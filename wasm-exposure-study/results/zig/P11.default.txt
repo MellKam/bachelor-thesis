@@ -1,0 +1,5 @@
+# P11/default spec=P11
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm
+FAIL P11 probes/P11/zig/default//out.wasm
+  ✗ custom section "meta"  — custom sections: 
+  ✓ instantiates

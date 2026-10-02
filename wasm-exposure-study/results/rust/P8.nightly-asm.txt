@@ -1,0 +1,8 @@
+# P8/nightly-asm toolchain=nightly-2026-10-02 spec=P8
+$ cargo +nightly-2026-10-02 build --release --target wasm32-unknown-unknown
+   Compiling p8_nightly_asm v0.1.0 (/study/probes/P8/rust/nightly-asm)
+    Finished `release` profile [optimized] target(s) in 0.14s
+PASS P8 probes/P8/rust/nightly-asm//out/nightly-asm.wasm
+  ✓ identity (externref) -> (externref)
+  ✓ instantiates
+  ✓ returns the identical object

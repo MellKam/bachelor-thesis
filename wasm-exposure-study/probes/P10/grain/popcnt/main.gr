@@ -1,0 +1,6 @@
+module Main
+
+from "runtime/unsafe/wasmi32" include WasmI32
+
+@unsafe
+provide let popcount = (x: WasmI32) => WasmI32.popcnt(x)

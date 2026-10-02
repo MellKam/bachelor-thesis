@@ -1,0 +1,8 @@
+PROBE VARIANT        BUILD    CHECK
+P12   idiomatic      ok       FAIL  (3713 bytes)
+P12   wasmi32        ok       PASS  (3650 bytes)
+P4    default        ok       FAIL  (38615 bytes)
+P4    start-section  ok       FAIL  (38609 bytes)
+P5    default        ok       FAIL  (29707 bytes)
+P6    tuple          ok       FAIL  (29451 bytes)
+done

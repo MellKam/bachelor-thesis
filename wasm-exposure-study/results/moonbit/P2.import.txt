@@ -1,0 +1,9 @@
+# P2/import spec=P2:import
+$ moon build --release --target wasm && cp _build/wasm/release/build/src/src.wasm out.wasm
+Warning: `moon.mod.json` at '/study/probes/P2/moonbit/import' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
+Finished. moon: ran 2 tasks, now up to date
+PASS P2:import probes/P2/moonbit/import//out.wasm
+  ✓ exactly one memory
+  ✓ limits min 1 max 4
+  ✓ imported as host.mem
+  ✓ instantiates

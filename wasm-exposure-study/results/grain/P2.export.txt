@@ -1,0 +1,8 @@
+# P2/export spec=P2:export
+$ grain compile --release main.gr -o out.wasm --initial-memory-pages 1 --maximum-memory-pages 4
+FAIL P2:export probes/P2/grain/export//out.wasm
+  ✓ exactly one memory
+  ✓ limits min 1 max 4
+  ✓ defined in module (not imported)
+  ✗ exported as "mem"  — memory exports: memory
+  ✓ instantiates

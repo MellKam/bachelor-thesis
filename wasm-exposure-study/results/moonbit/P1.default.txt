@@ -1,0 +1,10 @@
+# P1/default spec=P1
+$ moon build --release --target wasm && cp _build/wasm/release/build/src/src.wasm out.wasm
+Warning: `moon.mod.json` at '/study/probes/P1/moonbit/default' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
+Finished. moon: ran 2 tasks, now up to date
+PASS P1 probes/P1/moonbit/default//out.wasm
+  ✓ import host.log
+  ✓ import type (i32) -> ()
+  ✓ export run () -> ()
+  ✓ instantiates
+  ✓ log received 42

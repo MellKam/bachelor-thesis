@@ -1,0 +1,7 @@
+# P9/exception spec=P9
+$ grain compile --release main.gr -o out.wasm
+File "main.gr", line 6, characters 2-5:
+Error: Syntax error after ' ' and before 'try'.
+Expected an expression or a record field.
+
+BUILD FAILED

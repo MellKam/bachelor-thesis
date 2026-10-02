@@ -1,0 +1,13 @@
+# P7/default spec=P7
+$ /home/melkam/wx/target/release/wx build . -o out.wasm
+warning[W1004]: function `init` is never used
+  ┌─ /home/melkam/wx/thesis/wasm-exposure-study/probes/P7/wx/default/main.wx:3:4
+  │
+3 │ fn init() {
+  │    ^^^^
+
+Wrote 48 bytes to out.wasm
+FAIL P7 probes/P7/wx/default//out.wasm
+  ✗ start section references a function  — start = null (if absent, record a documented equivalent as partial)
+  ✓ instantiates
+  ✗ get() == 7 on first call  — got 0, expected 7

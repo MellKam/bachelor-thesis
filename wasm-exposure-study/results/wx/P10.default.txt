@@ -1,0 +1,10 @@
+# P10/default spec=P10
+$ /home/melkam/wx/target/release/wx build . -o out.wasm
+error[E1049]: no method `count_ones` found for type `u32`
+  ┌─ /home/melkam/wx/thesis/wasm-exposure-study/probes/P10/wx/default/main.wx:2:5
+  │
+2 │   x.count_ones()
+  │     ^^^^^^^^^^
+
+error: aborting due to 1 previous error
+BUILD FAILED

@@ -1,0 +1,3 @@
+# cat/grain
+$ grain compile --release --memory-base 32768 main.gr -o out.wasm
+{"bytes":3915,"imports":["wasi_snapshot_preview1.fd_write (func)","wasi_snapshot_preview1.fd_read (func)"],"exports":["memory (memory)","_start (func)"],"ok":true,"detail":"stdout equals stdin for text, empty and 100000 random bytes"}

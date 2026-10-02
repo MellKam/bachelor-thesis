@@ -1,0 +1,7 @@
+# P2/import spec=P2:import
+$ grain compile --release main.gr -o out.wasm --initial-memory-pages 1 --maximum-memory-pages 4 --import-memory
+FAIL P2:import probes/P2/grain/import//out.wasm
+  ✓ exactly one memory
+  ✓ limits min 1 max 4
+  ✗ imported as host.mem  — memory imports: env.memory
+  ✓ instantiates

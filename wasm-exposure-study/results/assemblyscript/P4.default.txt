@@ -1,0 +1,9 @@
+# P4/default spec=P4
+$ asc main.ts -o out.wasm -O --noAssert
+PASS P4 probes/P4/assemblyscript/default//out.wasm
+  ✓ exported global "counter"
+  ✓ counter is mutable i32
+  ✓ imported global host.base (immutable i32)
+  ✓ instantiates
+  ✓ bump() == 42
+  ✓ counter global == 42

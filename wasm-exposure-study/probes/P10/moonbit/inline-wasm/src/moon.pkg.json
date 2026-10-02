@@ -1,0 +1,11 @@
+{
+  "is-main": false,
+  "link": {
+    "wasm": {
+      "exports": [
+        "popcount",
+        "simd_add"
+      ]
+    }
+  }
+}

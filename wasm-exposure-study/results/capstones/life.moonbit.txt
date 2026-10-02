@@ -1,0 +1,5 @@
+# life/moonbit
+$ moon build --release --target wasm && cp _build/wasm/release/build/src/src.wasm out.wasm
+Warning: `moon.mod.json` at '/study/capstones/life/moonbit' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
+Finished. moon: ran 2 tasks, now up to date
+{"bytes":2236,"extraImports":[],"extraExports":[],"calledStart":false,"ok":true,"detail":"matches reference after 100 steps","alive":1608}

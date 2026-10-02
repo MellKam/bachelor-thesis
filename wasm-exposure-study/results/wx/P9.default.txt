@@ -1,0 +1,10 @@
+# P9/default spec=P9
+$ /home/melkam/wx/target/release/wx build . -o out.wasm
+error[E0009]: invalid item
+  ┌─ /home/melkam/wx/thesis/wasm-exposure-study/probes/P9/wx/default/main.wx:1:1
+  │
+1 │ tag Boom(code: i32) -> !;
+  │ ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+BUILD FAILED

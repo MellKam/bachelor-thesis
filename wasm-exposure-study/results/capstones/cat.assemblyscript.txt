@@ -1,0 +1,3 @@
+# cat/assemblyscript
+$ asc main.ts -o out.wasm -O --noAssert
+{"bytes":203,"imports":["wasi_snapshot_preview1.fd_write (func)","wasi_snapshot_preview1.fd_read (func)"],"exports":["_start (func)","memory (memory)"],"ok":true,"detail":"stdout equals stdin for text, empty and 100000 random bytes"}

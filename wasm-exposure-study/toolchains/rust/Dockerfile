@@ -1,0 +1,42 @@
+# Rust toolchain for wasm-exposure-study. Starts from the shared base image
+# (Debian + Node + WABT + Wasmtime, see toolchains/base/Dockerfile); build it with `make rust-image`.
+# Pins looked up from official channels on 2026-10-02.
+FROM wasm-exposure-base
+
+# Rust stable channel manifest dated 2026-10-01
+ARG RUST_VERSION=1.99.0
+ARG RUST_COMMIT=b940084d7eb6a299eb4bfeb8e34901bc051e7ac4
+# sha256 of https://static.rust-lang.org/dist/channel-rust-1.99.0.toml
+ARG RUST_MANIFEST_SHA256=ce6dddc886364f8d786514771212cebe9b731ba82d6b859951c6b0ccc516b6a2
+# rustup-init for x86_64-unknown-linux-gnu, from static.rust-lang.org/rustup/archive/<version>/
+ARG RUSTUP_VERSION=1.29.1
+ARG RUSTUP_INIT_SHA256=dda7234360b7f578ca8b0ddcb80145646fa61a67c1720a5abc7051b35c9fcb71
+
+ENV RUSTUP_HOME=/opt/rust/rustup CARGO_HOME=/opt/rust/cargo PATH=/opt/rust/cargo/bin:$PATH
+RUN set -eux; \
+    curl -sSfo /tmp/rustup-init \
+      "https://static.rust-lang.org/rustup/archive/${RUSTUP_VERSION}/x86_64-unknown-linux-gnu/rustup-init"; \
+    echo "${RUSTUP_INIT_SHA256}  /tmp/rustup-init" | sha256sum -c -; \
+    curl -sSfo /tmp/manifest.toml "https://static.rust-lang.org/dist/channel-rust-${RUST_VERSION}.toml"; \
+    echo "${RUST_MANIFEST_SHA256}  /tmp/manifest.toml" | sha256sum -c -; \
+    chmod +x /tmp/rustup-init; \
+    /tmp/rustup-init -y --no-modify-path --profile minimal --default-toolchain "${RUST_VERSION}" \
+      -t wasm32-unknown-unknown -t wasm32-wasip1; \
+    rm /tmp/rustup-init /tmp/manifest.toml; \
+    rustc -vV | grep -q "commit-hash: ${RUST_COMMIT}"
+
+# Pinned nightly, used ONLY for probe variants that need an unstable feature (e.g. `global_asm!` on wasm32,
+# `#![feature(asm_experimental_arch)]`). Results from it are always flagged as requiring nightly. Not the default toolchain.
+# Manifest looked up 2026-10-02: https://static.rust-lang.org/dist/2026-10-02/channel-rust-nightly.toml
+ARG RUST_NIGHTLY=nightly-2026-10-02
+ARG RUST_NIGHTLY_COMMIT=c36f14571
+ARG RUST_NIGHTLY_MANIFEST_SHA256=50abfdf8df57de84ff7b3188b6cad2a9681a4165518712c9e504948bf896e2b3
+RUN set -eux; \
+    curl -sSfo /tmp/nightly.toml "https://static.rust-lang.org/dist/2026-10-02/channel-rust-nightly.toml"; \
+    echo "${RUST_NIGHTLY_MANIFEST_SHA256}  /tmp/nightly.toml" | sha256sum -c -; \
+    rustup toolchain install "${RUST_NIGHTLY}" --profile minimal -t wasm32-unknown-unknown; \
+    rm /tmp/nightly.toml; \
+    rustc +"${RUST_NIGHTLY}" -vV | grep -q "commit-hash: ${RUST_NIGHTLY_COMMIT}"; \
+    rustc -vV | grep -q "release: ${RUST_VERSION}"
+
+WORKDIR /study

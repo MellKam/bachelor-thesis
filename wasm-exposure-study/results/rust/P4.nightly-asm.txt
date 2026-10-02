@@ -1,0 +1,11 @@
+# P4/nightly-asm toolchain=nightly-2026-10-02 spec=P4
+$ cargo +nightly-2026-10-02 build --release --target wasm32-unknown-unknown
+   Compiling p4_nightly_asm v0.1.0 (/study/probes/P4/rust/nightly-asm)
+    Finished `release` profile [optimized] target(s) in 0.19s
+PASS P4 probes/P4/rust/nightly-asm//out/nightly-asm.wasm
+  ✓ exported global "counter"
+  ✓ counter is mutable i32
+  ✓ imported global host.base (immutable i32)
+  ✓ instantiates
+  ✓ bump() == 42
+  ✓ counter global == 42

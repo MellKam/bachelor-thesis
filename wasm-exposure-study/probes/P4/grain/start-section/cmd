@@ -1,0 +1,1 @@
+grain compile --release main.gr -o out.wasm --use-start-section

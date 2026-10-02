@@ -1,0 +1,8 @@
+{
+  "is-main": true,
+  "link": {
+    "wasm": {
+      "heap-start-address": 16384
+    }
+  }
+}

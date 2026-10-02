@@ -1,0 +1,9 @@
+# P6/nightly-asm toolchain=nightly-2026-10-02 spec=P6
+$ cargo +nightly-2026-10-02 build --release --target wasm32-unknown-unknown
+   Compiling p6_nightly_asm v0.1.0 (/study/probes/P6/rust/nightly-asm)
+    Finished `release` profile [optimized] target(s) in 0.15s
+PASS P6 probes/P6/rust/nightly-asm//out/nightly-asm.wasm
+  ✓ divmod has two results
+  ✓ divmod (i32, i32) -> (i32, i32)
+  ✓ instantiates
+  ✓ divmod(17,5) == [3,2]

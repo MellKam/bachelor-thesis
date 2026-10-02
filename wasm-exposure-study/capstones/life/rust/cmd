@@ -1,0 +1,1 @@
+cargo build --release --target wasm32-unknown-unknown --target-dir /tmp/t-life && cp /tmp/t-life/wasm32-unknown-unknown/release/life.wasm out.wasm

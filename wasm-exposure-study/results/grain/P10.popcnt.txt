@@ -1,0 +1,8 @@
+# P10/popcnt spec=P10
+$ grain compile --release main.gr -o out.wasm
+FAIL P10 probes/P10/grain/popcnt//out.wasm
+  ✓ i32.popcnt opcode present
+  ✗ i32x4.add opcode present
+  ✓ instantiates
+  ✓ popcount(255) == 8
+  ✗ export simd_add

@@ -1,0 +1,7 @@
+# P11/default toolchain=stable spec=P11
+$ cargo  build --release --target wasm32-unknown-unknown
+   Compiling p11_default v0.1.0 (/study/probes/P11/rust/default)
+    Finished `release` profile [optimized] target(s) in 0.16s
+PASS P11 probes/P11/rust/default//out/default.wasm
+  ✓ custom section "meta"
+  ✓ instantiates

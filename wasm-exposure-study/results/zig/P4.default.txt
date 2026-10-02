@@ -1,0 +1,4 @@
+# P4/default spec=P4
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm
+error: wasm-ld: /tmp/zc/tmp/75eb59155cdef4b6/out_zcu.o: undefined symbol: base
+BUILD FAILED

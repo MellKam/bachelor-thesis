@@ -1,0 +1,4 @@
+# P3/default spec=P3
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm
+FAIL P3 probes/P3/zig/default//out.wasm
+  ✗ module is valid WebAssembly  — 0000049: error: memory variable out of range: 1 (max 1)

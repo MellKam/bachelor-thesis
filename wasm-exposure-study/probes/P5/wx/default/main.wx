@@ -1,0 +1,11 @@
+fn double(x: i32) -> i32 { x * 2 }
+fn plus100(x: i32) -> i32 { x + 100 }
+
+fn call_slot(slot: i32, x: i32) -> i32 {
+  local f = if slot == 0 { double } else { plus100 };
+  f(x)
+}
+
+export {
+  call_slot
+}

@@ -1,0 +1,6 @@
+# P7/ctor spec=P7
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm
+FAIL P7 probes/P7/zig/ctor//out.wasm
+  ✗ start section references a function  — start = null (if absent, record a documented equivalent as partial)
+  ✓ instantiates
+  ✓ get() == 7 on first call

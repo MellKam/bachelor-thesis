@@ -1,0 +1,9 @@
+# P12/no_std toolchain=stable spec=P12
+$ cargo  build --release --target wasm32-unknown-unknown
+   Compiling p12_no_std v0.1.0 (/study/probes/P12/rust/no_std)
+    Finished `release` profile [optimized] target(s) in 0.16s
+PASS P12 probes/P12/rust/no_std//out/no_std.wasm
+  ✓ exports add (i32, i32) -> (i32)
+  ✓ instantiates
+  ✓ add(2,3) == 5
+  surface: {"bytes":302,"imports":[],"unrequestedExports":["memory (memory)"],"definedFunctions":1,"memories":[{"min":16,"max":null,"shared":false,"memory64":false}],"definedGlobals":0,"tables":0,"tags":0,"start":null,"customSections":["name","producers","target_features"],"dataSegments":0}

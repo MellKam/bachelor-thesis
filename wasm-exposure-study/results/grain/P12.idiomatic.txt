@@ -1,0 +1,7 @@
+# P12/idiomatic spec=P12
+$ grain compile --release main.gr -o out.wasm
+FAIL P12 probes/P12/grain/idiomatic//out.wasm
+  ✓ exports add (i32, i32) -> (i32)
+  ✓ instantiates
+  ✗ add(2,3) == 5  — memory access out of bounds
+  surface: {"bytes":3713,"imports":["wasi_snapshot_preview1.fd_write (func)"],"unrequestedExports":["memory (memory)","_start (func)"],"definedFunctions":15,"memories":[{"min":64,"max":null,"shared":false,"memory64":false}],"definedGlobals":21,"tables":0,"tags":0,"start":null,"customSections":[],"dataSegments":1}

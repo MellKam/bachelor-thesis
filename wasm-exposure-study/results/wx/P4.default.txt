@@ -1,0 +1,10 @@
+# P4/default spec=P4
+$ /home/melkam/wx/target/release/wx build . -o out.wasm
+Wrote 84 bytes to out.wasm
+PASS P4 probes/P4/wx/default//out.wasm
+  ✓ exported global "counter"
+  ✓ counter is mutable i32
+  ✓ imported global host.base (immutable i32)
+  ✓ instantiates
+  ✓ bump() == 42
+  ✓ counter global == 42

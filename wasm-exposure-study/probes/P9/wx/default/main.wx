@@ -1,0 +1,7 @@
+tag Boom(code: i32) -> !;
+
+fn roundtrip(x: i32) -> i32 { x }
+
+export {
+  roundtrip
+}

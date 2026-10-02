@@ -1,0 +1,8 @@
+# P1/default spec=P1
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm
+PASS P1 probes/P1/zig/default//out.wasm
+  ✓ import host.log
+  ✓ import type (i32) -> ()
+  ✓ export run () -> ()
+  ✓ instantiates
+  ✓ log received 42

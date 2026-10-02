@@ -1,0 +1,16 @@
+PROBE VARIANT        BUILD    CHECK
+P1    default        ok       PASS  (91 bytes)
+P10   default        ok       FAIL  (122 bytes)
+P11   default        ok       FAIL  (92 bytes)
+P12   releasefast    ok       PASS  (4977 bytes)
+P12   releasesmall   ok       PASS  (73 bytes)
+P2    export         ok       FAIL  (70 bytes)
+P2    import         ok       FAIL  (73 bytes)
+P3    default        ok       FAIL  (74 bytes)
+P4    default        FAILED   -
+P5    default        ok       PASS  (155 bytes)
+P6    default        ok       FAIL  (98 bytes)
+P7    ctor           ok       FAIL  (143 bytes)
+P8    opaque-ptr     ok       FAIL  (74 bytes)
+P9    error-union    ok       FAIL  (75 bytes)
+done

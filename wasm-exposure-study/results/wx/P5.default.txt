@@ -1,0 +1,10 @@
+# P5/default spec=P5
+$ /home/melkam/wx/target/release/wx build . -o out.wasm
+Wrote 110 bytes to out.wasm
+PASS P5 probes/P5/wx/default//out.wasm
+  ✓ funcref table
+  ✓ element segment
+  ✓ call_indirect present
+  ✓ instantiates
+  ✓ call_slot(0,5) == 10
+  ✓ call_slot(1,5) == 105

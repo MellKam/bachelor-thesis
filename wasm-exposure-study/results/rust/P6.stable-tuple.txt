@@ -1,0 +1,5 @@
+# P6/stable-tuple toolchain=stable spec=P6
+$ cargo  build --release --target wasm32-unknown-unknown
+   Compiling p6_stable_tuple v0.1.0 (/study/probes/P6/rust/stable-tuple)
+    Finished `release` profile [optimized] target(s) in 0.14s
+CHECKER TIMED OUT after 20s: calling an export never returned

@@ -1,0 +1,8 @@
+module Main
+
+provide let mut counter = 0
+
+provide let bump = () => {
+  counter += 1
+  counter
+}

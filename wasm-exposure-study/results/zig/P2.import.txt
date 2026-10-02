@@ -1,0 +1,7 @@
+# P2/import spec=P2:import
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm --initial-memory=65536 --max-memory=262144 --stack 8192 --import-memory
+FAIL P2:import probes/P2/zig/import//out.wasm
+  ✓ exactly one memory
+  ✓ limits min 1 max 4
+  ✗ imported as host.mem  — memory imports: env.memory
+  ✓ instantiates

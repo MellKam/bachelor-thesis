@@ -1,0 +1,10 @@
+module Main
+
+from "int32" include Int32
+use Int32.{ (*), (+) }
+
+let double = (x: Int32) => x * 2l
+let plus100 = (x: Int32) => x + 100l
+let slots = [> double, plus100]
+
+provide let call_slot = (slot: Number, x: Int32) => slots[slot](x)

@@ -1,0 +1,8 @@
+#[link_section = "meta"]
+global meta: i32 = 1;
+
+fn nop() {}
+
+export {
+  nop
+}

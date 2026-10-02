@@ -6,7 +6,7 @@ WebAssembly (Wasm) is a portable bytecode format designed to execute safely insi
 
 Although WebAssembly began as a technology for the Web, its use has expanded well beyond the browser. Standalone runtimes make it useful for server-side and serverless workloads, where fast startup and strong isolation are valuable properties, and the same isolation model makes it attractive as an extension format for running third-party or otherwise untrusted code inside a controlled sandbox.
 
-At the same time, WebAssembly is still evolving. Its core remains deliberately small, while additional capabilities are added through extensions. Features such as garbage collection, multiple memories, exception handling, and emerging stack-switching support expand the range of programming models WebAssembly can support directly, rather than simply adding raw capability. The Component Model is also developing a higher-level way for independently compiled components to interact across language boundaries.
+At the same time, WebAssembly is still evolving. Its core remains deliberately small, while additional capabilities are added through extensions. Features such as garbage collection, multiple memories, exception handling, and emerging stack-switching support expand the range of programming models WebAssembly can support directly. The Component Model is also developing a higher-level way for independently compiled components to interact across language boundaries.
 
 Together, these extensions give WebAssembly more ways to represent memory and control flow than any single language needs. It is becoming less a narrow compilation target and more a general-purpose platform — and realizing that depends on how well the languages that target it expose what it actually offers.
 
@@ -34,7 +34,7 @@ The implementation follows these design principles:
 
 ### 1.4 Scope
 
-The main scope of this thesis is to design such a language and show how the idea works in practice. The implementation therefore serves as a proof of concept, built to show whether the language is practical to write real programs in, while objectively outlining its limitations and the future work needed to fully realize the idea.
+The main scope of this thesis is to design such a language and show how the idea works in practice. The implementation therefore serves as a proof of concept, built to show whether the language is practical to write real programs in, while objectively outlining its limitations and the future work needed to fully implement the idea.
 
 It focuses on the foundations needed to demonstrate the design's main ideas: parsing, semantic analysis, type inference, traits, modules, WebAssembly code generation, and optimization passes such as inlining and dead-code elimination.
 

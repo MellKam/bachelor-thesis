@@ -1,0 +1,7 @@
+fn popcount(x: u32) -> u32 {
+  x.count_ones()
+}
+
+export {
+  popcount
+}

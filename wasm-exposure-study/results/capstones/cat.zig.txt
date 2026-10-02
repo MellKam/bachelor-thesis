@@ -1,0 +1,3 @@
+# cat/zig
+$ zig build-exe main.zig -target wasm32-wasi -O ReleaseSmall -femit-bin=out.wasm
+{"bytes":360,"imports":["wasi_snapshot_preview1.proc_exit (func)","wasi_snapshot_preview1.fd_read (func)","wasi_snapshot_preview1.fd_write (func)"],"exports":["memory (memory)","_start (func)"],"ok":true,"detail":"stdout equals stdin for text, empty and 100000 random bytes"}

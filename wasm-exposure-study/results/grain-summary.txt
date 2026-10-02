@@ -1,0 +1,13 @@
+PROBE VARIANT        BUILD    CHECK
+P1    default        ok       PASS  (3706 bytes)
+P10   popcnt         ok       FAIL  (3653 bytes)
+P12   idiomatic      FAILED   -
+P12   wasmi32        FAILED   -
+P2    export         ok       FAIL  (3654 bytes)
+P2    import         ok       FAIL  (3668 bytes)
+P4    default        ok       FAIL  (38615 bytes)
+P5    default        FAILED   -
+P6    tuple          FAILED   -
+P7    start-section  ok       PASS  (3645 bytes)
+P9    exception      FAILED   -
+done

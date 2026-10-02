@@ -1,0 +1,7 @@
+# P2/import spec=P2:import
+$ asc main.ts -o out.wasm -O --noAssert --initialMemory 1 --maximumMemory 4 --importMemory
+FAIL P2:import probes/P2/assemblyscript/import//out.wasm
+  ✓ exactly one memory
+  ✓ limits min 1 max 4
+  ✗ imported as host.mem  — memory imports: env.memory
+  ✓ instantiates

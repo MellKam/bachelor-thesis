@@ -1,0 +1,9 @@
+# P12/default spec=P12
+$ moon build --release --target wasm && cp _build/wasm/release/build/src/src.wasm out.wasm
+Warning: `moon.mod.json` at '/study/probes/P12/moonbit/default' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
+Finished. moon: ran 2 tasks, now up to date
+PASS P12 probes/P12/moonbit/default//out.wasm
+  ✓ exports add (i32, i32) -> (i32)
+  ✓ instantiates
+  ✓ add(2,3) == 5
+  surface: {"bytes":188,"imports":[],"unrequestedExports":[],"definedFunctions":1,"memories":[{"min":1,"max":null,"shared":false,"memory64":false}],"definedGlobals":0,"tables":1,"tags":0,"start":null,"customSections":["name","producers"],"dataSegments":1}

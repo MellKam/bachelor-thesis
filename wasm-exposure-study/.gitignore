@@ -1,0 +1,14 @@
+# build outputs; results are recorded in attempts/ and results/
+probes/*/*/out/
+capstones/*/*/out/
+node_modules/
+probes/*/*/out.wasm*
+probes/*/moonbit/*/_build/
+probes/*/*/_build/
+capstones/*/*/out.wasm
+capstones/*/*/_build/
+**/*.gro
+probes/*/grain/*/target/
+capstones/*/grain/target/
+probes/*/wx/*/out.wasm
+capstones/*/wx/out.wasm

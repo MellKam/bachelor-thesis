@@ -1,0 +1,8 @@
+# P2/export spec=P2:export
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm --initial-memory=65536 --max-memory=262144 --stack 8192 --export-memory
+FAIL P2:export probes/P2/zig/export//out.wasm
+  ✓ exactly one memory
+  ✓ limits min 1 max 4
+  ✓ defined in module (not imported)
+  ✗ exported as "mem"  — memory exports: memory
+  ✓ instantiates

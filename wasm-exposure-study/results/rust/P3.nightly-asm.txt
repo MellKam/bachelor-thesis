@@ -1,0 +1,6 @@
+# P3/nightly-asm toolchain=nightly-2026-10-02 spec=P3
+$ cargo +nightly-2026-10-02 build --release --target wasm32-unknown-unknown
+   Compiling p3_nightly_asm v0.1.0 (/study/probes/P3/rust/nightly-asm)
+    Finished `release` profile [optimized] target(s) in 0.16s
+FAIL P3 probes/P3/rust/nightly-asm//out/nightly-asm.wasm
+  ✗ module is valid WebAssembly  — 000003f: error: memory variable out of range: 1 (max 1)

@@ -1,0 +1,9 @@
+# P5/default spec=P5
+$ grain compile --release main.gr -o out.wasm
+FAIL P5 probes/P5/grain/default//out.wasm
+  ✓ funcref table
+  ✓ element segment
+  ✓ call_indirect present
+  ✓ instantiates
+  ✗ call_slot(0,5) == 10  — memory access out of bounds
+  ✗ call_slot(1,5) == 105  — memory access out of bounds

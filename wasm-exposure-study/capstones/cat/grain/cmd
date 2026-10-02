@@ -1,0 +1,1 @@
+grain compile --release --memory-base 32768 main.gr -o out.wasm

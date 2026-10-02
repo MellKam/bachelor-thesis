@@ -1,0 +1,7 @@
+# P12/releasesmall spec=P12
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm
+PASS P12 probes/P12/zig/releasesmall//out.wasm
+  ✓ exports add (i32, i32) -> (i32)
+  ✓ instantiates
+  ✓ add(2,3) == 5
+  surface: {"bytes":73,"imports":[],"unrequestedExports":["memory (memory)"],"definedFunctions":1,"memories":[{"min":16,"max":null,"shared":false,"memory64":false}],"definedGlobals":1,"tables":1,"tags":0,"start":null,"customSections":[],"dataSegments":0}

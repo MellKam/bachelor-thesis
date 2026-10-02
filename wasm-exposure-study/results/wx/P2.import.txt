@@ -1,0 +1,10 @@
+# P2/import spec=P2:import
+$ /home/melkam/wx/target/release/wx build . -o out.wasm
+error[E1007]: undeclared identifier
+  ┌─ /home/melkam/wx/thesis/wasm-exposure-study/probes/P2/wx/import/main.wx:7:9
+  │
+7 │   host::mem.size_bytes()
+  │         ^^^
+
+error: aborting due to 1 previous error
+BUILD FAILED

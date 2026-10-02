@@ -1,0 +1,1 @@
+grain compile --release main.gr -o out.wasm --initial-memory-pages 1 --maximum-memory-pages 4 --import-memory

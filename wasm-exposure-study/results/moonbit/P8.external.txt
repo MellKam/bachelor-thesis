@@ -1,0 +1,8 @@
+# P8/external spec=P8
+$ moon build --release --target wasm && cp _build/wasm/release/build/src/src.wasm out.wasm
+Warning: `moon.mod.json` at '/study/probes/P8/moonbit/external' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
+Finished. moon: ran 2 tasks, now up to date
+PASS P8 probes/P8/moonbit/external//out.wasm
+  ✓ identity (externref) -> (externref)
+  ✓ instantiates
+  ✓ returns the identical object

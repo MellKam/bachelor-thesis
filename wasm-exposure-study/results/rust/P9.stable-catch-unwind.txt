@@ -1,0 +1,9 @@
+# P9/stable-catch-unwind toolchain=stable spec=P9
+$ cargo  build --release --target wasm32-unknown-unknown
+   Compiling p9_stable_catch_unwind v0.1.0 (/study/probes/P9/rust/stable-catch-unwind)
+    Finished `release` profile [optimized] target(s) in 0.19s
+FAIL P9 probes/P9/rust/stable-catch-unwind//out/stable-catch-unwind.wasm
+  ✗ tag section with an i32-payload tag  — tags: []
+  ✗ exception-handling instructions
+  ✓ instantiates
+  ✗ roundtrip(5) == 5  — unreachable

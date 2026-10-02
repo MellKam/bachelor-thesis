@@ -1,0 +1,57 @@
+module Main
+
+from "runtime/unsafe/wasmi32" include WasmI32
+use WasmI32.{ (+), (-), (*), (&), (==), (!=), remU }
+
+foreign wasm random: () => WasmI32 from "host"
+
+// Grids at fixed addresses below the Grain heap (--memory-base 32768); current-grid flag stored at 4000.
+@unsafe
+provide let init = () => {
+  let mut i = 0n
+  while (WasmI32.ltU(i, 4096n)) {
+    WasmI32.store8(4096n + i, random() & 1n, 0n)
+    i = i + 1n
+  }
+  WasmI32.store8(4000n, 0n, 0n)
+}
+
+@unsafe
+provide let step = () => {
+  let cur = WasmI32.load8U(4000n, 0n)
+  let c = 4096n + cur * 4096n
+  let nx = 4096n + (1n - cur) * 4096n
+  let mut y = 0n
+  while (WasmI32.ltU(y, 64n)) {
+    let mut x = 0n
+    while (WasmI32.ltU(x, 64n)) {
+      let mut cnt = 0n
+      let mut dy = 0n
+      while (WasmI32.ltU(dy, 3n)) {
+        let mut dx = 0n
+        while (WasmI32.ltU(dx, 3n)) {
+          if (!(dy == 1n && dx == 1n)) {
+            cnt = cnt + WasmI32.load8U(c + remU(y + 63n + dy, 64n) * 64n + remU(x + 63n + dx, 64n), 0n)
+          }
+          dx = dx + 1n
+        }
+        dy = dy + 1n
+      }
+      let alive = WasmI32.load8U(c + y * 64n + x, 0n) != 0n
+      let next = if (cnt == 3n || (alive && cnt == 2n)) 1n else 0n
+      WasmI32.store8(nx + y * 64n + x, next, 0n)
+      x = x + 1n
+    }
+    y = y + 1n
+  }
+  WasmI32.store8(4000n, 1n - cur, 0n)
+}
+
+@unsafe
+provide let cells_ptr = () => 4096n + WasmI32.load8U(4000n, 0n) * 4096n
+
+@unsafe
+provide let width = () => 64n
+
+@unsafe
+provide let height = () => 64n

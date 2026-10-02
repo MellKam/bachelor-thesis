@@ -1,0 +1,3 @@
+# life/zig
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm
+{"bytes":538,"extraImports":[],"extraExports":[],"calledStart":false,"ok":true,"detail":"matches reference after 100 steps","alive":1608}

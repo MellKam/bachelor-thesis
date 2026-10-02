@@ -1,0 +1,12 @@
+#[memory_limits(min_pages = 1, max_pages = 4)]
+import "host" as host {
+  memory mem: u32;
+}
+
+fn touch() -> u32 {
+  host::mem.size_bytes()
+}
+
+export {
+  touch
+}

@@ -1,0 +1,8 @@
+# P2/export spec=P2:export
+$ asc main.ts -o out.wasm -O --noAssert --initialMemory 1 --maximumMemory 4
+FAIL P2:export probes/P2/assemblyscript/export//out.wasm
+  ✓ exactly one memory
+  ✓ limits min 1 max 4
+  ✓ defined in module (not imported)
+  ✗ exported as "mem"  — memory exports: memory
+  ✓ instantiates

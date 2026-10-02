@@ -1,0 +1,33 @@
+module Main
+
+from "runtime/unsafe/wasmi32" include WasmI32
+use WasmI32.{ (+), (!=), (==) }
+
+foreign wasm fd_read: (WasmI32, WasmI32, WasmI32, WasmI32) => WasmI32 from "wasi_snapshot_preview1"
+foreign wasm fd_write: (WasmI32, WasmI32, WasmI32, WasmI32) => WasmI32 from "wasi_snapshot_preview1"
+
+// iovec at 4096, result at 4112, buffer at 8192; the Grain heap starts at --memory-base 32768.
+@unsafe
+let run = () => {
+  WasmI32.store(4096n, 8192n, 0n)
+  let mut go = true
+  while (go) {
+    WasmI32.store(4096n, 8192n, 0n)
+    WasmI32.store(4096n, 4096n, 4n)
+    if (fd_read(0n, 4096n, 1n, 4112n) != 0n) {
+      go = false
+    } else {
+      let n = WasmI32.load(4112n, 0n)
+      if (n == 0n) {
+        go = false
+      } else {
+        WasmI32.store(4096n, n, 4n)
+        if (fd_write(1n, 4096n, 1n, 4112n) != 0n) {
+          go = false
+        }
+      }
+    }
+  }
+}
+
+run()

@@ -1,0 +1,9 @@
+# P2/import toolchain=stable spec=P2:import
+$ cargo  build --release --target wasm32-unknown-unknown
+   Compiling p2m v0.1.0 (/study/probes/P2/rust/import)
+    Finished `release` profile [optimized] target(s) in 0.15s
+PASS P2:import probes/P2/rust/import//out/import.wasm
+  ✓ exactly one memory
+  ✓ limits min 1 max 4
+  ✓ imported as host.mem
+  ✓ instantiates

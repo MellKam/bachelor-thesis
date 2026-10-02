@@ -1,0 +1,14 @@
+PROBE VARIANT        BUILD    CHECK
+P1    default        ok       PASS  (69 bytes)
+P10   default        ok       PASS  (92 bytes)
+P12   default        ok       PASS  (55 bytes)
+P2    export         ok       FAIL  (53 bytes)
+P2    import         ok       FAIL  (65 bytes)
+P3    memory-index   FAILED   -
+P4    default        ok       PASS  (92 bytes)
+P5    default        ok       PASS  (638 bytes)
+P6    tuple          ok       FAIL  (3622 bytes)
+P7    global-init    ok       PASS  (72 bytes)
+P8    externref      ok       PASS  (56 bytes)
+P9    try-catch      FAILED   -
+done

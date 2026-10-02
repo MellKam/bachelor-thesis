@@ -1,0 +1,10 @@
+{
+  "is-main": false,
+  "link": {
+    "wasm": {
+      "exports": [
+        "call_slot"
+      ]
+    }
+  }
+}
