@@ -1,3 +1,0 @@
-module Main
-
-provide let touch = () => 0

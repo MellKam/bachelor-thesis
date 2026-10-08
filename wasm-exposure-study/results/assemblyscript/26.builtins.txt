@@ -1,0 +1,11 @@
+# 26-relaxed-simd/assemblyscript/builtins spec=26
+$ asc main.ts -o out.wasm -O --noAssert --enable simd --enable relaxed-simdPASS 21 probes/26-relaxed-simd/assemblyscript/builtins/out.wasm (78 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ f32x4.relaxed_madd (or nmadd) emitted
+  ✓ instantiates
+  ✓ relaxed_madd(2,3,4) == 10
+PASS 26 probes/26-relaxed-simd/assemblyscript/builtins/out.wasm (78 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ f32x4.relaxed_madd (or nmadd) emitted
+  ✓ instantiates
+  ✓ relaxed_madd(2,3,4) == 10

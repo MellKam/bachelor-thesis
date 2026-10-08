@@ -1,0 +1,60 @@
+{
+  "feature": "11",
+  "file": "probes/11-conversions-sign-extension/c/plain-c/out.wasm",
+  "bytes": 425,
+  "pass": true,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "i32.trunc_sat_f64 emitted",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "i32.extend8_s emitted",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "i32.extend16_s emitted",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "sat_trunc(1e20) == i32 max",
+      "ok": true,
+      "detail": "got 2147483647, expected 2147483647"
+    },
+    {
+      "name": "sat_trunc(-1e20) == i32 min",
+      "ok": true,
+      "detail": "got -2147483648, expected -2147483648"
+    },
+    {
+      "name": "sat_trunc(NaN) == 0",
+      "ok": true,
+      "detail": "got 0, expected 0"
+    },
+    {
+      "name": "ext8(0x80) == -128",
+      "ok": true,
+      "detail": "got -128, expected -128"
+    },
+    {
+      "name": "ext16(0x8000) == -32768",
+      "ok": true,
+      "detail": "got -32768, expected -32768"
+    }
+  ],
+  "unsupported": []
+}

@@ -1,0 +1,11 @@
+# 17-externref/c/externref-type spec=17
+$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -Wl,--no-entry -mreference-types main.c -o out.wasmPASS 11 probes/17-externref/c/externref-type/out.wasm (374 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ identity (externref) -> (externref)
+  ✓ instantiates
+  ✓ returns the identical object
+PASS 17 probes/17-externref/c/externref-type/out.wasm (374 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ identity (externref) -> (externref)
+  ✓ instantiates
+  ✓ returns the identical object

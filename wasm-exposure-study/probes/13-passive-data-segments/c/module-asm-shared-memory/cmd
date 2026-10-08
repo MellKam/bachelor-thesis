@@ -1,0 +1,1 @@
+clang --target=wasm32-unknown-unknown -O2 -nostdlib -matomics -mbulk-memory -Wl,--no-entry,--shared-memory,--import-memory,--max-memory=16777216,--export=msg main.c -o out.wasm

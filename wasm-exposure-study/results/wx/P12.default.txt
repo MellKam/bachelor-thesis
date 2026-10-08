@@ -1,8 +1,0 @@
-# P12/default spec=P12
-$ /home/melkam/wx/target/release/wx build . -o out.wasm
-Wrote 41 bytes to out.wasm
-PASS P12 probes/P12/wx/default//out.wasm
-  ✓ exports add (i32, i32) -> (i32)
-  ✓ instantiates
-  ✓ add(2,3) == 5
-  surface: {"bytes":41,"imports":[],"unrequestedExports":[],"definedFunctions":1,"memories":[],"definedGlobals":0,"tables":0,"tags":0,"start":null,"customSections":[],"dataSegments":0}

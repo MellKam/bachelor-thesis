@@ -1,9 +1,0 @@
-# P4/default spec=P4
-$ grain compile --release main.gr -o out.wasm
-FAIL P4 probes/P4/grain/default//out.wasm
-  ✗ exported global "counter"
-  ✗ counter is mutable i32
-  ✗ imported global host.base (immutable i32)
-  ✓ instantiates
-  ✗ bump() == 42  — memory access out of bounds
-  ✗ counter global == 42  — undefined

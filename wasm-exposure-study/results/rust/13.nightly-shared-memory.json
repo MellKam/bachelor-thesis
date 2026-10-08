@@ -1,0 +1,51 @@
+{
+  "feature": "13",
+  "file": "probes/13-passive-data-segments/rust/nightly-shared-memory//out.wasm",
+  "bytes": 589,
+  "pass": false,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "a passive data segment holding \"WASM\"",
+      "ok": true,
+      "detail": "segments: [[\"passive\",null,4]]"
+    },
+    {
+      "name": "memory.init emitted in load",
+      "ok": false,
+      "detail": ""
+    },
+    {
+      "name": "data.drop emitted",
+      "ok": false,
+      "detail": "informational",
+      "info": true
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "peek(2048) == 0 before load",
+      "ok": true,
+      "detail": "got 0, expected 0"
+    },
+    {
+      "name": "peek(2048) == 0x57 after load",
+      "ok": true,
+      "detail": "got 87, expected 87"
+    },
+    {
+      "name": "peek(2051) == 0x4d after load",
+      "ok": true,
+      "detail": "got 77, expected 77"
+    }
+  ],
+  "unsupported": []
+}

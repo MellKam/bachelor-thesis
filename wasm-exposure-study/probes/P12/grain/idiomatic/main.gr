@@ -1,6 +1,0 @@
-module Main
-
-from "int32" include Int32
-use Int32.{ (+) }
-
-provide let add = (a: Int32, b: Int32) => a + b

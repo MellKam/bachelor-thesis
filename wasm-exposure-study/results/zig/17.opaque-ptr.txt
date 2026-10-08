@@ -1,0 +1,6 @@
+# 17-externref/zig/opaque-ptr spec=17
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasmFAIL 11 probes/17-externref/zig/opaque-ptr/out.wasm (74 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ identity (externref) -> (externref)  — (i32) -> (i32)
+  ✓ instantiates
+  ✗ returns the identical object

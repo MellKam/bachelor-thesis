@@ -1,0 +1,222 @@
+{
+  "feature": "08",
+  "file": "probes/08-integer-ops/rust/default/out.wasm",
+  "bytes": 1512,
+  "pass": true,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "add: export present",
+      "ok": true,
+      "detail": "got 5, expected 5"
+    },
+    {
+      "name": "add: instruction emitted (i32.add)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "add: behaves",
+      "ok": true,
+      "detail": "got 5, expected 5"
+    },
+    {
+      "name": "sub: export present",
+      "ok": true,
+      "detail": "got 7, expected 7"
+    },
+    {
+      "name": "sub: instruction emitted (i32.sub)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "sub: behaves",
+      "ok": true,
+      "detail": "got 7, expected 7"
+    },
+    {
+      "name": "mul: export present",
+      "ok": true,
+      "detail": "got 42, expected 42"
+    },
+    {
+      "name": "mul: instruction emitted (i32.mul)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mul: behaves",
+      "ok": true,
+      "detail": "got 42, expected 42"
+    },
+    {
+      "name": "div: export present",
+      "ok": true,
+      "detail": "got 3, expected 3"
+    },
+    {
+      "name": "div: instruction emitted (i32.div_[su])",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "div: behaves",
+      "ok": true,
+      "detail": "got 3, expected 3"
+    },
+    {
+      "name": "rem: export present",
+      "ok": true,
+      "detail": "got 2, expected 2"
+    },
+    {
+      "name": "rem: instruction emitted (i32.rem_[su])",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "rem: behaves",
+      "ok": true,
+      "detail": "got 2, expected 2"
+    },
+    {
+      "name": "clz: export present",
+      "ok": true,
+      "detail": "got 31, expected 31"
+    },
+    {
+      "name": "clz: instruction emitted (i32.clz)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "clz: behaves",
+      "ok": true,
+      "detail": "got 31, expected 31"
+    },
+    {
+      "name": "ctz: export present",
+      "ok": true,
+      "detail": "got 3, expected 3"
+    },
+    {
+      "name": "ctz: instruction emitted (i32.ctz)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ctz: behaves",
+      "ok": true,
+      "detail": "got 3, expected 3"
+    },
+    {
+      "name": "popcnt: export present",
+      "ok": true,
+      "detail": "got 8, expected 8"
+    },
+    {
+      "name": "popcnt: instruction emitted (i32.popcnt)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "popcnt: behaves",
+      "ok": true,
+      "detail": "got 8, expected 8"
+    },
+    {
+      "name": "rotl: export present",
+      "ok": true,
+      "detail": "got 3, expected 3"
+    },
+    {
+      "name": "rotl: instruction emitted (i32.rotl)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "rotl: behaves",
+      "ok": true,
+      "detail": "got 3, expected 3"
+    },
+    {
+      "name": "rotr: export present",
+      "ok": true,
+      "detail": "got -2147483648, expected -2147483648"
+    },
+    {
+      "name": "rotr: instruction emitted (i32.rotr)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "rotr: behaves",
+      "ok": true,
+      "detail": "got -2147483648, expected -2147483648"
+    }
+  ],
+  "members": {
+    "add": {
+      "export": true,
+      "emitted": true,
+      "behaves": true
+    },
+    "sub": {
+      "export": true,
+      "emitted": true,
+      "behaves": true
+    },
+    "mul": {
+      "export": true,
+      "emitted": true,
+      "behaves": true
+    },
+    "div": {
+      "export": true,
+      "emitted": true,
+      "behaves": true
+    },
+    "rem": {
+      "export": true,
+      "emitted": true,
+      "behaves": true
+    },
+    "clz": {
+      "export": true,
+      "emitted": true,
+      "behaves": true
+    },
+    "ctz": {
+      "export": true,
+      "emitted": true,
+      "behaves": true
+    },
+    "popcnt": {
+      "export": true,
+      "emitted": true,
+      "behaves": true
+    },
+    "rotl": {
+      "export": true,
+      "emitted": true,
+      "behaves": true
+    },
+    "rotr": {
+      "export": true,
+      "emitted": true,
+      "behaves": true
+    }
+  },
+  "unsupported": []
+}

@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wasm Exposure Ratings</title>
+<meta name="description" content="How far seven languages reach into WebAssembly: 30 features, rated for reach, compiler checking and directness.">
+<style>
+:root {
+  color-scheme: light;
+  --page: #f9f9f7;
+  --surface: #fcfcfb;
+  --ink: #0b0b0b;
+  --ink-2: #52514e;
+  --ink-3: #6b6a65;
+  --grid: #e1e0d9;
+  --axis: #c3c2b7;
+  --border: rgba(11, 11, 11, 0.10);
+  --s1: #2a78d6;
+  --s2: #eb6834;
+  --s3: #1baf7a;
+  --absent: #c3c2b7;
+  --absent-ink: #0b0b0b;
+  --hatch: #b4b2a8;
+  --ord-0: #1c5cab;
+  --ord-1: #5598e7;
+  --ord-2: #86b6ef;
+  --blue-0: #cde2fb; --blue-1: #86b6ef; --blue-2: #3987e5; --blue-3: #1c5cab; --blue-4: #0d366b;
+  --orange-0: #fde3d6; --orange-1: #f6b393; --orange-2: #eb6834; --orange-3: #b8470f; --orange-4: #7a2a08;
+  --hover: rgba(11, 11, 11, 0.06);
+  --focus: #2a78d6;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --page: #0d0d0d;
+    --surface: #1a1a19;
+    --ink: #ffffff;
+    --ink-2: #c3c2b7;
+    --ink-3: #a3a299;
+    --grid: #2c2c2a;
+    --axis: #383835;
+    --border: rgba(255, 255, 255, 0.10);
+    --s1: #3987e5;
+    --s2: #d95926;
+    --s3: #199e70;
+    --absent: #383835;
+    --absent-ink: #ffffff;
+    --hatch: #4a4a46;
+    --ord-0: #9ec5f4;
+    --ord-1: #5598e7;
+    --ord-2: #256abf;
+    --blue-0: #0d366b; --blue-1: #184f95; --blue-2: #2a78d6; --blue-3: #6da7ec; --blue-4: #cde2fb;
+    --orange-0: #4a1d0b; --orange-1: #7a2f12; --orange-2: #b4491b; --orange-3: #e8845a; --orange-4: #fbd3bf;
+    --hover: rgba(255, 255, 255, 0.08);
+    --focus: #6da7ec;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0d0d0d;
+  --surface: #1a1a19;
+  --ink: #ffffff;
+  --ink-2: #c3c2b7;
+  --ink-3: #a3a299;
+  --grid: #2c2c2a;
+  --axis: #383835;
+  --border: rgba(255, 255, 255, 0.10);
+  --s1: #3987e5;
+  --s2: #d95926;
+  --s3: #199e70;
+  --absent: #383835;
+  --absent-ink: #ffffff;
+  --hatch: #4a4a46;
+  --ord-0: #9ec5f4;
+  --ord-1: #5598e7;
+  --ord-2: #256abf;
+  --blue-0: #0d366b; --blue-1: #184f95; --blue-2: #2a78d6; --blue-3: #6da7ec; --blue-4: #cde2fb;
+  --orange-0: #4a1d0b; --orange-1: #7a2f12; --orange-2: #b4491b; --orange-3: #e8845a; --orange-4: #fbd3bf;
+  --hover: rgba(255, 255, 255, 0.08);
+  --focus: #6da7ec;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 112px; }
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--ink);
+  font: 15px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, p { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 3px; }
+svg :focus-visible { outline-offset: 0; }
+
+/* ---- top bar ---- */
+.topbar {
+  position: sticky; top: 0; z-index: 20;
+  background: color-mix(in srgb, var(--page) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+.topbar-in { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+.nav { display: flex; align-items: center; gap: 20px; height: 48px; }
+.brand { font-weight: 650; letter-spacing: -0.01em; white-space: nowrap; }
+.nav-links { display: flex; gap: 16px; overflow-x: auto; scrollbar-width: none; flex: 1; font-size: 13px; color: var(--ink-2); }
+.nav-links a { text-decoration: none; white-space: nowrap; padding: 4px 0; }
+.nav-links a:hover { color: var(--ink); }
+.btn {
+  font: inherit; font-size: 13px; color: var(--ink);
+  background: transparent; border: 1px solid var(--border); border-radius: 999px;
+  padding: 4px 12px; cursor: pointer; white-space: nowrap;
+}
+.btn:hover { background: var(--hover); }
+.chips { display: flex; align-items: center; gap: 6px; padding: 0 0 10px; overflow-x: auto; scrollbar-width: none; }
+.chips-label { font-size: 12px; color: var(--ink-3); margin-right: 4px; white-space: nowrap; }
+.chip {
+  font: inherit; font-size: 13px; color: var(--ink-2);
+  background: transparent; border: 1px solid var(--border); border-radius: 999px;
+  padding: 3px 11px; cursor: pointer; white-space: nowrap;
+}
+.chip:hover { background: var(--hover); color: var(--ink); }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+
+/* ---- page ---- */
+main { max-width: 1120px; margin: 0 auto; padding: 0 16px 80px; }
+.hero { padding: 56px 0 28px; }
+.eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
+h1 { font-size: clamp(30px, 5vw, 46px); line-height: 1.1; letter-spacing: -0.025em; font-weight: 700; margin: 10px 0 14px; max-width: 18em; }
+.hero p.lede { font-size: 17px; color: var(--ink-2); max-width: 46em; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-top: 28px; }
+.tile { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+.tile .k { font-size: 13px; color: var(--ink-2); }
+.tile .v { font-size: 28px; font-weight: 650; letter-spacing: -0.02em; line-height: 1.2; margin-top: 2px; }
+.tile .n { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
+
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px 28px 20px; margin-top: 20px; }
+.card h2 { font-size: clamp(21px, 3vw, 26px); line-height: 1.2; letter-spacing: -0.02em; font-weight: 680; margin: 6px 0 8px; max-width: 28em; }
+.card .sub { color: var(--ink-2); max-width: 46em; }
+figure { margin: 22px 0 0; }
+figcaption { margin-top: 14px; font-size: 13px; color: var(--ink-2); max-width: 60em; }
+figcaption p + p { margin-top: 6px; }
+figcaption b { color: var(--ink); font-weight: 600; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--ink-2); margin-bottom: 12px; align-items: center; }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; flex: none; }
+.legend i.line { height: 2px; width: 16px; border-radius: 1px; }
+.legend i.ring { border-radius: 50%; width: 10px; height: 10px; }
+.legend .ramp { width: 120px; height: 10px; border-radius: 3px; }
+.chart { position: relative; width: 100%; }
+.chart svg { display: block; overflow: visible; }
+.chart.scroll { overflow-x: auto; padding-bottom: 4px; }
+.pair { display: grid; gap: 20px 28px; grid-template-columns: 1fr; }
+@media (min-width: 760px) {
+  .pair.score { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); }
+  .pair.scatter { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+.pane h3 { font-size: 13px; font-weight: 600; color: var(--ink-2); margin-bottom: 4px; }
+
+/* svg text */
+svg text { font-family: inherit; fill: var(--ink-2); font-size: 12px; }
+svg .t-ink { fill: var(--ink); }
+svg .t-strong { fill: var(--ink); font-weight: 600; }
+svg .t-muted { fill: var(--ink-3); font-size: 11px; }
+svg .grid { stroke: var(--grid); stroke-width: 1; }
+svg .axis { stroke: var(--axis); stroke-width: 1; }
+svg [data-lang] { transition: opacity 0.15s; }
+svg .hit { fill: transparent; }
+svg .hover-row:hover .hit, svg .hover-row:focus .hit { fill: var(--hover); }
+svg .cell:hover rect.fill, svg .cell:focus rect.fill { stroke: var(--ink); stroke-width: 2; }
+svg [tabindex] { outline: none; }
+svg [tabindex]:focus-visible .hit, svg [tabindex]:focus-visible rect.fill { stroke: var(--focus); stroke-width: 2; }
+svg .dot:hover circle.mark, svg .dot:focus circle.mark { stroke-width: 3; }
+
+/* tooltip */
+#tip {
+  position: fixed; z-index: 50; pointer-events: none; max-width: 320px;
+  background: var(--surface); color: var(--ink);
+  border: 1px solid var(--border); border-radius: 10px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18);
+  padding: 10px 12px; font-size: 13px;
+}
+#tip[hidden] { display: none; }
+#tip .t-title { font-weight: 600; margin-bottom: 4px; }
+#tip .t-row { display: flex; gap: 8px; align-items: baseline; }
+#tip .t-row b { font-weight: 650; min-width: 2.2em; color: var(--ink); }
+#tip .t-row span { color: var(--ink-2); }
+#tip .t-note { margin-top: 6px; color: var(--ink-2); font-size: 12px; line-height: 1.45; }
+
+/* table twin */
+details.tv { margin-top: 14px; font-size: 13px; }
+details.tv summary { cursor: pointer; color: var(--ink-2); width: fit-content; padding: 2px 0; }
+details.tv summary:hover { color: var(--ink); }
+.tv-scroll { overflow-x: auto; margin-top: 8px; border: 1px solid var(--border); border-radius: 8px; }
+.tv table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+.tv th, .tv td { padding: 6px 10px; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--grid); }
+.tv th:first-child, .tv td:first-child { text-align: left; }
+.tv th { color: var(--ink-2); font-weight: 600; background: var(--page); }
+.tv tr:last-child td { border-bottom: 0; }
+.vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.method ul { margin: 14px 0 0; padding-left: 20px; color: var(--ink-2); max-width: 60em; }
+.method li + li { margin-top: 8px; }
+.method li b { color: var(--ink); font-weight: 600; }
+.method code { font: 13px ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--page); padding: 1px 6px; border-radius: 4px; color: var(--ink); }
+footer { margin-top: 28px; font-size: 12px; color: var(--ink-3); }
+
+@media (max-width: 640px) {
+  .card { padding: 20px 16px 14px; border-radius: 12px; }
+  .nav-links { display: none; }
+  .nav { justify-content: space-between; }
+  .hero { padding-top: 36px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  svg [data-lang] { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="6" height="6" style="fill: var(--surface)"/>
+      <line x1="0" y1="0" x2="0" y2="6" style="stroke: var(--hatch)" stroke-width="2.5"/>
+    </pattern>
+    <pattern id="dots" width="6" height="6" patternUnits="userSpaceOnUse">
+      <rect width="6" height="6" style="fill: var(--surface)"/>
+      <circle cx="3" cy="3" r="1.2" style="fill: var(--hatch)"/>
+    </pattern>
+  </defs>
+</svg>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <div class="nav">
+      <span class="brand">Wasm Exposure</span>
+      <nav class="nav-links" aria-label="Sections">
+        <a href="#coverage">Coverage</a>
+        <a href="#score">Score</a>
+        <a href="#loss">Lost points</a>
+        <a href="#tradeoffs">Trade-offs</a>
+        <a href="#versions">Spec versions</a>
+        <a href="#matrix">Features</a>
+        <a href="#obstacles">Obstacles</a>
+        <a href="#method">Method</a>
+      </nav>
+      <button class="btn" id="theme" type="button" aria-label="Colour theme">Theme: auto</button>
+    </div>
+    <div class="chips" id="chips" role="group" aria-label="Highlight a language"></div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <p class="eyebrow">Bachelor's thesis · WebAssembly exposure study</p>
+    <h1>How far does each language reach into WebAssembly?</h1>
+    <p class="lede" id="lede"></p>
+    <div class="tiles" id="tiles"></div>
+  </section>
+
+  <section class="card" id="coverage">
+    <p class="eyebrow">1 · The evidence</p>
+    <h2 id="h-coverage"></h2>
+    <p class="sub">Counts only, no weights. Every language–feature pair was probed and lands in exactly one of five buckets.</p>
+    <figure>
+      <div class="legend" id="leg-coverage"></div>
+      <div class="chart" id="chart-coverage"></div>
+      <figcaption id="cap-coverage"></figcaption>
+      <div id="tv-coverage"></div>
+    </figure>
+  </section>
+
+  <section class="card" id="score">
+    <p class="eyebrow">2 · The summary</p>
+    <h2 id="h-score"></h2>
+    <p class="sub">One number per language, from the author's written-down coefficients. The right panel shows how much that ranking moves when every coefficient is jostled at random.</p>
+    <figure>
+      <div class="pair score">
+        <div class="pane"><h3>Score (0–1)</h3><div class="chart" id="chart-score"></div></div>
+        <div class="pane"><h3>Rank across 2,000 perturbed runs</h3><div class="chart" id="chart-rank"></div></div>
+      </div>
+      <figcaption id="cap-score"></figcaption>
+      <div id="tv-score"></div>
+    </figure>
+  </section>
+
+  <section class="card" id="loss">
+    <p class="eyebrow">3 · Reading the score</p>
+    <h2 id="h-loss"></h2>
+    <p class="sub">Each bar is the best possible result: every feature reached fully, with nothing in the way. What a language keeps is its score; the rest is split by cause.</p>
+    <figure>
+      <div class="legend" id="leg-loss"></div>
+      <div class="chart" id="chart-loss"></div>
+      <figcaption id="cap-loss"></figcaption>
+      <div id="tv-loss"></div>
+    </figure>
+  </section>
+
+  <section class="card" id="tradeoffs">
+    <p class="eyebrow">4 · Trade-offs</p>
+    <h2>Reaching far, reaching cleanly and being checked are three different things</h2>
+    <p class="sub">Support is how much of the feature set a language can produce. Directness is how few obstacles stand in the way of what it reaches. Checked is how much of what it reaches the compiler type-checks.</p>
+    <figure>
+      <div class="pair scatter">
+        <div class="pane"><h3>Support vs. directness</h3><div class="chart" id="chart-sd"></div></div>
+        <div class="pane"><h3>Support vs. checked</h3><div class="chart" id="chart-sc"></div></div>
+      </div>
+      <figcaption id="cap-tradeoffs"></figcaption>
+      <div id="tv-tradeoffs"></div>
+    </figure>
+  </section>
+
+  <section class="card" id="versions">
+    <p class="eyebrow">5 · Over time</p>
+    <h2 id="h-versions"></h2>
+    <p class="sub">The same score, computed separately for the features each WebAssembly spec release introduced.</p>
+    <figure>
+      <div class="legend" id="leg-versions"></div>
+      <div class="chart" id="chart-versions"></div>
+      <figcaption id="cap-versions"></figcaption>
+      <div id="tv-versions"></div>
+    </figure>
+  </section>
+
+  <section class="card" id="matrix">
+    <p class="eyebrow">6 · Every cell</p>
+    <h2 id="h-matrix"></h2>
+    <p class="sub" id="sub-matrix"></p>
+    <figure>
+      <div class="legend" id="leg-matrix"></div>
+      <div class="chart scroll" id="chart-matrix"></div>
+      <figcaption id="cap-matrix"></figcaption>
+      <div id="tv-matrix"></div>
+    </figure>
+  </section>
+
+  <section class="card" id="obstacles">
+    <p class="eyebrow">7 · What gets in the way</p>
+    <h2 id="h-obstacles"></h2>
+    <p class="sub">Among the features a language does reach, how many carry each kind of obstacle. Rows run from the mildest penalty to the harshest.</p>
+    <figure>
+      <div class="legend" id="leg-obstacles"></div>
+      <div class="chart scroll" id="chart-obstacles"></div>
+      <figcaption id="cap-obstacles"></figcaption>
+      <div id="tv-obstacles"></div>
+    </figure>
+  </section>
+
+  <section class="card method" id="method">
+    <p class="eyebrow">8 · How to read this fairly</p>
+    <h2>What the numbers do and do not say</h2>
+    <ul id="method-list"></ul>
+  </section>
+
+  <footer id="foot"></footer>
+</main>
+
+<div id="tip" role="tooltip" hidden></div>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

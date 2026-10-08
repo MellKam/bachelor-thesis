@@ -1,0 +1,15 @@
+# 02-memory/c/export spec=02:export
+$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -Wl,--no-entry -Wl,--initial-memory=65536 -Wl,--max-memory=262144 -Wl,-z,stack-size=8192 -Wl,--export-memory=mem main.c -o out.wasmPASS 02:export probes/02-memory/c/export/out.wasm (365 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exactly one memory
+  ✓ limits min 1 max 4
+  ✓ defined in module (not imported)
+  ✓ exported as "mem"
+  ✓ instantiates
+PASS 02:export probes/02-memory/c/export/out.wasm (365 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exactly one memory
+  ✓ limits min 1 max 4
+  ✓ defined in module (not imported)
+  ✓ exported as "mem"
+  ✓ instantiates

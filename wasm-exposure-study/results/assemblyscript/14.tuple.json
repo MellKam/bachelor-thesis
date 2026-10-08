@@ -1,0 +1,35 @@
+{
+  "feature": "14",
+  "file": "probes/14-multi-value/assemblyscript/tuple/out.wasm",
+  "bytes": 3622,
+  "pass": false,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "divmod has two results",
+      "ok": false,
+      "detail": "(i32, i32) -> (i32)"
+    },
+    {
+      "name": "divmod (i32, i32) -> (i32, i32)",
+      "ok": false,
+      "detail": "(i32, i32) -> (i32)"
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "divmod(17,5) == [3,2]",
+      "ok": false,
+      "detail": "got 35968, expected [3,2]"
+    }
+  ],
+  "unsupported": []
+}

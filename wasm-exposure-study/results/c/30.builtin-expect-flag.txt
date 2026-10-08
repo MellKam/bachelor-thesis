@@ -1,0 +1,5 @@
+# 30-branch-hinting/c/builtin-expect-flag spec=30
+$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -mllvm --enable-branch-hint -Wl,--no-entry main.c -o out.wasm
+clang (LLVM option parsing): Unknown command line argument '--enable-branch-hint'.  Try: 'clang (LLVM option parsing) --help'
+clang (LLVM option parsing): Did you mean '--enable-gvn-sink'?
+BUILD FAILED

@@ -1,0 +1,15 @@
+# 06-data-segments/rust/default spec=06
+$ rm -rf /tmp/rt && cargo build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p06_default v0.1.0 (/study/probes/06-data-segments/rust/default)
+    Finished `release` profile [optimized] target(s) in 0.17sFAIL 06 probes/06-data-segments/rust/default/out.wasm (349 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ active data segment puts "WASM" at address 1024  — bytes at 1024..1027 = [null,null,null,null]; segments: [["active",1048576,4]]
+  ✓ instantiates
+  ✗ peek(1024) == 0x57  — got 0, expected 87
+  ✗ peek(1027) == 0x4d  — got 0, expected 77
+FAIL 06 probes/06-data-segments/rust/default/out.wasm (349 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ active data segment puts "WASM" at address 1024  — bytes at 1024..1027 = [null,null,null,null]; segments: [["active",1048576,4]]
+  ✓ instantiates
+  ✗ peek(1024) == 0x57  — got 0, expected 87
+  ✗ peek(1027) == 0x4d  — got 0, expected 77

@@ -1,0 +1,11 @@
+# 21-extended-const/rust/nightly-asm-runtime spec=21
+$ rm -rf /tmp/rt && cargo +nightly-2026-10-02 build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p21_nightly_asm_runtime v0.1.0 (/study/probes/21-extended-const/rust/nightly-asm-runtime)
+    Finished `release` profile [optimized] target(s) in 0.14s
+FAIL 21 probes/21-extended-const/rust/nightly-asm-runtime//out.wasm (355 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ imported global host.base (immutable i32)
+  ✗ a global initialiser combines global.get with integer arithmetic  — initialisers: []
+  · start function used instead (informational)  — start = null
+  ✓ instantiates
+  ✓ get_g() == 112

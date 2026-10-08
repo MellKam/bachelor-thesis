@@ -1,0 +1,11 @@
+# 26-relaxed-simd/c/wasm_simd128 spec=26
+$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -Wl,--no-entry -msimd128 -mrelaxed-simd main.c -o out.wasmPASS 21 probes/26-relaxed-simd/c/wasm_simd128/out.wasm (423 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ f32x4.relaxed_madd (or nmadd) emitted
+  ✓ instantiates
+  ✓ relaxed_madd(2,3,4) == 10
+PASS 26 probes/26-relaxed-simd/c/wasm_simd128/out.wasm (423 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ f32x4.relaxed_madd (or nmadd) emitted
+  ✓ instantiates
+  ✓ relaxed_madd(2,3,4) == 10

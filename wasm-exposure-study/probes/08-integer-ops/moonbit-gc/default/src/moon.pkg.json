@@ -1,0 +1,19 @@
+{
+  "is-main": false,
+  "link": {
+    "wasm-gc": {
+      "exports": [
+        "i_add",
+        "i_sub",
+        "i_mul",
+        "i_div",
+        "i_rem",
+        "i_clz",
+        "i_ctz",
+        "i_popcnt",
+        "i_rotl",
+        "i_rotr"
+      ]
+    }
+  }
+}

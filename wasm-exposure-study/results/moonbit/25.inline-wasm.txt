@@ -1,0 +1,17 @@
+# 25-multiple-memories/moonbit/inline-wasm spec=25
+$ moon build --release --target wasm && cp _build/wasm/release/build/src/src.wasm out.wasm
+Warning: `moon.mod.json` at '/study/probes/25-multiple-memories/moonbit/inline-wasm' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
+Error: [0044]
+   ╭─[ /study/probes/25-multiple-memories/moonbit/inline-wasm/src/lib.mbt:1:1 ]
+   │
+ 1 │ ╭─▶ extern "wasm" fn copy_raw() -> Int =
+ 2 │ ├─▶   #|(func (result i32) i32.const 0 i32.const 0 i32.const 4 memory.copy 1 0 i32.const 0 i32.load8_u)
+   │ │                                                                                                         
+   │ ╰───────────────────────────────────────────────────────────────────────────────────────────────────────── Error Warning (invalid_inline_wasm): Invalid inline wasm: Dwarfsm parse failure: unable to parse plaininstr with input (1 0 i32.const 0 i32.load8_u)
+───╯
+Failed with 0 warnings, 1 errors.
+Error: failed to run build for target Wasm
+
+Caused by:
+    failed when building project
+BUILD FAILED

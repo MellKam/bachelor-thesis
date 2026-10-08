@@ -1,9 +1,0 @@
-PROBE VARIANT              TOOLCHAIN      BUILD    CHECK
-P10   default              stable         ok       FAIL  (431 bytes)
-P6    nightly-asm          nightly-2026-10-02 ok       PASS  (327 bytes)
-P6    stable-tuple         stable         ok       HANG  (769 bytes)
-P7    stable-ctor          stable         ok       FAIL  (463 bytes)
-P8    nightly-asm          nightly-2026-10-02 ok       PASS  (321 bytes)
-P8    stable-asm           stable         FAILED   -
-P9    nightly-asm          nightly-2026-10-02 ok       PASS  (367 bytes)
-P9    stable-catch-unwind  stable         ok       FAIL  (20180 bytes)

@@ -1,0 +1,18 @@
+# 13-passive-data-segments/rust/stable-shared-memory spec=13
+$ rm -rf /tmp/rt && cargo build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p13_stable_shared_memory v0.1.0 (/study/probes/13-passive-data-segments/rust/stable-shared-memory)
+warning: unstable feature specified for `-Ctarget-feature`: `atomics`
+  |
+  = note: this feature is not stably supported; its behavior can change in the future
+
+warning: `p13_stable_shared_memory` (lib) generated 1 warning
+    Finished `release` profile [optimized] target(s) in 0.16s
+FAIL 13 probes/13-passive-data-segments/rust/stable-shared-memory//out.wasm (579 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ a passive data segment holding "WASM"
+  ✗ memory.init emitted in load
+  · data.drop emitted  — informational
+  ✓ instantiates
+  ✓ peek(2048) == 0 before load
+  ✓ peek(2048) == 0x57 after load
+  ✓ peek(2051) == 0x4d after load

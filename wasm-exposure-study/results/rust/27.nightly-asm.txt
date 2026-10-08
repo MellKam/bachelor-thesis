@@ -1,0 +1,10 @@
+# 27-exception-tags/rust/nightly-asm spec=27
+$ rm -rf /tmp/rt && cargo +nightly-2026-10-02 build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p9_nightly_asm v0.1.0 (/study/probes/27-exception-tags/rust/nightly-asm)
+    Finished `release` profile [optimized] target(s) in 0.16sPASS 17 probes/27-exception-tags/rust/nightly-asm/out.wasm (367 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ tag section with at least one tag
+  ✓ tag payload types (informational; the reference uses i32)
+  ✓ exception-handling instructions
+  ✓ instantiates
+  ✓ roundtrip(5) == 5

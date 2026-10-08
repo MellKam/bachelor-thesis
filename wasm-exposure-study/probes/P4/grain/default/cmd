@@ -1,1 +1,0 @@
-grain compile --release main.gr -o out.wasm

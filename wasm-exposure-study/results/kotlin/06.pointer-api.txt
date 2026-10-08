@@ -1,0 +1,14 @@
+# 06-data-segments/kotlin/pointer-api spec=06
+$ sh ../../../kotlin-build.sh wasm-wasiFAIL 06 probes/06-data-segments/kotlin/pointer-api/out.wasm (615243 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ active data segment puts "WASM" at address 1024  — bytes at 1024..1027 = [null,null,null,null]; segments: [["passive",null,9686],["passive",null,5176],["passive",null,5372],["passive",null,5372],["passive",null,148],["passive",null,888],["passive",null,888],["passive",null,888],["passive",null,696],["passive",null,696],["passive",null,408],["passive",null,80],["passive",null,80],["passive",null,152],["passive",null,152],["passive",null,572],["passive",null,572],["passive",null,756],["passive",null,756],["passive",null,64],["passive",null,64],["passive",null,40],["passive",null,40],["passive",null,8],["passive",null,24],["passive",null,174],["passive",null,264],["passive",null,128],["passive",null,16],["passive",null,240],["passive",null,30],["passive",null,336],["passive",null,42],["passive",null,1536],["passive",null,1536],["passive",null,3720],["passive",null,8128],["passive",null,13412],["passive",null,4066],["passive",null,3]]
+  ✓ instantiates
+  ✓ host called _start before any other export (WASI command convention)
+  ✗ peek(1024) == 0x57  — memory access out of bounds
+  ✗ peek(1027) == 0x4d  — memory access out of boundsFAIL 06 probes/06-data-segments/kotlin/pointer-api/out.wasm (615243 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ active data segment puts "WASM" at address 1024  — bytes at 1024..1027 = [null,null,null,null]; segments: [["passive",null,9686],["passive",null,5176],["passive",null,5372],["passive",null,5372],["passive",null,148],["passive",null,888],["passive",null,888],["passive",null,888],["passive",null,696],["passive",null,696],["passive",null,408],["passive",null,80],["passive",null,80],["passive",null,152],["passive",null,152],["passive",null,572],["passive",null,572],["passive",null,756],["passive",null,756],["passive",null,64],["passive",null,64],["passive",null,40],["passive",null,40],["passive",null,8],["passive",null,24],["passive",null,174],["passive",null,264],["passive",null,128],["passive",null,16],["passive",null,240],["passive",null,30],["passive",null,336],["passive",null,42],["passive",null,1536],["passive",null,1536],["passive",null,3720],["passive",null,8128],["passive",null,13412],["passive",null,4066],["passive",null,3]]
+  ✓ instantiates
+  ✓ host called _start before any other export (WASI command convention)
+  ✗ peek(1024) == 0x57  — memory access out of bounds
+  ✗ peek(1027) == 0x4d  — memory access out of bounds

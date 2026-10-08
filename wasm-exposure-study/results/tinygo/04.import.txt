@@ -1,0 +1,12 @@
+# 04-table-import-export/tinygo/import spec=04:import
+$ tinygo build -o out.wasm -target=wasm-unknown -no-debug -ldflags="-extldflags \"--import-table\"" main.go
+FAIL 04:import probes/04-table-import-export/tinygo/import//out.wasm (899 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exactly one table
+  ✗ funcref table with limits min 2 max 8  — {"module":"env","name":"__indirect_function_table","kind":"table","reftype":"funcref","min":3,"max":null,"shared":false,"memory64":false}
+  ✓ call_indirect present
+  ✗ imported as host.tbl  — table imports: env.__indirect_function_table
+  ✓ instantiates
+  ✓ host called _initialize before any other export (reactor convention)
+  ✗ slot 0 of the host table is filled by the module  — the module must place a function into the imported table
+  ✓ call_slot(0,5) == 10

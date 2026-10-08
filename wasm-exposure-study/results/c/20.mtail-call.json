@@ -1,0 +1,30 @@
+{
+  "feature": "20",
+  "file": "probes/20-tail-calls/c/mtail-call/out.wasm",
+  "bytes": 458,
+  "pass": false,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "return_call emitted",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "count(1000000, 0) == 1000000 without overflowing the stack",
+      "ok": false,
+      "detail": "Maximum call stack size exceeded"
+    }
+  ],
+  "unsupported": []
+}

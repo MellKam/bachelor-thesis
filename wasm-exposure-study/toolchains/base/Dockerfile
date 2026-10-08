@@ -17,6 +17,10 @@ ARG NODE_SHA256=ca70e9e349de048b9522abb3adc05b3bd6f43c5ffd3ec57916c7da292f59f022
 # WABT 1.0.42 (2026-09-15); digest = sha256 of the GitHub release asset
 ARG WABT_VERSION=1.0.42
 ARG WABT_SHA256=84895407a6bbb80e918f33b16b2fb2206021c150b6bc9ff6f761263a745ab131
+# wasm-tools 1.261.0 (2026-10-02): the Bytecode Alliance's parser/printer/validator. WABT 1.0.42 cannot read Wasm GC modules
+# (Kotlin/Wasm, MoonBit wasm-gc), so the checker uses `wasm-tools print` to read instructions. Looked up 2026-10-08.
+ARG WASM_TOOLS_VERSION=1.261.0
+ARG WASM_TOOLS_SHA256=ad62b2176037e93e1348cb65d6212d128ca9f097b63d155569f25215818ff7b1
 # Wasmtime v49.0.1 (2026-09-24)
 ARG WASMTIME_VERSION=49.0.1
 ARG WASMTIME_SHA256=c71f7e0d30a92e418f0d17db7c6d8f6664c1ad764340a1278678f4209deab534
@@ -30,7 +34,10 @@ RUN set -eux; cd /tmp; \
     curl -sSfLO "https://github.com/bytecodealliance/wasmtime/releases/download/v${WASMTIME_VERSION}/wasmtime-v${WASMTIME_VERSION}-x86_64-linux.tar.xz"; \
     echo "${WASMTIME_SHA256}  wasmtime-v${WASMTIME_VERSION}-x86_64-linux.tar.xz" | sha256sum -c -; \
     mkdir -p /opt/wasmtime && tar -xJf wasmtime-v${WASMTIME_VERSION}-x86_64-linux.tar.xz -C /opt/wasmtime --strip-components=1; \
+    curl -sSfLO "https://github.com/bytecodealliance/wasm-tools/releases/download/v${WASM_TOOLS_VERSION}/wasm-tools-${WASM_TOOLS_VERSION}-x86_64-linux.tar.gz"; \
+    echo "${WASM_TOOLS_SHA256}  wasm-tools-${WASM_TOOLS_VERSION}-x86_64-linux.tar.gz" | sha256sum -c -; \
+    mkdir -p /opt/wasm-tools && tar -xzf wasm-tools-${WASM_TOOLS_VERSION}-x86_64-linux.tar.gz -C /opt/wasm-tools --strip-components=1; \
     rm -f /tmp/*.tar.*
-ENV PATH=/opt/node/bin:/opt/wabt/bin:/opt/wasmtime:$PATH
+ENV PATH=/opt/node/bin:/opt/wabt/bin:/opt/wasmtime:/opt/wasm-tools:$PATH
 
 WORKDIR /study

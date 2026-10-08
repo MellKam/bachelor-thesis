@@ -1,0 +1,47 @@
+{
+  "feature": "27",
+  "file": "probes/27-exception-tags/tinygo/panic-recover/out.wasm",
+  "bytes": 734,
+  "pass": false,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "tag section with at least one tag",
+      "ok": false,
+      "detail": "tags: []"
+    },
+    {
+      "name": "tag payload types (informational; the reference uses i32)",
+      "ok": true,
+      "detail": "[]",
+      "info": true
+    },
+    {
+      "name": "exception-handling instructions",
+      "ok": false,
+      "detail": ""
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "host called _initialize before any other export (reactor convention)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "roundtrip(5) == 5",
+      "ok": false,
+      "detail": "unreachable"
+    }
+  ],
+  "unsupported": []
+}

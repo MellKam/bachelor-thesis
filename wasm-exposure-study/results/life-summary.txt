@@ -6,6 +6,4 @@
 {"bytes":408,"extraImports":[],"extraExports":[],"calledStart":false,"ok":true,"detail":"matches reference after 100 steps","alive":1608}
 == moonbit
 BUILD FAILED
-== grain
-{"bytes":4229,"extraImports":["wasi_snapshot_preview1.fd_write (func)"],"extraExports":["_start (func)"],"calledStart":true,"ok":true,"detail":"matches reference after 100 steps","alive":1608}
 done

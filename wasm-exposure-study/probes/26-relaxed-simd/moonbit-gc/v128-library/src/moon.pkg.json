@@ -1,0 +1,13 @@
+{
+  "is-main": false,
+  "link": {
+    "wasm-gc": {
+      "exports": [
+        "relaxed_madd"
+      ]
+    }
+  },
+  "import": [
+    "moonbitlang/core/v128"
+  ]
+}

@@ -1,0 +1,1 @@
+zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm --shared-memory --import-memory --max-memory=16777216 -mcpu=generic+atomics+bulk_memory

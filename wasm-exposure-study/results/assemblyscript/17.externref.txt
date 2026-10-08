@@ -1,0 +1,11 @@
+# 17-externref/assemblyscript/externref spec=17
+$ asc main.ts -o out.wasm -O --noAssert --enable reference-typesPASS 11 probes/17-externref/assemblyscript/externref/out.wasm (56 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ identity (externref) -> (externref)
+  ✓ instantiates
+  ✓ returns the identical object
+PASS 17 probes/17-externref/assemblyscript/externref/out.wasm (56 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ identity (externref) -> (externref)
+  ✓ instantiates
+  ✓ returns the identical object

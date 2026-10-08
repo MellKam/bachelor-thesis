@@ -1,6 +1,0 @@
-# P8/opaque-ptr spec=P8
-$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm
-FAIL P8 probes/P8/zig/opaque-ptr//out.wasm
-  ✗ identity (externref) -> (externref)  — (i32) -> (i32)
-  ✓ instantiates
-  ✗ returns the identical object

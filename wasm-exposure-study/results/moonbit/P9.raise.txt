@@ -1,9 +1,0 @@
-# P9/raise spec=P9
-$ moon build --release --target wasm && cp _build/wasm/release/build/src/src.wasm out.wasm
-Warning: `moon.mod.json` at '/study/probes/P9/moonbit/raise' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
-Finished. moon: ran 2 tasks, now up to date
-FAIL P9 probes/P9/moonbit/raise//out.wasm
-  ✗ tag section with an i32-payload tag  — tags: []
-  ✗ exception-handling instructions
-  ✓ instantiates
-  ✓ roundtrip(5) == 5

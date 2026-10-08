@@ -1,0 +1,22 @@
+{
+ "basis": "Draft values, to be set by the author. The score of a cell is  reach x product of the factors of its obstacles;  the score of a language is the weighted mean of its cells over the probed features (Absent counts 0). `obstacles` is ordered from least to most damaging, and the order is the reasoned part: it follows what each obstacle takes away from the developer. The factors are the numbers read off that order. rating.md re-ranks the languages with every number perturbed (the order of the obstacles kept) and only calls an ordering robust if it survives.",
+ "reach": {
+  "full": 1,
+  "partial": 0.5
+ },
+ "obstacles": [
+  { "kind": "config", "factor": 0.90, "why": "A build setting: a flag, config file or linker argument. One line of the build, supported, deterministic, reversible, nothing at run time. The type checker no longer sees the feature, but the toolchain still validates the setting." },
+  { "kind": "experimental-api", "factor": 0.85, "why": "One call site depends on something marked experimental or unstable, on a supported compiler. It may change in an update, but the damage is local and the rest of the project builds on the stable release." },
+  { "kind": "side-effect", "factor": 0.85, "why": "The mechanism is an implementation detail of another construct: nothing in the language asks for it (a closure call that happens to be call_ref, casts that come from a class hierarchy, panic unwinding standing in for exceptions). The behaviour and the type checking are unchanged, but the developer cannot write the Wasm construct itself. Not for optimiser behaviour: if a better test makes the instruction appear reliably, there is no obstacle." },
+  { "kind": "nightly-compiler", "factor": 0.80, "why": "The whole project, and every project that depends on it, needs a compiler that is not a supported release and can break from one day to the next. Wider than one call site, but the code is still type-checked and deterministic, and the constraint ends when the feature is stabilised." },
+  { "kind": "restricted-host", "factor": 0.80, "why": "The module only runs on certain hosts: it imports WASI functions or JS glue code (C++ exceptions need a WASI host, Kotlin's externref build a JS host). Some deployment targets are lost, but most projects target one kind of host anyway and a wide set remains; the code itself is unaffected." },
+  { "kind": "opaque", "factor": 0.75, "why": "Hand-written assembly or Wasm text. Deterministic and supported, but the compiler stops checking it for good: mistakes surface at run time, it is tied to one target and maintained by hand." },
+  { "kind": "extra-runtime", "factor": 0.70, "why": "Every module carries extra code: a runtime shipped inside it (322 KB of libc++abi for C++ exceptions). A permanent size cost paid by every user of the module, but the module still runs anywhere." },
+  { "kind": "other-backend", "factor": 0.50, "why": "The module must be built for a different backend and gives up everything only the first backend offers. The features of the two backends are mutually exclusive in one module: using this one removes the others." }
+ ],
+ "features": {
+  "01": 3, "02": 3, "03": 3, "04": 2, "05": 2, "06": 3, "07": 1, "08": 3, "09": 3, "10": 3,
+  "11": 2, "12": 2, "13": 1, "14": 2, "15": 2, "16": 1, "17": 2, "18": 1, "19": 1,
+  "20": 2, "21": 1, "22": 2, "23": 2, "24": 1, "25": 1, "26": 1, "27": 2, "28": 1, "29": 2, "30": 1
+ }
+}

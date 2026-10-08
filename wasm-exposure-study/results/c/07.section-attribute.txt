@@ -1,0 +1,11 @@
+# 07-custom-sections/c/section-attribute spec=07
+$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -Wl,--no-entry main.c -o out.wasmFAIL 07 probes/07-custom-sections/c/section-attribute/out.wasm (400 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ custom section "meta"  — custom sections: name, producers, target_features
+  ✗ payload is "hello"
+  ✓ instantiates
+FAIL 07 probes/07-custom-sections/c/section-attribute/out.wasm (400 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ custom section "meta"  — custom sections: name, producers, target_features
+  ✗ payload is "hello"
+  ✓ instantiates

@@ -1,0 +1,11 @@
+{
+  "is-main": false,
+  "link": {
+    "wasm": {
+      "exports": [
+        "bulk_test"
+      ],
+      "heap-start-address": 16384
+    }
+  }
+}

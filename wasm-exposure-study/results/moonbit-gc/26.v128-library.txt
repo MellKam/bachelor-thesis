@@ -1,0 +1,44 @@
+# 26-relaxed-simd/moonbit-gc/v128-library spec=26
+$ moon build --release --target wasm-gc && cp _build/wasm-gc/release/build/src/src.wasm out.wasm
+Warning: `moon.mod.json` at '/study/probes/26-relaxed-simd/moonbit-gc/v128-library' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
+Warning: [0014]
+   ╭─[ /study/probes/26-relaxed-simd/moonbit-gc/v128-library/src/lib.mbt:2:11 ]
+   │
+ 2 │   let r = @v128.f32x4_relaxed_madd(@v128.f32x4_splat(a), @v128.f32x4_splat(b), @v128.f32x4_splat(c))
+   │           ────────────┬───────────  
+   │                       ╰───────────── Warning (alert_experimental): subject to breaking change without notice
+───╯
+Warning: [0014]
+   ╭─[ /study/probes/26-relaxed-simd/moonbit-gc/v128-library/src/lib.mbt:2:36 ]
+   │
+ 2 │   let r = @v128.f32x4_relaxed_madd(@v128.f32x4_splat(a), @v128.f32x4_splat(b), @v128.f32x4_splat(c))
+   │                                    ────────┬────────  
+   │                                            ╰────────── Warning (alert_experimental): subject to breaking change without notice
+───╯
+Warning: [0014]
+   ╭─[ /study/probes/26-relaxed-simd/moonbit-gc/v128-library/src/lib.mbt:2:58 ]
+   │
+ 2 │   let r = @v128.f32x4_relaxed_madd(@v128.f32x4_splat(a), @v128.f32x4_splat(b), @v128.f32x4_splat(c))
+   │                                                          ────────┬────────  
+   │                                                                  ╰────────── Warning (alert_experimental): subject to breaking change without notice
+───╯
+Warning: [0014]
+   ╭─[ /study/probes/26-relaxed-simd/moonbit-gc/v128-library/src/lib.mbt:2:80 ]
+   │
+ 2 │   let r = @v128.f32x4_relaxed_madd(@v128.f32x4_splat(a), @v128.f32x4_splat(b), @v128.f32x4_splat(c))
+   │                                                                                ────────┬────────  
+   │                                                                                        ╰────────── Warning (alert_experimental): subject to breaking change without notice
+───╯
+Warning: [0014]
+   ╭─[ /study/probes/26-relaxed-simd/moonbit-gc/v128-library/src/lib.mbt:3:3 ]
+   │
+ 3 │   @v128.f32x4_extract_lane(r, 0)
+   │   ────────────┬───────────  
+   │               ╰───────────── Warning (alert_experimental): subject to breaking change without notice
+───╯
+Finished. moon: ran 2 tasks, now up to date (5 warnings, 0 errors)
+PASS 26 probes/26-relaxed-simd/moonbit-gc/v128-library//out.wasm (415 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ f32x4.relaxed_madd (or nmadd) emitted
+  ✓ instantiates
+  ✓ relaxed_madd(2,3,4) == 10

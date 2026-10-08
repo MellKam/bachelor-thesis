@@ -1,8 +1,0 @@
-# P1/default spec=P1
-$ grain compile --release main.gr -o out.wasm
-PASS P1 probes/P1/grain/default//out.wasm
-  ✓ import host.log
-  ✓ import type (i32) -> ()
-  ✓ export run () -> ()
-  ✓ instantiates
-  ✓ log received 42

@@ -1,0 +1,12 @@
+# 22-typed-function-references/rust/nightly-asm-gc spec=22
+$ rm -rf /tmp/rt && cargo +nightly-2026-10-02 build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p22_nightly_asm_gc v0.1.0 (/study/probes/22-typed-function-references/rust/nightly-asm-gc)
+    Finished `release` profile [optimized] target(s) in 0.19s
+PASS 22 probes/22-typed-function-references/rust/nightly-asm-gc//out.wasm (361 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ ref.func emitted (anywhere in the module: the reference may be built in an initialiser)
+  ✓ call_ref emitted in apply
+  · reference type is non-nullable (informational)
+  · call_indirect or a table also present (informational)
+  ✓ instantiates
+  ✓ apply(5) == 10

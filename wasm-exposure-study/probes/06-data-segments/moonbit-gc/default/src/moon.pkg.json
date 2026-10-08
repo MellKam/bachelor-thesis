@@ -1,0 +1,11 @@
+{
+  "is-main": false,
+  "link": {
+    "wasm-gc": {
+      "exports": [
+        "peek",
+        "first"
+      ]
+    }
+  }
+}

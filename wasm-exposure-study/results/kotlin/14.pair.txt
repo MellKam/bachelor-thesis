@@ -1,0 +1,6 @@
+# 14-multi-value/kotlin/pair spec=14
+$ sh ../../../kotlin-build.sh wasm-wasi
+main.kt:6:1: error: unsupported '@WasmImport' and '@WasmExport' return type 'Pair<Int, Int>'.
+@WasmExport
+^^^^^^^^^^^
+BUILD FAILED

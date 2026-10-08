@@ -1,8 +1,0 @@
-# P7/init spec=P7
-$ moon build --release --target wasm && cp _build/wasm/release/build/src/src.wasm out.wasm
-Warning: `moon.mod.json` at '/study/probes/P7/moonbit/init' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
-Finished. moon: ran 2 tasks, now up to date
-PASS P7 probes/P7/moonbit/init//out.wasm
-  ✓ start section references a function
-  ✓ instantiates
-  ✓ get() == 7 on first call

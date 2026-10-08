@@ -1,0 +1,12 @@
+# 06-data-segments/assemblyscript/default spec=06
+$ asc main.ts -o out.wasm -O --noAssert
+WARNING AS201: Conversion from type 'usize' to 'i32' will require an explicit cast when switching between 32/64-bit.
+   :
+ 3 │ export function dataAddress(): i32 { return DATA; }
+   │                                             ~~~~
+   └─ in main.ts(3,45)PASS 06 probes/06-data-segments/assemblyscript/default/out.wasm (96 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ active data segment puts "WASM" at address 1024
+  ✓ instantiates
+  ✓ peek(1024) == 0x57
+  ✓ peek(1027) == 0x4d

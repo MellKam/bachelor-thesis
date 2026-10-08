@@ -1,9 +1,0 @@
-# P5/default spec=P5
-$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm
-PASS P5 probes/P5/zig/default//out.wasm
-  ✓ funcref table
-  ✓ element segment
-  ✓ call_indirect present
-  ✓ instantiates
-  ✓ call_slot(0,5) == 10
-  ✓ call_slot(1,5) == 105

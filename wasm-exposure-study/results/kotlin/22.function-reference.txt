@@ -1,0 +1,11 @@
+# 22-typed-function-references/kotlin/function-reference spec=22
+$ sh ../../../kotlin-build.sh wasm-wasi
+PASS 22 probes/22-typed-function-references/kotlin/function-reference//out.wasm (616139 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ ref.func emitted (anywhere in the module: the reference may be built in an initialiser)
+  ✓ call_ref emitted in apply
+  ✓ reference type is non-nullable (informational)
+  · call_indirect or a table also present (informational)
+  ✓ instantiates
+  ✓ host called _start before any other export (WASI command convention)
+  ✓ apply(5) == 10

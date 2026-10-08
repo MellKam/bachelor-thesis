@@ -1,0 +1,12 @@
+# 28-exnref-exceptions/kotlin/try-catch spec=28
+$ sh ../../../kotlin-build.sh wasm-wasi
+PASS 28 probes/28-exnref-exceptions/kotlin/try-catch//out.wasm (615479 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ tag section with at least one tag
+  ✓ try_table emitted
+  ✓ throw_ref emitted
+  ✓ catch_ref / catch_all_ref used (informational)
+  · legacy try/catch/rethrow also used (informational)
+  ✓ instantiates
+  ✓ host called _start before any other export (WASI command convention)
+  ✓ rethrow_test(5) == 5

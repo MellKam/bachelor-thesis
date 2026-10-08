@@ -1,0 +1,4 @@
+# 29-memory64/tinygo/wasm64-target spec=29
+$ tinygo build -o out.wasm -target=wasm64 -no-debug main.go
+open /opt/tinygo/targets/wasm64.json: no such file or directory
+BUILD FAILED

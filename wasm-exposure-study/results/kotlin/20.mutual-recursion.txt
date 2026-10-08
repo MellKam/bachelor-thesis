@@ -1,0 +1,12 @@
+# 20-tail-calls/kotlin/mutual-recursion spec=20
+$ sh ../../../kotlin-build.sh wasm-wasiFAIL 19 probes/20-tail-calls/kotlin/mutual-recursion/out.wasm (614788 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ return_call emitted
+  ✓ instantiates
+  ✓ host called _start before any other export (WASI command convention)
+  ✗ count(1000000, 0) == 1000000 without overflowing the stack  — Maximum call stack size exceededFAIL 19 probes/20-tail-calls/kotlin/mutual-recursion/out.wasm (614788 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ return_call emitted
+  ✓ instantiates
+  ✓ host called _start before any other export (WASI command convention)
+  ✗ count(1000000, 0) == 1000000 without overflowing the stack  — Maximum call stack size exceeded

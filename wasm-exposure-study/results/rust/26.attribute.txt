@@ -1,0 +1,8 @@
+# 26-relaxed-simd/rust/attribute spec=26
+$ rm -rf /tmp/rt && cargo build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p21_attribute v0.1.0 (/study/probes/26-relaxed-simd/rust/attribute)
+    Finished `release` profile [optimized] target(s) in 0.21sPASS 21 probes/26-relaxed-simd/rust/attribute/out.wasm (360 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ f32x4.relaxed_madd (or nmadd) emitted
+  ✓ instantiates
+  ✓ relaxed_madd(2,3,4) == 10

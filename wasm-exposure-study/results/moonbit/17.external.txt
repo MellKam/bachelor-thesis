@@ -1,0 +1,9 @@
+# 17-externref/moonbit/external spec=17
+$ moon build --release --target wasm && cp _build/wasm/release/build/src/src.wasm out.wasm
+Warning: `moon.mod.json` at '/study/probes/17-externref/moonbit/external' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
+Finished. moon: no work to do
+PASS 17 probes/17-externref/moonbit/external//out.wasm (2660 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ identity (externref) -> (externref)
+  ✓ instantiates
+  ✓ returns the identical object

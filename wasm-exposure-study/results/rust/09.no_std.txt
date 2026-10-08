@@ -1,0 +1,36 @@
+# 09-float-builtins/rust/no_std spec=09
+$ rm -rf /tmp/rt && cargo build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p09_no_std v0.1.0 (/study/probes/09-float-builtins/rust/no_std)
+error[E0599]: no method named `sqrt` found for type `f64` in the current scope
+ --> src/lib.rs:3:66
+  |
+3 | #[unsafe(no_mangle)] pub extern "C" fn f_sqrt(x: f64) -> f64 { x.sqrt() }
+  |                                                                  ^^^^ method not found in `f64`
+
+error[E0599]: no method named `ceil` found for type `f64` in the current scope
+ --> src/lib.rs:6:66
+  |
+6 | #[unsafe(no_mangle)] pub extern "C" fn f_ceil(x: f64) -> f64 { x.ceil() }
+  |                                                                  ^^^^ method not found in `f64`
+
+error[E0599]: no method named `floor` found for type `f64` in the current scope
+ --> src/lib.rs:7:67
+  |
+7 | #[unsafe(no_mangle)] pub extern "C" fn f_floor(x: f64) -> f64 { x.floor() }
+  |                                                                   ^^^^^ method not found in `f64`
+
+error[E0599]: no method named `trunc` found for type `f64` in the current scope
+ --> src/lib.rs:8:67
+  |
+8 | #[unsafe(no_mangle)] pub extern "C" fn f_trunc(x: f64) -> f64 { x.trunc() }
+  |                                                                   ^^^^^ method not found in `f64`
+
+error[E0599]: no method named `round_ties_even` found for type `f64` in the current scope
+ --> src/lib.rs:9:69
+  |
+9 | #[unsafe(no_mangle)] pub extern "C" fn f_nearest(x: f64) -> f64 { x.round_ties_even() }
+  |                                                                     ^^^^^^^^^^^^^^^ method not found in `f64`
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `p09_no_std` (lib) due to 5 previous errors
+BUILD FAILED

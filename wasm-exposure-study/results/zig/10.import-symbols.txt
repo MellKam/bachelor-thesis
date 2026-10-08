@@ -1,0 +1,9 @@
+# 10-globals/zig/import-symbols spec=10
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm --import-symbolsFAIL 03 probes/10-globals/zig/import-symbols/out.wasm (112 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exported global "counter"
+  ✗ counter is mutable i32
+  ✗ imported global host.base (immutable i32)
+  ✓ instantiates
+  ✗ bump() == 42  — got 1, expected 42
+  ✗ counter global == 42  — 1048576

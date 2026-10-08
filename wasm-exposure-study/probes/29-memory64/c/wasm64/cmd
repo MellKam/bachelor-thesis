@@ -1,0 +1,1 @@
+clang --target=wasm64-unknown-unknown -O2 -nostdlib -Wl,--no-entry -Wl,-mwasm64 main.c -o out.wasm

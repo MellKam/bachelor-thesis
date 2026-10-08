@@ -1,0 +1,11 @@
+# 15-simd/zig/memory-roundtrip spec=15
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm -mcpu=generic+simd128
+PASS 15 probes/15-simd/zig/memory-roundtrip//out.wasm (248 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ instantiates
+  ✓ simd_add: i32x4.splat emitted
+  ✓ simd_add: i32x4.add emitted
+  ✓ simd_add: i32x4.extract_lane emitted
+  ✓ simd_shuffle: i8x16.shuffle emitted
+  ✓ simd_add(2,3) == 5
+  ✓ simd_shuffle(1,2) == 2

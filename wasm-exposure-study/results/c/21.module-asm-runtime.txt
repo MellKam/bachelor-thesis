@@ -1,0 +1,9 @@
+# 21-extended-const/c/module-asm-runtime spec=21
+$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -Wl,--no-entry main.c -o out.wasm
+FAIL 21 probes/21-extended-const/c/module-asm-runtime//out.wasm (392 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ imported global host.base (immutable i32)
+  ✗ a global initialiser combines global.get with integer arithmetic  — initialisers: []
+  · start function used instead (informational)  — start = null
+  ✓ instantiates
+  ✓ get_g() == 112

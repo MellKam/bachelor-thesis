@@ -1,0 +1,13 @@
+# 15-simd/moonbit/inline-wasm spec=15
+$ moon build --release --target wasm && cp _build/wasm/release/build/src/src.wasm out.wasm
+Warning: `moon.mod.json` at '/study/probes/15-simd/moonbit/inline-wasm' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
+Finished. moon: ran 2 tasks, now up to date
+PASS 15 probes/15-simd/moonbit/inline-wasm//out.wasm (270 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ instantiates
+  ✓ simd_add: i32x4.splat emitted
+  ✓ simd_add: i32x4.add emitted
+  ✓ simd_add: i32x4.extract_lane emitted
+  ✓ simd_shuffle: i8x16.shuffle emitted
+  ✓ simd_add(2,3) == 5
+  ✓ simd_shuffle(1,2) == 2

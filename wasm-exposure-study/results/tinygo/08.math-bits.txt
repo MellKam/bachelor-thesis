@@ -1,0 +1,35 @@
+# 08-integer-ops/tinygo/math-bits spec=08
+$ tinygo build -o out.wasm -target=wasm-unknown -no-debug main.goPASS 08 probes/08-integer-ops/tinygo/math-bits/out.wasm (1274 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ instantiates
+  ✓ host called _initialize before any other export (reactor convention)
+  ✓ add: export present
+  ✓ add: instruction emitted (i32.add)
+  ✓ add: behaves
+  ✓ sub: export present
+  ✓ sub: instruction emitted (i32.sub)
+  ✓ sub: behaves
+  ✓ mul: export present
+  ✓ mul: instruction emitted (i32.mul)
+  ✓ mul: behaves
+  ✓ div: export present
+  ✓ div: instruction emitted (i32.div_[su])
+  ✓ div: behaves
+  ✓ rem: export present
+  ✓ rem: instruction emitted (i32.rem_[su])
+  ✓ rem: behaves
+  ✓ clz: export present
+  ✓ clz: instruction emitted (i32.clz)
+  ✓ clz: behaves
+  ✓ ctz: export present
+  ✓ ctz: instruction emitted (i32.ctz)
+  ✓ ctz: behaves
+  ✓ popcnt: export present
+  ✓ popcnt: instruction emitted (i32.popcnt)
+  ✓ popcnt: behaves
+  ✓ rotl: export present
+  ✓ rotl: instruction emitted (i32.rotl)
+  ✓ rotl: behaves
+  ✓ rotr: export present
+  ✓ rotr: instruction emitted (i32.rotr)
+  ✓ rotr: behaves

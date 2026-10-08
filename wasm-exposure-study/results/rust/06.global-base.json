@@ -1,0 +1,35 @@
+{
+  "feature": "06",
+  "file": "probes/06-data-segments/rust/global-base/out.wasm",
+  "bytes": 349,
+  "pass": true,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "active data segment puts \"WASM\" at address 1024",
+      "ok": true,
+      "detail": "bytes at 1024..1027 = [87,65,83,77]; segments: [[\"active\",1024,4]]"
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "peek(1024) == 0x57",
+      "ok": true,
+      "detail": "got 87, expected 87"
+    },
+    {
+      "name": "peek(1027) == 0x4d",
+      "ok": true,
+      "detail": "got 77, expected 77"
+    }
+  ],
+  "unsupported": []
+}

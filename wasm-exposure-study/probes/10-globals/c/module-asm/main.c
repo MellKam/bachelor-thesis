@@ -1,0 +1,18 @@
+__asm__(
+    ".globaltype base, i32, immutable\n"
+    ".import_module base, host\n"
+    ".import_name base, base\n"
+    ".globaltype counter, i32\n"
+    ".globl counter\n"
+    "counter:\n"
+    ".section .text.bump,\"\",@\n"
+    ".globl bump\n"
+    ".export_name bump, bump\n"
+    "bump:\n"
+    "  .functype bump () -> (i32)\n"
+    "  global.get base\n"
+    "  i32.const 1\n"
+    "  i32.add\n"
+    "  global.set counter\n"
+    "  global.get counter\n"
+    "  end_function\n");

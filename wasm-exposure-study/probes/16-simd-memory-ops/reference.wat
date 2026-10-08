@@ -1,0 +1,12 @@
+(module
+  (memory (export "mem") 1)
+  (func (export "v_copy") (param $p i32) (result i32)
+    (v128.store offset=16 (local.get $p) (v128.load (local.get $p)))
+    (i32.load8_u offset=16 (local.get $p)))
+  (func (export "v_select") (param $p i32) (result i32) (local $r v128)
+    (local.set $r (v128.bitselect (v128.load (local.get $p)) (v128.load offset=16 (local.get $p)) (v128.load offset=32 (local.get $p))))
+    (v128.store offset=48 (local.get $p) (local.get $r))
+    (i32x4.extract_lane 0 (local.get $r)))
+  (func (export "v_narrow") (param $p i32) (result i32)
+    (v128.store offset=32 (local.get $p) (i8x16.narrow_i16x8_s (v128.load (local.get $p)) (v128.load offset=16 (local.get $p))))
+    (i32.load8_u offset=39 (local.get $p))))

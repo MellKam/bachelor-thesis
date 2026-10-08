@@ -1,8 +1,0 @@
-# P10/default spec=P10
-$ asc main.ts -o out.wasm -O --noAssert --enable simd
-PASS P10 probes/P10/assemblyscript/default//out.wasm
-  ✓ i32.popcnt opcode present
-  ✓ i32x4.add opcode present
-  ✓ instantiates
-  ✓ popcount(255) == 8
-  ✓ simd_add(2,3) == 5

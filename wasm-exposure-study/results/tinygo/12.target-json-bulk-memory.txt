@@ -1,0 +1,11 @@
+# 12-bulk-memory/tinygo/target-json-bulk-memory spec=12
+$ tinygo build -o out.wasm -target=./target.json -no-debug main.goFAIL 13 probes/12-bulk-memory/tinygo/target-json-bulk-memory/out.wasm (2229 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ export bulk_test
+  ✗ memory.fill emitted
+  ✗ memory.copy emitted
+  · array.fill / array.copy used instead (the GC-array equivalents; informational)
+  ✓ instantiates
+  ✓ host called _initialize before any other export (reactor convention)
+  ✓ bulk_test(8) == 40
+  ✓ bulk_test(40) == 200

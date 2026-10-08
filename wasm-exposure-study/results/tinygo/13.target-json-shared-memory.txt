@@ -1,0 +1,12 @@
+# 13-passive-data-segments/tinygo/target-json-shared-memory spec=13
+$ tinygo build -o out.wasm -target=./target.json -no-debug -ldflags="-extldflags \"--shared-memory --import-memory --max-memory=16777216\"" main.go
+FAIL 13 probes/13-passive-data-segments/tinygo/target-json-shared-memory//out.wasm (1004 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ a passive data segment holding "WASM"
+  ✗ memory.init emitted in load
+  · data.drop emitted  — informational
+  ✓ instantiates
+  ✓ host called _initialize before any other export (reactor convention)
+  ✓ peek(2048) == 0 before load
+  ✓ peek(2048) == 0x57 after load
+  ✓ peek(2051) == 0x4d after load

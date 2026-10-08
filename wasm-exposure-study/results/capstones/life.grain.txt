@@ -1,3 +1,0 @@
-# life/grain
-$ grain compile --release --memory-base 32768 main.gr -o out.wasm
-{"bytes":4229,"extraImports":["wasi_snapshot_preview1.fd_write (func)"],"extraExports":["_start (func)"],"calledStart":true,"ok":true,"detail":"matches reference after 100 steps","alive":1608}

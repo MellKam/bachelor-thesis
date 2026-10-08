@@ -1,0 +1,51 @@
+{
+  "feature": "04:import",
+  "file": "probes/04-table-import-export/assemblyscript/import//out.wasm",
+  "bytes": 645,
+  "pass": false,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "exactly one table",
+      "ok": true,
+      "detail": "1 tables"
+    },
+    {
+      "name": "funcref table with limits min 2 max 8",
+      "ok": false,
+      "detail": "{\"module\":\"env\",\"name\":\"table\",\"kind\":\"table\",\"reftype\":\"funcref\",\"min\":3,\"max\":null,\"shared\":false,\"memory64\":false}"
+    },
+    {
+      "name": "call_indirect present",
+      "ok": true,
+      "detail": "informational",
+      "info": true
+    },
+    {
+      "name": "imported as host.tbl",
+      "ok": false,
+      "detail": "table imports: env.table"
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "slot 0 of the host table is filled by the module",
+      "ok": false,
+      "detail": "the module must place a function into the imported table"
+    },
+    {
+      "name": "call_slot(0,5) == 10",
+      "ok": true,
+      "detail": "got 10, expected 10"
+    }
+  ],
+  "unsupported": []
+}

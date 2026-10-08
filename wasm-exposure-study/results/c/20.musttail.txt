@@ -1,0 +1,11 @@
+# 20-tail-calls/c/musttail spec=20
+$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -Wl,--no-entry -mtail-call main.c -o out.wasmPASS 19 probes/20-tail-calls/c/musttail/out.wasm (454 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ return_call emitted
+  ✓ instantiates
+  ✓ count(1000000, 0) == 1000000 without overflowing the stack
+PASS 20 probes/20-tail-calls/c/musttail/out.wasm (454 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ return_call emitted
+  ✓ instantiates
+  ✓ count(1000000, 0) == 1000000 without overflowing the stack

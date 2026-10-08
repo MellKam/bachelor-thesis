@@ -1,0 +1,6 @@
+{
+  "inherits": [
+    "wasm-unknown"
+  ],
+  "features": "+tail-call,+mutable-globals,+nontrapping-fptoint,+sign-ext"
+}

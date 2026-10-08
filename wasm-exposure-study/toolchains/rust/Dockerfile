@@ -3,6 +3,10 @@
 # Pins looked up from official channels on 2026-10-02.
 FROM wasm-exposure-base
 
+# A host C toolchain: `-Zbuild-std` (needed for the tier-3 wasm64 target and for panic=unwind) compiles build scripts that must be
+# linked for the host. It plays no part in the Wasm output. Debian packages, taken at build time.
+RUN apt-get update && apt-get install -y --no-install-recommends gcc libc6-dev && rm -rf /var/lib/apt/lists/*
+
 # Rust stable channel manifest dated 2026-10-01
 ARG RUST_VERSION=1.99.0
 ARG RUST_COMMIT=b940084d7eb6a299eb4bfeb8e34901bc051e7ac4
@@ -26,7 +30,7 @@ RUN set -eux; \
     rustc -vV | grep -q "commit-hash: ${RUST_COMMIT}"
 
 # Pinned nightly, used ONLY for probe variants that need an unstable feature (e.g. `global_asm!` on wasm32,
-# `#![feature(asm_experimental_arch)]`). Results from it are always flagged as requiring nightly. Not the default toolchain.
+# `#![feature(asm_experimental_arch)]`, or `-Zbuild-std` for the tier-3 `wasm64-unknown-unknown` target, hence `rust-src`). Results from it are always flagged as requiring nightly. Not the default toolchain.
 # Manifest looked up 2026-10-02: https://static.rust-lang.org/dist/2026-10-02/channel-rust-nightly.toml
 ARG RUST_NIGHTLY=nightly-2026-10-02
 ARG RUST_NIGHTLY_COMMIT=c36f14571
@@ -34,7 +38,7 @@ ARG RUST_NIGHTLY_MANIFEST_SHA256=50abfdf8df57de84ff7b3188b6cad2a9681a4165518712c
 RUN set -eux; \
     curl -sSfo /tmp/nightly.toml "https://static.rust-lang.org/dist/2026-10-02/channel-rust-nightly.toml"; \
     echo "${RUST_NIGHTLY_MANIFEST_SHA256}  /tmp/nightly.toml" | sha256sum -c -; \
-    rustup toolchain install "${RUST_NIGHTLY}" --profile minimal -t wasm32-unknown-unknown; \
+    rustup toolchain install "${RUST_NIGHTLY}" --profile minimal -t wasm32-unknown-unknown -c rust-src; \
     rm /tmp/nightly.toml; \
     rustc +"${RUST_NIGHTLY}" -vV | grep -q "commit-hash: ${RUST_NIGHTLY_COMMIT}"; \
     rustc -vV | grep -q "release: ${RUST_VERSION}"

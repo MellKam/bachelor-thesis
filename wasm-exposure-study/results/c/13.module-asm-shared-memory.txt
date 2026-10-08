@@ -1,0 +1,12 @@
+# 13-passive-data-segments/c/module-asm-shared-memory spec=13
+$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -matomics -mbulk-memory -Wl,--no-entry,--shared-memory,--import-memory,--max-memory=16777216,--export=msg main.c -o out.wasm
+FAIL 13 probes/13-passive-data-segments/c/module-asm-shared-memory//out.wasm (582 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ a passive data segment holding "WASM"
+  ✓ memory.init emitted in load
+  ✓ data.drop emitted
+  ✓ instantiates
+  ✓ peek(2048) == 0 before load
+  ✗ load(2048) ok  — memory access out of bounds
+  ✗ peek(2048) == 0x57 after load  — got 0, expected 87
+  ✗ peek(2051) == 0x4d after load  — got 0, expected 77

@@ -1,9 +1,0 @@
-# P6/tuple spec=P6
-$ moon build --release --target wasm && cp _build/wasm/release/build/src/src.wasm out.wasm
-Warning: `moon.mod.json` at '/study/probes/P6/moonbit/tuple' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
-Finished. moon: ran 2 tasks, now up to date
-FAIL P6 probes/P6/moonbit/tuple//out.wasm
-  ✗ divmod has two results  — (i32, i32) -> (i32)
-  ✗ divmod (i32, i32) -> (i32, i32)  — (i32, i32) -> (i32)
-  ✓ instantiates
-  ✗ divmod(17,5) == [3,2]  — got 11608, expected [3,2]

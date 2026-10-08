@@ -1,8 +1,0 @@
-# P3/default spec=P3
-$ /home/melkam/wx/target/release/wx build . -o out.wasm
-Wrote 130 bytes to out.wasm
-PASS P3 probes/P3/wx/default//out.wasm
-  ✓ two or more memories
-  ✓ memory.copy with differing memory operands
-  ✓ instantiates
-  ✓ copy_test() == 10

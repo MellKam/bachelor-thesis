@@ -1,5 +1,0 @@
-fn identity(x: externref) -> externref { x }
-
-export {
-  identity
-}

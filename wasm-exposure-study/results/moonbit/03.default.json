@@ -1,0 +1,45 @@
+{
+  "feature": "03",
+  "file": "probes/03-table-indirect-call/moonbit/default//out.wasm",
+  "bytes": 2735,
+  "pass": true,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "funcref table",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "element segment",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "call_indirect present",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "call_slot(0,5) == 10",
+      "ok": true,
+      "detail": "got 10, expected 10"
+    },
+    {
+      "name": "call_slot(1,5) == 105",
+      "ok": true,
+      "detail": "got 105, expected 105"
+    }
+  ],
+  "unsupported": []
+}

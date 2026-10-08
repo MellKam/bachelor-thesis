@@ -1,0 +1,15 @@
+# 01-imports-exports/assemblyscript/default spec=01
+$ asc main.ts -o out.wasm -O --noAssertPASS 01 probes/01-imports-exports/assemblyscript/default/out.wasm (69 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ import host.log
+  ✓ import type (i32) -> ()
+  ✓ export run () -> ()
+  ✓ instantiates
+  ✓ log received 42
+PASS 01 probes/01-imports-exports/assemblyscript/default/out.wasm (69 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ import host.log
+  ✓ import type (i32) -> ()
+  ✓ export run () -> ()
+  ✓ instantiates
+  ✓ log received 42

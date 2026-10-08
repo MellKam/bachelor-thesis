@@ -1,0 +1,36 @@
+// The one list of features, in stabilisation order: core module structure first, the most recently standardised extensions last.
+// `since` is the spec version the feature belongs to (webassembly/proposals finished-proposals.md). Within a version the order
+// follows when the feature was first available in a major engine; that within-version order is approximate and has not been
+// checked against the CG meeting notes. `slug` names the probe directory: probes/<id>-<slug>/.
+export const FEATURES = [
+  { id: '01', slug: 'imports-exports', name: 'Imports and exports', since: '1.0' },
+  { id: '02', slug: 'memory', name: 'Memory configuration', since: '1.0' },
+  { id: '03', slug: 'table-indirect-call', name: 'Table and indirect call', since: '1.0' },
+  { id: '04', slug: 'table-import-export', name: 'Table import and export', since: '1.0' },
+  { id: '05', slug: 'start-function', name: 'Start function', since: '1.0' },
+  { id: '06', slug: 'data-segments', name: 'Data segments', since: '1.0' },
+  { id: '07', slug: 'custom-sections', name: 'Custom sections', since: '1.0' },
+  { id: '08', slug: 'integer-ops', name: 'Integer operations', since: '1.0' },
+  { id: '09', slug: 'float-builtins', name: 'Float builtins', since: '1.0' },
+  { id: '10', slug: 'globals', name: 'Globals', since: '1.0' },
+  { id: '11', slug: 'conversions-sign-extension', name: 'Non-trapping conversions, sign extension', since: '2.0' },
+  { id: '12', slug: 'bulk-memory', name: 'Bulk memory', since: '2.0' },
+  { id: '13', slug: 'passive-data-segments', name: 'Passive data segments', since: '2.0' },
+  { id: '14', slug: 'multi-value', name: 'Multi-value', since: '2.0' },
+  { id: '15', slug: 'simd', name: 'SIMD', since: '2.0' },
+  { id: '16', slug: 'simd-memory-ops', name: 'SIMD memory and bitwise operations', since: '2.0' },
+  { id: '17', slug: 'externref', name: '`externref`', since: '2.0' },
+  { id: '18', slug: 'multiple-tables', name: 'Multiple tables', since: '2.0' },
+  { id: '19', slug: 'table-operations', name: 'Table operations on references', since: '2.0' },
+  { id: '20', slug: 'tail-calls', name: 'Tail calls', since: '3.0' },
+  { id: '21', slug: 'extended-const', name: 'Extended constant expressions', since: '3.0' },
+  { id: '22', slug: 'typed-function-references', name: 'Typed function references', since: '3.0' },
+  { id: '23', slug: 'gc-typed-refs', name: 'GC structs and arrays', since: '3.0' },
+  { id: '24', slug: 'gc-casts-subtyping', name: 'GC casts, subtyping, i31, packed fields', since: '3.0' },
+  { id: '25', slug: 'multiple-memories', name: 'Multiple memories', since: '3.0' },
+  { id: '26', slug: 'relaxed-simd', name: 'Relaxed SIMD', since: '3.0' },
+  { id: '27', slug: 'exception-tags', name: 'Exception tags', since: '3.0' },
+  { id: '28', slug: 'exnref-exceptions', name: 'Exception handling with exnref', since: '3.0' },
+  { id: '29', slug: 'memory64', name: '64-bit memory', since: '3.0' },
+  { id: '30', slug: 'branch-hinting', name: 'Branch hinting', since: '3.0' },
+];

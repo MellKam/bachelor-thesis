@@ -1,0 +1,17 @@
+# 02-memory/rust/export spec=02:export
+$ rm -rf /tmp/rt && cargo build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p2e v0.1.0 (/study/probes/02-memory/rust/export)
+    Finished `release` profile [optimized] target(s) in 0.15sPASS 02:export probes/02-memory/rust/export/out.wasm (292 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exactly one memory
+  ✓ limits min 1 max 4
+  ✓ defined in module (not imported)
+  ✓ exported as "mem"
+  ✓ instantiates
+PASS 02:export probes/02-memory/rust/export/out.wasm (292 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exactly one memory
+  ✓ limits min 1 max 4
+  ✓ defined in module (not imported)
+  ✓ exported as "mem"
+  ✓ instantiates

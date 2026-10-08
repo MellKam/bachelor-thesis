@@ -1,0 +1,1 @@
+clang --target=wasm32-unknown-unknown -O2 -nostdlib -Wl,--no-entry -Wl,--initial-memory=65536 -Wl,--max-memory=262144 -Wl,-z,stack-size=8192 -Xlinker --import-memory=host,mem main.c -o out.wasm

@@ -1,0 +1,1 @@
+clang --target=wasm32-unknown-unknown -O2 -nostdlib -Wl,--no-entry -mmultivalue -Xclang -target-abi -Xclang experimental-mv main.c -o out.wasm

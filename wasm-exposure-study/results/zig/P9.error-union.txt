@@ -1,7 +1,0 @@
-# P9/error-union spec=P9
-$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm
-FAIL P9 probes/P9/zig/error-union//out.wasm
-  ✗ tag section with an i32-payload tag  — tags: []
-  ✗ exception-handling instructions
-  ✓ instantiates
-  ✓ roundtrip(5) == 5

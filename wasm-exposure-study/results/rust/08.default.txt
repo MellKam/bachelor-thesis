@@ -1,0 +1,69 @@
+# 08-integer-ops/rust/default spec=08
+$ rm -rf /tmp/rt && cargo build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p08_default v0.1.0 (/study/probes/08-integer-ops/rust/default)
+    Finished `release` profile [optimized] target(s) in 0.16sPASS 08 probes/08-integer-ops/rust/default/out.wasm (1512 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ instantiates
+  ✓ add: export present
+  ✓ add: instruction emitted (i32.add)
+  ✓ add: behaves
+  ✓ sub: export present
+  ✓ sub: instruction emitted (i32.sub)
+  ✓ sub: behaves
+  ✓ mul: export present
+  ✓ mul: instruction emitted (i32.mul)
+  ✓ mul: behaves
+  ✓ div: export present
+  ✓ div: instruction emitted (i32.div_[su])
+  ✓ div: behaves
+  ✓ rem: export present
+  ✓ rem: instruction emitted (i32.rem_[su])
+  ✓ rem: behaves
+  ✓ clz: export present
+  ✓ clz: instruction emitted (i32.clz)
+  ✓ clz: behaves
+  ✓ ctz: export present
+  ✓ ctz: instruction emitted (i32.ctz)
+  ✓ ctz: behaves
+  ✓ popcnt: export present
+  ✓ popcnt: instruction emitted (i32.popcnt)
+  ✓ popcnt: behaves
+  ✓ rotl: export present
+  ✓ rotl: instruction emitted (i32.rotl)
+  ✓ rotl: behaves
+  ✓ rotr: export present
+  ✓ rotr: instruction emitted (i32.rotr)
+  ✓ rotr: behaves
+PASS 08 probes/08-integer-ops/rust/default/out.wasm (1512 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ instantiates
+  ✓ add: export present
+  ✓ add: instruction emitted (i32.add)
+  ✓ add: behaves
+  ✓ sub: export present
+  ✓ sub: instruction emitted (i32.sub)
+  ✓ sub: behaves
+  ✓ mul: export present
+  ✓ mul: instruction emitted (i32.mul)
+  ✓ mul: behaves
+  ✓ div: export present
+  ✓ div: instruction emitted (i32.div_[su])
+  ✓ div: behaves
+  ✓ rem: export present
+  ✓ rem: instruction emitted (i32.rem_[su])
+  ✓ rem: behaves
+  ✓ clz: export present
+  ✓ clz: instruction emitted (i32.clz)
+  ✓ clz: behaves
+  ✓ ctz: export present
+  ✓ ctz: instruction emitted (i32.ctz)
+  ✓ ctz: behaves
+  ✓ popcnt: export present
+  ✓ popcnt: instruction emitted (i32.popcnt)
+  ✓ popcnt: behaves
+  ✓ rotl: export present
+  ✓ rotl: instruction emitted (i32.rotl)
+  ✓ rotl: behaves
+  ✓ rotr: export present
+  ✓ rotr: instruction emitted (i32.rotr)
+  ✓ rotr: behaves

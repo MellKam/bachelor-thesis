@@ -1,0 +1,16 @@
+# 27-exception-tags/kotlin/try-catch-new-eh spec=27
+$ sh ../../../kotlin-build.sh wasm-wasi -Xwasm-use-new-exception-proposalPASS 17 probes/27-exception-tags/kotlin/try-catch-new-eh/out.wasm (615398 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ tag section with at least one tag
+  ✓ tag payload types (informational; the reference uses i32)
+  ✓ exception-handling instructions
+  ✓ instantiates
+  ✓ host called _start before any other export (WASI command convention)
+  ✓ roundtrip(5) == 5PASS 17 probes/27-exception-tags/kotlin/try-catch-new-eh/out.wasm (615398 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ tag section with at least one tag
+  ✓ tag payload types (informational; the reference uses i32)
+  ✓ exception-handling instructions
+  ✓ instantiates
+  ✓ host called _start before any other export (WASI command convention)
+  ✓ roundtrip(5) == 5

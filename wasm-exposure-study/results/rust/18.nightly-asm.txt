@@ -1,0 +1,11 @@
+# 18-multiple-tables/rust/nightly-asm spec=18
+$ rm -rf /tmp/rt && cargo +nightly-2026-10-02 build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p12_nightly_asm v0.1.0 (/study/probes/18-multiple-tables/rust/nightly-asm)
+    Finished `release` profile [optimized] target(s) in 0.15sPASS 12 probes/18-multiple-tables/rust/nightly-asm/out.wasm (453 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ two or more tables
+  · element segments initialise the tables (informational: a table may also be filled by table.set at run time)  — 0
+  ✓ call_indirect uses two different tables
+  ✓ instantiates
+  ✓ call_a(5) == 6
+  ✓ call_b(5) == 105

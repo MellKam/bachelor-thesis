@@ -1,0 +1,32 @@
+# 09-float-builtins/zig/module-asm spec=09
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm
+PASS 09 probes/09-float-builtins/zig/module-asm//out.wasm (219 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ instantiates
+  ✓ sqrt: export present
+  ✓ sqrt: instruction emitted (f64.sqrt)
+  ✓ sqrt: behaves
+  ✓ min: export present
+  ✓ min: instruction emitted (f64.min)
+  ✓ min: behaves
+  ✓ max: export present
+  ✓ max: instruction emitted (f64.max)
+  ✓ max: behaves
+  ✓ ceil: export present
+  ✓ ceil: instruction emitted (f64.ceil)
+  ✓ ceil: behaves
+  ✓ floor: export present
+  ✓ floor: instruction emitted (f64.floor)
+  ✓ floor: behaves
+  ✓ trunc: export present
+  ✓ trunc: instruction emitted (f64.trunc)
+  ✓ trunc: behaves
+  ✓ nearest: export present
+  ✓ nearest: instruction emitted (f64.nearest)
+  ✓ nearest: behaves
+  ✓ copysign: export present
+  ✓ copysign: instruction emitted (f64.copysign)
+  ✓ copysign: behaves
+  ✓ abs: export present
+  ✓ abs: instruction emitted (f64.abs)
+  ✓ abs: behaves

@@ -1,8 +1,0 @@
-# P1/default spec=P1
-$ asc main.ts -o out.wasm -O --noAssert
-PASS P1 probes/P1/assemblyscript/default//out.wasm
-  ✓ import host.log
-  ✓ import type (i32) -> ()
-  ✓ export run () -> ()
-  ✓ instantiates
-  ✓ log received 42

@@ -1,0 +1,4 @@
+# 14-multi-value/tinygo/multiple-results spec=14
+$ tinygo build -o out.wasm -target=wasm-unknown -no-debug main.go
+main.go:4:35: //go:wasmexport divmod: too many return values
+BUILD FAILED

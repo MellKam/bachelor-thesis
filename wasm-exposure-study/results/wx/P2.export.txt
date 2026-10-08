@@ -1,9 +1,0 @@
-# P2/export spec=P2:export
-$ /home/melkam/wx/target/release/wx build . -o out.wasm
-Wrote 50 bytes to out.wasm
-PASS P2:export probes/P2/wx/export//out.wasm
-  ✓ exactly one memory
-  ✓ limits min 1 max 4
-  ✓ defined in module (not imported)
-  ✓ exported as "mem"
-  ✓ instantiates

@@ -1,0 +1,8 @@
+# 01-imports-exports/zig/default spec=01
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasmPASS 01 probes/01-imports-exports/zig/default/out.wasm (91 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ import host.log
+  ✓ import type (i32) -> ()
+  ✓ export run () -> ()
+  ✓ instantiates
+  ✓ log received 42

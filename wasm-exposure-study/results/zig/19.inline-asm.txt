@@ -1,0 +1,11 @@
+# 19-table-operations/zig/inline-asm spec=19
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm -mcpu=generic+reference_types
+FAIL 19 probes/19-table-operations/zig/inline-asm//out.wasm (86 bytes)
+  · module validates (all extensions enabled)  — error: func 0 failed to validate
+  ✓ table.grow emitted
+  ✗ table.set emitted
+  ✗ table.get emitted
+  ✓ table.size emitted
+  ✗ ref.is_null emitted
+  ✗ instantiates  — WebAssembly.instantiate(): Compiling function #0 failed: expected 1 elements on the stack for fallthru, found 2 @+85
+  ✗ export table_ops

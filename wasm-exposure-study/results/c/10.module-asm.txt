@@ -1,0 +1,17 @@
+# 10-globals/c/module-asm spec=10
+$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -Wl,--no-entry -Wl,--export=counter main.c -o out.wasmPASS 03 probes/10-globals/c/module-asm/out.wasm (429 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exported global "counter"
+  ✓ counter is mutable i32
+  ✓ imported global host.base (immutable i32)
+  ✓ instantiates
+  ✓ bump() == 42
+  ✓ counter global == 42
+PASS 10 probes/10-globals/c/module-asm/out.wasm (429 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exported global "counter"
+  ✓ counter is mutable i32
+  ✓ imported global host.base (immutable i32)
+  ✓ instantiates
+  ✓ bump() == 42
+  ✓ counter global == 42

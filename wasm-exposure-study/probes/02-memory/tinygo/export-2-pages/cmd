@@ -1,0 +1,1 @@
+tinygo build -o out.wasm -target=wasm-unknown -no-debug -ldflags="-extldflags \"--initial-memory=131072 --max-memory=262144 --export-memory=mem\"" -stack-size=8kB main.go

@@ -1,0 +1,1 @@
+clang --target=wasm32-unknown-unknown -O2 -nostdlib -mreference-types -Wl,--no-entry -Wl,--allow-undefined main.c -o out.wasm

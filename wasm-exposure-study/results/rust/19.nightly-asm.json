@@ -1,0 +1,50 @@
+{
+  "feature": "19",
+  "file": "probes/19-table-operations/rust/nightly-asm//out.wasm",
+  "bytes": 404,
+  "pass": true,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "table.grow emitted",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "table.set emitted",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "table.get emitted",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "table.size emitted",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ref.is_null emitted",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "table_ops(3) == 1104",
+      "ok": true,
+      "detail": "got 1104, expected 1104"
+    }
+  ],
+  "unsupported": []
+}

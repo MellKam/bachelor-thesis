@@ -1,0 +1,9 @@
+# 27-exception-tags/tinygo/panic-recover spec=27
+$ tinygo build -o out.wasm -target=wasm-unknown -no-debug main.goFAIL 17 probes/27-exception-tags/tinygo/panic-recover/out.wasm (734 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ tag section with at least one tag  — tags: []
+  ✓ tag payload types (informational; the reference uses i32)
+  ✗ exception-handling instructions
+  ✓ instantiates
+  ✓ host called _initialize before any other export (reactor convention)
+  ✗ roundtrip(5) == 5  — unreachable

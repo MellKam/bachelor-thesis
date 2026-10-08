@@ -1,0 +1,13 @@
+# 02-memory/assemblyscript/import spec=02:import
+$ asc main.ts -o out.wasm -O --noAssert --initialMemory 1 --maximumMemory 4 --importMemoryFAIL 02:import probes/02-memory/assemblyscript/import/out.wasm (65 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exactly one memory
+  ✓ limits min 1 max 4
+  ✗ imported as host.mem  — memory imports: env.memory
+  ✓ instantiates
+FAIL 02:import probes/02-memory/assemblyscript/import/out.wasm (65 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exactly one memory
+  ✓ limits min 1 max 4
+  ✗ imported as host.mem  — memory imports: env.memory
+  ✓ instantiates

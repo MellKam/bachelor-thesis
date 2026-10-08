@@ -1,0 +1,61 @@
+# 09-float-builtins/c/wasm-builtins spec=09
+$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -Wl,--no-entry main.c -o out.wasmPASS 09 probes/09-float-builtins/c/wasm-builtins/out.wasm (587 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ instantiates
+  ✓ sqrt: export present
+  ✓ sqrt: instruction emitted (f64.sqrt)
+  ✓ sqrt: behaves
+  ✓ min: export present
+  ✓ min: instruction emitted (f64.min)
+  ✓ min: behaves
+  ✓ max: export present
+  ✓ max: instruction emitted (f64.max)
+  ✓ max: behaves
+  ✓ ceil: export present
+  ✓ ceil: instruction emitted (f64.ceil)
+  ✓ ceil: behaves
+  ✓ floor: export present
+  ✓ floor: instruction emitted (f64.floor)
+  ✓ floor: behaves
+  ✓ trunc: export present
+  ✓ trunc: instruction emitted (f64.trunc)
+  ✓ trunc: behaves
+  ✓ nearest: export present
+  ✓ nearest: instruction emitted (f64.nearest)
+  ✓ nearest: behaves
+  ✓ copysign: export present
+  ✓ copysign: instruction emitted (f64.copysign)
+  ✓ copysign: behaves
+  ✓ abs: export present
+  ✓ abs: instruction emitted (f64.abs)
+  ✓ abs: behaves
+PASS 09 probes/09-float-builtins/c/wasm-builtins/out.wasm (587 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ instantiates
+  ✓ sqrt: export present
+  ✓ sqrt: instruction emitted (f64.sqrt)
+  ✓ sqrt: behaves
+  ✓ min: export present
+  ✓ min: instruction emitted (f64.min)
+  ✓ min: behaves
+  ✓ max: export present
+  ✓ max: instruction emitted (f64.max)
+  ✓ max: behaves
+  ✓ ceil: export present
+  ✓ ceil: instruction emitted (f64.ceil)
+  ✓ ceil: behaves
+  ✓ floor: export present
+  ✓ floor: instruction emitted (f64.floor)
+  ✓ floor: behaves
+  ✓ trunc: export present
+  ✓ trunc: instruction emitted (f64.trunc)
+  ✓ trunc: behaves
+  ✓ nearest: export present
+  ✓ nearest: instruction emitted (f64.nearest)
+  ✓ nearest: behaves
+  ✓ copysign: export present
+  ✓ copysign: instruction emitted (f64.copysign)
+  ✓ copysign: behaves
+  ✓ abs: export present
+  ✓ abs: instruction emitted (f64.abs)
+  ✓ abs: behaves

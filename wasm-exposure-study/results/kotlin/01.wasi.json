@@ -1,0 +1,46 @@
+{
+  "feature": "01",
+  "file": "probes/01-imports-exports/kotlin/wasi/out.wasm",
+  "bytes": 614665,
+  "pass": true,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "import host.log",
+      "ok": true,
+      "detail": "imports: wasi_snapshot_preview1.random_get, host.log"
+    },
+    {
+      "name": "import type (i32) -> ()",
+      "ok": true,
+      "detail": "(i32) -> ()"
+    },
+    {
+      "name": "export run () -> ()",
+      "ok": true,
+      "detail": "() -> ()"
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "host called _start before any other export (WASI command convention)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "log received 42",
+      "ok": true,
+      "detail": "received [42]"
+    }
+  ],
+  "unsupported": []
+}

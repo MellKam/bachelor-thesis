@@ -1,7 +1,0 @@
-# P6/default spec=P6
-$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm
-FAIL P6 probes/P6/zig/default//out.wasm
-  ✗ divmod has two results  — (i32, i32, i32) -> ()
-  ✗ divmod (i32, i32) -> (i32, i32)  — (i32, i32, i32) -> ()
-  ✓ instantiates
-  ✗ divmod(17,5) == [3,2]  — divide by zero

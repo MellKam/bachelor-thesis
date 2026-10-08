@@ -1,0 +1,50 @@
+{
+  "feature": "15",
+  "file": "probes/15-simd/moonbit-gc/v128-library//out.wasm",
+  "bytes": 930,
+  "pass": true,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "simd_add: i32x4.splat emitted",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "simd_add: i32x4.add emitted",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "simd_add: i32x4.extract_lane emitted",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "simd_shuffle: i8x16.shuffle emitted",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "simd_add(2,3) == 5",
+      "ok": true,
+      "detail": "got 5, expected 5"
+    },
+    {
+      "name": "simd_shuffle(1,2) == 2",
+      "ok": true,
+      "detail": "got 2, expected 2"
+    }
+  ],
+  "unsupported": []
+}

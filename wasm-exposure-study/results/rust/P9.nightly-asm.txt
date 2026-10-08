@@ -1,9 +1,0 @@
-# P9/nightly-asm toolchain=nightly-2026-10-02 spec=P9
-$ cargo +nightly-2026-10-02 build --release --target wasm32-unknown-unknown
-   Compiling p9_nightly_asm v0.1.0 (/study/probes/P9/rust/nightly-asm)
-    Finished `release` profile [optimized] target(s) in 0.14s
-PASS P9 probes/P9/rust/nightly-asm//out/nightly-asm.wasm
-  ✓ tag section with an i32-payload tag
-  ✓ exception-handling instructions
-  ✓ instantiates
-  ✓ roundtrip(5) == 5

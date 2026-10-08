@@ -1,0 +1,13 @@
+# 04-table-import-export/rust/import spec=04:import
+$ rm -rf /tmp/rt && cargo build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p04_import v0.1.0 (/study/probes/04-table-import-export/rust/import)
+    Finished `release` profile [optimized] target(s) in 0.19s
+FAIL 04:import probes/04-table-import-export/rust/import//out.wasm (535 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exactly one table
+  ✗ funcref table with limits min 2 max 8  — {"module":"env","name":"__indirect_function_table","kind":"table","reftype":"funcref","min":3,"max":null,"shared":false,"memory64":false}
+  ✓ call_indirect present
+  ✗ imported as host.tbl  — table imports: env.__indirect_function_table
+  ✓ instantiates
+  ✗ slot 0 of the host table is filled by the module  — the module must place a function into the imported table
+  ✓ call_slot(0,5) == 10

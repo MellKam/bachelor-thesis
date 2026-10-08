@@ -1,6 +1,0 @@
-# P8/externref spec=P8
-$ asc main.ts -o out.wasm -O --noAssert --enable reference-types
-PASS P8 probes/P8/assemblyscript/externref//out.wasm
-  ✓ identity (externref) -> (externref)
-  ✓ instantiates
-  ✓ returns the identical object

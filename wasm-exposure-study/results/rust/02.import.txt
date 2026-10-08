@@ -1,0 +1,15 @@
+# 02-memory/rust/import spec=02:import
+$ rm -rf /tmp/rt && cargo build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p2m v0.1.0 (/study/probes/02-memory/rust/import)
+    Finished `release` profile [optimized] target(s) in 0.17sPASS 02:import probes/02-memory/rust/import/out.wasm (296 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exactly one memory
+  ✓ limits min 1 max 4
+  ✓ imported as host.mem
+  ✓ instantiates
+PASS 02:import probes/02-memory/rust/import/out.wasm (296 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exactly one memory
+  ✓ limits min 1 max 4
+  ✓ imported as host.mem
+  ✓ instantiates

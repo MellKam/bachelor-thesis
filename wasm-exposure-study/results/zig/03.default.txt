@@ -1,0 +1,10 @@
+# 03-table-indirect-call/zig/default spec=03
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm
+PASS 03 probes/03-table-indirect-call/zig/default//out.wasm (155 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ funcref table
+  ✓ element segment
+  ✓ call_indirect present
+  ✓ instantiates
+  ✓ call_slot(0,5) == 10
+  ✓ call_slot(1,5) == 105

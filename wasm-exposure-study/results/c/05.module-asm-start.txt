@@ -1,0 +1,11 @@
+# 05-start-function/c/module-asm-start spec=05
+$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -Wl,--no-entry -Wl,--entry=init main.c -o out.wasmFAIL 05 probes/05-start-function/c/module-asm-start/out.wasm (401 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ start section references a function  — start = null (if absent, record a documented equivalent as partial)
+  ✓ instantiates
+  ✗ get() == 7 on first call  — got 0, expected 7
+FAIL 05 probes/05-start-function/c/module-asm-start/out.wasm (401 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ start section references a function  — start = null (if absent, record a documented equivalent as partial)
+  ✓ instantiates
+  ✗ get() == 7 on first call  — got 0, expected 7

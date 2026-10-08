@@ -1,0 +1,10 @@
+# 28-exnref-exceptions/assemblyscript/try-catch spec=28
+$ asc main.ts -o out.wasm -O --noAssert
+ERROR AS100: Not implemented: Exceptions
+   :
+ 2 │ try {
+   │ ~~~~~
+   └─ in main.ts(2,3)
+
+FAILURE 1 compile error(s)
+BUILD FAILED

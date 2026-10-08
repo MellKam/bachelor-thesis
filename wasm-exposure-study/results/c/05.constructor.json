@@ -1,0 +1,30 @@
+{
+  "feature": "05",
+  "file": "probes/05-start-function/c/constructor/out.wasm",
+  "bytes": 394,
+  "pass": false,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "start section references a function",
+      "ok": false,
+      "detail": "start = null (if absent, record a documented equivalent as partial)"
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "get() == 7 on first call",
+      "ok": true,
+      "detail": "got 7, expected 7"
+    }
+  ],
+  "unsupported": []
+}

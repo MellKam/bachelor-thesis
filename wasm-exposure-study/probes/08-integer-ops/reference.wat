@@ -1,0 +1,11 @@
+(module
+  (func (export "i_add") (param i32 i32) (result i32) (i32.add (local.get 0) (local.get 1)))
+  (func (export "i_sub") (param i32 i32) (result i32) (i32.sub (local.get 0) (local.get 1)))
+  (func (export "i_mul") (param i32 i32) (result i32) (i32.mul (local.get 0) (local.get 1)))
+  (func (export "i_div") (param i32 i32) (result i32) (i32.div_s (local.get 0) (local.get 1)))
+  (func (export "i_rem") (param i32 i32) (result i32) (i32.rem_s (local.get 0) (local.get 1)))
+  (func (export "i_clz") (param i32) (result i32) (i32.clz (local.get 0)))
+  (func (export "i_ctz") (param i32) (result i32) (i32.ctz (local.get 0)))
+  (func (export "i_popcnt") (param i32) (result i32) (i32.popcnt (local.get 0)))
+  (func (export "i_rotl") (param i32 i32) (result i32) (i32.rotl (local.get 0) (local.get 1)))
+  (func (export "i_rotr") (param i32 i32) (result i32) (i32.rotr (local.get 0) (local.get 1))))

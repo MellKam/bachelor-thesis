@@ -1,0 +1,6 @@
+# 20-tail-calls/zig/always-tail spec=20
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm -mcpu=generic+tail_callPASS 19 probes/20-tail-calls/zig/always-tail/out.wasm (140 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ return_call emitted
+  ✓ instantiates
+  ✓ count(1000000, 0) == 1000000 without overflowing the stack

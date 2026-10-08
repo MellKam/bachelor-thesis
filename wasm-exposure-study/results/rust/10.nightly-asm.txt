@@ -1,0 +1,19 @@
+# 10-globals/rust/nightly-asm spec=10
+$ rm -rf /tmp/rt && cargo +nightly-2026-10-02 build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p4_nightly_asm v0.1.0 (/study/probes/10-globals/rust/nightly-asm)
+    Finished `release` profile [optimized] target(s) in 0.17sPASS 03 probes/10-globals/rust/nightly-asm/out.wasm (383 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exported global "counter"
+  ✓ counter is mutable i32
+  ✓ imported global host.base (immutable i32)
+  ✓ instantiates
+  ✓ bump() == 42
+  ✓ counter global == 42
+PASS 10 probes/10-globals/rust/nightly-asm/out.wasm (383 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exported global "counter"
+  ✓ counter is mutable i32
+  ✓ imported global host.base (immutable i32)
+  ✓ instantiates
+  ✓ bump() == 42
+  ✓ counter global == 42

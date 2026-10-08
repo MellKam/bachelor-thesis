@@ -1,0 +1,18 @@
+{
+  "is-main": false,
+  "link": {
+    "wasm-gc": {
+      "exports": [
+        "f_sqrt",
+        "f_min",
+        "f_max",
+        "f_ceil",
+        "f_floor",
+        "f_trunc",
+        "f_nearest",
+        "f_copysign",
+        "f_abs"
+      ]
+    }
+  }
+}

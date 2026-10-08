@@ -1,0 +1,14 @@
+# 11-conversions-sign-extension/rust/default spec=11
+$ rm -rf /tmp/rt && cargo build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p14_default v0.1.0 (/study/probes/11-conversions-sign-extension/rust/default)
+    Finished `release` profile [optimized] target(s) in 0.15sPASS 14 probes/11-conversions-sign-extension/rust/default/out.wasm (360 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ instantiates
+  ✓ i32.trunc_sat_f64 emitted
+  ✓ i32.extend8_s emitted
+  ✓ i32.extend16_s emitted
+  ✓ sat_trunc(1e20) == i32 max
+  ✓ sat_trunc(-1e20) == i32 min
+  ✓ sat_trunc(NaN) == 0
+  ✓ ext8(0x80) == -128
+  ✓ ext16(0x8000) == -32768

@@ -1,0 +1,25 @@
+# 13-passive-data-segments/rust/nightly-shared-memory spec=13
+$ rm -rf /tmp/rt && cargo +nightly-2026-10-02 build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+    Updating crates.io index
+ Downloading crates ...
+  Downloaded cfg-if v1.0.4
+  Downloaded foldhash v0.2.0
+  Downloaded rustc-literal-escaper v0.0.8
+  Downloaded getopts v0.2.24
+  Downloaded dlmalloc v0.2.14
+  Downloaded rustc-demangle v0.1.28
+  Downloaded hashbrown v0.17.1
+  Downloaded libc v0.2.189
+   Compiling compiler_builtins v0.1.160 (/opt/rust/rustup/toolchains/nightly-2026-10-02-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/compiler-builtins/compiler-builtins)
+   Compiling core v0.0.0 (/opt/rust/rustup/toolchains/nightly-2026-10-02-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core)
+   Compiling p13_nightly_shared_memory v0.1.0 (/study/probes/13-passive-data-segments/rust/nightly-shared-memory)
+    Finished `release` profile [optimized] target(s) in 16.49s
+FAIL 13 probes/13-passive-data-segments/rust/nightly-shared-memory//out.wasm (589 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ a passive data segment holding "WASM"
+  ✗ memory.init emitted in load
+  · data.drop emitted  — informational
+  ✓ instantiates
+  ✓ peek(2048) == 0 before load
+  ✓ peek(2048) == 0x57 after load
+  ✓ peek(2051) == 0x4d after load

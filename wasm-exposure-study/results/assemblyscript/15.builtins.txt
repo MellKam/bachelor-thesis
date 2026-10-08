@@ -1,0 +1,19 @@
+# 15-simd/assemblyscript/builtins spec=15
+$ asc main.ts -o out.wasm -O --noAssert --enable simdPASS 15 probes/15-simd/assemblyscript/builtins/out.wasm (117 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ instantiates
+  ✓ simd_add: i32x4.splat emitted
+  ✓ simd_add: i32x4.add emitted
+  ✓ simd_add: i32x4.extract_lane emitted
+  ✓ simd_shuffle: i8x16.shuffle emitted
+  ✓ simd_add(2,3) == 5
+  ✓ simd_shuffle(1,2) == 2
+PASS 15 probes/15-simd/assemblyscript/builtins/out.wasm (117 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ instantiates
+  ✓ simd_add: i32x4.splat emitted
+  ✓ simd_add: i32x4.add emitted
+  ✓ simd_add: i32x4.extract_lane emitted
+  ✓ simd_shuffle: i8x16.shuffle emitted
+  ✓ simd_add(2,3) == 5
+  ✓ simd_shuffle(1,2) == 2

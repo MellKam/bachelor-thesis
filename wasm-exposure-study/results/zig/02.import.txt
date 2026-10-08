@@ -1,0 +1,7 @@
+# 02-memory/zig/import spec=02:import
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm --initial-memory=65536 --max-memory=262144 --stack 8192 --import-memoryFAIL 02:import probes/02-memory/zig/import/out.wasm (73 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exactly one memory
+  ✓ limits min 1 max 4
+  ✗ imported as host.mem  — memory imports: env.memory
+  ✓ instantiates

@@ -1,0 +1,20 @@
+# 12-bulk-memory/kotlin/bytearray spec=12
+$ sh ../../../kotlin-build.sh wasm-wasiFAIL 13 probes/12-bulk-memory/kotlin/bytearray/out.wasm (615207 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ export bulk_test
+  ✗ memory.fill emitted
+  ✗ memory.copy emitted
+  ✓ array.fill / array.copy used instead (the GC-array equivalents; informational)
+  ✓ instantiates
+  ✓ host called _start before any other export (WASI command convention)
+  ✓ bulk_test(8) == 40
+  ✓ bulk_test(40) == 200FAIL 13 probes/12-bulk-memory/kotlin/bytearray/out.wasm (615207 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ export bulk_test
+  ✗ memory.fill emitted
+  ✗ memory.copy emitted
+  ✓ array.fill / array.copy used instead (the GC-array equivalents; informational)
+  ✓ instantiates
+  ✓ host called _start before any other export (WASI command convention)
+  ✓ bulk_test(8) == 40
+  ✓ bulk_test(40) == 200

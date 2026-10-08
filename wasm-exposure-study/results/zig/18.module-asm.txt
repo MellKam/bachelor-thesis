@@ -1,0 +1,7 @@
+# 18-multiple-tables/zig/module-asm spec=18
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm
+error: <inline asm>:29:3: invalid instruction
+  ref.func add1
+  ^
+
+BUILD FAILED

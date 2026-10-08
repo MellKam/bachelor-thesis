@@ -1,0 +1,10 @@
+# 18-multiple-tables/c/funcref-tables spec=18
+$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -Wl,--no-entry -mreference-types main.c -o out.wasm
+FAIL 18 probes/18-multiple-tables/c/funcref-tables//out.wasm (578 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ two or more tables
+  · element segments initialise the tables (informational: a table may also be filled by table.set at run time)  — 1
+  ✗ call_indirect uses two different tables  — table operands: ["0"]
+  ✓ instantiates
+  ✓ call_a(5) == 6
+  ✓ call_b(5) == 105

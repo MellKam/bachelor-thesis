@@ -1,0 +1,13 @@
+# 14-multi-value/c/experimental-abi spec=14
+$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -Wl,--no-entry -mmultivalue -Xclang -target-abi -Xclang experimental-mv main.c -o out.wasmPASS 10 probes/14-multi-value/c/experimental-abi/out.wasm (387 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ divmod has two results
+  ✓ divmod (i32, i32) -> (i32, i32)
+  ✓ instantiates
+  ✓ divmod(17,5) == [3,2]
+PASS 14 probes/14-multi-value/c/experimental-abi/out.wasm (387 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ divmod has two results
+  ✓ divmod (i32, i32) -> (i32, i32)
+  ✓ instantiates
+  ✓ divmod(17,5) == [3,2]

@@ -1,0 +1,6 @@
+# 20-tail-calls/zig/mcpu-tail-call spec=20
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm -mcpu=generic+tail_callFAIL 19 probes/20-tail-calls/zig/mcpu-tail-call/out.wasm (144 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ return_call emitted
+  ✓ instantiates
+  ✗ count(1000000, 0) == 1000000 without overflowing the stack  — Maximum call stack size exceeded

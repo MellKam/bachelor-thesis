@@ -1,0 +1,17 @@
+{
+  "is-main": false,
+  "link": {
+    "wasm": {
+      "exports": [
+        "v_copy",
+        "v_select",
+        "v_narrow"
+      ],
+      "export-memory-name": "memory",
+      "memory-limits": {
+        "min": 1,
+        "max": 16
+      }
+    }
+  }
+}

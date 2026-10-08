@@ -1,0 +1,35 @@
+{
+  "feature": "02:import",
+  "file": "probes/02-memory/moonbit-gc/import//out.wasm",
+  "bytes": 171,
+  "pass": true,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "exactly one memory",
+      "ok": true,
+      "detail": "1 memories"
+    },
+    {
+      "name": "limits min 1 max 4",
+      "ok": true,
+      "detail": "{\"module\":\"host\",\"name\":\"mem\",\"kind\":\"memory\",\"min\":1,\"max\":4,\"shared\":false,\"memory64\":false}"
+    },
+    {
+      "name": "imported as host.mem",
+      "ok": true,
+      "detail": "memory imports: host.mem"
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "unsupported": []
+}

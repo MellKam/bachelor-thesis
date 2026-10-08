@@ -1,0 +1,47 @@
+{
+  "feature": "27",
+  "file": "probes/27-exception-tags/c/cxx-wasip1-eh-newabi/out.wasm",
+  "bytes": 322482,
+  "pass": true,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "tag section with at least one tag",
+      "ok": true,
+      "detail": "tags: [\"(i32) -> ()\"]"
+    },
+    {
+      "name": "tag payload types (informational; the reference uses i32)",
+      "ok": true,
+      "detail": "[[\"i32\"]]",
+      "info": true
+    },
+    {
+      "name": "exception-handling instructions",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "_start ran",
+      "ok": false,
+      "detail": "unreachable",
+      "info": true
+    },
+    {
+      "name": "roundtrip(5) == 5",
+      "ok": true,
+      "detail": "got 5, expected 5"
+    }
+  ],
+  "unsupported": []
+}

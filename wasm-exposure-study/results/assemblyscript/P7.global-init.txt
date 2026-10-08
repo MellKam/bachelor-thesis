@@ -1,6 +1,0 @@
-# P7/global-init spec=P7
-$ asc main.ts -o out.wasm -O --noAssert
-PASS P7 probes/P7/assemblyscript/global-init//out.wasm
-  ✓ start section references a function
-  ✓ instantiates
-  ✓ get() == 7 on first call

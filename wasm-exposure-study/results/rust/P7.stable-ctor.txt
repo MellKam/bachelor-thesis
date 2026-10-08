@@ -1,8 +1,0 @@
-# P7/stable-ctor toolchain=stable spec=P7
-$ cargo  build --release --target wasm32-unknown-unknown
-   Compiling p7_stable_ctor v0.1.0 (/study/probes/P7/rust/stable-ctor)
-    Finished `release` profile [optimized] target(s) in 0.16s
-FAIL P7 probes/P7/rust/stable-ctor//out/stable-ctor.wasm
-  ✗ start section references a function  — start = null (if absent, record a documented equivalent as partial)
-  ✓ instantiates
-  ✓ get() == 7 on first call

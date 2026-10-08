@@ -1,0 +1,4 @@
+# 02-memory/tinygo/import spec=02:import
+$ tinygo build -o out.wasm -target=wasm-unknown -no-debug -ldflags="-extldflags \"--initial-memory=65536 --max-memory=262144 --import-memory=host,mem\"" -stack-size=8kB main.go
+wasm-ld: error: initial memory too small, 65537 bytes needed
+BUILD FAILED

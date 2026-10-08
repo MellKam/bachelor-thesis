@@ -1,0 +1,13 @@
+# 25-multiple-memories/c/builtin-index1 spec=25
+$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -Wl,--no-entry -mmultimemory main.c -o out.wasmFAIL 16 probes/25-multiple-memories/c/builtin-index1/out.wasm (388 bytes)
+  · module validates (all extensions enabled)  — error: func 0 failed to validate
+  ✗ two or more memories  — 1
+  ✗ memory.copy with differing memory operands  — copies: []
+  ✗ instantiates  — WebAssembly.instantiate(): Compiling function #0:"copy_test" failed: memory index 1 exceeds number of declared memories (1) @+61
+  ✗ export copy_test
+FAIL 25 probes/25-multiple-memories/c/builtin-index1/out.wasm (388 bytes)
+  · module validates (all extensions enabled)  — error: func 0 failed to validate
+  ✗ two or more memories  — 1
+  ✗ memory.copy with differing memory operands  — copies: []
+  ✗ instantiates  — WebAssembly.instantiate(): Compiling function #0:"copy_test" failed: memory index 1 exceeds number of declared memories (1) @+61
+  ✗ export copy_test

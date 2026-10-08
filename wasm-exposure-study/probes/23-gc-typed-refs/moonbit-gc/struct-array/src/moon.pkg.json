@@ -1,0 +1,10 @@
+{
+  "is-main": false,
+  "link": {
+    "wasm-gc": {
+      "exports": [
+        "gc_test"
+      ]
+    }
+  }
+}

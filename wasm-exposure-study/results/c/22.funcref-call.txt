@@ -1,0 +1,10 @@
+# 22-typed-function-references/c/funcref-call spec=22
+$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -mreference-types -Wl,--no-entry main.c -o out.wasm
+FAIL 22 probes/22-typed-function-references/c/funcref-call//out.wasm (445 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ ref.func emitted (anywhere in the module: the reference may be built in an initialiser)
+  ✗ call_ref emitted in apply
+  · reference type is non-nullable (informational)
+  ✓ call_indirect or a table also present (informational)
+  ✓ instantiates
+  ✓ apply(5) == 10

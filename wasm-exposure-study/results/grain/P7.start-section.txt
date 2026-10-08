@@ -1,6 +1,0 @@
-# P7/start-section spec=P7
-$ grain compile --release main.gr -o out.wasm --use-start-section
-PASS P7 probes/P7/grain/start-section//out.wasm
-  ✓ start section references a function
-  ✓ instantiates
-  ✓ get() == 7 on first call

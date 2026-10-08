@@ -1,0 +1,17 @@
+# 27-exception-tags/c/cxx-wasip1-eh-newabi spec=27
+$ clang++ --target=wasm32-wasip1 -O2 -fwasm-exceptions -mllvm -wasm-use-legacy-eh=false -mexception-handling -Wl,--no-entry main.cpp -lunwind -o out.wasmPASS 17 probes/27-exception-tags/c/cxx-wasip1-eh-newabi/out.wasm (322482 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ tag section with at least one tag
+  ✓ tag payload types (informational; the reference uses i32)
+  ✓ exception-handling instructions
+  ✓ instantiates
+  · _start ran  — unreachable
+  ✓ roundtrip(5) == 5
+PASS 27 probes/27-exception-tags/c/cxx-wasip1-eh-newabi/out.wasm (322482 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ tag section with at least one tag
+  ✓ tag payload types (informational; the reference uses i32)
+  ✓ exception-handling instructions
+  ✓ instantiates
+  · _start ran  — unreachable
+  ✓ roundtrip(5) == 5

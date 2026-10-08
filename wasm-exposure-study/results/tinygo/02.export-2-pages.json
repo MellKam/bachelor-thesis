@@ -1,0 +1,46 @@
+{
+  "feature": "02:export",
+  "file": "probes/02-memory/tinygo/export-2-pages/out.wasm",
+  "bytes": 745,
+  "pass": false,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "exactly one memory",
+      "ok": true,
+      "detail": "1 memories"
+    },
+    {
+      "name": "limits min 1 max 4",
+      "ok": false,
+      "detail": "{\"min\":2,\"max\":4,\"shared\":false,\"memory64\":false}"
+    },
+    {
+      "name": "defined in module (not imported)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "exported as \"mem\"",
+      "ok": true,
+      "detail": "memory exports: mem"
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "host called _initialize before any other export (reactor convention)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    }
+  ],
+  "unsupported": []
+}

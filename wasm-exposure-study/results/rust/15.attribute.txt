@@ -1,0 +1,13 @@
+# 15-simd/rust/attribute spec=15
+$ rm -rf /tmp/rt && cargo build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p15_attribute v0.1.0 (/study/probes/15-simd/rust/attribute)
+    Finished `release` profile [optimized] target(s) in 0.22s
+FAIL 15 probes/15-simd/rust/attribute//out.wasm (359 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ instantiates
+  ✗ simd_add: i32x4.splat emitted
+  ✗ simd_add: i32x4.add emitted
+  ✗ simd_add: i32x4.extract_lane emitted
+  ✗ simd_shuffle: i8x16.shuffle emitted
+  ✓ simd_add(2,3) == 5
+  ✓ simd_shuffle(1,2) == 2

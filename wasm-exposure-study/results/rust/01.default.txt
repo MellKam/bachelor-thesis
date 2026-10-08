@@ -1,0 +1,17 @@
+# 01-imports-exports/rust/default spec=01
+$ rm -rf /tmp/rt && cargo build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p1 v0.1.0 (/study/probes/01-imports-exports/rust/default)
+    Finished `release` profile [optimized] target(s) in 0.18sPASS 01 probes/01-imports-exports/rust/default/out.wasm (339 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ import host.log
+  ✓ import type (i32) -> ()
+  ✓ export run () -> ()
+  ✓ instantiates
+  ✓ log received 42
+PASS 01 probes/01-imports-exports/rust/default/out.wasm (339 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ import host.log
+  ✓ import type (i32) -> ()
+  ✓ export run () -> ()
+  ✓ instantiates
+  ✓ log received 42

@@ -1,0 +1,13 @@
+# 19-table-operations/rust/nightly-asm spec=19
+$ rm -rf /tmp/rt && cargo +nightly-2026-10-02 build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p19_nightly_asm v0.1.0 (/study/probes/19-table-operations/rust/nightly-asm)
+    Finished `release` profile [optimized] target(s) in 0.25s
+PASS 19 probes/19-table-operations/rust/nightly-asm//out.wasm (404 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ table.grow emitted
+  ✓ table.set emitted
+  ✓ table.get emitted
+  ✓ table.size emitted
+  ✓ ref.is_null emitted
+  ✓ instantiates
+  ✓ table_ops(3) == 1104
