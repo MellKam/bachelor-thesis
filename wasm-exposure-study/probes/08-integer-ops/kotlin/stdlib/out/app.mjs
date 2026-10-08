@@ -1,0 +1,38 @@
+
+import { WASI } from 'wasi';
+import { argv, env } from 'node:process';
+
+const wasi = new WASI({ version: 'preview1', args: argv, env, });
+
+const fs = await import('node:fs');
+const url = await import('node:url');
+const wasmBuffer = fs.readFileSync(url.fileURLToPath(import.meta.resolve('./app.wasm')));
+const wasmModule = new WebAssembly.Module(wasmBuffer);
+const wasmInstance = new WebAssembly.Instance(wasmModule, wasi.getImportObject());
+
+wasi.start(wasmInstance);
+
+const exports = wasmInstance.exports
+
+export {
+    exports as __ALL_EXPORTS,
+
+}
+
+const wasmMemory = exports.memory;
+export { wasmMemory as memory }
+
+export const {
+    i_add,
+    i_sub,
+    i_mul,
+    i_div,
+    i_rem,
+    i_clz,
+    i_ctz,
+    i_popcnt,
+    i_rotl,
+    i_rotr,
+    _start
+} = exports
+
