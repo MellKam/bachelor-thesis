@@ -29,7 +29,11 @@ cell score     = reach  x  (the factor of each obstacle of the cell, multiplied)
 language score = sum over features of (importance weight x cell score)  /  sum of the importance weights
 ```
 
-- **Reach:** full 1, partial 0.5, Absent 0.
+Absent (not found) cells are left out of that sum and that denominator entirely, the same way a `pending` cell is — "no way was
+found" is not the same claim as "no way exists", and scoring it as a demonstrated 0 would credit an unproven negative. Absent
+(confirmed) cells stay in the denominator and score 0, since a reason or a failed `rests_on` probe is there to back the 0.
+
+- **Reach:** full 1, partial 0.5, Absent (confirmed) 0; Absent (not found) is excluded rather than scored.
 - **Obstacle factors** (one per kind, applied once, never per word): `config` and `opaque` (from `expressed_as`) and the five `needs` kinds.
   They are listed in `weights.json` from least to most damaging, each with the reason it ranks there. The **order** is the reasoned part:
   it follows what the obstacle takes away from the developer (a build setting < one experimental call site, or a mechanism that is only an
@@ -76,6 +80,11 @@ These are choices, not findings.
   becomes a claim of the thesis it needs its own coded dimension.
 - **Absent without an attempt.** Some Absent cells rest on an `ABSENT.md` and no probe (`probes/<NN>-<slug>/<lang>/ABSENT.md`; the
   generated reports link to it). They count as not reached, like any Absent cell; the summary counts them separately as the uncertainty.
+- **Confirmed vs. not found change the score, not just the summary.** Absent (confirmed) scores 0, like any demonstrated limitation.
+  Absent (not found) is excluded from the weighted mean, like a `pending` cell — the modifier exists precisely so that "nobody has
+  found a way yet" is never silently scored the same as "no way exists". A language with many `not found` cells has a score computed
+  over fewer features, not a score dragged toward 0 by unresolved uncertainty; `counts.absentNotFound` in `rating.json` says how many
+  were excluded for each language, so the comparison stays legible.
 - **Obstacles must survive a better test.** Optimiser behaviour is not an obstacle. When a probe loses an instruction to an optimisation, the
   probe is rewritten until the instruction appears reliably (SIMD operands sent through volatile memory, a function-pointer table that is an
   exported mutable static), and the older attempts stay in the folder as "other attempts". An obstacle is recorded only if no test can get

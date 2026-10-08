@@ -16,4 +16,10 @@ Every Rust Wasm target is linear-memory. The compiler does accept `-C target-fea
 those instructions; `core::arch::wasm32` has no struct or array reference types and Rust's own types (`Box`, `Vec`, structs) always
 live in linear memory. Assembly cannot declare a GC struct type (the LLVM assembler has no syntax for it).
 
-Result: **Absent (not found)**. No documentation statement or compiler rejection was found to make it *confirmed*.
+rust-lang/rust#150111 (merged) adds `target_feature = "gc"` only as a detection flag for tools like wasm-bindgen; its author states
+explicitly that these features are "not accessible through Rust apart from unstable inline ASM," which has no GC-type declaration
+syntax. The root cause is one level below Rust: LLVM's own WasmGC backend effort stalled from lack of funding (Paulo Matos/Igalia,
+LLVM discourse, Nov 2023: "our funding dried out and we ended up not being able to do it") — the identical gap already confirmed for
+Zig and TinyGo in this study, since all three share the same LLVM wasm backend.
+
+Result: **Absent (confirmed)**.

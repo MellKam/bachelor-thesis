@@ -5,8 +5,10 @@
 // every entry of `needs` is one). The report is the tally of those answers per language, per spec version and per feature, and a
 // list of which language is ahead of which: A is ahead of B only if A is at least as good on every count and better on one.
 // On top of the counts there is one number per language between 0 and 1, from the coefficients in results/rating/weights.json: a cell's
-// score is reach x the product of the factors of its obstacles, a language's score the weighted mean over the probed features. The
-// coefficients are data, and the report re-ranks the languages with all of them perturbed, so only robust orderings are claimed.
+// score is reach x the product of the factors of its obstacles, a language's score the weighted mean over the probed features.
+// Absent (confirmed) counts 0 in that mean, like a demonstrated limitation; Absent (not found) is left out of the mean entirely, like
+// a pending cell, because "no way was found" is not the same claim as "no way exists" and must not be scored as if it were.
+// The coefficients are data, and the report re-ranks the languages with all of them perturbed, so only robust orderings are claimed.
 // The same numbers are written to results/rating/rating.json for charts.
 import { readFileSync, writeFileSync } from 'node:fs';
 import { FEATURES as FEATURE_LIST } from './feature-list.mjs';
@@ -48,8 +50,9 @@ W.obstacles.forEach((o, i) => { if (!(o.factor > 0 && o.factor <= 1) || (i && o.
 const FACTORS = Object.fromEntries(W.obstacles.map((o) => [o.kind, o.factor]));
 const kindsOf = (r) => [...(r.expressed_as === 'config' || r.expressed_as === 'opaque' ? [r.expressed_as] : []), ...(r.needs ?? [])];
 // p = { reach: {full, partial}, factors: {kind: f}, weights: {id: w} }
+const notFound = (c) => c.absent && c.modifier === 'not found';
 const cellScore = (c, p) => (c.absent || c.pending ? 0 : p.reach[c.selected.record.support] * kindsOf(c.selected.record).reduce((a, k) => a * p.factors[k], 1));
-const langScore = (l, p) => { let num = 0, den = 0; for (const [id] of FEATURES) { const c = cells[l][id]; if (c.pending) continue; num += p.weights[id] * cellScore(c, p); den += p.weights[id]; } return num / den; };
+const langScore = (l, p) => { let num = 0, den = 0; for (const [id] of FEATURES) { const c = cells[l][id]; if (c.pending || notFound(c)) continue; num += p.weights[id] * cellScore(c, p); den += p.weights[id]; } return num / den; };
 const BASE = { reach: W.reach, factors: FACTORS, weights: W.features };
 const SCORE = Object.fromEntries(LANGS.map(([l]) => [l, langScore(l, BASE)]));
 // Sensitivity: every coefficient moves at random, and the languages are ranked again each time. Seeded, so the file is reproducible.
@@ -82,7 +85,7 @@ out.push('', '**Reached**: the language can produce the feature in some way. **F
   'Sorted by reached, then by no obstacle. The "not found" column is the uncertainty: those cells could still be reached if a way exists. The sort order is only a layout; the comparison is below.', '');
 
 const byScore = [...LANGS].sort(([a], [b]) => SCORE[b] - SCORE[a]);
-out.push('## Score', '', 'One number between 0 and 1 per language, from the coefficients in `results/rating/weights.json` (a draft, set by the author). A cell scores its reach (full 1, partial 0.5) times the factor of each of its obstacles; a language scores the weighted mean of its cells over the features, where an Absent cell counts 0 and each feature has an importance weight. The counts above are the evidence; this is their summary.', '',
+out.push('## Score', '', 'One number between 0 and 1 per language, from the coefficients in `results/rating/weights.json` (a draft, set by the author). A cell scores its reach (full 1, partial 0.5) times the factor of each of its obstacles; a language scores the weighted mean of its cells over the features, where each feature has an importance weight. Absent (confirmed) counts 0 in that mean; Absent (not found) is left out of the mean entirely, like a pending cell, since no way was found but none was shown to not exist. The counts above are the evidence; this is their summary.', '',
   `| Language | Score | Rank in ${DRAWS} perturbed runs (best–worst) |`, '|---|---|---|');
 for (const [l, n] of byScore) out.push(`| ${n} | ${SCORE[l].toFixed(2)} | ${Math.min(...ranks[l])}–${Math.max(...ranks[l])} |`);
 const robust = [];
@@ -144,20 +147,21 @@ const metrics = (c) => {
   return { status: 'reached', variant: c.selected.name, expressedAs: r.expressed_as, partial: r.support === 'partial' ? r.missing : null, support, checked: isChecked(r) ? 1 : 0, directness, score: support * directness, obstacles: kinds };
 };
 const M = Object.fromEntries(LANGS.map(([l]) => [l, Object.fromEntries(FEATURES.map(([id]) => [id, metrics(cells[l][id])]))]));
-// The four numbers of a language over a set of features. support and score average over every probed feature (Absent counts 0);
-// checked and directness average over the reached features only, so they say how good what the language reaches is.
+// The four numbers of a language over a set of features. support and score average over every probed feature where the reach is
+// known (Absent confirmed counts 0; Absent not found is excluded, same as pending, since no way was found but none was shown to
+// not exist); checked and directness average over the reached features only, so they say how good what the language reaches is.
 const aggregate = (l, keep = () => true) => {
   let wAll = 0, wReached = 0, sup = 0, chk = 0, dir = 0, sc = 0, n = 0, reached = 0;
-  for (const [id] of FEATURES) { const m = M[l][id]; if (m.status === 'pending' || !keep(id)) continue; const w = W.features[id]; n++; wAll += w; sup += w * m.support; sc += w * m.score; if (m.status === 'reached') { reached++; wReached += w; chk += w * m.checked; dir += w * m.directness; } }
+  for (const [id] of FEATURES) { const m = M[l][id]; if (m.status === 'pending' || (m.status === 'absent' && m.absent === 'not found') || !keep(id)) continue; const w = W.features[id]; n++; wAll += w; sup += w * m.support; sc += w * m.score; if (m.status === 'reached') { reached++; wReached += w; chk += w * m.checked; dir += w * m.directness; } }
   return { features: n, reached, support: r4(wAll ? sup / wAll : null), checked: r4(wReached ? chk / wReached : null), directness: r4(wReached ? dir / wReached : null), score: r4(wAll ? sc / wAll : null) };
 };
 const json = {
   about: 'Generated by check/rating.mjs from results/coding.json and results/rating/weights.json. All numbers are between 0 and 1. Do not edit by hand.',
   criteria: {
-    support: { description: 'How much of the feature set the language can produce: reach of a feature is full 1, partial 0.5, absent 0. Weighted mean over all probed features.', scope: 'all features' },
+    support: { description: 'How much of the feature set the language can produce: reach of a feature is full 1, partial 0.5, Absent (confirmed) 0. Weighted mean over every probed feature except Absent (not found), which is excluded rather than scored, since no way was found but none was shown to not exist.', scope: 'all features except Absent (not found)' },
     checked: { description: 'How much of what the language reaches is type-checked by the compiler (native or annotation = 1, config or assembly = 0). Weighted mean over the reached features.', scope: 'reached features' },
     directness: { description: 'How few obstacles stand between the developer and what the language reaches: the product of the obstacle factors of the cell (1 = none). Weighted mean over the reached features.', scope: 'reached features' },
-    score: { description: 'The single summary: per feature, support times directness; weighted mean over all probed features. Checked is reported next to it, not multiplied in, because config and assembly already lower directness.', scope: 'all features' },
+    score: { description: 'The single summary: per feature, support times directness; weighted mean over every probed feature except Absent (not found), for the same reason as support. Checked is reported next to it, not multiplied in, because config and assembly already lower directness.', scope: 'all features except Absent (not found)' },
   },
   coefficients: { reach: W.reach, obstacles: W.obstacles.map((o) => ({ kind: o.kind, factor: o.factor, why: o.why })), featureWeights: W.features },
   features: FEATURE_LIST.map((f) => ({ id: f.id, name: f.name, since: f.since, weight: W.features[f.id] })),

@@ -30,10 +30,10 @@
    "note": "`--export-table` / `--import-table` link arguments; the table is `__indirect_function_table` / `env.__indirect_function_table`, sized to the address-taken functions plus one (min 3, max 3 when exported). A private or `const` array of function pointers is folded by LLVM into a `select`, leaving no table and no `call_indirect`; an exported `static mut` cannot be assumed constant, so the indirect call stays without any barrier (an earlier probe used `black_box` for the same effect)."
   },
   "05": {
-   "absent": "not found",
+   "absent": "confirmed",
    "rests_on": ["stable-ctor"],
    "flags": ["constructor only"],
-   "note": "A `.init_array` constructor produces `__wasm_call_ctors`, which nobody calls unless the host does; no start section."
+   "note": "A `.init_array` constructor produces `__wasm_call_ctors`, which nobody calls unless the host does; no start section. wasm-ld (shared with Zig/TinyGo) has no flag to emit one; an LLVM maintainer states it's \"not meant for general use, but rather for toolchains\" (LLVM discourse, 2019). rustwasm/team#108 (2018) requested this for Rust and went unaddressed; the repo is now archived (2025). Structural, not Rust-specific."
   },
   "06": {
    "variants": {
@@ -130,10 +130,10 @@
    "note": "`become` (explicit_tail_calls) plus `+tail-call`. Ordinary calls in tail position are only sometimes turned into `return_call` (`flag` emits it in one direction and still overflows)."
   },
   "21": {
-   "absent": "not found",
+   "absent": "confirmed",
    "rests_on": ["nightly-asm-runtime"],
    "flags": ["initialiser computed at run time"],
-   "note": "Assembly cannot give a global an initialiser expression, so the sum is computed inside the function."
+   "note": "Assembly cannot give a global an initialiser expression, so the sum is computed inside the function. `+extended-const` is a real target-feature flag but, like `gc`, only gates LLVM instruction selection — no `core::arch::wasm32` API or assembly directive exposes writing a global's init-expression from an imported global; LLVM's own MC assembler has no syntax for it. Extended-const is consumed internally for relocations only, same structural gap as Zig."
   },
   "22": {
    "variants": {
@@ -143,10 +143,12 @@
    "note": "`global_asm!` with `call_ref`; without `-C target-feature=+gc` the assembler rejects it (`nightly-asm`)."
   },
   "23": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "rust-lang/rust#150111 (merged) adds `target_feature = \"gc\"` only as a detection flag for tools like wasm-bindgen; its author states GC features are \"not accessible through Rust apart from unstable inline ASM,\" which has no GC-type declaration syntax. Root cause is LLVM itself: Paulo Matos/Igalia (LLVM discourse, Nov 2023) says WasmGC backend funding \"dried out\" before completion — the identical structural gap confirmed for Zig/TinyGo in this study."
   },
   "24": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "Follows directly from 23: no struct/array/i31 GC-type infrastructure exists in LLVM's wasm backend for Rust to build casts, subtyping or packed-field access on top of."
   },
   "25": {
    "absent": "confirmed",
@@ -182,7 +184,7 @@
   "30": {
    "absent": "not found",
    "rests_on": ["cold-attribute-flag"],
-   "note": "`#[cold]` on the rare path, with and without `-C llvm-args=--enable-branch-hint`: no `metadata.code.branch_hint` section is produced."
+   "note": "`#[cold]` on the rare path, with and without `-C llvm-args=--enable-branch-hint`: no `metadata.code.branch_hint` section is produced. llvm/llvm-project#146230 (open draft, implements the section via a new `-mbranch-hinting` flag) is not yet merged — empirically tested against rustc nightly (LLVM 22.1.0): `-C llvm-args=-mbranch-hinting` is rejected as an unrecognized argument, confirming the flag isn't in Rust's bundled LLVM yet; `--enable-branch-hint` is silently ignored. No Rust-specific tracking issue; gated entirely on the open LLVM PR landing, not structurally closed."
   }
  },
  "zig": {
@@ -211,9 +213,10 @@
    "note": "`--export-table` / `--import-table`; same fixed name and limits as Rust and C."
   },
   "05": {
-   "absent": "not found",
+   "absent": "confirmed",
    "rests_on": ["ctor"],
-   "flags": ["constructor only"]
+   "flags": ["constructor only"],
+   "note": "wasm-ld has no flag to emit a real Wasm start section (only `--entry`/`-fno-entry` for the exported `_start`); an LLVM/Binaryen maintainer states the start section is \"not meant for general use, but rather for toolchains\" internally. Structural, not Zig-specific."
   },
   "06": {
    "variants": {
@@ -224,7 +227,7 @@
   "07": {
    "absent": "not found",
    "rests_on": ["default"],
-   "note": "Three `linksection` spellings put the bytes in the data section."
+   "note": "Three `linksection` spellings put the bytes in the data section (ziglang/zig#5494, open since 2020 — the `.custom_section.X` magic prefix that works for Clang/Rust still routes through Zig as ordinary data). Untested lead: module-level `asm(\".section meta,\\\"\\\",@ ...\")`, parallel to the `.section .text.X,\"\",@` trick already proven for a code section in probe 04/18 — not yet attempted here."
   },
   "08": {
    "variants": {
@@ -242,7 +245,7 @@
    "absent": "not found",
    "rests_on": ["import-symbols"],
    "flags": ["export var exports an immutable address global"],
-   "note": "`extern \"host\" const base` is a data symbol (link error without `--import-symbols`, then not a global); `export var counter` exports an immutable global holding the variable's address."
+   "note": "`extern \"host\" const base` is a data symbol (link error without `--import-symbols`, then not a global); `export var counter` exports an immutable global holding the variable's address. Tracked as ziglang/zig#4866 (open since 2020, no progress). Untested lead from ziggit.dev/t/11404: module-level `asm(\".globaltype sym, i32 ...\")` via LLVM's MC directive — proposed but never confirmed working, and may hit the same assembler bugs as `.tabletype` (zig#13165, see 18/19)."
   },
   "11": {
    "variants": {
@@ -264,7 +267,8 @@
   "14": {
    "absent": "not found",
    "rests_on": ["default"],
-   "flags": ["struct return becomes out-pointer"]
+   "flags": ["struct return becomes out-pointer"],
+   "note": "LLVM's wasm backend genuinely supports multi-result codegen (Zig's own `std.Target.wasm.Feature.multivalue`), but exported/imported functions always lower through the Clang-mirrored C ABI (struct return via out-pointer) regardless. zig#16639 (open, stalled since 2023) proposes a `callconv(.Wasm)` using `+multivalue` to fix exactly this gap; not implemented."
   },
   "15": {
    "variants": {
@@ -282,20 +286,21 @@
    "note": "`@Vector` loads, stores and bitwise select map to `v128.load/store/bitselect`; the saturating narrow, written as clamp and truncate, does not become `i8x16.narrow_i16x8_s`, in either of two forms tried (`vector`). Module-level assembly writes all three exports (`module-asm`)."
   },
   "17": {
-   "absent": "not found",
+   "absent": "confirmed",
    "rests_on": ["opaque-ptr"],
-   "flags": ["opaque pointer is an i32"]
+   "flags": ["opaque pointer is an i32"],
+   "note": "ziglang/zig#10491 (\"Support WebAssembly Reference Types\") closed as not-planned — core dev: \"I'm afraid there's no such thing yet,\" gated behind Wasm-specific address spaces never built. Deliberate non-support, not just an unaddressed backlog item."
   },
   "18": {
    "absent": "not found",
    "rests_on": ["module-asm-reftypes"],
    "flags": ["inline asm rejects ref.func"],
-   "note": "Module-level assembly with two `.tabletype` symbols fails with \"invalid instruction\" even with `+reference_types`."
+   "note": "Module-level assembly with two `.tabletype` symbols fails with \"invalid instruction\" even with `+reference_types`. Tracked as ziglang/zig#13165 (open, backend-llvm, pre-1.0 milestone): Zig's own LLVM-IR lowering miscompiles `.tabletype`-bearing inline assembly (a call target gets silently substituted and the directive dropped) — a Zig compiler bug, not an LLVM/wasm-ld capability gap, so the door is open pending a fix rather than structurally closed."
   },
   "19": {
    "absent": "not found",
    "rests_on": ["inline-asm"],
-   "note": "No builtin for table operations; function-level inline assembly assembles but yields an invalid module."
+   "note": "No builtin for table operations; function-level inline assembly assembles but yields an invalid module. Same root cause as 18 (ziglang/zig#13165, open): table-op/table-type directives are miscompiled by Zig's own assembly lowering, not unsupported by LLVM/wasm-ld."
   },
   "20": {
    "variants": {
@@ -305,18 +310,21 @@
    "note": "`@call(.always_tail, ...)`. Plain calls get `return_call` in one direction at most (`mcpu-tail-call`) and still overflow."
   },
   "21": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "Zig defines an `extended_const` target feature, but it's consumed internally by LLVM/the linker for relocations (e.g. PIC data-segment offsets), not exposed as global-initializer syntax. Zig global initializers are always evaluated by the comptime interpreter at compile time, which structurally cannot observe a value (an import) that only exists at instantiation time — independent of whether cell 10 (global import) ever gets fixed."
   },
   "22": {
-   "absent": "not found",
+   "absent": "confirmed",
    "rests_on": ["function-pointer"],
-   "note": "Function pointers are indices into the implicit table and are called with `call_indirect`."
+   "note": "Function pointers are indices into the implicit table and are called with `call_indirect`. No `function_references` target feature exists in Zig (`std/Target/wasm.zig`'s Feature enum), and more fundamentally LLVM's wasm backend itself has no `call_ref`/typed-function-reference codegen to expose — an upstream gap, not a Zig-specific omission."
   },
   "23": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "LLVM's own WasmGC backend effort stalled from lack of funding (Paulo Matos/Igalia, LLVM discourse, Nov 2023: \"our funding dried out and we ended up not being able to do it\"). Not a Zig gap at all — the LLVM backend Zig relies on has no struct/array GC-type support to surface, full stop."
   },
   "24": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "Follows directly from 23: the same LLVM-level absence (no GC machine types, no struct/array/i31 lowering) applies identically to casts, subtyping, i31 and packed fields, since none of it exists without the base GC-type infrastructure LLVM's backend doesn't have."
   },
   "25": {
    "absent": "confirmed",
@@ -327,15 +335,18 @@
   "26": {
    "absent": "not found",
    "rests_on": ["mulAdd"],
-   "flags": ["@mulAdd does not select relaxed_madd"]
+   "flags": ["@mulAdd does not select relaxed_madd"],
+   "note": "`@mulAdd` lowers through the generic `llvm.fma` intrinsic, which llvm-bugs#121311 confirms is not reliably pattern-matched to `f32x4.relaxed_madd` even with `+relaxed-simd`. Untested lead: Zig can call arbitrary LLVM intrinsics by name (used in its own stdlib) — `extern fn @\"llvm.wasm.relaxed.madd.v4f32\"(...)` targets the instruction directly, unlike `@mulAdd`."
   },
   "27": {
    "absent": "not found",
    "rests_on": ["error-union"],
-   "flags": ["error unions are ordinary control flow"]
+   "flags": ["error unions are ordinary control flow"],
+   "note": "Zig defines an `exception_handling` target feature and LLVM has a direct `llvm.wasm.throw(tag, ptr)` intrinsic (used by libc++abi's `__cxa_throw`) callable the same way as the lead for 26. Untested and nontrivial: it still needs a tag symbol declared via an MC directive analogous to `.tabletype`/`.globaltype`, which hit real Zig miscompilation bugs in 18/19/10 (zig#13165), and the catching side needs raw `try_table`/`catch` assembly since Zig's error unions never emit `invoke`/`landingpad` IR."
   },
   "28": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "LLVM's wasm backend does support `try_table`/`catch_ref`/`throw_ref`/exnref codegen (active upstream as of Jan 2025, llvm/llvm-project#124381), but only as a lowering target for `invoke`/`landingpad` IR — how C++ exceptions reach it. Zig's error-union model never generates that IR for its own control flow, so there is no path from ordinary Zig code to this machinery; only raw module-level assembly writing `try_table`/`throw_ref` text directly could reach it, which is speculative given the same assembler-directive bugs in 18/19/10 (zig#13165)."
   },
   "29": {
    "variants": {
@@ -346,7 +357,7 @@
   "30": {
    "absent": "not found",
    "rests_on": ["branch-hint"],
-   "note": "`@branchHint(.unlikely)` is accepted and produces no hint section."
+   "note": "`@branchHint(.unlikely)` is accepted and produces no hint section; it only sets LLVM branch-weight metadata, a generic optimizer hint. llvm/llvm-project#146230 (open) is actively implementing real `metadata.code.branch_hint` emission in LLVM's wasm backend behind a new `-mbranch-hinting` flag — not yet shipped upstream, not structurally closed."
   }
  },
  "c": {
@@ -376,9 +387,10 @@
    "note": "`-Wl,--export-table` / `--import-table`. Explicit `__funcref` tables cannot be exported or imported: clang rejects a non-static table (`export-funcref-table`, `import-funcref-table`)."
   },
   "05": {
-   "absent": "not found",
+   "absent": "confirmed",
    "rests_on": ["constructor"],
-   "flags": ["constructor only"]
+   "flags": ["constructor only"],
+   "note": "wasm-ld only exposes `--entry`/`--no-entry` for the `_start` export, never a real start section. LLVM's own attempt to wire this up (D40559, 2017) was abandoned by its author as unsalvageable — the start function runs before memory/table exports exist, so it structurally cannot call imports. An LLVM wasm-backend maintainer states it is \"not meant for general use\" (discourse.llvm.org/t/53373). Shared upstream limitation across every LLVM-based toolchain in this study (Rust, TinyGo, Zig)."
   },
   "06": {
    "variants": {
@@ -493,10 +505,12 @@
    "note": "Module-level assembly with `call_ref`, built with `-Xclang -target-feature -Xclang +gc`. A `__funcref` call in C is a `call_indirect` (`funcref-call`)."
   },
   "23": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "clang exposes `__externref_t`/`__funcref` (opaque reference types) and an `-mgc`-accepted target feature, but no struct/array GC-type declaration syntax in C or inline asm. Confirmed structural + resourcing gap: LLVM's own WasmGC backend effort stalled from lack of funding (Paulo Matos/Igalia, LLVM discourse, Nov 2023) after only externref/funcref landed — still true even though Wasm 3.0 shipped (Sept 2025) with GC structs/arrays as a core feature. C/C++'s type system also has no notion of a managed/traced reference distinct from a raw pointer, so there'd be no obvious source syntax even if the backend existed."
   },
   "24": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "Follows directly from feature 23: `ref.cast`/subtyping/`i31`/packed fields all operate on GC struct/array types, which clang cannot declare at all. `externref`/`funcref` are opaque by design with no cast/subtype operations exposed."
   },
   "25": {
    "absent": "confirmed",
@@ -532,7 +546,7 @@
   "30": {
    "absent": "not found",
    "rests_on": ["builtin-expect"],
-   "note": "`__builtin_expect(x < 0, 0)` produces no hint section; `-mllvm --enable-branch-hint` is not an option of this clang (`builtin-expect-flag`)."
+   "note": "`__builtin_expect(x < 0, 0)` produces no hint section; `-mllvm --enable-branch-hint` is not an option of this clang (`builtin-expect-flag`) — wrong flag name/form, not proof the mechanism is absent. Lead: llvm/llvm-project#146230 adds a real `-mbranch-hinting` clang driver flag (Options.td, m_wasm_Features_Group) lowering existing `!prof`/`__builtin_expect` branch-probability metadata into `metadata.code.branch_hint` — so `__builtin_expect` plausibly needs no new wiring once this lands. PR is still open/unmerged (checked Oct 2026); re-test once merged."
   }
  },
  "moonbit": {
@@ -559,7 +573,8 @@
    "note": "On the wasm-gc backend: function values are GC closures, no table. The module has no table; indirect calls use `call_ref`."
   },
   "04": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "No table config in moon.pkg.json on either backend (the full link schema exposes exports/import-memory/memory-limits/shared-memory/export-memory-name/heap-start-address and wasm-gc's string-related options, nothing table-related); inline-wasm only substitutes a function body, not module-level sections, so it can't add a table either. `FuncRef[T]` crosses the FFI boundary as externref, not a table slot."
   },
   "05": {
    "variants": {
@@ -571,10 +586,11 @@
   "06": {
    "absent": "not found",
    "rests_on": ["default", "moonbit-gc/default"],
-   "note": "wasm backend: Static data is placed by the compiler (segment at 10000 in this build)."
+   "note": "wasm backend: Static data is placed by the compiler (segment at 10000 in this build). Lead: moon.pkg.json's wasm-only `link.wasm.heap-start-address` option (\"specify the starting address of the linear memory that can be used\") is used today in MoonBit's own Wasm4 SDK guide to keep the compiler's managed region below a hardware-mapped address range — it may shift where static data begins, though whether a specific literal's exact offset is predictable/choosable this way is unverified."
   },
   "07": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "No custom-section option in moon.pkg.json on either backend. moonc's generic custom-section encoder (`dwarfsm_encode_wasm.ml`) exists but is wired only to its own DWARF debug-info emission (the `-g` flag), not to a developer-supplied section name/content."
   },
   "08": {
    "variants": {
@@ -591,9 +607,10 @@
    "note": "wasm backend: `sqrt`, `ceil`, `floor`, `trunc`, `abs` map to opcodes; `min`/`max`/`round`/`copysign` do not (`round` rounds half away from zero). `inline-wasm`: `f64.nearest` parses and is emitted; `f64.min`, `f64.max` and `f64.copysign` are rejected by the inline Wasm parser."
   },
   "10": {
-   "absent": "not found",
+   "absent": "confirmed",
    "rests_on": ["default", "moonbit-gc/default"],
-   "flags": ["Ref is a heap cell"]
+   "flags": ["Ref is a heap cell"],
+   "note": "`Ref[T]` (the only mutable-global construct) is a heap cell on both backends, confirmed by the probe. No FFI/config surface imports a raw Wasm global either (only function and memory imports exist), so neither half of the feature has a path on either backend. moonc's wasm-gc codegen does emit real `global` declarations, but only as internal per-type lazy-init placeholder slots, not anything a developer's `Ref`/`let` maps onto."
   },
   "11": {
    "variants": {
@@ -613,14 +630,15 @@
    "note": "`Array::fill` / `blit_to` emit `memory.fill` / `memory.copy` on the wasm backend. On the wasm-gc backend they become `array.fill` / `array.copy` on GC arrays instead, but inline Wasm text writes `memory.fill` / `memory.copy` there too (`inline-wasm`)."
   },
   "13": {
-   "absent": "not found",
+   "absent": "confirmed",
    "rests_on": ["bytes-literal", "moonbit-gc/bytes-literal"],
-   "note": "wasm backend: The segment holding a `Bytes` literal is active, also with the `shared-memory` link option (`bytes-literal-shared-memory`); there are no raw addresses to copy to. wasm-gc backend: The `Bytes` literal is held in a passive segment (read with `array.new_data`), but no source construct requests one or runs `memory.init`."
+   "note": "wasm backend: The segment holding a `Bytes` literal is active, also with the `shared-memory` link option (`bytes-literal-shared-memory`); there are no raw addresses to copy to. wasm-gc backend: The `Bytes` literal is held in a passive segment (read with `array.new_data`), but no source construct requests one or runs `memory.init`. Re-checked: no moon.pkg.json option, compiler flag, or stdlib function was found for passive-segment control beyond this internal Bytes-literal use, on either backend."
   },
   "14": {
    "absent": "not found",
    "rests_on": ["tuple", "moonbit-gc/tuple"],
-   "flags": ["tuple is a heap object", "tuple is a GC struct"]
+   "flags": ["tuple is a heap object", "tuple is a GC struct"],
+   "note": "Lead: MoonBit's FFI docs list \"multi-value\" as a targeted post-MVP proposal for the Wasm backend, and inline-wasm lets a function's entire body be hand-written WAT (`extern \"wasm\" fn ... = #|(func (param ...) (result i32 i32) ...)`), which might bypass the normal boxed-tuple ABI for a tuple-returning signature. Untested — name/behavior not verified."
   },
   "15": {
    "variants": {
@@ -649,18 +667,22 @@
    "flags": ["#external type"]
   },
   "18": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "Same structural reason as feature 04 (table import/export): no config surface on either backend, and moonc's own module-construction code builds a single `table` field, not a list."
   },
   "19": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "Same structural reason as features 04/18: no exposed table manipulation surface (table.grow/set/get/size, ref.is_null) on either backend."
   },
   "20": {
-   "absent": "not found",
+   "absent": "confirmed",
    "rests_on": ["mutual-recursion", "moonbit-gc/mutual-recursion"],
-   "flags": ["recursion overflows"]
+   "flags": ["recursion overflows"],
+   "note": "moonc's documented Wasm target-feature list (bulk-memory-operations, multi-value, reference-types) omits tail-call, and no moon.pkg.json/CLI flag mentions return_call. Its only tail-position optimization (contification, `pass_contification.ml`) is a self-recursion-only IR transform, not mutual recursion — consistent with the probe's own observed overflow."
   },
   "21": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "Confirms and extends the existing ABSENT.md: there is no global-import mechanism at all in MoonBit on either backend (FFI only imports functions and memory), so there is no global for a const-expr initializer to even target."
   },
   "22": {
    "variants": {
@@ -681,9 +703,10 @@
    "note": "Enum variants are declared subtypes with `ref.cast`/`ref.test`, `FixedArray[Byte]` is a packed `i8` array; `i31` is not used for boxed values. Side effect: the subtype declarations and casts come from the enum's variants, not from anything the program writes as a GC type."
   },
   "25": {
-   "absent": "not found",
+   "absent": "confirmed",
    "rests_on": ["inline-wasm"],
-   "flags": ["inline Wasm parser rejects the memory index"]
+   "flags": ["inline Wasm parser rejects the memory index"],
+   "note": "moonc's own module-construction code builds a single `mem` field, not a list, on both backends; moon.pkg.json's memory options (import-memory, memory-limits, export-memory-name) are all singular. No GitHub issue tracks this specifically — undocumented rather than a known limitation, but the structural evidence (single `mem` field in the compiler's own module builder) is solid."
   },
   "26": {
    "variants": {
@@ -696,10 +719,12 @@
   "27": {
    "absent": "not found",
    "rests_on": ["raise", "moonbit-gc/raise"],
-   "flags": ["errors are ordinary control flow"]
+   "flags": ["errors are ordinary control flow"],
+   "note": "Lead: moonc's wasm-gc codegen (`wasm_of_clam_gc.ml`) has a real `Lcatch` IR node that lowers to a genuine `try_table`/`catch` with an imported Wasm tag and a `$throw` function — but it's gated by `assert !Basic_config.test_mode`, which `moon`'s own build-lowering sets specifically for `moon test`. This strongly suggests the test runner (not ordinary `raise`/try-catch) uses real exception tags to catch panics inside `test { }` blocks on wasm-gc specifically; the plain wasm backend has no equivalent code. Needs an actual `-test-mode` build + wasm inspection to confirm."
   },
   "28": {
-   "absent": "not found"
+   "absent": "not found",
+   "note": "Lead: same mechanism as feature 27 — `moon test --target wasm-gc` reaches a real try_table/catch/imported-tag path in `wasm_of_clam_gc.ml`. Whether it specifically exercises exnref/throw_ref semantics (vs. plain catch) needs inspection of a test-mode build; no equivalent found on the plain wasm backend."
   },
   "29": {
    "absent": "confirmed",
@@ -708,7 +733,8 @@
    "note": "wasm backend: `moon build --target wasm64`: invalid value."
   },
   "30": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "Fresh searches for a MoonBit branch-hint/likely/unlikely attribute, moon.pkg.json flag, or moonc CLI option found nothing new on either backend — no construct, pragma, or build flag surfaced in docs, blog posts, or GitHub search."
   }
  },
  "assemblyscript": {
@@ -751,7 +777,8 @@
    "note": "`memory.data` lays bytes out from the memory base; the default base happens to be 1024, so `default` passes too."
   },
   "07": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "No `asc` flag or decorator emits a custom section. `asc`'s `afterCompile` transform hook can hand a post-compile JS plugin a raw Binaryen `Module` with `addCustomSection` (proven in production by `as-bind`), but that bypasses AssemblyScript's own compiler/type system to call a different tool's IR builder API on the already-emitted module — not the language producing the feature, so it doesn't count as reached. Accepting it would need to apply symmetrically to any toolchain whose output can be post-processed with Binaryen/wasm-opt, which would break the comparison."
   },
   "08": {
    "variants": {
@@ -781,14 +808,15 @@
    "note": "`memory.fill` / `memory.copy`; bulk memory is enabled by default."
   },
   "13": {
-   "absent": "not found",
+   "absent": "confirmed",
    "rests_on": ["memory-init-shared"],
-   "note": "`memory.init` and `memory.drop` exist as builtins, but every data segment is active (also with `--sharedMemory`), so the call folds to `unreachable`."
+   "note": "`memory.init` and `memory.drop` exist as builtins, but every data segment is active (also with `--sharedMemory`), so the call folds to `unreachable`. Binaryen's own passive-segment support is reachable only via the `afterCompile` transform hook on the already-compiled module (see 07's note on why that doesn't count as the language reaching it)."
   },
   "14": {
-   "absent": "not found",
+   "absent": "confirmed",
    "rests_on": ["tuple"],
-   "flags": ["array is a heap pointer"]
+   "flags": ["array is a heap pointer"],
+   "note": "No AS syntax returns more than one real Wasm result. Binaryen can build a tuple-result function via the `afterCompile` hook, but such a function wouldn't be callable from AS source at all, only from host/wasm tooling — not the language reaching the feature (see 07)."
   },
   "15": {
    "variants": {
@@ -811,35 +839,38 @@
    "flags": ["needs --enable reference-types"]
   },
   "18": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "No AS construct declares a second table; `--tableBase` only relocates the implicit one. Binaryen's `addTable` is reachable only via the `afterCompile` transform hook on the already-compiled module — not the language reaching it (see 07)."
   },
   "19": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "The stdlib `table` namespace only has `init`/`drop`/`copy` — no `grow`/`get`/`set`/`size`, and no `ref.is_null`. Binaryen has all of these as builder methods, but only reachable via the `afterCompile` transform hook on the already-compiled module — not the language reaching it (see 07)."
   },
   "20": {
-   "absent": "not found",
+   "absent": "confirmed",
    "rests_on": ["enable-tail-calls"],
    "flags": ["--enable tail-calls accepted, no effect"],
-   "note": "Not in `asc --help`; no `return_call` appears."
+   "note": "Not in `asc --help`; no `return_call` appears. An open draft PR (#3020, unmerged as of Sep 2026) would add `--enable tail-calls`; Binaryen itself landed tail-call codegen in v133, reachable today only via the `afterCompile` transform hook, which doesn't count as the language reaching it (see 07)."
   },
   "21": {
-   "absent": "not found",
+   "absent": "confirmed",
    "rests_on": ["global-const"],
-   "note": "`export const g = base + 4 * 3` is initialised in the start function (the global's initialiser is a plain constant)."
+   "note": "`export const g = base + 4 * 3` is initialised in the start function (the global's initialiser is a plain constant). AssemblyScript's own feature-status page lists extended-const as still in its implementation phase, with no flag yet — active WIP, not shipped."
   },
   "22": {
-   "absent": "not found",
+   "absent": "confirmed",
    "rests_on": ["function-values"],
-   "note": "Function values are table indices called with `call_indirect`; no feature flag selects `call_ref` (`--enable` has no function-references)."
+   "note": "Function values are table indices called with `call_indirect`; no feature flag selects `call_ref` (`--enable` has no function-references). AssemblyScript's own feature-status page ties typed function references to the existing `--enable gc` flag, which is itself still WIP (see 23) and doesn't change codegen."
   },
   "23": {
-   "absent": "not found",
+   "absent": "confirmed",
    "rests_on": ["classes-enable-gc"],
    "flags": ["--enable gc is \"WIP\""],
-   "note": "Classes stay in linear memory with or without the flag."
+   "note": "Classes stay in linear memory with or without the flag. AssemblyScript's own docs state classes stay in linear memory \"independent of the host GC\" by design, not merely unfinished. Binaryen's TypeBuilder/struct.*/array.* API is reachable only via the `afterCompile` transform hook on the already-compiled module — a standalone WasmGC graph bolted onto the module, not AS's own classes, and not the language reaching it (see 07)."
   },
   "24": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "Follows directly from 23: no AS-level GC struct/array types exist to cast, subtype or pack. The same `afterCompile`/Binaryen caveat from 23 applies identically."
   },
   "25": {
    "absent": "confirmed",
@@ -864,10 +895,10 @@
    "flags": ["AS100 Not implemented: Exceptions"]
   },
   "29": {
-   "absent": "not found",
+   "absent": "confirmed",
    "rests_on": ["enable-memory64"],
    "flags": ["--enable memory64 accepted, no effect"],
-   "note": "The flag is not in `asc --help`; it is accepted silently and the memory stays 32-bit."
+   "note": "The flag is not in `asc --help`; it is accepted silently and the memory stays 32-bit. AssemblyScript's own feature-status page shows no flag yet for memory64 at all (weaker than reference-types/gc, which at least have one). Binaryen's `setMemory(..., memory64: true)` is reachable only via the `afterCompile` transform hook — not the language reaching it (see 07)."
   },
   "30": {
    "absent": "confirmed",
@@ -902,10 +933,10 @@
    "note": "`-ldflags=\"-extldflags --export-table\"` / `--import-table`."
   },
   "05": {
-   "absent": "not found",
+   "absent": "confirmed",
    "rests_on": ["init-func"],
    "flags": ["init() runs in _initialize"],
-   "note": "No start section; Go `init()` runs when the host calls the exported `_initialize`."
+   "note": "No start section; Go `init()` runs when the host calls the exported `_initialize`. `lld`'s WebAssembly port has no start-section support at all (reactor convention only), confirmed by objdump on the init-func probe: no Start section."
   },
   "06": {
    "variants": {
@@ -914,9 +945,9 @@
    "flags": ["-extldflags --global-base and a smaller stack"]
   },
   "07": {
-   "absent": "not found",
+   "absent": "confirmed",
    "rests_on": ["go-section"],
-   "note": "`//go:section meta` does not produce a custom section."
+   "note": "`//go:section meta` does not produce a custom section (confirmed via objdump: only name/producers/target_features exist); no other TinyGo or wasm-ld flag reachable through the build exposes an arbitrary custom section."
   },
   "08": {
    "variants": {
@@ -930,8 +961,9 @@
    "note": "`math.RoundToEven` is not `f64.nearest`; the other members map to opcodes."
   },
   "10": {
-   "absent": "not found",
-   "rests_on": ["go-var"]
+   "absent": "confirmed",
+   "rests_on": ["go-var"],
+   "note": "No Global section emitted at all (confirmed via objdump) even with `+mutable-globals` enabled; a package `var` always lowers to linear memory. `//go:wasmimport`/`//go:wasmexport` are documented for functions only, never variables."
   },
   "11": {
    "variants": {
@@ -957,54 +989,67 @@
    "flags": ["compiler rejects: too many return values"]
   },
   "15": {
-   "absent": "not found"
+   "absent": "not found",
+   "note": "Not yet tried: `-llvm-features +simd128` (merged PR #1844) passes the simd128 target feature to LLVM; an external TinyGo 0.41.1/LLVM 20 build reports it producing v128 instructions via autovectorization with no Go source change. Worth a re-probe before treating this as confirmed."
   },
   "16": {
-   "absent": "not found"
+   "absent": "not found",
+   "note": "Not yet tried: `-llvm-features +simd128` (see 15); the external report specifically describes v128 memory (load/store) instructions, which maps onto this feature more directly than 15. Worth a re-probe before treating this as confirmed."
   },
   "17": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "`-reference-types` is explicitly disabled in the wasm-unknown target description, which externref requires. tinygo-org/tinygo#2702 shows the compiler cannot even accept a host externref parameter (compiles it as plain i32 instead)."
   },
   "18": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "Multiple tables need the reference-types proposal, explicitly disabled (`-reference-types`) in the wasm-unknown target; no Go construct declares a table of any kind (only the implicit single indirect-call table exists)."
   },
   "19": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "Table ops need reference-types, disabled in the wasm-unknown target description; no Go/TinyGo API exposes the implicit indirect-call table for runtime manipulation."
   },
   "20": {
-   "absent": "not found",
+   "absent": "confirmed",
    "rests_on": ["target-json-tail-call"],
-   "flags": ["no return_call even with +tail-call"]
+   "flags": ["no return_call even with +tail-call"],
+   "note": "Confirmed via wasm2wat on the target-json-tail-call probe's own binary: even with a custom target.json enabling `+tail-call`, the module contains only `call`, zero `return_call` — the LLVM feature flag alone doesn't make TinyGo's codegen emit the opcode."
   },
   "21": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "Depends on feature 10: TinyGo never emits a Global section for package vars (confirmed via objdump), so there is no Wasm global for an extended-const expression to reference."
   },
   "22": {
-   "absent": "not found",
+   "absent": "confirmed",
    "rests_on": ["func-value"],
-   "note": "Function values are table indices called with `call_indirect`."
+   "note": "Function values are table indices called with `call_indirect`. No LLVM wasm backend support for `call_ref`/typed function references exists at all; that codegen path is only implemented by non-LLVM toolchains (Kotlin/Wasm, MoonBit)."
   },
   "23": {
-   "absent": "not found",
+   "absent": "confirmed",
    "rests_on": ["struct-slice"],
-   "flags": ["the GC manages linear memory"]
+   "flags": ["the GC manages linear memory"],
+   "note": "TinyGo ships its own linear-memory GC; there is no WasmGC backend, and LLVM's wasm backend itself has no struct.new/array.new codegen path (WasmGC codegen exists only in non-LLVM toolchains)."
   },
   "24": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "Follows directly from feature 23: with no struct.new/array.new emission at all, there is nothing to cast, subtype, pack or box as i31."
   },
   "25": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "The wasm-unknown target links exactly one linear memory, and TinyGo's allocator/runtime is single-memory-aware throughout (a gap shared by most LLVM-based toolchains, not TinyGo-specific)."
   },
   "26": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "LLVM's wasm backend has a `+relaxed-simd` feature bit, but it is only reachable via clang builtins (`__builtin_wasm_relaxed_*`) never exposed through Go syntax or any TinyGo package, and LLVM's autovectorizer deliberately never auto-selects relaxed-SIMD (platform-dependent results), unlike plain simd128."
   },
   "27": {
-   "absent": "not found",
+   "absent": "confirmed",
    "rests_on": ["panic-recover"],
-   "flags": ["panic traps"]
+   "flags": ["panic traps"],
+   "note": "The merged panic/recover implementation (PR #5550) deliberately uses Asyncify-based unwinding instead of real wasm exception-handling, specifically because many WASI runtimes don't support wasm-EH yet; an earlier wasm-EH-based attempt (#4380) was abandoned and even it never exposed a host-visible, payload-bearing tag."
   },
   "28": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "Follows directly from feature 27: the merged recover() implementation uses Asyncify, not wasm exception-handling at all, so there is no tag section, exnref or try_table/throw_ref anywhere in the pipeline."
   },
   "29": {
    "absent": "confirmed",
@@ -1013,7 +1058,8 @@
    "note": "`open /opt/tinygo/targets/wasm64.json: no such file or directory`."
   },
   "30": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "Go has no likely/unlikely builtin or pragma of any kind, and no TinyGo/LLVM path to `metadata.code.branch_hint` was found; no TinyGo issue or PR references branch hinting."
   }
  },
  "kotlin": {
@@ -1024,19 +1070,20 @@
    "flags": ["@WasmImport / @WasmExport", "experimental interop opt-in"]
   },
   "02": {
-   "absent": "not found",
+   "absent": "confirmed",
    "rests_on": ["default"],
    "flags": ["memory exported as `memory`, min 0 pages"],
-   "note": "No compiler option for memory limits or names."
+   "note": "No compiler option for memory limits or names. Confirmed via compiler source (`WasmCompiledModuleFragment.kt`): min/max pages are hardcoded (min=0, max=null/unlimited), the export name is a hardcoded `\"memory\"` WASI-ABI literal, and import-vs-export is auto-picked per target. The full `-Xwasm-*` flag list has no memory option at all."
   },
   "03": {
-   "absent": "not found",
+   "absent": "confirmed",
    "rests_on": ["function-values"],
    "flags": ["function values are GC closures, no table"],
-   "note": "The module has no table; 577 `call_ref` sites call function values instead."
+   "note": "The module has no table; 577 `call_ref` sites call function values instead. `WasmTable` is only ever constructed by the binary decoder (parsing a foreign module), never by Kotlin's own codegen path."
   },
   "04": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "Same root cause as 03: no table-emitting code path exists in Kotlin's own codegen at all (`WasmTable` is decoder-only), so table import/export has nothing to produce."
   },
   "05": {
    "variants": {
@@ -1046,12 +1093,14 @@
    "note": "A real start section (`$_initializeModule`)."
   },
   "06": {
-   "absent": "not found",
+   "absent": "confirmed",
    "rests_on": ["pointer-api"],
-   "flags": ["Pointer API over a zero-page memory"]
+   "flags": ["Pointer API over a zero-page memory"],
+   "note": "`kotlin.wasm.unsafe.MemoryAllocator.allocate()` only hands back runtime-assigned addresses from a bump allocator; there is no API to place data at a caller-chosen fixed address. Static data (string literals/arrays) goes through passive segments feeding GC arrays (see 13), not user-controlled linear-memory offsets."
   },
   "07": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "Confirmed via source: the compiler's custom-section writer (`AnnotationKind` in `WasmIrToBinary.kt`) supports only three hardcoded, `private`, internal section kinds (`metadata.code.branch_hint`, `metadata.code.trace_inst`, a JS-called marker). No generic name+bytes custom-section API is exposed anywhere."
   },
   "08": {
    "variants": {
@@ -1067,7 +1116,8 @@
   },
   "10": {
    "absent": "not found",
-   "rests_on": ["top-level-var"]
+   "rests_on": ["top-level-var"],
+   "note": "Lead: source inspection (`DeclarationGenerator.generateField`) shows every top-level Kotlin property DOES compile to a real mutable Wasm global, not a GC-heap field — the premise holds. But no public annotation exports/imports a property's global directly; the only global-export code path found (`multimoduleExportIfNeeded`) is scoped to class vtables under the internal `-Xwasm-generate-closed-world-multimodule` flag. Worth testing whether that flag/mechanism can be repurposed for a plain top-level var before treating this as confirmed."
   },
   "11": {
    "variants": {
@@ -1076,15 +1126,15 @@
    "note": "`toInt()` saturates; `toByte()/toShort()` are not emitted as `extend8_s/extend16_s`."
   },
   "12": {
-   "absent": "not found",
+   "absent": "confirmed",
    "rests_on": ["bytearray"],
    "flags": ["GC-array ops only"],
-   "note": "`ByteArray.fill/copyInto` become `array.fill` / `array.copy`."
+   "note": "`ByteArray.fill/copyInto` become `array.fill` / `array.copy`. Confirmed via source: `memory.fill`/`memory.copy` have zero emission sites in the ir2wasm backend (the opcodes exist only in the generic decoder table); ByteArray ops stay on GC arrays."
   },
   "13": {
-   "absent": "not found",
+   "absent": "confirmed",
    "rests_on": ["string-literal"],
-   "note": "Kotlin keeps string literals in passive data segments of its own; the program cannot request one, and has no linear memory to copy it into."
+   "note": "Kotlin keeps string literals in passive data segments of its own; the program cannot request one, and has no linear memory to copy it into. Confirmed via source: passive segments are wired only to `array.new_data` feeding GC arrays; `memory.init` has zero emission sites in the backend."
   },
   "14": {
    "absent": "confirmed",
@@ -1093,10 +1143,12 @@
    "note": "\"unsupported @WasmImport and @WasmExport return type\"."
   },
   "15": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "Confirmed structurally: the compiler's complete Wasm opcode table (`Operators.kt`) defines zero SIMD instructions — only the bare `v128` value type exists, for round-tripping foreign module signatures. No stdlib intrinsic or flag can reach SIMD since the opcode isn't modeled at all."
   },
   "16": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "Same opcode-table evidence as 15: v128.load/store, bitselect and narrowing ops are entirely absent from `Operators.kt`."
   },
   "17": {
    "variants": {
@@ -1105,18 +1157,22 @@
    "note": "`JsAny` is `externref`; exported with `@JsExport`, not `@WasmExport`. Obstacles: built for the `wasm-js` target (every other Kotlin probe uses `wasm-wasi`); the module imports 89 `js_code` functions and 8 `wasm:js-string` builtins, so it needs a JS host."
   },
   "18": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "Same root cause as 03/04: no table-emitting code path exists in Kotlin's own codegen at all, so multiple tables is moot."
   },
   "19": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "Same root cause as 03/04/18: table.grow/set/get/size and ref.is_null need a module-owned table, which Kotlin/Wasm's codegen never creates."
   },
   "20": {
    "absent": "not found",
    "rests_on": ["mutual-recursion"],
-   "flags": ["no return_call"]
+   "flags": ["no return_call"],
+   "note": "Lead: `-Xwasm-enable-tail-calls` (\"Emit WebAssembly tail call instructions (return_call / return_call_indirect)\") is a real, public compiler flag listed in the compiler's own `-X` help dump, backed by a `WasmTailCallLowering` IR pass, introduced in Kotlin 2.5 (Beta at research time). Needs a build on 2.5+ to verify it lowers mutual recursion specifically (not just self-tailrec) and survives n=1,000,000 before treating this as reached."
   },
   "21": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "No evidence of extended-const-expression support found. Non-trivial global initializers always run as code at start-up (`generateField` in `DeclarationGenerator.kt`), consistent with Kotlin/Wasm's reliance on an explicit init routine rather than const-expr globals."
   },
   "22": {
    "variants": {
@@ -1137,10 +1193,12 @@
    "note": "Class subtypes with casts and `ByteArray` as a packed `i8` array; `i31` is not used for a boxed `Int`. Side effect: the subtype declarations and casts come from the class hierarchy, not from anything the program writes as a GC type."
   },
   "25": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "Confirmed via source: zero references to a second/multiple-memory construct anywhere in the compiler; the single memory is one hardcoded `WasmMemory` object (see 02)."
   },
   "26": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "Relaxed SIMD needs base SIMD opcodes, which don't exist in Kotlin's Wasm opcode table at all (see 15/16)."
   },
   "27": {
    "variants": {
@@ -1156,10 +1214,12 @@
    "note": "`throw e` inside a `catch` compiles to `try_table` and `throw_ref`; the default and `-Xwasm-use-new-exception-proposal` modules are identical."
   },
   "29": {
-   "absent": "not found"
+   "absent": "confirmed",
+   "note": "Confirmed via source: no memory64-related code anywhere in the compiler; `WasmLimits`/`WasmMemory` are hardcoded to 32-bit (`UInt`) page counts with no 64-bit variant in the IR model."
   },
   "30": {
-   "absent": "not found"
+   "absent": "not found",
+   "note": "Lead: branch-hint codegen is fully implemented and tested internally — `kotlin.wasm.internal.likely`/`unlikely` lower through `WasmOp.PSEUDO_ANNOTATION_BRANCH_HINT` to a real `metadata.code.branch_hint` section, verified by the compiler's own test `wasm-annotations/branchHint.kt`. But these functions are package-`internal` to the stdlib with no public flag or annotation exposing them to user code (unlike tail calls, 20) — worth watching for a public entry point given how mature the internal implementation already is."
   }
  }
 }
