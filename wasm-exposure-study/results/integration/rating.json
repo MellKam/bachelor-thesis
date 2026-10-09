@@ -1,0 +1,533 @@
+{
+ "about": "Integration and combined scores, 0..1. per = score of each criterion.",
+ "weights": {
+  "basis": "We chose these values and they may not be ideal; the report re-ranks the languages under random perturbations of all of them and only calls an order stable if it survives. Cell score = reach x route factor x product of the factors of its `needs` (the obstacle factors in weights.json). Integration score = weighted mean of I1-I5 (Absent counts 0). Combined = exposure x w_exposure + integration x w_integration.",
+  "routes": [
+   {
+    "kind": "builtin",
+    "factor": 1,
+    "why": "The language's own compiler or standard toolchain does it, nothing added to the build recipe."
+   },
+   {
+    "kind": "official-tool",
+    "factor": 0.85,
+    "why": "One or more extra tools from the language's own project or the Bytecode Alliance: installed, versioned and invoked by the developer, but supported and documented."
+   },
+   {
+    "kind": "community-tool",
+    "factor": 0.7,
+    "why": "Extra tools from a third party (a package, a plugin, a fork): works, but the language project does not stand behind it."
+   },
+   {
+    "kind": "hand-written",
+    "factor": 0.5,
+    "why": "The developer writes the glue (string marshalling over alloc/analyse): no tool, every project repeats it, errors show up at run time."
+   }
+  ],
+  "criteria": {
+   "I1": 3,
+   "I2": 3,
+   "I3": 2,
+   "I4": 1,
+   "I5": 2
+  },
+  "combined": {
+   "exposure": 0.6,
+   "integration": 0.4
+  },
+  "info": {
+   "I1": {
+    "name": "WASI",
+    "question": "Can the module run outside a browser, as a command-line program?",
+    "test": "A program copies stdin to stdout; run under `wasmtime run`. Text and empty input must round-trip.",
+    "counts": "The route (built in, library, hand-written imports) and the WASI version (p1, p2, p3).",
+    "short": "Runs outside a browser?"
+   },
+   "I2": {
+    "name": "Component Model",
+    "question": "Can the language compile to a WebAssembly component with a typed interface?",
+    "test": "A `words` component exports a WIT function taking a string and returning a record; its type is checked against the reference WIT and it is called with `wasmtime --invoke`.",
+    "counts": "Only direct support: a toolchain or generator for the language. A hand-written canonical ABI is not support.",
+    "short": "Compiles to a component?"
+   },
+   "I3": {
+    "name": "JS bindings",
+    "question": "Can a string and a record cross to JavaScript without hand-written marshalling?",
+    "test": "The same `words` function is called from Node with a string and returns an object, through whatever glue the language's tooling generates.",
+    "counts": "The route: built in, official tool, community tool, or hand-written glue.",
+    "short": "Reaches JS without glue?"
+   },
+   "I4": {
+    "name": "Debuggability",
+    "question": "Does a debug build carry what a debugger needs?",
+    "test": "A debug build of `life`: name section, DWARF or a source map, and a trap whose stack names the source function.",
+    "counts": "Full if names plus DWARF or a source map are present; partial if only names.",
+    "short": "Debug info and traps?"
+   },
+   "I5": {
+    "name": "Size",
+    "question": "How much does the language add to a small module?",
+    "test": "`life`, `words` and `cat`, each built as a size-tuned floor build and a default-flags build, measured after `wasm-opt -Oz`.",
+    "counts": "Bytes on a log scale: 1000 times the smallest build of a program scores 0.",
+    "short": "How small is it?"
+   }
+  }
+ },
+ "criteria": {
+  "I1": {
+   "name": "WASI",
+   "weight": 3,
+   "question": "Can the module run outside a browser, as a command-line program?",
+   "test": "A program copies stdin to stdout; run under `wasmtime run`. Text and empty input must round-trip.",
+   "counts": "The route (built in, library, hand-written imports) and the WASI version (p1, p2, p3).",
+   "short": "Runs outside a browser?"
+  },
+  "I2": {
+   "name": "Component Model",
+   "weight": 3,
+   "question": "Can the language compile to a WebAssembly component with a typed interface?",
+   "test": "A `words` component exports a WIT function taking a string and returning a record; its type is checked against the reference WIT and it is called with `wasmtime --invoke`.",
+   "counts": "Only direct support: a toolchain or generator for the language. A hand-written canonical ABI is not support.",
+   "short": "Compiles to a component?"
+  },
+  "I3": {
+   "name": "JS bindings",
+   "weight": 2,
+   "question": "Can a string and a record cross to JavaScript without hand-written marshalling?",
+   "test": "The same `words` function is called from Node with a string and returns an object, through whatever glue the language's tooling generates.",
+   "counts": "The route: built in, official tool, community tool, or hand-written glue.",
+   "short": "Reaches JS without glue?"
+  },
+  "I4": {
+   "name": "Debuggability",
+   "weight": 1,
+   "question": "Does a debug build carry what a debugger needs?",
+   "test": "A debug build of `life`: name section, DWARF or a source map, and a trap whose stack names the source function.",
+   "counts": "Full if names plus DWARF or a source map are present; partial if only names.",
+   "short": "Debug info and traps?"
+  },
+  "I5": {
+   "name": "Size",
+   "weight": 2,
+   "question": "How much does the language add to a small module?",
+   "test": "`life`, `words` and `cat`, each built as a size-tuned floor build and a default-flags build, measured after `wasm-opt -Oz`.",
+   "counts": "Bytes on a log scale: 1000 times the smallest build of a program scores 0.",
+   "short": "How small is it?"
+  }
+ },
+ "languages": [
+  {
+   "id": "rust",
+   "detail": {
+    "I1": {
+     "variant": "wasip1",
+     "route": "builtin",
+     "support": "full",
+     "tools": [],
+     "needs": []
+    },
+    "I2": {
+     "variant": "wit-bindgen-wasip2",
+     "route": "official-tool",
+     "support": "full",
+     "tools": [
+      "wit-bindgen (crate)"
+     ],
+     "needs": []
+    },
+    "I3": {
+     "variant": "wasm-bindgen",
+     "route": "official-tool",
+     "support": "full",
+     "tools": [
+      "wasm-bindgen-cli"
+     ],
+     "needs": []
+    },
+    "I4": {
+     "variant": "debug",
+     "route": "builtin",
+     "support": "full",
+     "tools": [],
+     "needs": []
+    },
+    "I5": {
+     "sizeScore": 0.677
+    }
+   },
+   "per": {
+    "I1": 1,
+    "I2": 0.85,
+    "I3": 0.85,
+    "I4": 1,
+    "I5": 0.677
+   },
+   "integration": 0.873090909090909,
+   "combined": 0.7409763636363637,
+   "exposure": 0.6529,
+   "rank": {
+    "best": 2,
+    "worst": 2
+   }
+  },
+  {
+   "id": "zig",
+   "detail": {
+    "I1": {
+     "variant": "wasi",
+     "route": "builtin",
+     "support": "full",
+     "tools": [],
+     "needs": []
+    },
+    "I2": {
+     "absent": "confirmed"
+    },
+    "I3": {
+     "variant": "raw",
+     "route": "hand-written",
+     "support": "full",
+     "tools": [],
+     "needs": []
+    },
+    "I4": {
+     "variant": "debug",
+     "route": "builtin",
+     "support": "full",
+     "tools": [],
+     "needs": []
+    },
+    "I5": {
+     "sizeScore": 0.82
+    }
+   },
+   "per": {
+    "I1": 1,
+    "I2": 0,
+    "I3": 0.5,
+    "I4": 1,
+    "I5": 0.82
+   },
+   "integration": 0.6036363636363636,
+   "combined": 0.5955745454545454,
+   "exposure": 0.5902,
+   "rank": {
+    "best": 3,
+    "worst": 6
+   }
+  },
+  {
+   "id": "c",
+   "detail": {
+    "I1": {
+     "variant": "wasip1",
+     "route": "builtin",
+     "support": "full",
+     "tools": [],
+     "needs": []
+    },
+    "I2": {
+     "variant": "wit-bindgen-wasip2",
+     "route": "official-tool",
+     "support": "full",
+     "tools": [
+      "wit-bindgen c"
+     ],
+     "needs": []
+    },
+    "I3": {
+     "variant": "emscripten-embind",
+     "route": "official-tool",
+     "support": "full",
+     "tools": [
+      "Emscripten (em++ --bind)"
+     ],
+     "needs": []
+    },
+    "I4": {
+     "variant": "debug",
+     "route": "builtin",
+     "support": "full",
+     "tools": [],
+     "needs": []
+    },
+    "I5": {
+     "sizeScore": 0.808
+    }
+   },
+   "per": {
+    "I1": 1,
+    "I2": 0.85,
+    "I3": 0.85,
+    "I4": 1,
+    "I5": 0.808
+   },
+   "integration": 0.8969090909090909,
+   "combined": 0.7831436363636364,
+   "exposure": 0.7073,
+   "rank": {
+    "best": 1,
+    "worst": 1
+   }
+  },
+  {
+   "id": "moonbit",
+   "detail": {
+    "I1": {
+     "variant": "wasm-raw-imports",
+     "route": "hand-written",
+     "support": "full",
+     "tools": [],
+     "needs": []
+    },
+    "I2": {
+     "variant": "wit-bindgen-wasm",
+     "route": "official-tool",
+     "support": "full",
+     "tools": [
+      "wit-bindgen moonbit",
+      "wasm-tools"
+     ],
+     "needs": []
+    },
+    "I3": {
+     "variant": "jco",
+     "route": "official-tool",
+     "support": "full",
+     "tools": [
+      "wit-bindgen moonbit",
+      "wasm-tools",
+      "jco"
+     ],
+     "needs": []
+    },
+    "I4": {
+     "variant": "debug",
+     "route": "builtin",
+     "support": "partial",
+     "tools": [],
+     "needs": [],
+     "missing": "name section only: no DWARF and no source map"
+    },
+    "I5": {
+     "sizeScore": 0.829
+    }
+   },
+   "per": {
+    "I1": 0.5,
+    "I2": 0.85,
+    "I3": 0.85,
+    "I4": 0.5,
+    "I5": 0.829
+   },
+   "integration": 0.7189090909090908,
+   "combined": 0.5215636363636363,
+   "exposure": 0.39,
+   "rank": {
+    "best": 3,
+    "worst": 8
+   }
+  },
+  {
+   "id": "assemblyscript",
+   "detail": {
+    "I1": {
+     "variant": "wasi-shim",
+     "route": "official-tool",
+     "support": "full",
+     "tools": [
+      "@assemblyscript/wasi-shim"
+     ],
+     "needs": []
+    },
+    "I2": {
+     "absent": "confirmed"
+    },
+    "I3": {
+     "variant": "bindings-esm",
+     "route": "builtin",
+     "support": "full",
+     "tools": [],
+     "needs": []
+    },
+    "I4": {
+     "variant": "debug",
+     "route": "builtin",
+     "support": "full",
+     "tools": [],
+     "needs": []
+    },
+    "I5": {
+     "sizeScore": 0.906
+    }
+   },
+   "per": {
+    "I1": 0.85,
+    "I2": 0,
+    "I3": 1,
+    "I4": 1,
+    "I5": 0.906
+   },
+   "integration": 0.6692727272727272,
+   "combined": 0.610009090909091,
+   "exposure": 0.5705,
+   "rank": {
+    "best": 3,
+    "worst": 6
+   }
+  },
+  {
+   "id": "tinygo",
+   "detail": {
+    "I1": {
+     "variant": "wasip1",
+     "route": "builtin",
+     "support": "full",
+     "tools": [],
+     "needs": []
+    },
+    "I2": {
+     "variant": "wit-bindgen-go-wasip2",
+     "route": "official-tool",
+     "support": "full",
+     "tools": [
+      "wit-bindgen-go",
+      "wasm-tools"
+     ],
+     "needs": []
+    },
+    "I3": {
+     "variant": "wasm-exec",
+     "route": "builtin",
+     "support": "full",
+     "tools": [],
+     "needs": []
+    },
+    "I4": {
+     "variant": "debug",
+     "route": "builtin",
+     "support": "full",
+     "tools": [],
+     "needs": []
+    },
+    "I5": {
+     "sizeScore": 0.449
+    }
+   },
+   "per": {
+    "I1": 1,
+    "I2": 0.85,
+    "I3": 1,
+    "I4": 1,
+    "I5": 0.449
+   },
+   "integration": 0.858909090909091,
+   "combined": 0.5449836363636364,
+   "exposure": 0.3357,
+   "rank": {
+    "best": 3,
+    "worst": 7
+   }
+  },
+  {
+   "id": "kotlin",
+   "detail": {
+    "I1": {
+     "variant": "stdlib-readln",
+     "route": "builtin",
+     "support": "full",
+     "tools": [],
+     "needs": []
+    },
+    "I2": {
+     "absent": "confirmed"
+    },
+    "I3": {
+     "variant": "wasm-js-export",
+     "route": "builtin",
+     "support": "full",
+     "tools": [],
+     "needs": [
+      "experimental-api"
+     ]
+    },
+    "I4": {
+     "variant": "debug-dwarf",
+     "route": "builtin",
+     "support": "full",
+     "tools": [],
+     "needs": [
+      "experimental-api"
+     ]
+    },
+    "I5": {
+     "sizeScore": 0.222
+    }
+   },
+   "per": {
+    "I1": 1,
+    "I2": 0,
+    "I3": 0.85,
+    "I4": 0.85,
+    "I5": 0.222
+   },
+   "integration": 0.5449090909090909,
+   "combined": 0.40306363636363635,
+   "exposure": 0.3085,
+   "rank": {
+    "best": 7,
+    "worst": 8
+   }
+  },
+  {
+   "id": "swift",
+   "detail": {
+    "I1": {
+     "variant": "wasilibc",
+     "route": "builtin",
+     "support": "full",
+     "tools": [],
+     "needs": []
+    },
+    "I2": {
+     "absent": "confirmed"
+    },
+    "I3": {
+     "variant": "jskit-bridge",
+     "route": "community-tool",
+     "support": "full",
+     "tools": [
+      "JavaScriptKit",
+      "PackageToJS plugin",
+      "npm"
+     ],
+     "needs": []
+    },
+    "I4": {
+     "variant": "debug",
+     "route": "builtin",
+     "support": "full",
+     "tools": [],
+     "needs": []
+    },
+    "I5": {
+     "sizeScore": 0.169
+    }
+   },
+   "per": {
+    "I1": 1,
+    "I2": 0,
+    "I3": 0.7,
+    "I4": 1,
+    "I5": 0.169
+   },
+   "integration": 0.5216363636363637,
+   "combined": 0.46863454545454547,
+   "exposure": 0.4333,
+   "rank": {
+    "best": 5,
+    "worst": 7
+   }
+  }
+ ]
+}

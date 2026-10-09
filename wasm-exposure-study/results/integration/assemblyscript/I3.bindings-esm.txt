@@ -1,0 +1,16 @@
+# i3-js-bindings/assemblyscript/bindings-esm
+$ asc main.ts -o out.wasm -O --noAssert --bindings esm --exportRuntime
+WARNING AS235: Only variables, functions and enums become WebAssembly module exports.
+   :
+ 1 │ export class Stats {
+   │              ~~~~~
+   └─ in main.ts(1,14)
+
+PASS I3 integration/i3-js-bindings/assemblyscript/bindings-esm//out.wasm (5089 bytes)
+  ✓ adapter loads the generated bindings
+  ✓ analyse("the quick brown fox") is right
+  ✓ analyse("") is right
+  ✓ analyse("  a  bb ccc  ") is right
+  ✓ analyse("héllo wörld") is right
+  ✓ analyse("lorem ipsum … (100001 bytes)") is right
+  ✓ adapter: 4 lines of code

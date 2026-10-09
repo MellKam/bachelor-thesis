@@ -1,0 +1,1 @@
+rm -rf /tmp/i4 && cargo build --target wasm32-unknown-unknown --target-dir /tmp/i4 && cp /tmp/i4/wasm32-unknown-unknown/debug/life.wasm out.wasm

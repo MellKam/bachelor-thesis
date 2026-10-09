@@ -1,0 +1,8 @@
+# i4-debug/kotlin/debug
+$ sh ../../../kotlin-build.sh wasm-wasi
+PASS I4 integration/i4-debug/kotlin/debug//out.wasm (616691 bytes)
+  ✓ name section present
+  · DWARF sections present
+  · source-map reference present
+  · a trap names the source function in the stack  — [object WebAssembly.Exception]
+  ✓ the debug build still runs life correctly

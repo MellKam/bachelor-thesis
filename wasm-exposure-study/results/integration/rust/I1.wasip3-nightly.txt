@@ -1,0 +1,55 @@
+# i1-wasi/rust/wasip3-nightly
+$ rm -rf /tmp/i1 && cargo +nightly-2026-10-02 build --release -Zbuild-std=std,panic_abort --target wasm32-wasip3 --target-dir /tmp/i1 && cp /tmp/i1/wasm32-wasip3/release/cat.wasm out.wasm
+    Updating crates.io index
+ Downloading crates ...
+  Downloaded addr2line v0.27.1
+  Downloaded cfg-if v1.0.4
+  Downloaded adler2 v2.0.1
+  Downloaded foldhash v0.2.0
+  Downloaded rustc-literal-escaper v0.0.8
+  Downloaded getopts v0.2.24
+  Downloaded rustc-demangle v0.1.28
+  Downloaded miniz_oxide v0.9.1
+  Downloaded wit-bindgen v0.62.0
+  Downloaded memchr v2.8.3
+  Downloaded wasip3 v0.9.0+wasi-0.3.0
+  Downloaded hashbrown v0.17.1
+  Downloaded gimli v0.34.0
+  Downloaded object v0.39.1
+  Downloaded libc v0.2.189
+   Compiling compiler_builtins v0.1.160 (/opt/rust/rustup/toolchains/nightly-2026-10-02-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/compiler-builtins/compiler-builtins)
+   Compiling core v0.0.0 (/opt/rust/rustup/toolchains/nightly-2026-10-02-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core)
+   Compiling libc v0.2.189
+   Compiling wit-bindgen v0.62.0
+   Compiling object v0.39.1
+   Compiling std v0.0.0 (/opt/rust/rustup/toolchains/nightly-2026-10-02-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std)
+   Compiling rustc-std-workspace-core v1.99.0 (/opt/rust/rustup/toolchains/nightly-2026-10-02-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/rustc-std-workspace-core)
+   Compiling alloc v0.0.0 (/opt/rust/rustup/toolchains/nightly-2026-10-02-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/alloc)
+   Compiling adler2 v2.0.1
+   Compiling memchr v2.8.3
+   Compiling cfg-if v1.0.4
+   Compiling rustc-demangle v0.1.28
+   Compiling rustc-literal-escaper v0.0.8
+   Compiling unwind v0.0.0 (/opt/rust/rustup/toolchains/nightly-2026-10-02-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/unwind)
+   Compiling rustc-std-workspace-alloc v1.99.0 (/opt/rust/rustup/toolchains/nightly-2026-10-02-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/rustc-std-workspace-alloc)
+   Compiling panic_unwind v0.0.0 (/opt/rust/rustup/toolchains/nightly-2026-10-02-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/panic_unwind)
+   Compiling panic_abort v0.0.0 (/opt/rust/rustup/toolchains/nightly-2026-10-02-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/panic_abort)
+   Compiling gimli v0.34.0
+   Compiling hashbrown v0.17.1
+   Compiling std_detect v0.1.5 (/opt/rust/rustup/toolchains/nightly-2026-10-02-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std_detect)
+   Compiling miniz_oxide v0.9.1
+   Compiling wasip3 v0.9.0+wasi-0.3.0
+   Compiling addr2line v0.27.1
+   Compiling proc_macro v0.0.0 (/opt/rust/rustup/toolchains/nightly-2026-10-02-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/proc_macro)
+   Compiling cat v0.1.0 (/study/integration/i1-wasi/rust/wasip3-nightly)
+error: linking with `wasm-component-ld` failed: exit status: 1
+  |
+  = note:  "wasm-component-ld" "-flavor" "wasm" "--export" "__main_void" "--export" "cabi_realloc" "-z" "stack-size=1048576" "--stack-first" "--no-demangle" "--cooperative-threading" "--export-if-defined=__wasm_task_hook" "crt1-command.o" "<2 object files omitted>" "/tmp/i1/wasm32-wasip3/release/build/std/d81f8a5a7328c8a5/out/libstd-d81f8a5a7328c8a5.rlib" "/tmp/i1/wasm32-wasip3/release/build/panic_abort/8953e60017eb61aa/out/libpanic_abort-8953e60017eb61aa.rlib" "/tmp/i1/wasm32-wasip3/release/build/wasip3/70e4bc1a0618cd98/out/libwasip3-70e4bc1a0618cd98.rlib" "/tmp/i1/wasm32-wasip3/release/build/wit-bindgen/086119081f300e93/out/libwit_bindgen-086119081f300e93.rlib" "/tmp/i1/wasm32-wasip3/release/build/cfg-if/9acdbe5039ecd28c/out/libcfg_if-9acdbe5039ecd28c.rlib" "/tmp/i1/wasm32-wasip3/release/build/rustc-demangle/909f45c1d3ae29ff/out/librustc_demangle-909f45c1d3ae29ff.rlib" "/tmp/i1/wasm32-wasip3/release/build/std_detect/a97ae3692f6c294c/out/libstd_detect-a97ae3692f6c294c.rlib" "/tmp/i1/wasm32-wasip3/release/build/hashbrown/066237e714f1c198/out/libhashbrown-066237e714f1c198.rlib" "/tmp/i1/wasm32-wasip3/release/build/rustc-std-workspace-alloc/82c8677297a44b88/out/librustc_std_workspace_alloc-82c8677297a44b88.rlib" "/tmp/i1/wasm32-wasip3/release/build/miniz_oxide/cb4961dad194337b/out/libminiz_oxide-cb4961dad194337b.rlib" "/tmp/i1/wasm32-wasip3/release/build/adler2/de209f700dc5fcf2/out/libadler2-de209f700dc5fcf2.rlib" "/tmp/i1/wasm32-wasip3/release/build/unwind/c9e294e56039d020/out/libunwind-c9e294e56039d020.rlib" "/tmp/i1/wasm32-wasip3/release/build/libc/a37fed50fa6442b8/out/liblibc-a37fed50fa6442b8.rlib" "-l" "c" "/tmp/i1/wasm32-wasip3/release/build/rustc-std-workspace-core/dcf6d3345625904c/out/librustc_std_workspace_core-dcf6d3345625904c.rlib" "/tmp/i1/wasm32-wasip3/release/build/alloc/4bec26c769152d21/out/liballoc-4bec26c769152d21.rlib" "/tmp/i1/wasm32-wasip3/release/build/core/09f231301c0d720d/out/libcore-09f231301c0d720d.rlib" "/tmp/i1/wasm32-wasip3/release/build/compiler_builtins/252b0b0f44e624ae/out/libcompiler_builtins-252b0b0f44e624ae.rlib" "-L" "/tmp/i1/wasm32-wasip3/release/build/wit-bindgen/09ba7ad4931ae522/out" "-L" "<sysroot>/lib/rustlib/wasm32-wasip3/lib/self-contained" "-o" "/tmp/i1/wasm32-wasip3/release/build/cat/63a696d118d752ca/out/cat.wasm" "--gc-sections" "-O3" "--strip-debug"
+  = note: some arguments are omitted. use `--verbose` to show all linker arguments
+  = note: rust-lld: error: cannot open crt1-command.o: No such file or directory
+          rust-lld: error: unable to find library -lc
+          error: failed to invoke LLD: exit status: 1
+          
+
+error: could not compile `cat` (bin "cat") due to 1 previous error
+BUILD FAILED

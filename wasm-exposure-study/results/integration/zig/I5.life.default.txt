@@ -1,0 +1,5 @@
+# i5-size/life/zig/default
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -femit-bin=out.wasm
+PASS I5:life integration/i5-size/life/zig/default//out.wasm (567039 bytes)
+  ✓ width x height is 64 x 64
+  ✓ matches the reference after 100 steps

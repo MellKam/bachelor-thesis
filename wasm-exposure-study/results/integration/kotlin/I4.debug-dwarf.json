@@ -1,0 +1,51 @@
+{
+  "criterion": "I4",
+  "file": "integration/i4-debug/kotlin/debug-dwarf//out.wasm",
+  "bytes": 618192,
+  "pass": true,
+  "checks": [
+    {
+      "name": "name section present",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "DWARF sections present",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "source-map reference present",
+      "ok": false,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "a trap names the source function in the stack",
+      "ok": false,
+      "detail": "[object WebAssembly.Exception]",
+      "info": true
+    },
+    {
+      "name": "the debug build still runs life correctly",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "debug": {
+    "names": true,
+    "dwarf": true,
+    "sourceMap": false,
+    "trapNamed": false
+  },
+  "customs": [
+    "name",
+    ".debug_abbrev",
+    ".debug_str",
+    ".debug_line_str",
+    ".debug_line",
+    ".debug_info"
+  ]
+}

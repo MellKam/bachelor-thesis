@@ -1,0 +1,470 @@
+{
+ "rust": {
+  "I1": {
+   "variants": {
+    "wasip1": {
+     "route": "builtin",
+     "support": "full"
+    },
+    "wasip2": {
+     "route": "builtin",
+     "support": "full"
+    }
+   },
+   "note": "wasip3-nightly (tier-3 target, -Zbuild-std) fails to link: no p3 sysroot (crt1-command.o) in the Rust toolchain; kept as evidence, not a variant of the cell."
+  },
+  "I2": {
+   "variants": {
+    "wit-bindgen-wasip2": {
+     "route": "official-tool",
+     "support": "full",
+     "tools": [
+      "wit-bindgen (crate)"
+     ]
+    }
+   },
+   "note": "The wasm32-wasip2 target links a component by itself; the guest bindings for a WIT world come from the wit-bindgen crate."
+  },
+  "I5": {
+   "cat": {
+    "floor": "wasip1",
+    "default": "wasip1"
+   }
+  },
+  "I3": {
+   "variants": {
+    "wasm-bindgen": {
+     "route": "official-tool",
+     "support": "full",
+     "tools": [
+      "wasm-bindgen-cli"
+     ]
+    },
+    "jco": {
+     "route": "official-tool",
+     "support": "full",
+     "tools": [
+      "wit-bindgen (crate)",
+      "jco"
+     ],
+     "probes": [
+      "jco"
+     ]
+    },
+    "raw": {
+     "route": "hand-written",
+     "support": "full",
+     "verdict": "I5.words/floor"
+    }
+   },
+   "note": "wasm-bindgen: the string and the #[wasm_bindgen] struct cross with a 3-line wrapper, nothing hand-marshalled; the jco route goes through the I2 component."
+  },
+  "I4": {
+   "variants": {
+    "debug": {
+     "route": "builtin",
+     "support": "full"
+    }
+   }
+  }
+ },
+ "zig": {
+  "I1": {
+   "variants": {
+    "wasi": {
+     "route": "builtin",
+     "support": "full"
+    }
+   },
+   "note": "Preview 1 only: the target list has wasm32-wasi (musl ABI) and no component target."
+  },
+  "I2": {
+   "absent": "confirmed",
+   "note": "No component target and no WIT generator. A hand-written ABI component was built as evidence (hand-abi-wasm-tools, 1266 B) and is not scored."
+  },
+  "I5": {
+   "cat": {
+    "floor": "wasi",
+    "default": "wasi"
+   }
+  },
+  "I3": {
+   "variants": {
+    "raw": {
+     "route": "hand-written",
+     "support": "full",
+     "verdict": "I5.words/floor"
+    }
+   },
+   "note": "No JS binding generator; the developer marshals the string through alloc/analyse by hand."
+  },
+  "I4": {
+   "variants": {
+    "debug": {
+     "route": "builtin",
+     "support": "full"
+    }
+   }
+  }
+ },
+ "c": {
+  "I1": {
+   "variants": {
+    "wasip1": {
+     "route": "builtin",
+     "support": "full"
+    },
+    "wasip2": {
+     "route": "builtin",
+     "support": "full"
+    },
+    "wasip3": {
+     "route": "builtin",
+     "support": "full",
+     "needs": [
+      "experimental-api"
+     ]
+    }
+   },
+   "note": "wasi-sdk 34 ships sysroots for p1, p2 and p3; p3 runs in Wasmtime 49 and is a pre-release spec."
+  },
+  "I2": {
+   "variants": {
+    "wit-bindgen-wasip2": {
+     "route": "official-tool",
+     "support": "full",
+     "tools": [
+      "wit-bindgen c"
+     ]
+    }
+   },
+   "note": "wasi-sdk's wasm32-wasip2 target links the component (wasm-component-ld); wit-bindgen c writes the bindings and the world's type object."
+  },
+  "I5": {
+   "cat": {
+    "floor": "wasip1",
+    "default": "wasip1"
+   }
+  },
+  "I3": {
+   "variants": {
+    "emscripten-embind": {
+     "route": "official-tool",
+     "support": "full",
+     "tools": [
+      "Emscripten (em++ --bind)"
+     ]
+    },
+    "jco": {
+     "route": "official-tool",
+     "support": "full",
+     "tools": [
+      "wit-bindgen c",
+      "jco"
+     ]
+    },
+    "raw": {
+     "route": "hand-written",
+     "support": "full",
+     "verdict": "I5.words/floor"
+    }
+   },
+   "note": "Emscripten's embind (em++ --bind) converts the string and a struct to JavaScript by itself. It is counted as an official tool because Emscripten is a second toolchain beside the wasi-sdk clang that every other cell uses (about 1.7 GB more). If Emscripten were treated as C's own toolchain the route would be built in (1.00): +0.15 on I3, about +0.03 on the integration score and +0.01 on the combined score, with no change in any rank. The jco route over the I2 component and the hand-written raw route also pass."
+  },
+  "I4": {
+   "variants": {
+    "debug": {
+     "route": "builtin",
+     "support": "full"
+    }
+   }
+  }
+ },
+ "moonbit": {
+  "I1": {
+   "variants": {
+    "wasm-raw-imports": {
+     "route": "hand-written",
+     "support": "full"
+    }
+   },
+   "note": "No WASI binding and no stdin in core: the developer declares wasi_snapshot_preview1 imports and lays out the iovecs by hand (inline Wasm for loads and stores). moonbitlang/x 0.5.5 was checked: its fs package on wasm imports a custom host module (__moonbit_fs_unstable), not WASI, and it has no stdin, so it does not change this cell. The wasm-gc backend has no route (integration/i1-wasi/moonbit-gc/ABSENT.md). No penalty for the backend: a project picks one backend, and what the wasm backend gives up is priced in the exposure axis."
+  },
+  "I2": {
+   "variants": {
+    "wit-bindgen-wasm": {
+     "route": "official-tool",
+     "support": "full",
+     "tools": [
+      "wit-bindgen moonbit",
+      "wasm-tools"
+     ]
+    }
+   },
+   "note": "Strings are UTF-16 (component embed --encoding utf16). This is the route of the MoonBit component tutorial (wit-bindgen moonbit, moon build --target wasm, wasm-tools component embed/new). Only the wasm backend: on wasm-gc the generated bindings crash the compiler (Key_not_found \"$moonbit.gc.malloc\"). No other-backend factor here, see I1."
+  },
+  "I5": {
+   "cat": {
+    "floor": "wasm-raw-imports",
+    "default": "wasm-raw-imports"
+   }
+  },
+  "I3": {
+   "variants": {
+    "jco": {
+     "route": "official-tool",
+     "support": "full",
+     "tools": [
+      "wit-bindgen moonbit",
+      "wasm-tools",
+      "jco"
+     ]
+    },
+    "raw": {
+     "route": "hand-written",
+     "support": "full",
+     "verdict": "I5.words/floor"
+    }
+   },
+   "note": "Both routes need the wasm backend (linear memory); wasm-gc has no hand-marshalling route and no generator. No other-backend factor: the backend is one choice per project and is priced in the exposure axis."
+  },
+  "I4": {
+   "variants": {
+    "debug": {
+     "route": "builtin",
+     "support": "partial",
+     "missing": "name section only: no DWARF and no source map"
+    }
+   },
+   "note": "moon build --debug keeps the name section only; no DWARF or source map on either backend was found (moon build --help lists only --debug/--strip)."
+  }
+ },
+ "assemblyscript": {
+  "I1": {
+   "variants": {
+    "wasi-shim": {
+     "route": "official-tool",
+     "support": "full",
+     "tools": [
+      "@assemblyscript/wasi-shim"
+     ]
+    },
+    "raw-imports": {
+     "route": "hand-written",
+     "support": "full"
+    }
+   }
+  },
+  "I2": {
+   "absent": "confirmed",
+   "note": "No component target and no WIT generator; export names cannot be written in source. A hand-written ABI component was built as evidence (hand-abi-wasm-tools, 1174 B; the export is renamed with sed) and is not scored."
+  },
+  "I5": {
+   "cat": {
+    "floor": "raw-imports",
+    "default": "wasi-shim"
+   }
+  },
+  "I3": {
+   "variants": {
+    "bindings-esm": {
+     "route": "builtin",
+     "support": "full"
+    },
+    "raw": {
+     "route": "hand-written",
+     "support": "full",
+     "verdict": "I5.words/floor"
+    }
+   },
+   "note": "asc --bindings esm lifts the string and the exported class by itself (AS235 warning: a class is not a Wasm export, the bindings still generate it)."
+  },
+  "I4": {
+   "variants": {
+    "debug": {
+     "route": "builtin",
+     "support": "full"
+    }
+   },
+   "note": "--debug --sourceMap: names and a source-map reference (no DWARF)."
+  }
+ },
+ "tinygo": {
+  "I1": {
+   "variants": {
+    "wasip1": {
+     "route": "builtin",
+     "support": "full"
+    },
+    "wasip2": {
+     "route": "builtin",
+     "support": "full"
+    }
+   }
+  },
+  "I2": {
+   "variants": {
+    "wit-bindgen-go-wasip2": {
+     "route": "official-tool",
+     "support": "full",
+     "tools": [
+      "wit-bindgen-go",
+      "wasm-tools"
+     ]
+    }
+   },
+   "note": "wasip2 target; the embedded world must include wasi:cli/imports and the WASI WIT packages must be copied into wit/deps, so the developer writes a second world beside the reference one."
+  },
+  "I5": {
+   "cat": {
+    "floor": "wasip1",
+    "default": "wasip1"
+   }
+  },
+  "I3": {
+   "variants": {
+    "wasm-exec": {
+     "route": "builtin",
+     "support": "full"
+    },
+    "jco": {
+     "route": "official-tool",
+     "support": "full",
+     "tools": [
+      "wit-bindgen-go",
+      "wasm-tools",
+      "jco"
+     ],
+     "probes": [
+      "jco"
+     ]
+    },
+    "raw": {
+     "route": "hand-written",
+     "support": "full",
+     "verdict": "I5.words/floor"
+    }
+   },
+   "note": "wasm_exec.js ships with TinyGo; strings and the result map convert through syscall/js (about 10 lines of wrapper to start the Go program)."
+  },
+  "I4": {
+   "variants": {
+    "debug": {
+     "route": "builtin",
+     "support": "full"
+    }
+   }
+  }
+ },
+ "kotlin": {
+  "I1": {
+   "variants": {
+    "stdlib-readln": {
+     "route": "builtin",
+     "support": "full"
+    },
+    "fd-calls": {
+     "route": "hand-written",
+     "support": "full"
+    }
+   },
+   "note": "stdlib-readln is text only: it mangles input that is not valid UTF-8 (binary-safe check fails, informational). Preview 1 only."
+  },
+  "I2": {
+   "absent": "confirmed",
+   "note": "Only wasm-wasi (p1) and wasm-js targets, no WIT generator. A hand-written ABI component was built as evidence (hand-abi-wasm-tools, 623 KB, with the WASI adapter) and is not scored."
+  },
+  "I5": {
+   "cat": {
+    "floor": "fd-calls",
+    "default": "stdlib-readln"
+   }
+  },
+  "I3": {
+   "variants": {
+    "wasm-js-export": {
+     "route": "builtin",
+     "support": "full",
+     "needs": [
+      "experimental-api"
+     ]
+    },
+    "raw": {
+     "route": "hand-written",
+     "support": "full",
+     "verdict": "I5.words/floor"
+    }
+   },
+   "note": "@JsExport is experimental and takes only functions returning external, primitive, string or function types, so the record is a JS object built by a js() snippet in the Kotlin source."
+  },
+  "I4": {
+   "variants": {
+    "debug": {
+     "route": "builtin",
+     "support": "partial",
+     "missing": "name section only: no DWARF and no source map"
+    },
+    "debug-dwarf": {
+     "route": "builtin",
+     "support": "full",
+     "needs": [
+      "experimental-api"
+     ]
+    }
+   },
+   "note": "Default debug build has names only; -Xwasm-debug-info -Xwasm-generate-dwarf adds DWARF (an -X flag, so experimental)."
+  }
+ },
+ "swift": {
+  "I1": {
+   "variants": {
+    "wasilibc": {
+     "route": "builtin",
+     "support": "full"
+    },
+    "foundation": {
+     "route": "builtin",
+     "support": "full"
+    }
+   },
+   "note": "Preview 1 only (the Wasm SDK targets wasm32-unknown-wasip1). foundation is 60 MB."
+  },
+  "I2": {
+   "absent": "confirmed",
+   "note": "No component target, and wit-bindgen has no Swift backend. Not attempted by hand."
+  },
+  "I5": {
+   "cat": {
+    "floor": "wasilibc",
+    "default": "foundation"
+   }
+  },
+  "I3": {
+   "variants": {
+    "jskit-bridge": {
+     "route": "community-tool",
+     "support": "full",
+     "tools": [
+      "JavaScriptKit",
+      "PackageToJS plugin",
+      "npm"
+     ]
+    },
+    "raw": {
+     "route": "hand-written",
+     "support": "full",
+     "verdict": "I5.words/floor"
+    }
+   },
+   "note": "JavaScriptKit (swiftwasm organisation) with its PackageToJS plugin; the bundle needs an npm dependency (@bjorn3/browser_wasi_shim) for the Node platform and is 10 MB."
+  },
+  "I4": {
+   "variants": {
+    "debug": {
+     "route": "builtin",
+     "support": "full"
+    }
+   }
+  }
+ }
+}

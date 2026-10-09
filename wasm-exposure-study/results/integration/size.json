@@ -1,0 +1,327 @@
+{
+ "basis": "bytes after wasm-opt -Oz when that is smaller, else the raw bytes; score = mean over builds of 1 - log10(size / smallest) / 3, clamped to [0, 1]",
+ "sizes": {
+  "rust": {
+   "life": {
+    "floor": {
+     "raw": 677,
+     "opt": 610,
+     "best": 610
+    },
+    "default": {
+     "raw": 945,
+     "opt": 982,
+     "best": 945
+    }
+   },
+   "words": {
+    "floor": {
+     "raw": 395,
+     "opt": 362,
+     "best": 362
+    },
+    "default": {
+     "raw": 666,
+     "opt": 801,
+     "best": 666
+    }
+   },
+   "cat": {
+    "floor": {
+     "raw": 76673,
+     "opt": 50361,
+     "best": 50361
+    },
+    "default": {
+     "raw": 76673,
+     "opt": 50361,
+     "best": 50361
+    }
+   }
+  },
+  "zig": {
+   "life": {
+    "floor": {
+     "raw": 538,
+     "opt": 492,
+     "best": 492
+    },
+    "default": {
+     "raw": 567039,
+     "opt": 8700,
+     "best": 8700
+    }
+   },
+   "words": {
+    "floor": {
+     "raw": 413,
+     "opt": 363,
+     "best": 363
+    },
+    "default": {
+     "raw": 565791,
+     "opt": 8267,
+     "best": 8267
+    }
+   },
+   "cat": {
+    "floor": {
+     "raw": 360,
+     "opt": 275,
+     "best": 275
+    },
+    "default": {
+     "raw": 360,
+     "opt": 275,
+     "best": 275
+    }
+   }
+  },
+  "c": {
+   "life": {
+    "floor": {
+     "raw": 504,
+     "opt": 457,
+     "best": 457
+    },
+    "default": {
+     "raw": 1826,
+     "opt": 977,
+     "best": 977
+    }
+   },
+   "words": {
+    "floor": {
+     "raw": 408,
+     "opt": 368,
+     "best": 368
+    },
+    "default": {
+     "raw": 1656,
+     "opt": 842,
+     "best": 842
+    }
+   },
+   "cat": {
+    "floor": {
+     "raw": 71571,
+     "opt": 3391,
+     "best": 3391
+    },
+    "default": {
+     "raw": 71571,
+     "opt": 3391,
+     "best": 3391
+    }
+   }
+  },
+  "moonbit": {
+   "life": {
+    "floor": {
+     "raw": 2236,
+     "opt": 1843,
+     "best": 1843
+    },
+    "default": {
+     "raw": 5253,
+     "opt": 2577,
+     "best": 2577
+    }
+   },
+   "words": {
+    "floor": {
+     "raw": 2150,
+     "opt": 1711,
+     "best": 1711
+    },
+    "default": {
+     "raw": 5173,
+     "opt": 2542,
+     "best": 2542
+    }
+   },
+   "cat": {
+    "floor": {
+     "raw": 414,
+     "opt": 180,
+     "best": 180
+    },
+    "default": {
+     "raw": 414,
+     "opt": 180,
+     "best": 180
+    }
+   }
+  },
+  "assemblyscript": {
+   "life": {
+    "floor": {
+     "raw": 408,
+     "opt": 408,
+     "best": 408
+    },
+    "default": {
+     "raw": 8717,
+     "opt": 405,
+     "best": 405
+    }
+   },
+   "words": {
+    "floor": {
+     "raw": 324,
+     "opt": 327,
+     "best": 324
+    },
+    "default": {
+     "raw": 1049027,
+     "opt": 317,
+     "best": 317
+    }
+   },
+   "cat": {
+    "floor": {
+     "raw": 203,
+     "opt": 203,
+     "best": 203
+    },
+    "default": {
+     "raw": 7904,
+     "opt": 7867,
+     "best": 7867
+    }
+   }
+  },
+  "tinygo": {
+   "life": {
+    "floor": {
+     "raw": 1279,
+     "opt": 1197,
+     "best": 1197
+    },
+    "default": {
+     "raw": 121671,
+     "opt": 21602,
+     "best": 21602
+    }
+   },
+   "words": {
+    "floor": {
+     "raw": 1168,
+     "opt": 1150,
+     "best": 1150
+    },
+    "default": {
+     "raw": 120341,
+     "opt": 21683,
+     "best": 21683
+    }
+   },
+   "cat": {
+    "floor": {
+     "raw": 405158,
+     "opt": 84319,
+     "best": 84319
+    },
+    "default": {
+     "raw": 405158,
+     "opt": 84319,
+     "best": 84319
+    }
+   }
+  },
+  "kotlin": {
+   "life": {
+    "floor": {
+     "raw": 616488,
+     "opt": 61363,
+     "best": 61363
+    },
+    "default": {
+     "raw": 616488,
+     "opt": 61363,
+     "best": 61363
+    }
+   },
+   "words": {
+    "floor": {
+     "raw": 615941,
+     "opt": 61158,
+     "best": 61158
+    },
+    "default": {
+     "raw": 615941,
+     "opt": 61158,
+     "best": 61158
+    }
+   },
+   "cat": {
+    "floor": {
+     "raw": 615215,
+     "opt": 60963,
+     "best": 60963
+    },
+    "default": {
+     "raw": 624257,
+     "opt": 64381,
+     "best": 64381
+    }
+   }
+  },
+  "swift": {
+   "life": {
+    "floor": {
+     "raw": 50315,
+     "opt": 11225,
+     "best": 11225
+    },
+    "default": {
+     "raw": 7164699,
+     "opt": 3359391,
+     "best": 3359391
+    }
+   },
+   "words": {
+    "floor": {
+     "raw": 47439,
+     "opt": 10694,
+     "best": 10694
+    },
+    "default": {
+     "raw": 7161908,
+     "opt": 3358770,
+     "best": 3358770
+    }
+   },
+   "cat": {
+    "floor": {
+     "raw": 7790129,
+     "opt": 3610864,
+     "best": 3610864
+    },
+    "default": {
+     "raw": 60376073,
+     "opt": null,
+     "best": 60376073
+    }
+   }
+  }
+ },
+ "smallest": {
+  "life/floor": 408,
+  "life/default": 405,
+  "words/floor": 324,
+  "words/default": 317,
+  "cat/floor": 180,
+  "cat/default": 180
+ },
+ "score": {
+  "rust": 0.677,
+  "zig": 0.82,
+  "c": 0.808,
+  "moonbit": 0.829,
+  "assemblyscript": 0.906,
+  "tinygo": 0.449,
+  "kotlin": 0.222,
+  "swift": 0.169
+ }
+}

@@ -1,0 +1,3 @@
+sh ../../../kotlin-build.sh wasm-wasi
+wasm-tools component embed ../../../wit out.wasm --world words-world -o embedded.wasm
+wasm-tools component new embedded.wasm --adapt wasi_snapshot_preview1=/opt/wasi-adapter/wasi_snapshot_preview1.reactor.wasm -o component.wasm && mv component.wasm out.wasm

@@ -1,0 +1,22 @@
+# i3-js-bindings/c/jco
+$ # needs the I2 component built first (make integration-c CRITERIA=I2)
+cp ../../../i2-component/c/wit-bindgen-wasip2/out.wasm component.wasm
+ln -sfn /opt/jco/node_modules node_modules
+rm -rf pkg && jco transpile component.wasm -o pkg --no-typescript --name words
+cp pkg/words.core.wasm out.wasm
+
+  Transpiled JS Component Files:
+
+ - pkg/interfaces/study-words-words.d.ts  0.17 KiB
+ - pkg/words.core.wasm                    50.5 KiB
+ - pkg/words.d.ts                         0.12 KiB
+ - pkg/words.js                           92.2 KiB
+
+PASS I3 integration/i3-js-bindings/c/jco//out.wasm (51681 bytes)
+  ✓ adapter loads the generated bindings
+  ✓ analyse("the quick brown fox") is right
+  ✓ analyse("") is right
+  ✓ analyse("  a  bb ccc  ") is right
+  ✓ analyse("héllo wörld") is right
+  ✓ analyse("lorem ipsum … (100001 bytes)") is right
+  ✓ adapter: 4 lines of code

@@ -1,0 +1,15 @@
+# i4-debug/swift/debug
+$ swift build -c debug --swift-sdk swift-6.4.0-RELEASE_wasm-embedded --scratch-path /tmp/sb-i4 && cp /tmp/sb-i4/out/Products/Debug-webassembly-wasm32/App.wasm out.wasm
+Building for debugging...
+[Pre-planning 1 / 37]
+[Planning deferred tasks]
+[18 / 20] App-product
+/study/integration/i4-debug/swift/debug/Package.swift: App-product: clang: warning: argument unused during compilation: '-rdynamic' [-Wunused-command-line-argument]
+[20 / 20] App-product
+Build complete! (2.01 secs)
+PASS I4 integration/i4-debug/swift/debug//out.wasm (56465 bytes)
+  ✓ name section present
+  ✓ DWARF sections present
+  · source-map reference present
+  ✓ a trap names the source function in the stack
+  ✓ the debug build still runs life correctly

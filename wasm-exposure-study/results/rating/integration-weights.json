@@ -1,0 +1,73 @@
+{
+ "basis": "We chose these values and they may not be ideal; the report re-ranks the languages under random perturbations of all of them and only calls an order stable if it survives. Cell score = reach x route factor x product of the factors of its `needs` (the obstacle factors in weights.json). Integration score = weighted mean of I1-I5 (Absent counts 0). Combined = exposure x w_exposure + integration x w_integration.",
+ "routes": [
+  {
+   "kind": "builtin",
+   "factor": 1.0,
+   "why": "The language's own compiler or standard toolchain does it, nothing added to the build recipe."
+  },
+  {
+   "kind": "official-tool",
+   "factor": 0.85,
+   "why": "One or more extra tools from the language's own project or the Bytecode Alliance: installed, versioned and invoked by the developer, but supported and documented."
+  },
+  {
+   "kind": "community-tool",
+   "factor": 0.7,
+   "why": "Extra tools from a third party (a package, a plugin, a fork): works, but the language project does not stand behind it."
+  },
+  {
+   "kind": "hand-written",
+   "factor": 0.5,
+   "why": "The developer writes the glue (string marshalling over alloc/analyse): no tool, every project repeats it, errors show up at run time."
+  }
+ ],
+ "criteria": {
+  "I1": 3,
+  "I2": 3,
+  "I3": 2,
+  "I4": 1,
+  "I5": 2
+ },
+ "combined": {
+  "exposure": 0.6,
+  "integration": 0.4
+ },
+ "info": {
+  "I1": {
+   "name": "WASI",
+   "question": "Can the module run outside a browser, as a command-line program?",
+   "test": "A program copies stdin to stdout; run under `wasmtime run`. Text and empty input must round-trip.",
+   "counts": "The route (built in, library, hand-written imports) and the WASI version (p1, p2, p3).",
+   "short": "Runs outside a browser?"
+  },
+  "I2": {
+   "name": "Component Model",
+   "question": "Can the language compile to a WebAssembly component with a typed interface?",
+   "test": "A `words` component exports a WIT function taking a string and returning a record; its type is checked against the reference WIT and it is called with `wasmtime --invoke`.",
+   "counts": "Only direct support: a toolchain or generator for the language. A hand-written canonical ABI is not support.",
+   "short": "Compiles to a component?"
+  },
+  "I3": {
+   "name": "JS bindings",
+   "question": "Can a string and a record cross to JavaScript without hand-written marshalling?",
+   "test": "The same `words` function is called from Node with a string and returns an object, through whatever glue the language's tooling generates.",
+   "counts": "The route: built in, official tool, community tool, or hand-written glue.",
+   "short": "Reaches JS without glue?"
+  },
+  "I4": {
+   "name": "Debuggability",
+   "question": "Does a debug build carry what a debugger needs?",
+   "test": "A debug build of `life`: name section, DWARF or a source map, and a trap whose stack names the source function.",
+   "counts": "Full if names plus DWARF or a source map are present; partial if only names.",
+   "short": "Debug info and traps?"
+  },
+  "I5": {
+   "name": "Size",
+   "question": "How much does the language add to a small module?",
+   "test": "`life`, `words` and `cat`, each built as a size-tuned floor build and a default-flags build, measured after `wasm-opt -Oz`.",
+   "counts": "Bytes on a log scale: 1000 times the smallest build of a program scores 0.",
+   "short": "How small is it?"
+  }
+ }
+}

@@ -10,6 +10,9 @@
 # To reproduce later without upstream, use the archived image (see README, Reproducibility).
 FROM wasm-exposure-base
 
+# git: `moon add` clones the package registry index (mooncakes.io/git/index). Used only by the integration criteria (MoonBit packages).
+RUN apt-get update && apt-get install -y --no-install-recommends git && rm -rf /var/lib/apt/lists/*
+
 ARG MOONBIT_SHA256=9226694de9ff978db1ecf820b7710c4224e84ec7a76b19a222d96f0cd4e31b6a
 ARG MOONBIT_CORE_SHA256=6f18b8fdea18f85e628a75e4a1bd3977c5a5c9c6a836fd8824192b0e6bd91b14
 

@@ -1,0 +1,47 @@
+{
+  "criterion": "I4",
+  "file": "integration/i4-debug/moonbit/debug//out.wasm",
+  "bytes": 5441,
+  "pass": true,
+  "checks": [
+    {
+      "name": "name section present",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "DWARF sections present",
+      "ok": false,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "source-map reference present",
+      "ok": false,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "a trap names the source function in the stack",
+      "ok": true,
+      "detail": "RuntimeError: unreachable |     at _M0FPC15abort5abortGuE (wasm://wasm/150eec82:wasm-function[33]:0xbb0) |     at _M0FP38capstone4life3src11crash__here (wasm://wasm/150eec82:wasm-function[24]:0x957) |",
+      "info": true
+    },
+    {
+      "name": "the debug build still runs life correctly",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "debug": {
+    "names": true,
+    "dwarf": false,
+    "sourceMap": false,
+    "trapNamed": true
+  },
+  "customs": [
+    "name",
+    "producers"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "criterion": "I4",
+  "file": "integration/i4-debug/assemblyscript/debug//out.wasm",
+  "bytes": 8939,
+  "pass": true,
+  "checks": [
+    {
+      "name": "name section present",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "DWARF sections present",
+      "ok": false,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "source-map reference present",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "a trap names the source function in the stack",
+      "ok": true,
+      "detail": "RuntimeError: unreachable |     at main/crash_here (wasm://wasm/9c6a32e2:wasm-function[6]:0x1fe) |     at Object.checkI4 [as I4] (file:///study/check/integration.mjs:213:30) |     at async file:///stu",
+      "info": true
+    },
+    {
+      "name": "the debug build still runs life correctly",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "debug": {
+    "names": true,
+    "dwarf": false,
+    "sourceMap": true,
+    "trapNamed": true
+  },
+  "customs": [
+    "name",
+    "sourceMappingURL"
+  ]
+}

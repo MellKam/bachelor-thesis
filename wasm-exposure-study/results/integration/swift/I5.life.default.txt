@@ -1,0 +1,10 @@
+# i5-size/life/swift/default
+$ swift build -c release --swift-sdk swift-6.4.0-RELEASE_wasm --scratch-path /tmp/sb-life-default && cp /tmp/sb-life-default/out/Products/Release-webassembly-wasm32/App.wasm out.wasm
+Building for production...
+[Planning deferred tasks]
+[18 / 20] App-product
+[20 / 20] App-product
+Build complete! (1.68 secs)
+PASS I5:life integration/i5-size/life/swift/default//out.wasm (7164699 bytes)
+  ✓ width x height is 64 x 64
+  ✓ matches the reference after 100 steps

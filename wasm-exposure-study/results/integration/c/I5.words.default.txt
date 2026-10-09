@@ -1,0 +1,8 @@
+# i5-size/words/c/default
+$ clang --target=wasm32-wasip1 -O2 -mexec-model=reactor -Wl,--export-memory main.c -o out.wasm
+PASS I5:words integration/i5-size/words/c/default//out.wasm (1656 bytes)
+  ✓ analyse("the quick brown fox") is right
+  ✓ analyse("") is right
+  ✓ analyse("  a  bb ccc  ") is right
+  ✓ analyse("héllo wörld") is right
+  ✓ analyse("lorem ipsum … (100001 bytes)") is right

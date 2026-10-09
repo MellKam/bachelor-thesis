@@ -1,0 +1,11 @@
+# i3-js-bindings/c/emscripten-embind
+$ em++ main.cpp -O2 --bind -sMODULARIZE -sEXPORT_ES6 -sENVIRONMENT=node -o out.mjs
+shared:INFO: (Emscripten: Running sanity checks)
+PASS I3 integration/i3-js-bindings/c/emscripten-embind//out.wasm (14337 bytes)
+  ✓ adapter loads the generated bindings
+  ✓ analyse("the quick brown fox") is right
+  ✓ analyse("") is right
+  ✓ analyse("  a  bb ccc  ") is right
+  ✓ analyse("héllo wörld") is right
+  ✓ analyse("lorem ipsum … (100001 bytes)") is right
+  ✓ adapter: 5 lines of code

@@ -1,0 +1,64 @@
+{
+ "about": "Toolchain cost (INTEGRATION.md I6): reported, not scored.",
+ "languages": {
+  "rust": {
+   "footprintMB": 924,
+   "buildSeconds": 0.4,
+   "tools": [
+    "wit-bindgen (crate)",
+    "wasm-bindgen-cli"
+   ]
+  },
+  "zig": {
+   "footprintMB": 396,
+   "buildSeconds": 2.9,
+   "tools": []
+  },
+  "c": {
+   "footprintMB": 635,
+   "buildSeconds": 0.1,
+   "tools": [
+    "wit-bindgen c",
+    "Emscripten (em++ --bind)"
+   ]
+  },
+  "moonbit": {
+   "footprintMB": 337,
+   "buildSeconds": 0.3,
+   "tools": [
+    "wit-bindgen moonbit",
+    "wasm-tools",
+    "jco"
+   ]
+  },
+  "assemblyscript": {
+   "footprintMB": 331,
+   "buildSeconds": 1.5,
+   "tools": [
+    "@assemblyscript/wasi-shim"
+   ]
+  },
+  "tinygo": {
+   "footprintMB": 1531,
+   "buildSeconds": 1.9,
+   "tools": [
+    "wit-bindgen-go",
+    "wasm-tools"
+   ]
+  },
+  "kotlin": {
+   "footprintMB": 396,
+   "buildSeconds": 12.4,
+   "tools": []
+  },
+  "swift": {
+   "footprintMB": 3939,
+   "buildSeconds": 3.8,
+   "tools": [
+    "JavaScriptKit",
+    "PackageToJS plugin",
+    "npm"
+   ]
+  }
+ }
+}

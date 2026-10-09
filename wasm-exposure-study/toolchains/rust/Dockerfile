@@ -25,7 +25,7 @@ RUN set -eux; \
     echo "${RUST_MANIFEST_SHA256}  /tmp/manifest.toml" | sha256sum -c -; \
     chmod +x /tmp/rustup-init; \
     /tmp/rustup-init -y --no-modify-path --profile minimal --default-toolchain "${RUST_VERSION}" \
-      -t wasm32-unknown-unknown -t wasm32-wasip1; \
+      -t wasm32-unknown-unknown -t wasm32-wasip1 -t wasm32-wasip2; \
     rm /tmp/rustup-init /tmp/manifest.toml; \
     rustc -vV | grep -q "commit-hash: ${RUST_COMMIT}"
 
@@ -44,3 +44,14 @@ RUN set -eux; \
     rustc -vV | grep -q "release: ${RUST_VERSION}"
 
 WORKDIR /study
+
+# wasm-bindgen-cli 0.2.129 (prebuilt musl release; digest = sha256 of the GitHub release asset, looked up 2026-10-09): generates the JS glue
+# for the integration criteria (INTEGRATION.md, I3). The `wasm-bindgen` crate in a project must have exactly this version.
+ARG WASM_BINDGEN_VERSION=0.2.129
+ARG WASM_BINDGEN_SHA256=82d12bb940e2d4e72e0d5605387fc1b8ca179044e012b620f0ce4e7440e8320e
+RUN set -eux; cd /tmp; \
+    curl -sSfLO "https://github.com/wasm-bindgen/wasm-bindgen/releases/download/${WASM_BINDGEN_VERSION}/wasm-bindgen-${WASM_BINDGEN_VERSION}-x86_64-unknown-linux-musl.tar.gz"; \
+    echo "${WASM_BINDGEN_SHA256}  wasm-bindgen-${WASM_BINDGEN_VERSION}-x86_64-unknown-linux-musl.tar.gz" | sha256sum -c -; \
+    mkdir -p /opt/wasm-bindgen && tar -xzf wasm-bindgen-${WASM_BINDGEN_VERSION}-x86_64-unknown-linux-musl.tar.gz -C /opt/wasm-bindgen --strip-components=1; \
+    rm -f /tmp/*.tar.*
+ENV PATH=/opt/wasm-bindgen:$PATH

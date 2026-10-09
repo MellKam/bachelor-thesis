@@ -1,0 +1,4 @@
+asc main.ts -o core.wasm -O --noAssert --runtime stub
+wasm-tools print core.wasm | sed 's|(export "analyse"|(export "study:words/words@0.1.0#analyse"|' | wasm-tools parse -o renamed.wasm
+wasm-tools component embed ../../../wit renamed.wasm --world words-world -o embedded.wasm
+wasm-tools component new embedded.wasm -o out.wasm

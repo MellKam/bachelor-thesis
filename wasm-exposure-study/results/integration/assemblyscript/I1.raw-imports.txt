@@ -1,0 +1,7 @@
+# i1-wasi/assemblyscript/raw-imports
+$ asc main.ts -o out.wasm -O --noAssert
+PASS I1 integration/i1-wasi/assemblyscript/raw-imports//out.wasm (203 bytes)
+  ✓ stdout equals stdin (text), exit 0
+  ✓ stdout equals stdin (empty), exit 0
+  ✓ binary-safe: stdout equals stdin (100000 random bytes), exit 0
+  ✓ WASI p1, module, entry command

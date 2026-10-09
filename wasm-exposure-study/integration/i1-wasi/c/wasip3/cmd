@@ -1,0 +1,1 @@
+clang --target=wasm32-wasip3 -Os main.c -o out.wasm

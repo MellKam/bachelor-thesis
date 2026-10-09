@@ -1,0 +1,15 @@
+# i2-component/zig/hand-abi-wasm-tools
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=core.wasm
+wasm-tools component embed ../../../wit core.wasm --world words-world -o embedded.wasm
+wasm-tools component new embedded.wasm -o out.wasm
+PASS I2 integration/i2-component/zig/hand-abi-wasm-tools//out.wasm (1266 bytes)
+  ✓ the file is a component, not a core module
+  ✓ wasm-tools validate (component-model)
+  ✓ exports study:words/words
+  ✓ the interface has the reference types
+  ✓ analyse("the quick brown fox") is right
+  ✓ analyse("") is right
+  ✓ analyse("  a  bb ccc  ") is right
+  ✓ analyse("héllo wörld") is right
+  ✓ analyse("lorem ipsum … (100001 bytes)") is right
+  ✓ imports: none

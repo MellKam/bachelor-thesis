@@ -16,8 +16,8 @@ obstacles):
 |---|---|
 | Is the feature **reached**? | the cell is not Absent |
 | Is it reached **fully**? | `support` is `full`, not `partial` |
-| Is it **checked** by the compiler? | `expressed_as` is `native` or `annotation` |
-| How many **obstacles** stand in the way? | one if `expressed_as` is `config` or `opaque`, plus one per entry of `needs` |
+| Is it **checked** by the compiler? | `expressed_as` is `native` or `annotation`, or an `inline_asm` record with `checked: true` |
+| How many **obstacles** stand in the way? | one if `expressed_as` is `config` or `inline_asm` (checked or not), plus one per entry of `needs` |
 
 `needs` is a closed list (`experimental-api`, `side-effect`, `nightly-compiler`, `restricted-host`, `extra-runtime`, `other-backend`; defined in `../README.md`). Each kind
 counts once, however long the explanation in the note, so the count cannot depend on how a cell was worded.
@@ -29,20 +29,19 @@ cell score     = reach  x  (the factor of each obstacle of the cell, multiplied)
 language score = sum over features of (importance weight x cell score)  /  sum of the importance weights
 ```
 
-Absent (not found) cells are left out of that sum and that denominator entirely, the same way a `pending` cell is — "no way was
-found" is not the same claim as "no way exists", and scoring it as a demonstrated 0 would credit an unproven negative. Absent
-(confirmed) cells stay in the denominator and score 0, since a reason or a failed `rests_on` probe is there to back the 0.
+Absent (not found) cells score 0, exactly like Absent (confirmed): a language is not rewarded for a way nobody found. They stay
+visible as a separate count in the reports, because they are the open uncertainty and could still turn into reached cells.
 
-- **Reach:** full 1, partial 0.5, Absent (confirmed) 0; Absent (not found) is excluded rather than scored.
-- **Obstacle factors** (one per kind, applied once, never per word): `config` and `opaque` (from `expressed_as`) and the five `needs` kinds.
+- **Reach:** full 1, partial 0.5, Absent 0, whether confirmed or not found.
+- **Obstacle factors** (one per kind, applied once, never per word): `config` and `inline_asm` (from `expressed_as`) and the five `needs` kinds.
   They are listed in `weights.json` from least to most damaging, each with the reason it ranks there. The **order** is the reasoned part:
   it follows what the obstacle takes away from the developer (a build setting < one experimental call site, or a mechanism that is only an
   implementation detail of another construct (a closure call, panic unwinding) < a nightly compiler for the whole project, which still gives checked, deterministic code and
-  ends when the feature is stabilised, or a module that only runs on certain hosts < unchecked assembly < extra code in every module < giving up
-  the other backend's features). The draft factors are 0.90, 0.85, 0.85, 0.80, 0.80, 0.75, 0.70 and 0.50 in that order.
-- **Importance weights:** 1 to 3 for each of the 30 features. The draft gives 3 to the module core every program uses (imports and exports,
+  ends when the feature is stabilised, or a module that only runs on certain hosts < extra code in every module < hand-written assembly, checked or not (no language help, per-target syntax, hard to write and maintain) < giving up
+  the other backend's features). The factors are 0.90, 0.85, 0.85, 0.80, 0.80, 0.70, 0.50 and 0.35 in that order. `checked` is deliberately not a factor: it changes the Checked count and the figures, and charging it again would count the cost of writing assembly twice.
+- **Importance weights:** 1 to 3 for each of the 30 features. The weights give 3 to the module core every program uses (imports and exports,
   memory, tables, data, globals, integer and float operations), 2 to common extensions, and 1 to specialised ones.
-- Every value is in `weights.json`. **They are the author's judgement**, which is why the report does not stop at the number.
+- Every value is in `weights.json`. **We chose them and they may not be ideal**, which is why the report does not stop at the number: it re-ranks the languages under 2,000 random perturbations of all of them.
 
 **Is the order trustworthy?** The report ranks the languages again 2000 times with every coefficient moved at random: partial reach
 by ±0.2, each obstacle factor by ±0.15, each importance weight between half and double. A language is called above another only if
@@ -65,7 +64,7 @@ as "robust under these perturbations", not as the third decimal of the score.
 These are choices, not findings.
 
 - **The coefficients.** All of `weights.json`. The order of the obstacles is argued in the file; the exact factors are not measured, so
-  the sensitivity run moves them (in the same order) and the importance weights independently. The importance weights in particular have no external source; the draft ranks features by how
+  the sensitivity run moves them (in the same order) and the importance weights independently. The importance weights in particular have no external source; the weights rank features by how
   many programs plausibly depend on them. Change them and re-run: the report shows what moves.
 
 - **What counts as an obstacle.** Config and assembly count as one each, whatever the distance; that makes `--global-base` and a page of
@@ -80,15 +79,23 @@ These are choices, not findings.
   becomes a claim of the thesis it needs its own coded dimension.
 - **Absent without an attempt.** Some Absent cells rest on an `ABSENT.md` and no probe (`probes/<NN>-<slug>/<lang>/ABSENT.md`; the
   generated reports link to it). They count as not reached, like any Absent cell; the summary counts them separately as the uncertainty.
-- **Confirmed vs. not found change the score, not just the summary.** Absent (confirmed) scores 0, like any demonstrated limitation.
-  Absent (not found) is excluded from the weighted mean, like a `pending` cell — the modifier exists precisely so that "nobody has
-  found a way yet" is never silently scored the same as "no way exists". A language with many `not found` cells has a score computed
-  over fewer features, not a score dragged toward 0 by unresolved uncertainty; `counts.absentNotFound` in `rating.json` says how many
-  were excluded for each language, so the comparison stays legible.
+- **Not found is scored as absent, but kept visible.** Absent (confirmed) and Absent (not found) both score 0, so unresolved cells never
+  raise a language's score. `counts.absentNotFound` in `rating.json` and the *not found* column of the reports still say how many cells
+  are open, so the uncertainty stays legible and a resolved cell can be moved to reached without touching the method.
 - **Obstacles must survive a better test.** Optimiser behaviour is not an obstacle. When a probe loses an instruction to an optimisation, the
   probe is rewritten until the instruction appears reliably (SIMD operands sent through volatile memory, a function-pointer table that is an
   exported mutable static), and the older attempts stay in the folder as "other attempts". An obstacle is recorded only if no test can get
   round it, because the language has no construct for it.
+
+## Integration and combined score
+
+The integration axis has its own coefficients in `integration-weights.json` : a factor per route (`builtin` 1.00,
+`official-tool` 0.85, `community-tool` 0.70, `hand-written` 0.50), a weight per criterion (I1 3, I2 3, I3 2, I4 1, I5 2) and the
+split of the combined score (0.6 exposure, 0.4 integration). A cell scores reach x route factor x the obstacle factors of its `needs`
+(from `weights.json`); an Absent cell scores 0, and a language without direct support for a criterion is Absent even if a hand-built
+route exists. The size criterion is `1 - log10(size / smallest) / 3` per build, averaged. `make integration-rating` writes
+`results/integration/rating.md` with the integration and combined scores and the same kind of sensitivity run (route factors perturbed with their order kept,
+criterion weights x 0.5-1.5, exposure share 0.4-0.8).
 
 ## rating.json
 

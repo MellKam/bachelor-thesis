@@ -1,0 +1,1 @@
+tinygo build -o out.wasm -target=wasip2 main.go

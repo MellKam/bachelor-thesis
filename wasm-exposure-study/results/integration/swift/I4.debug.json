@@ -1,0 +1,54 @@
+{
+  "criterion": "I4",
+  "file": "integration/i4-debug/swift/debug//out.wasm",
+  "bytes": 56465,
+  "pass": true,
+  "checks": [
+    {
+      "name": "name section present",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "DWARF sections present",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "source-map reference present",
+      "ok": false,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "a trap names the source function in the stack",
+      "ok": true,
+      "detail": "RuntimeError: unreachable |     at App.wasm.$e3App9crashHereyyF (wasm://wasm/App.wasm-00037246:wasm-function[31]:0x1779) |     at App.wasm.crash_here (wasm://wasm/App.wasm-00037246:wasm-function[30]:0",
+      "info": true
+    },
+    {
+      "name": "the debug build still runs life correctly",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "debug": {
+    "names": true,
+    "dwarf": true,
+    "sourceMap": false,
+    "trapNamed": true
+  },
+  "customs": [
+    ".debug_abbrev",
+    ".debug_info",
+    ".debug_ranges",
+    ".debug_str",
+    ".debug_names",
+    ".debug_line",
+    "name",
+    "producers",
+    "target_features"
+  ]
+}

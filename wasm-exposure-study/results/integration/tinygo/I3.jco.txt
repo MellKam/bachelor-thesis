@@ -1,0 +1,33 @@
+# i3-js-bindings/tinygo/jco
+$ # needs the I2 component built first (make integration-tinygo CRITERIA=I2)
+cp ../../../i2-component/tinygo/wit-bindgen-go-wasip2/out.wasm component.wasm
+ln -sfn /opt/jco/node_modules node_modules
+rm -rf pkg && jco transpile component.wasm -o pkg --no-typescript --name words
+cp pkg/words.core.wasm out.wasm
+
+  Transpiled JS Component Files:
+
+ - pkg/interfaces/study-words-words.d.ts            0.17 KiB
+ - pkg/interfaces/wasi-cli-environment.d.ts          0.2 KiB
+ - pkg/interfaces/wasi-cli-stderr.d.ts              0.16 KiB
+ - pkg/interfaces/wasi-cli-stdin.d.ts               0.15 KiB
+ - pkg/interfaces/wasi-cli-stdout.d.ts              0.16 KiB
+ - pkg/interfaces/wasi-clocks-monotonic-clock.d.ts  0.12 KiB
+ - pkg/interfaces/wasi-clocks-wall-clock.d.ts       0.16 KiB
+ - pkg/interfaces/wasi-filesystem-preopens.d.ts     0.19 KiB
+ - pkg/interfaces/wasi-filesystem-types.d.ts        3.74 KiB
+ - pkg/interfaces/wasi-io-error.d.ts                0.15 KiB
+ - pkg/interfaces/wasi-io-streams.d.ts              0.68 KiB
+ - pkg/interfaces/wasi-random-random.d.ts           0.14 KiB
+ - pkg/words.core.wasm                              60.6 KiB
+ - pkg/words.d.ts                                   1.37 KiB
+ - pkg/words.js                                      393 KiB
+
+PASS I3 integration/i3-js-bindings/tinygo/jco//out.wasm (62071 bytes)
+  ✓ adapter loads the generated bindings
+  ✓ analyse("the quick brown fox") is right
+  ✓ analyse("") is right
+  ✓ analyse("  a  bb ccc  ") is right
+  ✓ analyse("héllo wörld") is right
+  ✓ analyse("lorem ipsum … (100001 bytes)") is right
+  ✓ adapter: 4 lines of code

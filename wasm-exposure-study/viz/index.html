@@ -187,6 +187,21 @@ svg .dot:hover circle.mark, svg .dot:focus circle.mark { stroke-width: 3; }
 #tip .t-row { display: flex; gap: 8px; align-items: baseline; }
 #tip .t-row b { font-weight: 650; min-width: 2.2em; color: var(--ink); }
 #tip .t-row span { color: var(--ink-2); }
+details.how { margin: 18px 0 4px; font-size: 13px; color: var(--ink-2); }
+details.how summary { cursor: pointer; color: var(--ink); font-weight: 600; }
+#crit-defs { display: grid; grid-template-columns: repeat(auto-fit, minmax(176px, 1fr)); gap: 12px; margin: 22px 0 6px; }
+#crit-defs .def { border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+#crit-defs .def h4 { margin: 0 0 4px; font-size: 14px; color: var(--ink); }
+#crit-defs .def h4 span { font-weight: 400; color: var(--ink-3); font-size: 12px; margin-left: 6px; }
+#crit-defs .def p { margin: 6px 0 0; }
+#i6-tools { margin-top: 10px; }
+#i6-tools table { border-collapse: collapse; width: 100%; max-width: 640px; }
+#i6-tools th, #i6-tools td { text-align: left; padding: 6px 16px 6px 0; border-bottom: 1px solid var(--border); font-size: 13px; vertical-align: top; }
+#i6-tools th { font-weight: 600; color: var(--ink); white-space: nowrap; }
+#i6-tools td { color: var(--ink-2); }
+#i6-tools td.n { color: var(--ink-3); width: 1%; white-space: nowrap; }
+h3.sub-h { margin: 26px 0 8px; font-size: 14px; }
+#crit-defs .def p b { color: var(--ink); font-weight: 600; }
 #tip .t-note { margin-top: 6px; color: var(--ink-2); font-size: 12px; line-height: 1.45; }
 
 /* table twin */
@@ -246,6 +261,9 @@ footer { margin-top: 28px; font-size: 12px; color: var(--ink-3); }
         <a href="#versions">Spec versions</a>
         <a href="#matrix">Features</a>
         <a href="#obstacles">Obstacles</a>
+        <a href="#integration">Using it</a>
+        <a href="#toolchain">Toolchain</a>
+        <a href="#final">Combined</a>
         <a href="#method">Method</a>
       </nav>
       <button class="btn" id="theme" type="button" aria-label="Colour theme">Theme: auto</button>
@@ -257,7 +275,7 @@ footer { margin-top: 28px; font-size: 12px; color: var(--ink-3); }
 <main>
   <section class="hero">
     <p class="eyebrow">Bachelor's thesis · WebAssembly exposure study</p>
-    <h1>How far does each language reach into WebAssembly?</h1>
+    <h1>How far does each language reach into WebAssembly, and what does it cost to use?</h1>
     <p class="lede" id="lede"></p>
     <div class="tiles" id="tiles"></div>
   </section>
@@ -277,7 +295,7 @@ footer { margin-top: 28px; font-size: 12px; color: var(--ink-3); }
   <section class="card" id="score">
     <p class="eyebrow">2 · The summary</p>
     <h2 id="h-score"></h2>
-    <p class="sub">One number per language, from the author's written-down coefficients. The right panel shows how much that ranking moves when every coefficient is jostled at random.</p>
+    <p class="sub">One number per language; the right panel shows how much the ranking moves when every coefficient is perturbed.</p>
     <figure>
       <div class="pair score">
         <div class="pane"><h3>Score (0–1)</h3><div class="chart" id="chart-score"></div></div>
@@ -350,8 +368,49 @@ footer { margin-top: 28px; font-size: 12px; color: var(--ink-3); }
     </figure>
   </section>
 
+  <section class="card" id="integration">
+    <p class="eyebrow">8 · Using the module</p>
+    <h2 id="h-integration"></h2>
+    <p class="sub">What it takes to use the module a language produces, scored separately from exposure. Each column is one test that was built and run.</p>
+    <figure>
+      <div class="chart" id="chart-integration"></div>
+      <details class="how"><summary>How each criterion is tested</summary><div id="crit-defs"></div><p id="cap-scoring"></p></details>
+      <figcaption id="cap-integration"></figcaption>
+      <div id="tv-integration"></div>
+    </figure>
+  </section>
+
+  <section class="card" id="toolchain">
+    <p class="eyebrow">9 · Toolchain cost</p>
+    <h2 id="h-toolchain"></h2>
+    <p class="sub">Not scored and not part of the combined result: how heavy the official toolchain is, and how long a first build takes.</p>
+    <figure>
+      <div class="pair scatter">
+        <div class="pane"><h3>Toolchain footprint</h3><div class="chart" id="chart-footprint"></div></div>
+        <div class="pane"><h3>Cold build of the 50-line <code>words</code> program</h3><div class="chart" id="chart-build"></div></div>
+      </div>
+      <figcaption id="cap-toolchain"></figcaption>
+      <div id="tv-toolchain"></div>
+      <details class="how"><summary>Which extra tools does each language need?</summary><div id="i6-tools"></div></details>
+    </figure>
+  </section>
+
+  <section class="card" id="final">
+    <p class="eyebrow">10 · Putting it together</p>
+    <h2 id="h-final"></h2>
+    <p class="sub">The exposure score (sections 1–7) and the integration score (section 8) side by side, then combined into one number. The 0.6 / 0.4 split is a choice: change it and the order may change, which is what the range of ranks shows.</p>
+    <figure>
+      <div class="pair scatter">
+        <div class="pane"><h3>Exposure vs. integration</h3><div class="chart" id="chart-ei"></div></div>
+        <div class="pane"><h3>Combined score</h3><div class="legend" id="leg-final"></div><div class="chart" id="chart-final"></div></div>
+      </div>
+      <figcaption id="cap-final"></figcaption>
+      <div id="tv-final"></div>
+    </figure>
+  </section>
+
   <section class="card method" id="method">
-    <p class="eyebrow">8 · How to read this fairly</p>
+    <p class="eyebrow">11 · How to read this fairly</p>
     <h2>What the numbers do and do not say</h2>
     <ul id="method-list"></ul>
   </section>

@@ -1,0 +1,42 @@
+# i3-js-bindings/swift/jskit-bridge
+$ swift package --swift-sdk swift-6.4.0-RELEASE_wasm --scratch-path /tmp/sb-js --allow-writing-to-package-directory js --output Bundle 2>&1 | tail -30
+(cd Bundle && npm install --ignore-scripts --no-audit --no-fund >/dev/null 2>&1)
+cp Bundle/App.wasm out.wasm
+[440 / 462] SwiftIfConfig
+[442 / 462] SwiftSyntaxMacroExpansion
+[444 / 462] SwiftCompilerPlugin
+[449 / 463] BridgeJSMacros
+[456 / 470] BridgeJSMacros
+[457 / 470] BridgeJSMacros
+[461 / 471] BridgeJSMacros
+[475 / 485] JavaScriptKit
+[483 / 488] App-product
+[486 / 489] JavaScriptKit
+/study/integration/i3-js-bindings/swift/jskit-bridge/Package.swift: App-product: clang: warning: argument unused during compilation: '-rdynamic' [-Wunused-command-line-argument]
+[490 / 490] App-product
+Build complete! (58.32 secs)
+Build graph changed, cleaning...
+Packaging...
+[1/14] Bundle/App.wasm: [32mbuilding[0m
+[2/14] /tmp/sb-js/plugins/PackageToJS/outputs/Bundle.tmp/wasm-imports.json: [32mbuilding[0m
+[3/14] Bundle/index.d.ts: [32mbuilding[0m
+[4/14] Bundle/index.js: [32mbuilding[0m
+[5/14] Bundle/instantiate.d.ts: [32mbuilding[0m
+[6/14] Bundle/instantiate.js: [32mbuilding[0m
+[7/14] Bundle/package.json: [32mbuilding[0m
+[8/14] Bundle/platforms/browser.d.ts: [32mbuilding[0m
+[9/14] Bundle/platforms/browser.js: [32mbuilding[0m
+[10/14] Bundle/platforms/browser.worker.js: [32mbuilding[0m
+[11/14] Bundle/platforms/node.d.ts: [32mbuilding[0m
+[12/14] Bundle/platforms/node.js: [32mbuilding[0m
+[13/14] Bundle/runtime.d.ts: [32mbuilding[0m
+[14/14] Bundle/runtime.js: [32mbuilding[0m
+Packaging finished
+PASS I3 integration/i3-js-bindings/swift/jskit-bridge//out.wasm (10170589 bytes)
+  ✓ adapter loads the generated bindings
+  ✓ analyse("the quick brown fox") is right
+  ✓ analyse("") is right
+  ✓ analyse("  a  bb ccc  ") is right
+  ✓ analyse("héllo wörld") is right
+  ✓ analyse("lorem ipsum … (100001 bytes)") is right
+  ✓ adapter: 6 lines of code

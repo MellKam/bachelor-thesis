@@ -1,0 +1,8 @@
+# i5-size/words/c/floor
+$ clang --target=wasm32-unknown-unknown -Oz -nostdlib -Wl,--no-entry -Wl,--export-memory -Wl,--strip-all main.c -o out.wasm
+PASS I5:words integration/i5-size/words/c/floor//out.wasm (408 bytes)
+  ✓ analyse("the quick brown fox") is right
+  ✓ analyse("") is right
+  ✓ analyse("  a  bb ccc  ") is right
+  ✓ analyse("héllo wörld") is right
+  ✓ analyse("lorem ipsum … (100001 bytes)") is right

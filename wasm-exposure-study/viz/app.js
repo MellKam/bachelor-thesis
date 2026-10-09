@@ -178,7 +178,7 @@
   // ---------------------------------------------------------------- language filter (emphasis, not filtering)
   const focusStyle = document.head.appendChild(el('style'));
   function setFocus(id) {
-    focusStyle.textContent = id ? `svg [data-lang]:not([data-lang="${id}"]) { opacity: 0.2; }` : '';
+    focusStyle.textContent = id ? `svg [data-lang]:not([data-lang="${id}"]), #i6-tools tr[data-lang]:not([data-lang="${id}"]) { opacity: 0.2; }` : '';
     for (const b of document.querySelectorAll('.chip')) b.setAttribute('aria-pressed', String((b.dataset.id || '') === (id || '')));
   }
   function buildChips() {
@@ -687,7 +687,7 @@
     const leaders = langs.filter((l) => l.counts.reached === maxReached).map((l) => l.name);
     const second = d3.max(langs.filter((l) => l.counts.reached < maxReached), (l) => l.counts.reached);
     const minReached = d3.min(langs, (l) => l.counts.reached);
-    setText('#lede', `${NL} languages, ${NF} WebAssembly features, ${f0(R.cells.length)} judged language–feature pairs. For each pair the study asks three things: can the language produce the feature at all, does its compiler check it, and what stands between the developer and it?`);
+    setText('#lede', `${NL} languages, ${NF} WebAssembly features, ${f0(R.cells.length)} judged language–feature pairs. For each pair the study asks three things: can the language produce the feature at all, does its compiler check it, and what stands between the developer and it? A second axis then asks what it costs to use the module that comes out (WASI, components, JS bindings, debugging, size), and the two are combined at the end.`);
     const tiles = [
       ['Languages', NL, langs.map((l) => l.name).join(', ')],
       ['Features', NF, VERSIONS.map((v) => `${R.features.filter((f) => f.since === v).length} from spec ${v}`).join(' · ')],
@@ -709,22 +709,20 @@
     const neverProbed = d3.sum(langs, (l) => l.counts.neverProbed);
     cov.append(
       para(`<b>${clean0.name}</b> has the most features reached with no obstacle (${clean0.counts.noObstacle}). `
-        + `Hatched segments are the uncertainty: the language <i>might</i> reach those features, but no way was found. Across all languages that is ${totalUnknown} cells, ${neverProbed} of them never probed (they rest on an ABSENT.md only). Hover a bar for the exact split.`),
+        + `Hatched segments are the uncertainty: the language <i>might</i> reach those features, but no way was found (${totalUnknown} cells; they score 0 like any absent cell). Another ${neverProbed} absent cells rest only on a written note, with no probe built. Hover a bar for the exact split.`),
     );
 
     // score
     const notRobust = R.comparison.pairs.filter((p) => !p.robust);
     const top = langs[0];
     setText('#h-score', notRobust.length
-      ? `${top.name} comes out on top, and the order holds everywhere except ${joinNames(notRobust.map((p) => `${LANG.get(p.higher).name} vs. ${LANG.get(p.lower).name}`))}`
+      ? `${top.name} comes out on top; ${notRobust.length} close pair${notRobust.length === 1 ? '' : 's'} of languages cannot be ordered with confidence`
       : `${top.name} comes out on top, and the whole order holds under perturbation`);
     const cs = $('#cap-score');
     cs.replaceChildren();
-    const borderline = R.comparison.pairs.filter((p) => p.robust && p.share < 0.97);
-    cs.append(para(`A language counts as ahead of another only if it was ahead in at least 95% of the ${f0(R.comparison.perturbation.draws)} runs. `
-      + (notRobust.length ? `${joinNames(notRobust.map((p) => `<b>${LANG.get(p.higher).name} above ${LANG.get(p.lower).name}</b> held in only ${Math.round(p.share * 100)}%`))}, so quote that pair as a tie. ` : '')
-      + (borderline.length ? `Closest passes: ${joinNames(borderline.map((p) => `${LANG.get(p.higher).name} over ${LANG.get(p.lower).name} (${Math.round(p.share * 1000) / 10}%)`))}.` : '')));
-    cs.append(para('The score is the author\'s judgement made explicit (see the method notes): quote the order, not the third decimal.'));
+    cs.append(para(`Ahead means ahead in at least 95% of the ${f0(R.comparison.perturbation.draws)} perturbed runs.`
+      + (notRobust.length ? ` Treat as ties: ${notRobust.map((p) => `<b>${LANG.get(p.higher).name}</b> / <b>${LANG.get(p.lower).name}</b> (${Math.round(p.share * 100)}%)`).join(' · ')}.` : '')));
+    cs.append(para('The coefficients are our choice and may not be ideal (see the method notes): quote the order, not the third decimal.'));
 
     // loss
     const dominant = (l) => { const d = LOSS.get(l.id); return ['absent', 'obstacles', 'partial'].sort((a, b) => d[b] - d[a])[0]; };
@@ -788,16 +786,17 @@
     const absentTotal = d3.sum(langs, (l) => l.counts.absentNotFound + l.counts.absentConfirmed);
     const wlist = $('#method-list');
     const items = [
-      '<b>The score is a summary, not a measurement.</b> Per feature: reach (full 1, partial 0.5, absent 0) times the factor of every obstacle on it; then a weighted mean over all features. The obstacle factors and the 1–3 importance weights are the author\'s judgement, written down in <code>weights.json</code>.',
-      `<b>Rankings are tested, not asserted.</b> The ${f0(R.comparison.perturbation.draws)} perturbed runs move partial reach by ±0.2, every obstacle factor by ±0.15 and each importance weight between half and double. "Robust" means the order held in at least 95% of them.`,
-      `<b>Absent is not the same as impossible.</b> ${absentTotal} cells are absent; ${d3.sum(langs, (l) => l.counts.absentNotFound)} of them are "not found", meaning the probe did not find a way, and ${d3.sum(langs, (l) => l.counts.neverProbed)} of those were never probed at all. A language that is better studied can look better.`,
-      '<b>Checked means type-checked by the compiler</b> (native syntax or an annotation). It does not mean memory-safe; that would need its own coded dimension.',
-      '<b>One column, two backends (MoonBit).</b> A cell takes the better of the <code>wasm</code> and <code>wasm-gc</code> backends, and a feature available on only one gets the harsh <code>other-backend</code> factor, because a module uses a single backend.',
+      '<b>The score is a summary, not a measurement.</b> Per feature: reach (full 1, partial 0.5, absent 0) times the factor of every obstacle on it; then a weighted mean over all features. The obstacle factors and the 1–3 importance weights are our choice, written down in <code>weights.json</code>; they may not be ideal, which is why the ranking is re-run under random perturbations of all of them.',
+      `<b>Rankings are tested, not asserted.</b> The ${f0(R.comparison.perturbation.draws)} perturbed runs move partial reach by ±0.2, the damage of all obstacles together between half and one and a half times (plus ±15% each, in the same order) and each importance weight between half and double. "Robust" means the order held in at least 95% of them.`,
+      `<b>Absent is not the same as impossible.</b> ${absentTotal} cells are absent and all score 0. ${d3.sum(langs, (l) => l.counts.absentNotFound)} of them are "not found": no way was found yet, so they could still turn out reachable. ${d3.sum(langs, (l) => l.counts.neverProbed)} rest only on a written note (no probe was built). A language that is better studied can look better.`,
+      '<b>Checked means checked by the language\'s compiler</b> (native syntax or an annotation; inline assembly only if the compiler checks the block; negative probes show none of the four inline-assembly routes does, so no cell is marked checked). It does not mean memory-safe; that would need its own coded dimension.',
+      '<b>One column, two backends (MoonBit).</b> A cell takes the better of the <code>wasm</code> and <code>wasm-gc</code> backends, and a feature available on only one gets the harsh <code>other-backend</code> factor, because a module uses a single backend. The integration axis does not apply that factor: the backend is one choice per project and is already priced here.',
+      '<b>The integration axis is separate, and the combined score is a choice.</b> Sections 8–10 score what it costs to use the module (route factors, criterion weights and the 0.6 / 0.4 split are our choice and re-run under perturbation). Toolchain cost is reported but not scored. Some routes are counted conservatively: a hand-built component is not support for components, and Emscripten counts as a second toolchain.',
       '<b>Equal weighting is a choice.</b> A feature a few programs need counts as much as its importance weight says, no more; the spec-version view lets you read the core features apart from the recent ones.',
     ];
     wlist.replaceChildren();
     for (const t of items) { const li = el('li'); li.innerHTML = t; wlist.append(li); }
-    setText('#foot', `${R.about} · Visualisation: D3 v7, no build step. Run node viz/build-data.mjs after the ratings change.`);
+    setText('#foot', `Exposure data generated by check/rating.mjs from results/coding.json and results/rating/weights.json; integration data by check/integration-rating.mjs from results/integration.json. Exposure and integration scores are between 0 and 1. Do not edit by hand. · Visualisation: D3 v7, no build step. Run node viz/build-data.mjs after either rating changes.`);
   }
   // Prose is assembled as HTML strings with <b>/<i>; the names it interpolates come from
   // rating.json, so refuse to start if any of them could carry markup.
@@ -835,6 +834,224 @@
       obstacleKinds.map((k) => [k.kind, k.factor.toFixed(2), ...langs.map((l) => obstacleCells(l.id, k.kind).length)]));
   }
 
+
+  // ---------------------------------------------------------------- 8 · integration (second axis, on its own)
+  const I = window.INTEGRATION;
+  const ICRIT = Object.keys(I.criteria);
+  const nameOf = (id) => LANG.get(id).name;
+  const wExp = I.weights.combined.exposure, wInt = I.weights.combined.integration;
+  const byInt = [...I.languages].sort((a, b) => b.integration - a.integration);
+  const ordered = [...I.languages].sort((a, b) => b.combined - a.combined);
+
+  function cellDetail(d) {
+    if (d.sizeScore != null) return 'mean over life, words and cat, floor and default builds; log scale';
+    if (d.absent) return d.absent === 'none' ? 'no cell' : `absent (${d.absent})`;
+    const bits = [`${d.route}${d.support === 'partial' ? ', partial' : ''}`];
+    if (d.tools.length) bits.push(`tools: ${d.tools.join(', ')}`);
+    if (d.needs.length) bits.push(`needs: ${d.needs.join(', ')}`);
+    return `${d.variant}: ${bits.join('; ')}`;
+  }
+
+  function renderCriteria() {
+    const defs = $('#crit-defs');
+    defs.replaceChildren();
+    for (const c of ICRIT) {
+      const k = I.criteria[c];
+      const card = el('div', 'def');
+      const h4 = el('h4', null, `${c} ${k.name}`); h4.append(el('span', null, `weight ${k.weight}`));
+      card.append(h4, el('div', null, k.question));
+      const t = el('p'); t.append(el('b', null, 'Test: '), document.createTextNode(clean(k.test)));
+      const s = el('p'); s.append(el('b', null, 'Scored on: '), document.createTextNode(clean(k.counts)));
+      card.append(t, s);
+      defs.append(card);
+    }
+
+    // small multiples: one bar panel per criterion (and one for the total), languages as shared rows, best total first
+    const host = $('#chart-integration');
+    host.replaceChildren();
+    const panels = [...ICRIT.map((c) => ({ key: c, code: c, name: I.criteria[c].name, short: I.criteria[c].short })), { key: 'integration', code: 'Total', name: 'integration', short: 'Weighted mean of the five' }];
+    const W = host.clientWidth, labelW = Math.min(112, W * 0.24), gap = W < 560 ? 8 : 14, top = 58, rowH = 30;
+    const rightPad = W < 560 ? 30 : 0; // the total's label has to fit after its bar on a narrow screen
+    const pw = (W - labelW - rightPad - gap * (panels.length - 1)) / panels.length;
+    const wide = pw >= 96;
+    const bw = pw - (wide ? 36 : 4); // bar length of a score of 1: room is kept for the value label
+    const svg = makeSvg(host, W, top + rowH * byInt.length + 8, 'Bar panels: score of each language on each integration criterion, and the total');
+    byInt.forEach((l, i) => {
+      svg.append('text').attr('class', 't-ink').attr('data-lang', l.id).attr('x', 0).attr('y', top + rowH * i + rowH / 2 + 4).text(nameOf(l.id));
+    });
+    panels.forEach((p, j) => {
+      const x0 = labelW + j * (pw + gap);
+      const total = p.key === 'integration';
+      svg.append('text').attr('class', 't-ink').attr('x', x0).attr('y', 14).style('font-weight', 700).text(wide ? `${p.code} ${p.name}` : p.code);
+      svg.append('text').attr('class', 't-muted').attr('x', x0).attr('y', 30).text(wide ? p.short : '').style('font-size', '11px');
+      for (const t of [0, 0.5, 1]) {
+        svg.append('line').attr('class', t === 0 ? 'axis' : 'grid').attr('x1', x0 + t * bw).attr('x2', x0 + t * bw).attr('y1', top - 6).attr('y2', top + rowH * byInt.length);
+      }
+      byInt.forEach((l, i) => {
+        const v = total ? l.integration : l.per[p.key];
+        const d = total ? null : l.detail[p.key];
+        const absent = d && d.absent;
+        const yy = top + rowH * i;
+        const g = svg.append('g').attr('data-lang', l.id).attr('class', 'dot').attr('tabindex', 0)
+          .attr('aria-label', `${nameOf(l.id)}, ${p.name}: ${absent ? 'no direct support' : num(v)}`);
+        g.append('rect').attr('class', 'hit').attr('x', x0).attr('y', yy).attr('width', pw).attr('height', rowH).attr('fill', 'transparent');
+        if (absent) {
+          g.append('text').attr('class', 't-muted').attr('x', x0 + 6).attr('y', yy + rowH / 2 + 5).style('font-size', '15px').text('×');
+        } else if (v > 0.004) {
+          g.append('path').attr('d', roundedRight(x0, yy + rowH / 2 - 6, Math.max(2, v * bw), 12, 4)).attr('fill', total ? css('--ord-0') : css('--s1'));
+        }
+        if (wide || total) {
+          g.append('text').attr('class', total ? 't-ink' : 't-muted').attr('x', x0 + (absent ? 22 : v * bw + 6)).attr('y', yy + rowH / 2 + 4)
+            .style('font-weight', total ? 700 : 400).text(absent ? 'none' : f2(v));
+        }
+        tipBind(g.datum({ l, p, d, v }), ({ l: ll, p: pp, d: dd, v: vv }) => ({
+          title: `${nameOf(ll.id)} · ${pp.code === 'Total' ? 'Integration score' : `${pp.code} ${pp.name}`}`,
+          rows: [{ v: dd && dd.absent ? 'none' : num(vv), l: 'score' }],
+          note: dd ? cellDetail(dd) : 'weighted mean of the five criteria',
+        }));
+      });
+    });
+  }
+
+  // one sorted horizontal bar chart: label, bar, value
+  function sortedBars(host, rows, label, fmt, fill, unitName) {
+    host.replaceChildren();
+    const W = host.clientWidth, labelW = Math.min(112, W * 0.3), rowH = 30, rightPad = 64;
+    const x = d3.scaleLinear([0, d3.max(rows, (r) => r.value)], [0, W - labelW - rightPad]);
+    const svg = makeSvg(host, W, rowH * rows.length + 6, label);
+    rows.forEach((r, i) => {
+      const yy = 3 + rowH * i;
+      const g = svg.append('g').attr('data-lang', r.id).attr('class', 'dot').attr('tabindex', 0).attr('aria-label', `${nameOf(r.id)}: ${fmt(r.value)}`);
+      g.append('rect').attr('class', 'hit').attr('x', 0).attr('y', yy).attr('width', W).attr('height', rowH).attr('fill', 'transparent');
+      g.append('text').attr('class', 't-ink').attr('x', 0).attr('y', yy + rowH / 2 + 4).text(nameOf(r.id));
+      g.append('path').attr('d', roundedRight(labelW, yy + rowH / 2 - 6, Math.max(2, x(r.value)), 12, 4)).attr('fill', fill);
+      g.append('text').attr('class', 't-muted').attr('x', labelW + Math.max(2, x(r.value)) + 8).attr('y', yy + rowH / 2 + 4).text(fmt(r.value));
+      tipBind(g.datum(r), (d) => ({ title: nameOf(d.id), rows: [{ v: fmt(d.value), l: unitName }] }));
+    });
+  }
+
+  function renderToolchain() {
+    const T = I.toolchain;
+    const size = (n) => (n >= 1000 ? `${(n / 1000).toFixed(1)} GB` : `${n} MB`);
+    const byFoot = I.languages.map((l) => ({ id: l.id, value: T[l.id].footprintMB })).sort((a, b) => a.value - b.value);
+    const byBuild = I.languages.map((l) => ({ id: l.id, value: T[l.id].buildSeconds })).sort((a, b) => a.value - b.value);
+    sortedBars($('#chart-footprint'), byFoot, 'Bar chart: toolchain footprint per language, smallest first', size, css('--s1'), 'toolchain footprint');
+    sortedBars($('#chart-build'), byBuild, 'Bar chart: cold build time of the words program per language, fastest first', (v) => `${v} s`, css('--s2'), 'cold build');
+    const host = $('#i6-tools');
+    host.replaceChildren();
+    const t = el('table');
+    t.append(el('caption', 'vh', 'Extra tools per language'));
+    const body = el('tbody');
+    for (const l of [...I.languages].sort((a, b) => T[a.id].tools.length - T[b.id].tools.length || nameOf(a.id).localeCompare(nameOf(b.id)))) {
+      const tr = el('tr'); tr.dataset.lang = l.id;
+      const th = el('th', null, nameOf(l.id)); th.scope = 'row';
+      const n = T[l.id].tools.length;
+      tr.append(th, el('td', 'n', n === 0 ? 'none' : `${n} tool${n === 1 ? '' : 's'}`), el('td', null, T[l.id].tools.join(', ')));
+      body.append(tr);
+    }
+    t.append(body);
+    host.append(t);
+    const slow = byBuild.filter((r) => r.value > 4);
+    const lo = byFoot[0], hi = byFoot[byFoot.length - 1];
+    tableView($('#tv-toolchain'), 'Toolchain footprint, cold build time and extra tools per language',
+      ['Language', 'Toolchain footprint', 'Cold build of words (s)', 'Extra tools'],
+      I.languages.map((l) => [nameOf(l.id), size(T[l.id].footprintMB), T[l.id].buildSeconds, T[l.id].tools.join(', ') || 'none']));
+    setText('#h-toolchain', `Toolchains range from ${size(lo.value)} (${nameOf(lo.id)}) to ${size(hi.value)} (${nameOf(hi.id)})${slow.length === 1 ? `; only ${nameOf(slow[0].id)} takes over 4 s to build` : ''}`);
+    $('#cap-toolchain').textContent = 'Footprint: the official compiler, its standard library or SDK and the runtime it needs (Node, Go or a JDK). Build: a cold build of a 50-line program.';
+  }
+
+  // ---------------------------------------------------------------- 9 · exposure and integration combined
+  function renderFinal() {
+    const host = $('#chart-ei');
+    host.replaceChildren();
+    const w = host.clientWidth, h = Math.min(360, Math.max(280, w * 0.78));
+    const m = { l: 44, r: 14, t: 40, b: 42 };
+    const x = d3.scaleLinear([0.2, 0.8], [m.l, w - m.r]);
+    const y = d3.scaleLinear([0.3, 1], [h - m.b, m.t]);
+    const svg = makeSvg(host, w, h, 'Scatter: exposure score against integration score, with lines of equal combined score');
+    for (const t of [0.4, 0.6, 0.8, 1]) {
+      svg.append('line').attr('class', 'grid').attr('x1', m.l).attr('x2', w - m.r).attr('y1', y(t)).attr('y2', y(t));
+      svg.append('text').attr('class', 't-muted').attr('x', m.l - 8).attr('y', y(t) + 4).attr('text-anchor', 'end').text(f2(t));
+    }
+    for (const t of [0.2, 0.4, 0.6, 0.8]) {
+      svg.append('line').attr('class', 'grid').attr('x1', x(t)).attr('x2', x(t)).attr('y1', m.t).attr('y2', h - m.b);
+      svg.append('text').attr('class', 't-muted').attr('x', x(t)).attr('y', h - m.b + 16).attr('text-anchor', 'middle').text(f2(t));
+    }
+    svg.append('line').attr('class', 'axis').attr('x1', m.l).attr('x2', w - m.r).attr('y1', h - m.b).attr('y2', h - m.b);
+    svg.append('line').attr('class', 'axis').attr('x1', m.l).attr('x2', m.l).attr('y1', m.t).attr('y2', h - m.b);
+    svg.append('text').attr('class', 't-muted').attr('x', (m.l + w - m.r) / 2).attr('y', h - 6).attr('text-anchor', 'middle').text('Exposure score: how much of Wasm it lets you name →');
+    svg.append('text').attr('class', 't-muted').attr('x', 0).attr('y', 11).text('↑ Integration score (axis starts at 0.30)');
+    for (const c of [0.4, 0.5, 0.6, 0.7]) {
+      const pts = d3.range(0.2, 0.8 + 1e-9, 0.01).map((e) => [e, (c - wExp * e) / wInt]).filter(([, v]) => v >= 0.3 && v <= 1);
+      if (pts.length < 2) continue;
+      svg.append('path').attr('d', d3.line()(pts.map(([e, v]) => [x(e), y(v)]))).attr('fill', 'none').attr('class', 'axis').style('stroke-width', '1px');
+      const [e0, v0] = pts[0];
+      svg.append('text').attr('class', 't-muted').attr('x', x(e0) + 2).attr('y', y(v0) - 5).text(c === 0.4 ? `combined ${f2(c)}` : f2(c));
+    }
+    const pts = I.languages.map((l) => ({ l, x: x(l.exposure), y: y(l.integration), text: nameOf(l.id) }));
+    placeLabels(pts, pts, w - 4);
+    for (const p of pts) {
+      const g = svg.append('g').attr('data-lang', p.l.id).attr('class', 'dot').attr('tabindex', 0)
+        .attr('aria-label', `${p.text}: exposure ${num(p.l.exposure)}, integration ${num(p.l.integration)}, combined ${num(p.l.combined)}`);
+      g.append('circle').attr('class', 'hit').attr('cx', p.x).attr('cy', p.y).attr('r', 14);
+      g.append('circle').attr('class', 'mark').attr('cx', p.x).attr('cy', p.y).attr('r', 5.5).attr('fill', css('--s1'))
+        .style('stroke', css('--surface')).style('stroke-width', '2px');
+      g.append('text').attr('class', 't-ink').attr('x', p.x + p.dx).attr('y', p.y + p.dy).attr('text-anchor', p.anchor).style('font-weight', 600).text(p.text);
+      tipBind(g.datum(p.l), (l) => ({
+        title: nameOf(l.id),
+        rows: [{ v: num(l.exposure), l: 'exposure' }, { v: num(l.integration), l: 'integration' }, { v: num(l.combined), l: 'combined' }, { v: `${l.rank.best}–${l.rank.worst}`, l: 'rank range' }],
+      }));
+    }
+
+    // combined score as two stacked parts: what exposure contributes and what integration contributes
+    const bh = $('#chart-final');
+    bh.replaceChildren();
+    const lg = $('#leg-final');
+    lg.replaceChildren();
+    const cE = css('--s1'), cI = css('--s2');
+    lg.append(...[[cE, `Exposure × ${wExp}`], [cI, `Integration × ${wInt}`]].map(([f, t]) => { const s = el('span'), i = el('i'); i.style.background = f; s.append(i, document.createTextNode(t)); return s; }));
+    const W = bh.clientWidth, labelW = Math.min(112, W * 0.28), rowH = 34, top = 4, rightPad = 92;
+    const unit = (W - labelW - rightPad) / 0.85;
+    const s3 = makeSvg(bh, W, top + rowH * ordered.length + 4, 'Stacked bars: combined score per language, split into the exposure and integration parts');
+    ordered.forEach((l, i) => {
+      const yy = top + rowH * i;
+      const g = s3.append('g').attr('data-lang', l.id).attr('class', 'dot').attr('tabindex', 0)
+        .attr('aria-label', `${nameOf(l.id)}: combined ${num(l.combined)}, rank range ${l.rank.best} to ${l.rank.worst}`);
+      g.append('text').attr('class', 't-ink').attr('x', 0).attr('y', yy + rowH / 2 + 4).text(nameOf(l.id));
+      drawStack(g, [{ value: wExp * l.exposure, fill: cE, label: f2(wExp * l.exposure) }, { value: wInt * l.integration, fill: cI, label: f2(wInt * l.integration) }], labelW, yy + 5, rowH - 10, unit);
+      g.append('text').attr('class', 't-ink').attr('x', labelW + l.combined * unit + 8).attr('y', yy + rowH / 2 + 4).style('font-weight', 700).text(f2(l.combined));
+      g.append('text').attr('class', 't-muted').attr('x', labelW + l.combined * unit + 44).attr('y', yy + rowH / 2 + 4).text(`rank ${l.rank.best}–${l.rank.worst}`);
+      tipBind(g.datum(l), (ll) => ({
+        title: nameOf(ll.id),
+        rows: [{ v: num(ll.combined), l: 'combined' }, { v: num(ll.exposure), l: 'exposure score' }, { v: num(ll.integration), l: 'integration score' }, { v: `${ll.rank.best}–${ll.rank.worst}`, l: 'rank in 2,000 perturbed runs' }],
+      }));
+    });
+  }
+
+  function writeIntegrationCopy() {
+    const top = byInt[0], low = byInt[byInt.length - 1];
+    void top;
+    const unsupported = ICRIT.map((c) => ({ c, n: I.languages.filter((l) => l.detail[c].absent).length })).sort((a, b) => b.n - a.n)[0];
+    setText('#h-integration', `${nameOf(top.id)} is the easiest to use (${f2(top.integration)}) and ${nameOf(low.id)} the hardest (${f2(low.integration)})`);
+    $('#cap-integration').textContent = `× = no direct support (${unsupported.n} of ${NL} languages have none for ${I.criteria[unsupported.c].name.toLowerCase()}). Hover a bar for the route behind it.`;
+    $('#cap-scoring').textContent = `A bar is reach × the factor of the route (built in 1.00, official tool 0.85, community tool 0.70, hand-written 0.50) × the obstacle factors of section 7. Total is the weighted mean with weights ${ICRIT.map((c) => `${c} ${I.criteria[c].weight}`).join(', ')}. A hand-built component or hand-written marshalling over a core module is not counted as support for components.`;
+    const byExp = [...I.languages].sort((a, b) => b.exposure - a.exposure).map((l) => l.id);
+    const byComb = ordered.map((l) => l.id);
+    const move = byExp.map((id) => ({ id, d: byExp.indexOf(id) - byComb.indexOf(id) })).sort((a, b) => Math.abs(b.d) - Math.abs(a.d))[0];
+    const lead = ordered[0];
+    setText('#h-final', `${nameOf(lead.id)} leads on the combined score; ${nameOf(move.id)} moves ${Math.abs(move.d)} place${Math.abs(move.d) === 1 ? '' : 's'} ${move.d > 0 ? 'up' : 'down'} once integration counts`);
+    $('#cap-final').textContent = `Combined = ${wExp} × exposure + ${wInt} × integration. Lines in the scatter join points with the same combined score. Rank is the best and worst place of the language over 2,000 runs in which the route factors, criterion weights and the exposure share (0.4–0.8) are perturbed.`;
+  }
+
+  function writeIntegrationTable() {
+    tableView($('#tv-integration'), 'Integration criteria and integration score per language',
+      ['Language', ...ICRIT.map((c) => `${c} ${I.criteria[c].name}`), 'Integration'],
+      byInt.map((l) => [nameOf(l.id), ...ICRIT.map((c) => (l.detail[c].absent ? 'no direct support' : num(l.per[c]))), num(l.integration)]));
+    tableView($('#tv-final'), 'Exposure, integration and combined score per language',
+      ['Language', 'Exposure', 'Integration', 'Combined', 'Rank range'],
+      ordered.map((l) => [nameOf(l.id), num(l.exposure), num(l.integration), num(l.combined), `${l.rank.best}–${l.rank.worst}`]));
+  }
+
   // ---------------------------------------------------------------- theme + lifecycle
   const THEMES = ['auto', 'light', 'dark'];
   let theme = 'auto';
@@ -855,13 +1072,15 @@
   function renderAll() {
     tipHide();
     renderCoverage(); renderScore(); renderLoss(); renderTradeoffs();
-    renderVersions(); renderMatrix(); renderObstacles();
+    renderVersions(); renderMatrix(); renderObstacles(); renderCriteria(); renderToolchain(); renderFinal();
   }
 
   applyTheme();
   buildChips();
   writeCopy();
   writeTables();
+  writeIntegrationCopy();
+  writeIntegrationTable();
   renderAll();
 
   let lastW = innerWidth, timer = 0;

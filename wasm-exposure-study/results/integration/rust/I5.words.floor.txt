@@ -1,0 +1,10 @@
+# i5-size/words/rust/floor
+$ rm -rf /tmp/i5-words-floor && cargo build --release --target wasm32-unknown-unknown --target-dir /tmp/i5-words-floor && cp /tmp/i5-words-floor/wasm32-unknown-unknown/release/words.wasm out.wasm
+   Compiling words v0.1.0 (/study/integration/i5-size/words/rust/floor)
+    Finished `release` profile [optimized] target(s) in 0.25s
+PASS I5:words integration/i5-size/words/rust/floor//out.wasm (395 bytes)
+  ✓ analyse("the quick brown fox") is right
+  ✓ analyse("") is right
+  ✓ analyse("  a  bb ccc  ") is right
+  ✓ analyse("héllo wörld") is right
+  ✓ analyse("lorem ipsum … (100001 bytes)") is right

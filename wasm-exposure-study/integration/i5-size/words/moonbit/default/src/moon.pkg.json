@@ -1,0 +1,13 @@
+{
+  "is-main": false,
+  "link": {
+    "wasm": {
+      "exports": [
+        "alloc",
+        "analyse"
+      ],
+      "export-memory-name": "memory",
+      "heap-start-address": 16384
+    }
+  }
+}

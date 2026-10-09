@@ -1,0 +1,5 @@
+# i5-size/life/c/default
+$ clang --target=wasm32-wasip1 -O2 -mexec-model=reactor -Wl,--export-memory main.c -o out.wasm
+PASS I5:life integration/i5-size/life/c/default//out.wasm (1826 bytes)
+  ✓ width x height is 64 x 64
+  ✓ matches the reference after 100 steps

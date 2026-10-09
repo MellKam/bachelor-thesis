@@ -1,0 +1,11 @@
+package study:words@0.1.0;
+
+interface words {
+  record stats { words: u32, bytes: u32, longest: string }
+  analyse: func(text: string) -> stats;
+}
+
+world words-world {
+  include wasi:cli/imports@0.2.0;
+  export words;
+}

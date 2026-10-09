@@ -1,0 +1,7 @@
+# i5-size/life/moonbit/floor
+$ rm -rf _build && moon build --release --target wasm && cp _build/wasm/release/build/src/src.wasm out.wasm
+Warning: `moon.mod.json` at '/study/integration/i5-size/life/moonbit/floor' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
+Finished. moon: ran 2 tasks, now up to date
+PASS I5:life integration/i5-size/life/moonbit/floor//out.wasm (2236 bytes)
+  ✓ width x height is 64 x 64
+  ✓ matches the reference after 100 steps

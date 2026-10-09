@@ -4,7 +4,7 @@ An empirical comparison of how programming languages expose WebAssembly features
 Chapter 2 of the thesis: every claim in that chapter of the form "language X can / cannot express Y" should point at a probe in
 this directory.
 
-Status: **30 probes written and run for all eight language columns; results coded provisionally, not yet analysed.**
+Status: **30 probes written and run for all nine language columns; results coded provisionally, not yet analysed.**
 `results/matrix.md` is the generated overview, `results/coding.json` the hand-authored classification behind it, and
 `results/<lang>/*.json` the checker's verdicts it rests on. The plan the study follows (languages, feature list, the result
 vocabulary and the rules for scoring a cell) is [`../chapter-2-test-matrix.md`](../chapter-2-test-matrix.md); where this README and
@@ -17,8 +17,11 @@ scope; their files remain in `capstones/`, `host/` and `results/capstones/` unto
 > language, and what additional tooling is needed to get there?
 
 This is a question about *exposure*, not about performance, code quality or popularity. "Exposure" is measured by where a feature
-lives relative to the language: in the source and understood by the compiler, in the source but opaque to it, or outside the
-source altogether (see the result vocabulary in the matrix file).
+lives relative to the language: in the source and understood by the compiler, in the source as hand-written assembly (understood by
+the compiler only if it checks the block), or outside the source altogether (see the result vocabulary in the matrix file).
+
+A second, separate axis asks what it costs to *use* the module that comes out (WASI, the Component Model, JavaScript bindings,
+debug information, size); it is specified in `INTEGRATION.md` and reported next to the exposure score, never inside it.
 
 ## 2. Goals and non-goals
 
@@ -26,14 +29,14 @@ source altogether (see the result vocabulary in the matrix file).
 2. **Observable evidence**: every cell is decided by inspecting the compiled `.wasm`, not by reading what a language says it does.
 3. **Reproducibility**: pinned toolchains in containers, scripted runs, verdicts committed.
 
-Not a performance benchmark, not a ranking of languages, not a test of language *safety* (in particular not of whether the host
+Not a performance benchmark, not a verdict on which language is better (the scores summarise what was measured and are re-run under perturbation to show which orderings are stable), not a test of language *safety* (in particular not of whether the host
 boundary is checked), not a test of wx (wx is deliberately excluded so the baseline is not defined by the thesis's own language),
 and not exhaustive over Wasm: only features in a released version of the spec are probed, and instruction features are sampled by
 family. The matrix file lists what was left out and why.
 
 ## 3. Subjects
 
-Seven columns. C and C++ share a column (one toolchain and target, and one module can mix them), and so do MoonBit's two backends:
+Eight columns. C and C++ share a column (one toolchain and target, and one module can mix them), and so do MoonBit's two backends:
 the `wasm` and `wasm-gc` backends are different targets and a module uses one of them, so each probe is run on both (directories
 `moonbit/` and `moonbit-gc/`), a cell takes the better backend, and a feature only one of them has carries the cost "only on the
 `<backend>` backend", which counts as one obstacle (see `results/rating/README.md`).
@@ -48,14 +51,15 @@ the `wasm` and `wasm-gc` backends are different targets and a module uses one of
 | `assemblyscript` | AssemblyScript | 0.28.20 | linear memory + runtime GC | Binaryen |
 | `tinygo` | TinyGo | 0.42.0 (LLVM 22.1.4, Go 1.27.1) | linear memory + runtime GC | LLVM + `wasm-ld`, target `wasm-unknown` |
 | `kotlin` | Kotlin/Wasm | 2.4.21 (`kotlinc-wasm`, JDK 25.0.4.1) | Wasm GC | own backend; WASI target (`wasm-js` where a probe needs JS types) |
+| `swift` | Swift (Embedded Swift) | 6.4.0 (`swiftc` 6.4, LLVM 21.0.0 fork, `swift-6.4.0-RELEASE_wasm` SDK) | linear memory | LLVM + `wasm-ld` from the Swift toolchain, `swiftc -target wasm32-unknown-none-wasm -enable-experimental-feature Embedded`; `wasm64-unknown-none-wasm` for memory64; SwiftPM + the official Swift SDK for WebAssembly as route baselines (probe 01) |
 
 The language set is not claimed to be complete. It was chosen for current use as a Wasm target and for variety in design intent.
-Known omissions: Emscripten (a separate C toolchain), Go's standard compiler, Swift, Dart and others. Grain was part of an earlier
+Known omissions: Emscripten (a separate C toolchain), Go's standard compiler, Dart and others. Grain was part of an earlier
 pass and was dropped; nothing of it remains.
 
 ## 4. The probes
 
-There is one probe per feature of the list in `check/feature-list.mjs` (30 features, ordered by stabilisation: spec version 1.0, then 2.0, then 3.0). All 30 are run in all eight columns (the last nine were added after the first 21; see `PROBES.md`). A feature that is specified but not probed yet is `Pending` in `results/coding.json`.
+There is one probe per feature of the list in `check/feature-list.mjs` (30 features, ordered by stabilisation: spec version 1.0, then 2.0, then 3.0). All 30 are run in all nine columns (the last nine were added after the first 21; see `PROBES.md`). A feature that is specified but not probed yet is `Pending` in `results/coding.json`.
 [`PROBES.md`](PROBES.md) specifies each probe's task and exactly what the checker asserts.
 
 ```
@@ -80,12 +84,15 @@ Everything runs in containers; nothing is installed on the host except Docker.
 
 ```
 make base-image                         # Debian + Node + WABT + Wasmtime + wasm-tools (inspection tools only)
-make probe-<lang> [FEATURES="01 02"]    # build every variant of <lang> and check it   (rust zig c moonbit moonbit-gc assemblyscript tinygo kotlin)
+make probe-<lang> [FEATURES="01 02"]    # build every variant of <lang> and check it   (rust zig c moonbit moonbit-gc assemblyscript tinygo kotlin swift)
 make check-references                   # run the checker on the reference.wat files; a checker that rejects its own reference is broken
 make summary [LANGS="rust c"]           # one line per variant: verdict, size, failed checks
 make recheck [LANGS=...]                # re-run the checker on the binaries already built (after changing the checker); rebuilds nothing
 make matrix                             # validate results/coding.json against the evidence and render results/matrix.md
 make rating                             # render results/rating/rating.md (tallies and a 0-1 score) from results/coding.json and results/rating/weights.json
+make integration-<lang> [CRITERIA="I1 I3"]   # the integration criteria (INTEGRATION.md): build and check integration/i<n>-*/<lang>/*
+make integration-matrix                 # results/integration/matrix.md (+ size.json) from results/integration.json and the verdicts
+make integration-rating                 # results/integration/rating.md: integration and combined scores, with the sensitivity run
 ```
 
 `probes/run.sh <lang>` is the runner (it executes inside the language's image). For every variant it runs `cmd` in the variant's
@@ -101,7 +108,7 @@ directory, requires an `out.wasm`, runs the checker, and writes `results/<lang>/
    `cmd`, not hidden.
 3. The **checker's verdict** decides pass or fail, never the author's impression.
 4. Describe each variant that produced something in `results/coding.json` with categories (`expressed_as` native / annotation /
-   config / opaque, `support` full or partial, `needs` from a closed list), or mark the cell Absent with a modifier
+   config / inline_asm, `support` full or partial, `needs` from a closed list), or mark the cell Absent with a modifier
    (*confirmed*: the toolchain or documentation says there is no way, or rejects the attempt; *not found*: a way plausibly exists but
    none was found). The cell's result and its flags (*partial*, *needs an unstable toolchain*, *a side effect*, ...) are derived from those
    records; free-text `flags` and a `note` say what the categories cannot. The format is in `results/README.md`. `make matrix`
@@ -135,7 +142,7 @@ so that it can be argued with.
 | Probe design artefacts mistaken for language limits | Variants try the obvious ways around a result before a cell is called Absent; checker bugs found along the way are fixed and the binaries re-checked (`make recheck`) |
 | Language choice | Stated basis, known omissions named (Emscripten, others); results are for these toolchains at these versions |
 | Toolchain distribution differs from the one people use | E.g. C uses wasi-sdk's clang (a Wasm-only LLVM build at a different patch level than the official release); a cross-check against official LLVM is an open point |
-| Versions move | Everything is pinned and dated; results are a snapshot of 2026-10-02 (Rust, Zig, AssemblyScript, MoonBit) and 2026-10-08 (the rest) |
+| Versions move | Everything is pinned and dated; results are a snapshot of 2026-10-02 (Rust, Zig, AssemblyScript, MoonBit), 2026-10-08 (TinyGo, Kotlin, C) and 2026-10-09 (Swift) |
 | Engine support conflates with language support | A module the engine rejects is recorded as such, separately from "not emitted" |
 
 ## 9. Reproducibility
@@ -154,6 +161,7 @@ installed, `make <lang>-shell` opens a shell with this directory mounted at `/st
 | MoonBit | SHA-256 of the `latest` tarballs; **see caveat** |
 | TinyGo | release tarball SHA-256 + Go toolchain tarball SHA-256 from go.dev |
 | Kotlin/Wasm | `kotlin-compiler` zip SHA-256 + Temurin JDK tarball SHA-256 from Adoptium |
+| Swift | swift.org `debian13` toolchain tarball SHA-256 (computed from the download: swift.org publishes only a detached signature for it) + the Wasm SDK bundle's SHA-256 as published in swift.org's `releases.json`, checked by `swift sdk install --checksum` |
 
 Known gaps, stated so they are not mistaken for guarantees:
 
@@ -163,6 +171,7 @@ Known gaps, stated so they are not mistaken for guarantees:
 - **Network at probe time.** `-Zbuild-std` (Rust `wasm64` and `panic=unwind` variants) downloads crates when it runs; the standard
   library's own lockfile bounds that, but the downloads are not pinned by this repository.
 - **Kotlin 2.4.21 was published on the day it was pinned** (2026-10-08, a patch on the 2.4.0 line of 2026-06-03).
+- **Swift 6.4.0's toolchain tarball has no published checksum**, only a `.sig`; the pinned SHA-256 is the one computed when the Dockerfile was written (2026-10-09), and the image build fails if the download differs. The Wasm SDK's checksum is swift.org's own.
 - The base image's apt packages (`ca-certificates`, `curl`, `xz-utils`, `libatomic1`, plus `unzip` in the Kotlin image and `gcc`
   in the Rust image) come from Debian at build time. They do not affect compiled output.
 - Pinning fixes versions, not compiler provenance, and does not claim bit-for-bit identical builds.
@@ -175,11 +184,16 @@ Known gaps, stated so they are not mistaken for guarantees:
 wasm-exposure-study/
   README.md          this file
   PROBES.md          the 30 features, the task of each probe and what the checker asserts
+  INTEGRATION.md     the second axis: WASI, components, JS bindings, debuggability, size (criteria I1-I5), routes and scoring
   Makefile           image, probe, summary, recheck and matrix targets
-  toolchains/        base/ + one self-contained Dockerfile per language
+  toolchains/        base/ + one self-contained Dockerfile per language (rust zig c moonbit assemblyscript tinygo kotlin swift)
   probes/            run.sh, kotlin-build.sh and probes/<NN>-<slug>/ (see §4)
-  check/             the checker (features.mjs, wasm.mjs, wat.mjs, run.mjs) and its tools (summarise, recheck, matrix, validate-references)
-  results/           <lang>/<NN>.<variant>.{txt,json}, coding.json, matrix.md, rating/rating.md   (see results/README.md)
+  check/             the checker (features.mjs, wasm.mjs, wat.mjs, run.mjs) and its tools (summarise, recheck, matrix, validate-references);
+                     integration.mjs (checks I1-I5), integration-report.mjs, integration-rating.mjs
+  integration/       run.sh, wit/words.wit, host/ and i<n>-<slug>/<lang>/<variant>/ (i5-size/<program>/<lang>/<variant>/)
+  results/           <lang>/<NN>.<variant>.{txt,json}, coding.json, matrix.md, rating/rating.md   (see results/README.md);
+                     integration.json (hand coding), integration/<lang>/I<n>.<variant>.*, integration/{matrix,rating}.md
+  viz/               one-page D3 view of both ratings (viz/README.md)
   capstones/ host/   the earlier capstone programs and their shared hosts; out of scope, untouched
   attempts/          capstones.md only (the capstone write-up)
 ```

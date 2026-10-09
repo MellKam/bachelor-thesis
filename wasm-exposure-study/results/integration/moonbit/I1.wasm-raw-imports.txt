@@ -1,0 +1,9 @@
+# i1-wasi/moonbit/wasm-raw-imports
+$ moon build --release --target wasm && cp _build/wasm/release/build/src/src.wasm out.wasm
+Warning: `moon.mod.json` at '/study/integration/i1-wasi/moonbit/wasm-raw-imports' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
+Finished. moon: ran 1 task, now up to date
+PASS I1 integration/i1-wasi/moonbit/wasm-raw-imports//out.wasm (414 bytes)
+  ✓ stdout equals stdin (text), exit 0
+  ✓ stdout equals stdin (empty), exit 0
+  ✓ binary-safe: stdout equals stdin (100000 random bytes), exit 0
+  ✓ WASI p1, module, entry command

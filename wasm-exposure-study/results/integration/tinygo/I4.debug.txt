@@ -1,0 +1,8 @@
+# i4-debug/tinygo/debug
+$ tinygo build -o out.wasm -target=wasm-unknown -scheduler=none -gc=leaking .
+PASS I4 integration/i4-debug/tinygo/debug//out.wasm (33234 bytes)
+  ✓ name section present
+  ✓ DWARF sections present
+  · source-map reference present
+  ✓ a trap names the source function in the stack
+  ✓ the debug build still runs life correctly

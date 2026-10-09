@@ -1,0 +1,14 @@
+# i5-size/words/swift/default
+$ swift build -c release --swift-sdk swift-6.4.0-RELEASE_wasm --scratch-path /tmp/sb-words-default && cp /tmp/sb-words-default/out/Products/Release-webassembly-wasm32/App.wasm out.wasm
+Building for production...
+[Pre-planning 1 / 37]
+[Planning deferred tasks]
+[18 / 20] App-product
+[20 / 20] App-product
+Build complete! (1.56 secs)
+PASS I5:words integration/i5-size/words/swift/default//out.wasm (7161908 bytes)
+  ✓ analyse("the quick brown fox") is right
+  ✓ analyse("") is right
+  ✓ analyse("  a  bb ccc  ") is right
+  ✓ analyse("héllo wörld") is right
+  ✓ analyse("lorem ipsum … (100001 bytes)") is right

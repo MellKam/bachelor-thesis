@@ -1,0 +1,19 @@
+# i3-js-bindings/kotlin/wasm-js-export
+$ sh ../../../kotlin-build.sh wasm-js
+main.kt:3:28: warning: this declaration needs opt-in. Its usage should be marked with '@kotlin.js.ExperimentalWasmJsInterop' or '@OptIn(kotlin.js.ExperimentalWasmJsInterop::class)'
+external interface Stats : JsAny {
+                           ^^^^^
+main.kt:9:65: warning: this declaration needs opt-in. Its usage should be marked with '@kotlin.js.ExperimentalWasmJsInterop' or '@OptIn(kotlin.js.ExperimentalWasmJsInterop::class)'
+fun makeStats(words: Int, bytes: Int, longest: String): Stats = js("({ words: words, bytes: bytes, longest: longest })")
+                                                                ^^
+main.kt:13:2: warning: this declaration needs opt-in. Its usage should be marked with '@kotlin.js.ExperimentalJsExport' or '@OptIn(kotlin.js.ExperimentalJsExport::class)'
+@JsExport
+ ^^^^^^^^
+PASS I3 integration/i3-js-bindings/kotlin/wasm-js-export//out.wasm (629586 bytes)
+  ✓ adapter loads the generated bindings
+  ✓ analyse("the quick brown fox") is right
+  ✓ analyse("") is right
+  ✓ analyse("  a  bb ccc  ") is right
+  ✓ analyse("héllo wörld") is right
+  ✓ analyse("lorem ipsum … (100001 bytes)") is right
+  ✓ adapter: 4 lines of code

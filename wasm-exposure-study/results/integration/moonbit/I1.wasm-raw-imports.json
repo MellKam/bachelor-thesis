@@ -1,0 +1,43 @@
+{
+  "criterion": "I1",
+  "file": "integration/i1-wasi/moonbit/wasm-raw-imports//out.wasm",
+  "bytes": 414,
+  "optBytes": 180,
+  "pass": true,
+  "checks": [
+    {
+      "name": "stdout equals stdin (text), exit 0",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "stdout equals stdin (empty), exit 0",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "binary-safe: stdout equals stdin (100000 random bytes), exit 0",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "WASI p1, module, entry command",
+      "ok": true,
+      "detail": "",
+      "info": true
+    }
+  ],
+  "wasi": {
+    "kind": "module",
+    "versions": [
+      "p1"
+    ],
+    "entry": "command",
+    "imports": [
+      "wasi_snapshot_preview1.fd_write",
+      "wasi_snapshot_preview1.fd_read"
+    ],
+    "nonWasiImports": []
+  }
+}

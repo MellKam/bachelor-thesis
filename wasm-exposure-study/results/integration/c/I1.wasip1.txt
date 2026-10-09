@@ -1,0 +1,7 @@
+# i1-wasi/c/wasip1
+$ clang --target=wasm32-wasip1 -Os main.c -o out.wasm
+PASS I1 integration/i1-wasi/c/wasip1//out.wasm (71571 bytes)
+  ✓ stdout equals stdin (text), exit 0
+  ✓ stdout equals stdin (empty), exit 0
+  ✓ binary-safe: stdout equals stdin (100000 random bytes), exit 0
+  ✓ WASI p1, module, entry command

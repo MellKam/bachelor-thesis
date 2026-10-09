@@ -1,0 +1,17 @@
+# i5-size/words/moonbit/default
+$ rm -rf _build && moon build --target wasm && cp _build/wasm/debug/build/src/src.wasm out.wasm
+Warning: `moon.mod.json` at '/study/integration/i5-size/words/moonbit/default' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
+Warning: [0020]
+    ╭─[ /study/integration/i5-size/words/moonbit/default/src/lib.mbt:43:22 ]
+    │
+ 43 │     while i < len && not(is_ws(load8(ptr + i))) {
+    │                      ─┬─  
+    │                       ╰─── Warning (deprecated): Use !expr instead
+────╯
+Finished. moon: ran 2 tasks, now up to date (1 warnings, 0 errors)
+PASS I5:words integration/i5-size/words/moonbit/default//out.wasm (5173 bytes)
+  ✓ analyse("the quick brown fox") is right
+  ✓ analyse("") is right
+  ✓ analyse("  a  bb ccc  ") is right
+  ✓ analyse("héllo wörld") is right
+  ✓ analyse("lorem ipsum … (100001 bytes)") is right
