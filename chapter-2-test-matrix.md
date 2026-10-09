@@ -15,7 +15,7 @@ A result says where a Wasm feature lives relative to the language, using two pro
 | Native | yes | yes | A language construct, or a typed standard-library / intrinsic function |
 | Annotation | yes | yes | An attribute on an ordinary construct |
 | Config | no | no | Build flag, config file or linker argument outside the source |
-| Opaque | yes | no | Reached through inline assembly or Wasm text that the type system does not check |
+| Inline asm | yes | usually no | Written as assembly or Wasm text by hand (Rust `global_asm!`, Zig `asm`, C `__asm__`, MoonBit `extern "wasm"`). Marked *checked* only when the language's own compiler relates the block to the program, shown by a negative probe; rejection by the assembler or the engine alone does not count |
 | Absent | n/a | n/a | The language has no way to produce the feature (see modifiers) |
 
 **Absent** carries one of two modifiers stating how sure we are:
@@ -45,6 +45,7 @@ and cannot have both. C and C++ share a column for a different reason: one toolc
 | TinyGo | Linear memory + runtime GC | TinyGo 0.42.0 (Go 1.27.1) | no | toolchain ready |
 | MoonBit (`wasm-gc` backend) | Wasm GC | same `moon` toolchain, `wasm-gc` target | no | toolchain ready (shared image); same column as the `wasm` backend |
 | Kotlin/Wasm | Wasm GC | Kotlin 2.4.21 (`kotlinc-wasm`, JDK 25) | no | toolchain ready |
+| Swift | Linear memory, no runtime (Embedded Swift) | Swift 6.4.0: `swiftc` + `wasm-ld`, `wasm32-unknown-none-wasm` (`wasm64-unknown-none-wasm` for memory64); SwiftPM + the Swift SDK for WebAssembly only as a route baseline | no | toolchain ready |
 
 Dropped: Grain (not part of the comparison; its first-pass probes, results and toolchain were deleted from `wasm-exposure-study/`).
 
@@ -54,7 +55,7 @@ Only features that are part of a released version of the spec (`WebAssembly/prop
 stabilisation order: the module core (spec 1.0) first, then the 2.0 extensions, then the 3.0 extensions, the most recently standardised last.
 Within a version the order follows when a feature was first available in a major engine; that within-version order is approximate and not yet
 checked against the CG meeting notes. Features 4, 13, 16, 19, 21, 22, 24, 28 and 30 were added after the first 21 had been probed; they are
-specified in `wasm-exposure-study/PROBES.md` and have since been probed in all eight columns.
+specified in `wasm-exposure-study/PROBES.md` and have since been probed in all nine columns.
 A feature is either a piece of module structure (memory, globals, tags, ...) or a *family* of instructions probed as one unit.
 
 | # | Spec | Feature |
@@ -103,7 +104,7 @@ A feature is either a piece of module structure (memory, globals, tags, ...) or 
 | SIMD memory and bitwise operations | `v128.load`, `v128.store`, `v128.bitselect`, `i8x16.narrow_i16x8_s` |
 | GC casts, subtyping, i31, packed fields | declared subtype, `ref.test`/`ref.cast`, `ref.i31` + `i31.get`, packed `i8` array element |
 
-**Cell rule for a family.** The matrix cell shows the *weakest member* on the order Native > Annotation > Opaque > Absent
+**Cell rule for a family.** The matrix cell shows the *weakest member* on the order Native > Annotation > Inline asm > Absent
 (Config does not normally apply to an instruction). If members differ, the cell is marked *partial* with a note, and the
 per-member results go in an appendix table. For each member, the appendix also records whether the instruction is
 **guaranteed** to appear in the output or only survives when the optimiser leaves it alone.
@@ -122,46 +123,62 @@ per-member results go in an appendix table. For each member, the appendix also r
 Each filled cell: the result, plus a short flag where needed (e.g. `Config, partial`). Longer notes, if any, are listed below
 the matrix.
 
-| # | Feature | Rust | Zig | C/C++ | MoonBit | AssemblyScript | TinyGo | Kotlin/Wasm |
-|---|---|---|---|---|---|---|---|---|
-| 1 | Imports and exports | | | | | | | |
-| 2 | Memory: limits, exported name, imported module and field | | | | | | | |
-| 3 | Table and indirect call | | | | | | | |
-| 4 | Table import and export | | | | | | | |
-| 5 | Start function | | | | | | | |
-| 6 | Data segments (placement of initialised data) | | | | | | | |
-| 7 | Custom sections | | | | | | | |
-| 8 | Integer operations | | | | | | | |
-| 9 | Float builtins | | | | | | | |
-| 10 | Globals (mutable; import and export) | | | | | | | |
-| 11 | Non-trapping conversions and sign extension | | | | | | | |
-| 12 | Bulk memory | | | | | | | |
-| 13 | Passive data segments | | | | | | | |
-| 14 | Multi-value results | | | | | | | |
-| 15 | SIMD | | | | | | | |
-| 16 | SIMD memory and bitwise operations | | | | | | | |
-| 17 | `externref` | | | | | | | |
-| 18 | Multiple tables | | | | | | | |
-| 19 | Table operations on references | | | | | | | |
-| 20 | Tail calls | | | | | | | |
-| 21 | Extended constant expressions | | | | | | | |
-| 22 | Typed function references | | | | | | | |
-| 23 | GC structs and arrays | | | | | | | |
-| 24 | GC casts, subtyping, i31, packed fields | | | | | | | |
-| 25 | Multiple memories | | | | | | | |
-| 26 | Relaxed SIMD | | | | | | | |
-| 27 | Exception tags | | | | | | | |
-| 28 | Exception handling with exnref | | | | | | | |
-| 29 | 64-bit memory | | | | | | | |
-| 30 | Branch hinting | | | | | | | |
+| # | Feature | Rust | Zig | C/C++ | MoonBit | AssemblyScript | TinyGo | Kotlin/Wasm | Swift |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | Imports and exports | | | | | | | | |
+| 2 | Memory: limits, exported name, imported module and field | | | | | | | | |
+| 3 | Table and indirect call | | | | | | | | |
+| 4 | Table import and export | | | | | | | | |
+| 5 | Start function | | | | | | | | |
+| 6 | Data segments (placement of initialised data) | | | | | | | | |
+| 7 | Custom sections | | | | | | | | |
+| 8 | Integer operations | | | | | | | | |
+| 9 | Float builtins | | | | | | | | |
+| 10 | Globals (mutable; import and export) | | | | | | | | |
+| 11 | Non-trapping conversions and sign extension | | | | | | | | |
+| 12 | Bulk memory | | | | | | | | |
+| 13 | Passive data segments | | | | | | | | |
+| 14 | Multi-value results | | | | | | | | |
+| 15 | SIMD | | | | | | | | |
+| 16 | SIMD memory and bitwise operations | | | | | | | | |
+| 17 | `externref` | | | | | | | | |
+| 18 | Multiple tables | | | | | | | | |
+| 19 | Table operations on references | | | | | | | | |
+| 20 | Tail calls | | | | | | | | |
+| 21 | Extended constant expressions | | | | | | | | |
+| 22 | Typed function references | | | | | | | | |
+| 23 | GC structs and arrays | | | | | | | | |
+| 24 | GC casts, subtyping, i31, packed fields | | | | | | | | |
+| 25 | Multiple memories | | | | | | | | |
+| 26 | Relaxed SIMD | | | | | | | | |
+| 27 | Exception tags | | | | | | | | |
+| 28 | Exception handling with exnref | | | | | | | | |
+| 29 | 64-bit memory | | | | | | | | |
+| 30 | Branch hinting | | | | | | | | |
 
 ### Longer notes (only where a flag is not enough)
 
 (none yet)
 
+## Second axis: using the module
+
+The matrix above says what a developer can *name* from source. A second, separate axis (specified in
+`wasm-exposure-study/INTEGRATION.md`) says what it costs to *use* the module that comes out, on the same eight columns:
+
+| Criterion | Test | Cell |
+|---|---|---|
+| I1 WASI | a stdin-to-stdout program run under `wasmtime run` | route and WASI version (p1, p2, p3) |
+| I2 Component Model | a `words` component whose export is type-checked against a WIT world, called with `wasmtime --invoke` | route; Absent if the language has no direct way (a hand-written canonical ABI is not counted) |
+| I3 JS bindings | pass a string and get a record back from Node | route (builtin, official tool, community tool, hand-written) |
+| I4 Debuggability | a debug build of `life`: name section, DWARF, source map | full or partial |
+| I5 Size | `life`, `words`, `cat`, a floor build and a default build, after `wasm-opt -Oz` | measured bytes, scored on a log scale |
+
+A cell's *route* replaces `expressed_as` here: `builtin`, `official-tool`, `community-tool`, `hand-written`, with the same closed
+list of `needs`. The integration score is reported on its own first; the exposure and integration scores are combined only at the end (draft 0.6 / 0.4). A sixth item, toolchain cost (footprint of the official toolchain, cold build time, extra tools), is reported in its own section and not scored.
+
 ## Open points
 
-- Re-pin the toolchain snapshot date: Rust, Zig, AssemblyScript and MoonBit were pinned on 2026-10-02; TinyGo, Kotlin and C on 2026-10-08.
+- Re-pin the toolchain snapshot date: Rust, Zig, AssemblyScript and MoonBit were pinned on 2026-10-02; TinyGo, Kotlin and C on 2026-10-08; Swift on 2026-10-09.
 - Emscripten as a second C column: undecided.
 - Optional: cross-check the C results against the official LLVM release (wasi-sdk is a Wasm-only LLVM build at a different patch level).
 - The ordering within a spec version is approximate. Before the chapter states it, check each proposal's phase-4 date against the CG
