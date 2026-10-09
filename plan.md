@@ -6,6 +6,16 @@ should earn its place by pointing back at a WASM property it's representing, ext
 deliberately declining to hide. Framing/versioning discipline (hybrid design-first, cite
 `tir-refactor` commit+date, evidence per claim) lives in `context.md` — not repeated here.
 
+> **Status of this outline (rewritten 2026-10-09 after the chapter 2 interview).** Chapters 1 and 2 are written.
+> Chapters 3 onward follow the decisions made in that interview:
+> design chapters first, then the full pipeline, then evaluation, then the deferred effect chapter.
+> Storytelling rule for every design chapter: show the problem that was seen and how it was solved, so the reader
+> is not asked to trust the design. The sections carried over from the earlier outline are kept verbatim as
+> source material under the chapter they now feed.
+> Sections 1 and 2 below are the original plan. The written chapters differ: chapter 2 is a survey of eight
+> languages (exposure, integration, combined ranking, then design questions) and not the primer plus related work
+> that section 2 describes.
+
 ## 1. Introduction
 
 Short — a fast, argument-only read. No deep WASM technical content here; that's Chapter 2's
@@ -61,7 +71,80 @@ job. Standard funnel shape: hook → problem → thesis goal → contributions �
   multi-memory extension as a language concept; etc.). This is what earns Ch. 1's problem
   statement — show it, don't just assert it.
 
-## 3. Language design: wx's answer — unified, safe semantics
+### From chapter 2 to the design chapters
+
+Chapter 2 ends on five design questions. Each one is answered in a named place, and the answers are checked in the evaluation.
+
+| # | Question (Chapter 2) | Answered in | Checked in |
+|---|---|---|---|
+| 1 | Declared entities: memories, globals, imports and exports as typed constructs | Ch. 3 (items) | Ch. 7, wx through the Chapter 2 probes |
+| 2 | Several memories as part of the type system | Ch. 3, "Pointers carry their memory" | Ch. 7, probe 25 |
+| 3 | No imposed runtime or memory model | Ch. 3 (minimal core), Ch. 5 | Ch. 7, module sizes |
+| 4 | Checked access to raw instructions | Ch. 4 (intrinsics) | Ch. 7 |
+| 5 | Declared host boundary | Ch. 3, "Imports and exports" | Ch. 7, WASI example programs |
+
+## 3. Items: representing the platform's entities
+
+**The one idea of the chapter:** every WebAssembly entity (function, global, memory, and later table and tag) becomes
+a language *item*, and an item is a unique zero-sized type. Everything else in the chapter follows from taking that
+seriously. The chapter ends on the type-level guarantees only. The claim "no raw indexes" is completed in chapter 4,
+once it is shown that no intrinsic accepts an index. Say so in a forward pointer.
+
+**Voice and order.** Open with memory, the case that forced the design (honest chronology: memory came first, the
+other kinds were checked against the same model afterwards, and that generalisation is itself evidence). Introduce
+each piece of background at the moment the story needs it. No front-loaded tutorial.
+
+1. **Reading wx.** Half-page syntax primer for readers who do not know Rust.
+2. **Items of a module.** What defining, naming and using an entity means, and why a marker or a build flag is not
+   enough (point back at Chapter 2: memory limits are a linker flag in 7 of 8 languages). Functions and globals first;
+   the user's mental model comes from TypeScript.
+3. **The problem with memories.** In WebAssembly a memory is only an index. Rejected: an integer (any integer then
+   behaves as a memory, unsafe) and a runtime value or built-in function (the index should be a compile-time
+   immediate, never carried in a variable).
+4. **Items as unique zero-sized types.** `struct foo;`-style definition, so the compiler reuses the struct mental
+   model. Internally `Type::Function(FuncIndex)`, `Memory(MemIndex)`, `Global(GlobalIndex)`. Differences from a Rust
+   unit struct: it carries a compile-time index (an index into the per-kind vec, converted to the real Wasm index only
+   at codegen), and the item is also a value of its type, passable like unit but not constructible from nothing.
+5. **Names, paths and scopes.** `heap`, `heap::PAGE_SIZE`, `heap::*u8`; item is type, value and namespace at once.
+   Visibility.
+6. **Pointers carry their memory.** `M::*u8`; a pointer from one memory used as another is a type error. This needs a
+   bound saying "M is a memory".
+7. **Why traits.** `Memory` and `Global`/`GlobalMut`, implemented by the compiler for each declaration. Associated
+   types `Size` and `Value`; 64-bit memory comes for free; generic code over any memory (`memory_copy`). Dated
+   syntax evolution: `Memory where { Size = u32 }` (arbitrary bound expression at parse level, hard to parse and
+   validate) became `memory heap: u32;` (the programmer states only the pointer size). A more verbose
+   `memory heap where { Size = u32 }` may follow for items with several associated types: not implemented.
+8. **Declaring each kind.** Function; global (mutability, constant-expression initialisers only, one scalar per
+   global); memory (`#[memory_limits(min_pages, max_pages)]`); table and tag as designed items.
+9. **Imports and exports.** Principle: an imported item is the same kind of item as a defined one, only its origin
+   differs. The import block (functions by signature; globals and memories reuse the item declaration), the export
+   block (unique per package, at the binary root, never in a library; optional rename), how indexes are assigned
+   (imports first, at codegen), and `INDEX` as a read-only debug constant that no intrinsic accepts.
+10. **What this gives and what it does not.** Type-level guarantees only; links to Chapter 2 questions 1 and 2; the
+    status table below.
+
+**Extras to include**
+- Status table, item kind × define / name / use / import / export, marked implemented or designed (tables and tags
+  are designed only; the import block today covers function, global and memory).
+- Comparison box against Chapter 2 (for example memory limits: attribute in wx, linker flag elsewhere).
+- Dated decision log with commits: memory config block (June 2026) to attribute (`33252ce`, 2026-08-11) to derived
+  trait (`cd3c927`, 2026-09-27) to simplified syntax.
+- A real compiler diagnostic for a cross-memory pointer, with commit and date cited (needs the compiler on
+  `tir-refactor`).
+- Global-initialiser story under globals: two designs (a `lazy init` block, then a `#[start]` function) hit real
+  conflicts and were scoped back deliberately to constant expressions. Keep it here unless the chapter gets too long.
+
+**Open before writing**
+- Why does export use a separate block that lists names, instead of marking each item (an attribute or `pub`)?
+  Expect a real reason; a reader will ask.
+- Tables and tags: short subsection or only the status table?
+- Reconcile the per-kind intermediate index with the doc comment of `Memory::INDEX` ("which index this memory will
+  use in the generated wasm module").
+- `examples/` and many tir tests still use the old `Memory where { ... }` syntax. Update before quoting any of it.
+- Confirm the exact current import forms for function against global and memory imports in the parser.
+
+**Thread from the earlier outline.** The recurring mechanism "derive a trait binding from a lightweight declaration"
+(memory, global, and later tag are three instances) is named once here and then only pointed back to:
 
 - Thesis statement for the whole design arc: rather than special-casing each WASM extension,
   wx exposes each as ordinary language constructs backed by one recurring mechanism —
@@ -74,51 +157,7 @@ job. Standard funnel shape: hook → problem → thesis goal → contributions �
   the program actually uses the feature, verified by the codegen test suite. "Pay for what
   you use," applied to spec proposals themselves.
 
-## 4. Basics: functions and the stack
-
-- Function declaration, calling convention, the stack-machine model underneath.
-- **Block expressions as the value** (tail expression without `;`) — direct reflection of
-  WASM's own typed block-result model. First "we represent this directly" example; say so
-  explicitly rather than leaving it implicit.
-- **Structured control flow**: labeled blocks, `loop`, `break :label value`, `continue` —
-  WASM has no unstructured jumps, only nested `block`/`loop`/`br`/`br_table`. Most
-  C-shaped source languages need a real CFG-reconstruction pass (relooper/stackifier-style)
-  to target WASM at all; wx's source language never expresses irreducible control flow in
-  the first place, so there's no such pass hiding in the pipeline. Brief mention of `match`
-  → `br_table` as another instance, full treatment deferred to wherever enums/match land.
-
-## 5. Values and expressions
-
-- Untyped literals: `Type::Integer`/`Type::Float` as real placeholder types (pre-interned
-  indices 4/5), forced annotation, **no default-to-i32** (deliberate departure from Rust —
-  silently guessing a width has real, differently-encoded WASM consequences,
-  `i32.const`/`i64.const`/etc. are different instructions). `{integer}`/`{float}` diagnostic
-  spelling mirrors Rust's own convention — a borrowed-on-purpose detail.
-- String literals as `&[u8]` — no dedicated string type, reuse over invention.
-- `as` casts: explicit-only, no implicit widening. Forward-pointer only here; the honest
-  limitations (`u32 as char` lossy, `&T as *T` ownership-erasing) belong in §9's evaluation,
-  not here.
-- `!` (bottom type, renamed from `never` — decided during this design pass, see devlog) and
-  diverging expressions' interaction with block-value typing. Sets up the effects chapter's
-  `-> !` usage without re-deriving it there. Note the considered-and-kept-as-sugar
-  `type never = !;` alias idea.
-- `const` vs `global`: compile-time-inlined value vs. real mutable module state — a
-  distinction WASM itself already makes, not a wx invention.
-
-## 6. Structs and the named-call-syntax generalization
-
-- Struct declaration unification: paren-declared, named fields (`struct Point(x: i32, y: i32)`),
-  replacing a separate tuple-struct/record-struct split.
-- Positional and named construction as two faces of one mechanism — calling the implicit
-  constructor. "Named call syntax" (`Point({ x: 2, y: 4 })`) generalizes to *any* function
-  whose parameters are all named, not just structs — one more special form removed by
-  expressing it as sugar over something that already exists.
-- The `pub`-gates-positional-construction resolution: reuses existing field-visibility rather
-  than inventing a new opt-in attribute. Named tradeoff, not a free lunch — say so.
-- Flag honestly: **this is still-evolving design as of this writing**, not settled/shipped —
-  don't overclaim status here.
-
-## 7. Memory and globals: safe abstractions over WASM indices via ordinary trait dispatch
+**Source material from the earlier outline (section 7, memory and globals).**
 
 **Flagship uniqueness chapter** — the strongest concrete payoff of §3's thesis statement.
 
@@ -146,7 +185,120 @@ job. Standard funnel shape: hook → problem → thesis goal → contributions �
   in-progress subsystem, scoped back deliberately" material — cite it as exactly that, not
   as an oversight.
 
-## 8. Effect tracking (WIP chapter — designed, not implemented)
+## 4. Function bodies and intrinsics
+
+*Decided: intrinsics are introduced here, not in chapter 3.* Chapter 3 ends by pointing forward to this chapter.
+
+- **Intrinsics.** A bodiless `#[intrinsic]` function with a typed signature that lowers to a Wasm instruction. The
+  item is passed as a type parameter and as a zero-sized value, so the compiler writes the index into the instruction
+  as an immediate. Layering: intrinsic (raw instruction) to trait default method (`Memory::grow`) to user code
+  (`heap.grow(n)`). The same attribute marks primitive types (`#[intrinsic] pub type i32;`), which is a direct
+  instance of principle 3, uniform mechanisms. `std/main.wx` has 140 `#[intrinsic]` attributes. Verify before quoting
+  that there is no `mod wasm { }` at HEAD (CLAUDE.md still mentions one).
+- **Completes the safety claim.** No intrinsic accepts an integer index, so "no raw indexes" becomes structural.
+  Say plainly what the type check does not cover (an out-of-bounds load still traps).
+- **Answers Chapter 2 question 4**, checked access to instructions, as typed intrinsics instead of inline assembly.
+- **Open:** was there a real problem to solve in function bodies, or is this a straightforward mapping of Wasm's
+  structured control flow? If something was hard, that is the story. Ask before writing.
+
+**Material carried over from the earlier outline (section 4, basics: functions and the stack).**
+
+- Function declaration, calling convention, the stack-machine model underneath.
+- **Block expressions as the value** (tail expression without `;`) — direct reflection of
+  WASM's own typed block-result model. First "we represent this directly" example; say so
+  explicitly rather than leaving it implicit.
+- **Structured control flow**: labeled blocks, `loop`, `break :label value`, `continue` —
+  WASM has no unstructured jumps, only nested `block`/`loop`/`br`/`br_table`. Most
+  C-shaped source languages need a real CFG-reconstruction pass (relooper/stackifier-style)
+  to target WASM at all; wx's source language never expresses irreducible control flow in
+  the first place, so there's no such pass hiding in the pipeline. Brief mention of `match`
+  → `br_table` as another instance, full treatment deferred to wherever enums/match land.
+
+## 5. Types, values and ownership
+
+*Open: where structs, pointers and the ownership sigils belong in the story. Decide before writing this chapter.*
+It may merge into chapter 4. Material carried over from the earlier outline, sections 5 and 6:
+
+- Untyped literals: `Type::Integer`/`Type::Float` as real placeholder types (pre-interned
+  indices 4/5), forced annotation, **no default-to-i32** (deliberate departure from Rust —
+  silently guessing a width has real, differently-encoded WASM consequences,
+  `i32.const`/`i64.const`/etc. are different instructions). `{integer}`/`{float}` diagnostic
+  spelling mirrors Rust's own convention — a borrowed-on-purpose detail.
+- String literals as `&[u8]` — no dedicated string type, reuse over invention.
+- `as` casts: explicit-only, no implicit widening. Forward-pointer only here; the honest
+  limitations (`u32 as char` lossy, `&T as *T` ownership-erasing) belong in §9's evaluation,
+  not here.
+- `!` (bottom type, renamed from `never` — decided during this design pass, see devlog) and
+  diverging expressions' interaction with block-value typing. Sets up the effects chapter's
+  `-> !` usage without re-deriving it there. Note the considered-and-kept-as-sugar
+  `type never = !;` alias idea.
+- `const` vs `global`: compile-time-inlined value vs. real mutable module state — a
+  distinction WASM itself already makes, not a wx invention.
+
+- Struct declaration unification: paren-declared, named fields (`struct Point(x: i32, y: i32)`),
+  replacing a separate tuple-struct/record-struct split.
+- Positional and named construction as two faces of one mechanism — calling the implicit
+  constructor. "Named call syntax" (`Point({ x: 2, y: 4 })`) generalizes to *any* function
+  whose parameters are all named, not just structs — one more special form removed by
+  expressing it as sugar over something that already exists.
+- The `pub`-gates-positional-construction resolution: reuses existing field-visibility rather
+  than inventing a new opt-in attribute. Named tradeoff, not a free lunch — say so.
+- Flag honestly: **this is still-evolving design as of this writing**, not settled/shipped —
+  don't overclaim status here.
+
+## 6. The compiler pipeline (full chapter)
+
+*Decided: a full pipeline chapter, parser to codegen, not a short current-state chapter.* Framed as evidence for the
+design chapters, not a parallel narrative.
+
+- Pipeline: manifest and package graph, AST, TIR (prescan, demand-driven `ensure_signature`, bodies, trait
+  conformance), MIR (lowering, monomorphization, inlining and dead-code elimination), the sea-of-nodes optimiser,
+  the scheduler, codegen and encoding.
+- Candidate deep dives where wx does something non-obvious: demand-driven signature resolution with cycle detection;
+  the one-impl-per-trait-per-type-constructor coherence rule; the TIR Place/Value split; `typeset`; monomorphization
+  with inlining.
+- Status stated plainly per claim: MIR, opt and codegen are disabled mid-`tir-refactor` and are planned to work
+  again before submission. Cite a commit and date for anything taken from `tir-refactor`.
+
+## 7. Evaluation
+
+- **Run wx through the Chapter 2 probes** for the features it ships (memory configuration, globals, imports and
+  exports, multiple memories). This turns the survey into a measured yardstick. It depends on codegen working again.
+- Example programs, test counts, the `DiagnosticView` assertion vocabulary, WASI programs.
+- Honest limitations, reconciling every earlier claim. Material carried over from the earlier outline (section 9):
+
+- What's shipped and tested vs. landed-but-not-yet-recompiling (MIR/opt/codegen disabled
+  mid-`tir-refactor`) — state the distinction plainly per claim, don't blur it.
+- Testing methodology: `cargo test --workspace` counts, insta snapshots, `DiagnosticView`
+  assertion vocabulary.
+- Tooling in brief (LSP, formatter, editor integrations) — evidence of polish, not
+  intellectual core; don't give this chapter-level depth.
+- **Honest limitations section**, reconciling every earlier "shipped" claim against what
+  actually compiles and runs today:
+  - `as`-cast gaps: lossy casts (`u32 as char`) pass; pointer casts only compare `memory`,
+    not ownership (`&T as *T` silently defeats read-only).
+  - Struct positional-construction safety tradeoff from §6 (transposition risk on
+    same-typed fields, mitigated only by choosing to keep fields private).
+  - Effect system: fully unimplemented, plus the still-open init/allocation conflict.
+  - Any other gaps surfaced while writing §4–§8 that didn't get flagged inline.
+
+## 8. Effect tracking (separate chapter, designed and not implemented)
+
+*Decided: its own chapter, placed after the evaluation so that the implemented story is not interrupted. Deferred for
+now: first finish the chapters on items and function bodies.* Opens with an explicit "designed, not implemented"
+statement. Chapter 1's scope section already calls it design work.
+
+**Framing the chapter should carry (from the interview)**
+- Why effects matter: a signature alone does not say what a function does.
+- How Rust represents effect-like things, and what to avoid: function colouring (async, const and unsafe split the
+  function world), untracked panics, annotation burden, effects as a separate system.
+- How this design relates to algebraic effects and effect handlers (position still to decide: tracking first with
+  handlers as future work, or a restricted fragment).
+- How it would work. Primary source `notes/post.md`, which is written in the first person as a blog post and must be
+  adapted. Implementation mechanics in `notes/effect-tracking-plan.md` v3. `notes/effect-system.md` is only for
+  alternatives considered.
+
+**Material carried over from the earlier outline (section 8).**
 
 Opens with an explicit "designed, not implemented" statement. Primary source: `notes/post.md`
 (commit `e895c3b`, 2026-09-02) for exposition; `notes/effect-tracking-plan.md` v3 (2026-09-04)
@@ -190,24 +342,7 @@ for implementation mechanics; `notes/effect-system.md` (2026-08-11) only for
   effect-clause parsing, no `Effect` type, no `tag`/`catch` keyword in
   `crates/wx-compiler/src` as of this writing).
 
-## 9. Current state of the implementation
-
-- What's shipped and tested vs. landed-but-not-yet-recompiling (MIR/opt/codegen disabled
-  mid-`tir-refactor`) — state the distinction plainly per claim, don't blur it.
-- Testing methodology: `cargo test --workspace` counts, insta snapshots, `DiagnosticView`
-  assertion vocabulary.
-- Tooling in brief (LSP, formatter, editor integrations) — evidence of polish, not
-  intellectual core; don't give this chapter-level depth.
-- **Honest limitations section**, reconciling every earlier "shipped" claim against what
-  actually compiles and runs today:
-  - `as`-cast gaps: lossy casts (`u32 as char`) pass; pointer casts only compare `memory`,
-    not ownership (`&T as *T` silently defeats read-only).
-  - Struct positional-construction safety tradeoff from §6 (transposition risk on
-    same-typed fields, mitigated only by choosing to keep fields private).
-  - Effect system: fully unimplemented, plus the still-open init/allocation conflict.
-  - Any other gaps surfaced while writing §4–§8 that didn't get flagged inline.
-
-## 10. Conclusion & future work
+## 9. Conclusion and future work
 
 - Ownership/borrowing (if not folded into an earlier chapter).
 - Remaining effect-system open questions: multi-start-function ordering, init-time effects.
