@@ -12,6 +12,8 @@ deliberately declining to hide. Framing/versioning discipline (hybrid design-fir
 > Storytelling rule for every design chapter: show the problem that was seen and how it was solved, so the reader
 > is not asked to trust the design. The sections carried over from the earlier outline are kept verbatim as
 > source material under the chapter they now feed.
+> Chapter 3 was reordered on 2026-10-09: problem first, syntax last, with the table, tag and reference designs from
+> `notes/wx-tables-references-design.md` folded in as designed items. Chapter 7 gained a coverage map of the 30 features.
 > Sections 1 and 2 below are the original plan. The written chapters differ: chapter 2 is a survey of eight
 > languages (exposure, integration, combined ranking, then design questions) and not the primer plus related work
 > that section 2 describes.
@@ -85,47 +87,113 @@ Chapter 2 ends on five design questions. Each one is answered in a named place, 
 
 ## 3. Items: representing the platform's entities
 
-**The one idea of the chapter:** every WebAssembly entity (function, global, memory, and later table and tag) becomes
-a language *item*, and an item is a unique zero-sized type. Everything else in the chapter follows from taking that
-seriously. The chapter ends on the type-level guarantees only. The claim "no raw indexes" is completed in chapter 4,
-once it is shown that no intrinsic accepts an index. Say so in a forward pointer.
+**The one idea of the chapter:** every WebAssembly entity (function, global, memory, tag, table) becomes a language
+*item*. An item's **identity** is a unique zero-sized type; its **shape** is what the compiler implements for that
+type. Everything else follows from taking that seriously. The chapter ends on the type-level guarantees only. The
+claim "no raw indexes" is completed in chapter 4, once it is shown that no intrinsic accepts an index. Say so in a
+forward pointer.
 
-**Voice and order.** Open with memory, the case that forced the design (honest chronology: memory came first, the
-other kinds were checked against the same model afterwards, and that generalisation is itself evidence). Introduce
-each piece of background at the moment the story needs it. No front-loaded tutorial.
+**Voice and order (revised 2026-10-09: problem first, syntax last).** Open with the problem in WAT, which readers
+know from Chapter 2. Show the approaches that were considered and why they failed. Derive the consequences one at a
+time (names, pointers, traits). Only then assemble the final syntax in one place. wx syntax appears earlier only as
+small fragments, glossed in a sentence where first used. There is no "Reading wx" primer section. The vocabulary of
+identity versus shape was found in hindsight, not at the start; say so in the text ("the distinction that makes the
+problem precise is ..."), because the storytelling rule forbids presenting the design as if it had been obvious.
 
-1. **Reading wx.** Half-page syntax primer for readers who do not know Rust.
-2. **Items of a module.** What defining, naming and using an entity means, and why a marker or a build flag is not
-   enough (point back at Chapter 2: memory limits are a linker flag in 7 of 8 languages). Functions and globals first;
-   the user's mental model comes from TypeScript.
-3. **The problem with memories.** In WebAssembly a memory is only an index. Rejected: an integer (any integer then
-   behaves as a memory, unsafe) and a runtime value or built-in function (the index should be a compile-time
-   immediate, never carried in a variable).
-4. **Items as unique zero-sized types.** `struct foo;`-style definition, so the compiler reuses the struct mental
-   model. Internally `Type::Function(FuncIndex)`, `Memory(MemIndex)`, `Global(GlobalIndex)`. Differences from a Rust
-   unit struct: it carries a compile-time index (an index into the per-kind vec, converted to the real Wasm index only
-   at codegen), and the item is also a value of its type, passable like unit but not constructible from nothing.
-5. **Names, paths and scopes.** `heap`, `heap::PAGE_SIZE`, `heap::*u8`; item is type, value and namespace at once.
-   Visibility.
-6. **Pointers carry their memory.** `M::*u8`; a pointer from one memory used as another is a type error. This needs a
-   bound saying "M is a memory".
-7. **Why traits.** `Memory` and `Global`/`GlobalMut`, implemented by the compiler for each declaration. Associated
-   types `Size` and `Value`; 64-bit memory comes for free; generic code over any memory (`memory_copy`). Dated
-   syntax evolution: `Memory where { Size = u32 }` (arbitrary bound expression at parse level, hard to parse and
-   validate) became `memory heap: u32;` (the programmer states only the pointer size). A more verbose
-   `memory heap where { Size = u32 }` may follow for items with several associated types: not implemented.
-8. **Declaring each kind.** Function; global (mutability, constant-expression initialisers only, one scalar per
-   global); memory (`#[memory_limits(min_pages, max_pages)]`); table and tag as designed items.
-9. **Imports and exports.** Principle: an imported item is the same kind of item as a defined one, only its origin
-   differs. The import block (functions by signature; globals and memories reuse the item declaration), the export
-   block (unique per package, at the binary root, never in a library; optional rename), how indexes are assigned
-   (imports first, at codegen), and `INDEX` as a read-only debug constant that no intrinsic accepts.
-10. **What this gives and what it does not.** Type-level guarantees only; links to Chapter 2 questions 1 and 2; the
-    status table below.
+1. **Entities, identity and shape.** The problem, stated precisely. Table of kinds: kind, identity `(kind, index)`,
+   shape (function: signature; table: reference type, limits, index type; memory: limits, shared flag, index type;
+   global: value type, mutability; tag: signature). Each kind has its own index space, and imports take the first
+   indices, so a final index is a late layout decision that source code cannot know. Languages give *shape* (types
+   already exist) but give *identity* only to functions and globals; point at the Chapter 2 rows (01, 02, 10, 25 and
+   the table and tag rows). Functions are the one kind whose shape is also checked structurally at run time
+   (`call_indirect`), which is why they feel typed and memories feel like numbers. Terminology: say "identity and
+   shape"; mention nominal versus structural once, noting that Wasm identity is positional and names exist only at
+   the boundary (import/export strings, the name section). Requirements that follow: an entity must be definable,
+   nameable and usable, not only a marker; imports and exports must treat every kind alike; no raw indexes; no
+   cross-memory pointers.
+2. **Approaches considered.** Memory as an integer (any integer then behaves as a memory, unsafe). Memory as a
+   runtime value or built-in functions (the index should be a compile-time immediate, never carried in a variable).
+   Memory as an item that is a type. Show the first two in neutral pseudocode, labelled as such. Honest chronology:
+   memory came first and the other kinds were checked against the same model afterwards, which is itself evidence.
+   Do not invent earlier iterations that are not remembered.
+3. **Items as unique zero-sized types.** `struct foo;`-style definition so the compiler reuses the struct mental
+   model. Internally `Type::Memory { memory_index }`, `Type::Global { global_index }`,
+   `Type::FunctionItem { func_index, .. }`. Differences from a Rust unit struct: the item carries a compile-time
+   index into its per-kind vector (turned into the real Wasm index only at codegen), and the item is also a value of
+   its type, passable like unit but not constructible from nothing. Scope the claim: it is the *identity type* that
+   is zero-sized. A tag is a struct with a payload and is not (section 7).
+4. **Names, paths and scopes.** `heap`, `heap::PAGE_SIZE`, `heap::*u8`: an item is a type, a value and a namespace
+   at once. Visibility.
+5. **Pointers carry their memory.** `M::*u8`. A pointer from one memory used as another is a type error. Restricting
+   `M` to memories needs a bound. Include a real compiler diagnostic with commit and date.
+6. **Why traits.** `Memory` and `Global`/`GlobalMut`, implemented by the compiler for every declaration through a
+   synthetic impl created at pre-scan (`synthesize_memory_impl`, `synthesize_global_impl`). Associated types `Size`
+   and `Value`; 64-bit memory comes for free; generic code over any memory (`memory_copy`). Dated syntax evolution:
+   `memory heap: Memory where { Size = u32 };` (an arbitrary bound expression at parse level, hard to parse and
+   validate) became `memory heap: u32;`. A more verbose `memory heap where { Size = u32 }` may follow for several
+   associated types: not implemented. Present the **shape-to-mechanism table** here: a type code computes with is an
+   associated type; what operations exist is a declaration modifier that selects a trait (`global mut` gives
+   `GlobalMut`; `table[func]` gives `FuncTable`); plain numbers are attributes (`#[memory_limits]`).
+7. **The other kinds (designed, not implemented).** Mark the whole section as design. Sources:
+   `notes/wx-tables-references-design.md`.
+   - *Tags.* `trait Tag { type Result; }`; a tag is a struct plus `-> !`; `Exception` is an explicit opt-in. Not
+     zero-sized.
+   - *Tables.* `table[func] handlers: u32;` and `table[extern] nodes: u32;`. The kind is compiler-internal and picks
+     the trait. A table is reusable for any funcref or externref; the slot type carries the use-site type, as a
+     pointer type carries what a memory access reads.
+   - *Host types.* `type Node: extern;` in an import block. The kind bound is required, because it picks the
+     reference type even without the Type Imports extension. No signature-bearing nominal function types (Wasm
+     cannot express them; a one-field struct is the wrapper).
+   - *Handles and references.* The memory parallel: `M::*u32` against `u32`, `T::fn(i32) -> i32` against
+     `fn(i32) -> i32`. Handles are integers carrying their table and may live in memory; references are Wasm values
+     and may not. Why Wasm has both (cross-module exchange, no per-call checks, no table needed; indices because C
+     function pointers must be integers).
+   - *Where operations live.* `h.*` is `table.get`; `as_ref()` is `ref.func`. The mechanics belong to chapter 4.
+8. **Imports and exports.** Principle: an imported item is the same kind of item as a defined one, only its origin
+   differs. Evidence in the code: declared and imported memories and globals share one signature routine
+   (`resolve_memory_signature`, `resolve_global_signature`). The import block (functions by signature; globals and
+   memories reuse the item declaration), the export block (unique per package, at the binary root, never in a
+   library; optional rename), how indexes are assigned (imports first, at codegen), and `INDEX` as a read-only debug
+   constant that no intrinsic accepts.
+9. **The design assembled.** One complete example in final syntax (memory, global, table, tag, an import block with
+   a host type, an export block). Status table: item kind by define, name, use, import, export, marked implemented
+   or designed.
+10. **What this gives and what it does not.** The type-level guarantees only; links to Chapter 2 questions 1, 2 and
+    5; the claims list below.
+
+### Design story beats (the iteration log)
+
+The storytelling rule needs concrete problems and the reasoning that resolved each. These beats come from the 2026-10-09 design
+discussion; present them as alternatives considered and the reasons they were dropped, not as a chronology of earlier
+code. Keep each in Artem's own voice and cite `notes/wx-tables-references-design.md` for the details.
+
+| # | Problem seen | Alternative considered | Why it failed | Resolution |
+|---|---|---|---|---|
+| 1 | A memory is only an index | integer; runtime value or built-in function | any integer behaves as a memory; the index must be a compile-time immediate | item = unique zero-sized type |
+| 2 | Pointers must know their memory | untyped pointers | cross-memory use is silent | `M::*u8`; needs a bound, hence `Memory` trait |
+| 3 | Memory syntax was hard to validate | `Memory where { Size = u32 }` | arbitrary bound expression at parse level | `memory heap: u32;` (derive the rest) |
+| 4 | Table elements must be constrained to references | associated `Element` bound; then sealed marker traits for each family | `funcref` is not an ordinary type; wx uses `typeset` for closed lists and a typeset cannot hold traits | kind is compiler-internal state of the table |
+| 5 | A table should be reusable for any funcref or externref | a typeset-valued associated `Kind`; a fixed element type | forces one signature or type per table | `table[func]` / `table[extern]` as a declaration modifier, parallel to `global mut` selecting `GlobalMut`; slot type carries the use-site type |
+| 6 | References cannot live in memory but handles can | one bare form for both | would put opaque values in memory | handles (`T::...`) and references (bare) as two layers |
+| 7 | Where does a host type's kind come from | assume `extern` | `any` and `func` hierarchies exist; the kind picks the reference type even in the baseline | required kind bound: `type Node: extern;` |
+| 8 | Do function types need a nominal form | `type Handler: func() -> i32;` | Wasm cannot express nominal function types; wx already has struct wrappers | no signature-bearing form; keep opaque `type X: func;` for completeness |
+| 9 | `ref.func` as an implicit coercion hides an instruction | implicit function-item to `fn`; a `Deref` overload on items | deref reads a location, `ref.func` reads nothing; effect profiles differ | explicit `as_ref()` on function items; `.*` only on handles |
+
+### Claims and their strength
+
+Scope each claim to what can be defended; the chapter must not drift from these.
+
+- **Safety:** "no raw indexes, no cross-memory pointers", not "no bad pointers". Pointer ownership sigils are not
+  claimed as enforced. For tables the type system stops using a handle with the wrong table or signature; null and
+  out-of-range slots still trap, and the `call_indirect` check remains as the backstop.
+- **Zero-sized:** applies to the identity type. A tag carries a payload.
+- **Vocabulary:** identity and shape is hindsight, not the starting point.
+- **Status:** tables, tags, host types and references are designed only until codegen is back. Say so once per
+  section, and put it in the status table.
+- **Completeness:** the aim is to expose every Wasm feature; the checkable form of that aim is the coverage map in
+  chapter 7 (Wasm 3.0 plus tracked proposals), not an unqualified statement.
 
 **Extras to include**
-- Status table, item kind × define / name / use / import / export, marked implemented or designed (tables and tags
-  are designed only; the import block today covers function, global and memory).
 - Comparison box against Chapter 2 (for example memory limits: attribute in wx, linker flag elsewhere).
 - Dated decision log with commits: memory config block (June 2026) to attribute (`33252ce`, 2026-08-11) to derived
   trait (`cd3c927`, 2026-09-27) to simplified syntax.
@@ -137,11 +205,15 @@ each piece of background at the moment the story needs it. No front-loaded tutor
 **Open before writing**
 - Why does export use a separate block that lists names, instead of marking each item (an attribute or `pub`)?
   Expect a real reason; a reader will ask.
-- Tables and tags: short subsection or only the status table?
 - Reconcile the per-kind intermediate index with the doc comment of `Memory::INDEX` ("which index this memory will
   use in the generated wasm module").
 - `examples/` and many tir tests still use the old `Memory where { ... }` syntax. Update before quoting any of it.
 - Confirm the exact current import forms for function against global and memory imports in the parser.
+- Section 7 depends on the open points in `notes/wx-tables-references-design.md` section 6 (nullability, the
+  memory-representability rule, gating on typed function references, the fate of the implicit table). Do not write
+  those parts as settled.
+- Check that the Wasm facts quoted from memory (heap-type hierarchy, "declared function references" for `ref.func`)
+  match the spec, and verify the Haas et al. citation before using it.
 
 **Thread from the earlier outline.** The recurring mechanism "derive a trait binding from a lightweight declaration"
 (memory, global, and later tag are three instances) is named once here and then only pointed back to:
@@ -198,6 +270,10 @@ each piece of background at the moment the story needs it. No front-loaded tutor
 - **Completes the safety claim.** No intrinsic accepts an integer index, so "no raw indexes" becomes structural.
   Say plainly what the type check does not cover (an out-of-bounds load still traps).
 - **Answers Chapter 2 question 4**, checked access to instructions, as typed intrinsics instead of inline assembly.
+- **Picks up the reference operations designed in chapter 3 section 7:** `table_get`/`table_set`/`table_grow`... as
+  bodiless intrinsics behind trait methods, and `ref_func` behind the explicit `as_ref()` on function items. `h.*` on
+  a handle is `table.get`; `as_ref()` is not a deref because `ref.func` reads no location. Calls lower to
+  `call_ref` (reference) or `call_indirect` (handle).
 - **Open:** was there a real problem to solve in function bodies, or is this a straightforward mapping of Wasm's
   structured control flow? If something was hard, that is the story. Ask before writing.
 
@@ -264,6 +340,50 @@ design chapters, not a parallel narrative.
 
 - **Run wx through the Chapter 2 probes** for the features it ships (memory configuration, globals, imports and
   exports, multiple memories). This turns the survey into a measured yardstick. It depends on codegen working again.
+- **Coverage map: the 30 Chapter 2 features against wx.** This is the checkable form of the aim to expose every
+  Wasm feature. Statuses below were taken on 2026-10-09 by reading `std/main.wx`, `codegen/mod.rs` and the notes on
+  `tir-refactor`; they were **not** produced by compiling anything (MIR/opt/codegen are disabled on the branch).
+  Replace "Implemented" evidence with probe runs once codegen is back, and re-verify every row at submission.
+  Statuses: Implemented, Partial, Designed (a design exists, nothing in the compiler), Absent (not found, no design),
+  Idea (appears only as future work), Unchecked.
+
+| # | Feature | wx status | Basis |
+|---|---|---|---|
+| 01 | Imports and exports | Implemented | import and export blocks; function, global, memory imports |
+| 02 | Memory configuration | Implemented | `memory`, `#[memory_limits]` |
+| 03 | Table and indirect call | Partial | one implicit funcref table built by codegen; tables as items are Designed |
+| 04 | Table import and export | Designed | `notes/wx-tables-references-design.md` |
+| 05 | Start function | Partial | compiler-built start for global initialisers; user start function deliberately scoped back |
+| 06 | Data segments | Partial | string and array literals go to static data in the first memory; no user-declared segments |
+| 07 | Custom sections | Unchecked | |
+| 08 | Integer operations | Partial | operators through traits; no `clz`/`ctz`/`popcnt`/rotate found in `std/main.wx` |
+| 09 | Float builtins | Implemented | `sqrt`, `floor`, `ceil`, `trunc`, `nearest`, `copysign`, `min`, `max`, `abs` in std |
+| 10 | Globals | Implemented | `global`, `global mut`, `Global`/`GlobalMut` |
+| 11 | Non-trapping conversions, sign extension | Absent | no `trunc_sat` or `extend` intrinsics in std |
+| 12 | Bulk memory | Partial | `memory_copy`, `memory_fill`; no `memory_init` or `data_drop` |
+| 13 | Passive data segments | Absent | |
+| 14 | Multi-value | Implemented | tuple and struct results lower to multi-value (codegen tests) |
+| 15 | SIMD | Absent | `notes/simd.md` is a sketch, no `v128` in std |
+| 16 | SIMD memory and bitwise operations | Absent | |
+| 17 | `externref` | Designed | host types and `table[extern]` |
+| 18 | Multiple tables | Designed | tables as items |
+| 19 | Table operations on references | Designed | `table.get`/`set`/`grow`/... as trait methods over intrinsics |
+| 20 | Tail calls | Absent | no `return_call` |
+| 21 | Extended constant expressions | Unchecked | |
+| 22 | Typed function references | Designed | reference form of `fn`, `as_ref()`, `call_ref` |
+| 23 | GC structs and arrays | Idea | chapter 9 future work only |
+| 24 | GC casts, subtyping, i31, packed fields | Idea | chapter 9 future work only |
+| 25 | Multiple memories | Implemented | several `memory` items; pointers carry their memory |
+| 26 | Relaxed SIMD | Absent | |
+| 27 | Exception tags | Designed | `tag`, `Tag`, `Exception` (`notes/post.md`) |
+| 28 | Exception handling with exnref | Designed | `throw`/`catch` in the effect design; the `exn` family is a later kind |
+| 29 | 64-bit memory | Implemented | `MemoryKind::Memory64` in codegen; `PointerSize` is `u32` or `u64` |
+| 30 | Branch hinting | Unchecked | |
+
+  Tally at the time of writing: 7 Implemented, 5 Partial, 7 Designed, 6 Absent, 2 Idea, 3 Unchecked. State the
+  tally, the date and the commit together, and never as "full coverage". Rows 03, 05, 06, 08 and 12 are where a
+  reader will test the claim first; decide for each whether it is a gap to fix, a deliberate non-goal, or future work,
+  and say which.
 - Example programs, test counts, the `DiagnosticView` assertion vocabulary, WASI programs.
 - Honest limitations, reconciling every earlier claim. Material carried over from the earlier outline (section 9):
 
@@ -317,6 +437,8 @@ for implementation mechanics; `notes/effect-system.md` (2026-08-11) only for
   (`tir/builder/signature.rs`) — the same demand-driven `sig_state` machinery every other
   signature already resolves through.
 - Trap tracking as the base case.
+- **Tags as items are introduced in chapter 3 (section 7); this chapter only adds what `Exception` does with them.**
+  The text below was written when tags were planned to appear here first, and is kept as source material.
 - **Tags, introduced right here, immediately before exceptions** — not as an earlier
   standalone chapter. A tag is structurally just a struct, plus a derived associated type:
   `tag ApplicationError(status: ErrorStatus) -> !;` reuses §6's paren-declared field grammar,
