@@ -1,0 +1,51 @@
+{
+  "feature": "30",
+  "file": "probes/30-branch-hinting/zig/module-asm-section//out.wasm",
+  "bytes": 135,
+  "pass": false,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "custom section \"metadata.code.branch_hint\"",
+      "ok": true,
+      "detail": "custom sections: metadata.code.branch_hint"
+    },
+    {
+      "name": "hint section precedes the code section",
+      "ok": false,
+      "detail": "section order: 1,3,4,5,6,7,10,0"
+    },
+    {
+      "name": "at least one hint targets classify",
+      "ok": true,
+      "detail": "hints: [{\"fn\":0,\"off\":8,\"value\":1}]; classify = function 0"
+    },
+    {
+      "name": "hint values (0 unlikely, 1 likely)",
+      "ok": true,
+      "detail": "[1]",
+      "info": true
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "classify(5) == 10",
+      "ok": true,
+      "detail": "got 10, expected 10"
+    },
+    {
+      "name": "classify(-1) == -1",
+      "ok": true,
+      "detail": "got -1, expected -1"
+    }
+  ],
+  "unsupported": []
+}

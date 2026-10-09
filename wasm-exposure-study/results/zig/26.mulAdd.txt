@@ -1,5 +1,6 @@
 # 26-relaxed-simd/zig/mulAdd spec=26
-$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm -mcpu=generic+simd128+relaxed_simdFAIL 21 probes/26-relaxed-simd/zig/mulAdd/out.wasm (106 bytes)
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm -mcpu=generic+simd128+relaxed_simd
+FAIL 26 probes/26-relaxed-simd/zig/mulAdd//out.wasm (106 bytes)
   ✓ module validates (all extensions enabled)
   ✗ f32x4.relaxed_madd (or nmadd) emitted
   ✓ instantiates

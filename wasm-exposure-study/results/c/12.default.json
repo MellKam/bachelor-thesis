@@ -1,6 +1,6 @@
 {
   "feature": "12",
-  "file": "probes/12-bulk-memory/c/default/out.wasm",
+  "file": "probes/12-bulk-memory/c/default//out.wasm",
   "bytes": 597,
   "pass": true,
   "checks": [

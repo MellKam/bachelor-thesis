@@ -43,7 +43,7 @@ export function parseModule(bytes) {
   while (r.p < bytes.length) {
     const id = r.u8(); const size = r.u32(); const end = r.p + size; m.sections.push(id);
     try {
-      if (id === 0) { const nm = r.name(); m.customs.push(nm); m.customData.push({ name: nm, bytes: [...r.bytes(end - r.p)] }); }
+      if (id === 0) { const nm = r.name(); m.customs.push(nm); m.customData.push({ name: nm, at: m.sections.length - 1, bytes: [...r.bytes(end - r.p)] }); }
       else if (id === 1) for (let n = r.u32(); n--;) {
         const readComp = () => { // one composite type; pushes exactly one entry to m.types
           const form = r.u8();

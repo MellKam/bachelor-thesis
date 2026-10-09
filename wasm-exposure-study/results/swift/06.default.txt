@@ -1,0 +1,8 @@
+# 06-data-segments/swift/default spec=06
+$ swiftc -target wasm32-unknown-none-wasm -enable-experimental-feature Embedded -wmo -parse-as-library -O main.swift -o out.wasm -Xlinker --no-entry -Xclang-linker -nostdlib 
+PASS 06 probes/06-data-segments/swift/default//out.wasm (484 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ active data segment puts "WASM" at address 1024
+  ✓ instantiates
+  ✓ peek(1024) == 0x57
+  ✓ peek(1027) == 0x4d

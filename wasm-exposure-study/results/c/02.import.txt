@@ -1,11 +1,6 @@
 # 02-memory/c/import spec=02:import
-$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -Wl,--no-entry -Wl,--initial-memory=65536 -Wl,--max-memory=262144 -Wl,-z,stack-size=8192 -Xlinker --import-memory=host,mem main.c -o out.wasmPASS 02:import probes/02-memory/c/import/out.wasm (369 bytes)
-  ✓ module validates (all extensions enabled)
-  ✓ exactly one memory
-  ✓ limits min 1 max 4
-  ✓ imported as host.mem
-  ✓ instantiates
-PASS 02:import probes/02-memory/c/import/out.wasm (369 bytes)
+$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -Wl,--no-entry -Wl,--initial-memory=65536 -Wl,--max-memory=262144 -Wl,-z,stack-size=8192 -Xlinker --import-memory=host,mem main.c -o out.wasm
+PASS 02:import probes/02-memory/c/import//out.wasm (369 bytes)
   ✓ module validates (all extensions enabled)
   ✓ exactly one memory
   ✓ limits min 1 max 4

@@ -1,0 +1,10 @@
+# 22-typed-function-references/swift/function-value spec=22
+$ swiftc -target wasm32-unknown-none-wasm -enable-experimental-feature Embedded -wmo -parse-as-library -O main.swift -o out.wasm -Xlinker --no-entry -Xclang-linker -nostdlib
+FAIL 22 probes/22-typed-function-references/swift/function-value//out.wasm (640 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ ref.func emitted (anywhere in the module: the reference may be built in an initialiser)
+  ✗ call_ref emitted in apply
+  · reference type is non-nullable (informational)
+  ✓ call_indirect or a table also present (informational)
+  ✓ instantiates
+  ✓ apply(5) == 10

@@ -1,6 +1,6 @@
 {
   "feature": "17",
-  "file": "probes/17-externref/zig/opaque-ptr/out.wasm",
+  "file": "probes/17-externref/zig/opaque-ptr//out.wasm",
   "bytes": 74,
   "pass": false,
   "checks": [

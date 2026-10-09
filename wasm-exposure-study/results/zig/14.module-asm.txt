@@ -1,0 +1,8 @@
+# 14-multi-value/zig/module-asm spec=14
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm
+PASS 14 probes/14-multi-value/zig/module-asm//out.wasm (75 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ divmod has two results
+  ✓ divmod (i32, i32) -> (i32, i32)
+  ✓ instantiates
+  ✓ divmod(17,5) == [3,2]

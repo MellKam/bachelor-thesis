@@ -6,12 +6,16 @@
 //   { absent: "confirmed" | "not found", rests_on?: [probe], flags?, note? }   it cannot (rests_on: the probes that failed)
 //   { pending: true }                                                a feature specified but not probed yet
 // A record describes one probe variant with categories only, no numbers:
-//   expressed_as  native | annotation | config | opaque      where the feature lives (the result vocabulary of the chapter plan)
+//   expressed_as  native | annotation | config | inline_asm   how the feature is written (the result vocabulary of the chapter plan);
+//                 inline_asm = assembly or Wasm text written by hand (Rust global_asm!, Zig asm, C __asm__, MoonBit extern "wasm")
+//   checked       true | false, only for inline_asm: whether the language's own compiler relates the block to the surrounding program
+//                 (typed operands, a signature checked against the body). Default: native and annotation are checked, config and
+//                 inline_asm are not. It changes the Checked count and the figures, never the score, which already prices in inline_asm.
 //   support       full | partial (then `missing` says what is not produced)
 //   needs         what else the developer has to accept, from a closed list (NEEDS below); each kind counts once
 //   probes        probe directories the record rests on, when it is more than the variant's own name
-// An obstacle is `expressed_as` being config or opaque (the feature is reached outside the source, or outside the type checker) plus
-// one for every entry of `needs`. Nothing is multiplied or averaged: the rating counts cells (see rating.mjs).
+// An obstacle is `expressed_as` being config or inline_asm (the feature is reached outside the source, or by hand-written assembly,
+// whether or not the compiler checks it) plus one for every entry of `needs`. Nothing is multiplied or averaged: the rating counts cells (see rating.mjs).
 // `flags` holds only what the categories cannot say (opt-in compiler flags, "implicit table", ...). The cell's result and the
 // phrases for `partial` and `needs` are derived, never written twice.
 //
@@ -20,7 +24,7 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { FEATURES } from './feature-list.mjs';
 
-export const LANG_KEYS = ['rust', 'zig', 'c', 'moonbit', 'assemblyscript', 'tinygo', 'kotlin'];
+export const LANG_KEYS = ['rust', 'zig', 'c', 'moonbit', 'assemblyscript', 'tinygo', 'kotlin', 'swift'];
 // A language column can have several probe/verdict directories, one per backend that is a different target (MoonBit: `wasm` in
 // `moonbit/`, `wasm-gc` in `moonbit-gc/`). A probe is named `<name>` (first directory) or `<directory>/<name>`.
 export const LANG_DIRS = { moonbit: ['moonbit', 'moonbit-gc'] };
@@ -37,8 +41,8 @@ export const NEEDS = {
   'restricted-host': 'a module that only runs on certain hosts (it imports WASI functions or JS glue)',
   'other-backend': 'the other backend of the same language (a module uses one backend)',
 };
-const ENUMS = { expressed_as: ['native', 'annotation', 'config', 'opaque'], support: ['full', 'partial'] };
-const RECORD_FIELDS = ['expressed_as', 'support', 'missing', 'needs', 'probes'];
+const ENUMS = { expressed_as: ['native', 'annotation', 'config', 'inline_asm'], support: ['full', 'partial'] };
+const RECORD_FIELDS = ['expressed_as', 'support', 'missing', 'needs', 'probes', 'checked'];
 const CELL_FIELDS = ['variants', 'absent', 'rests_on', 'pending', 'flags', 'note'];
 const MODIFIERS = ['confirmed', 'not found'];
 
@@ -49,8 +53,9 @@ export const verdictOf = (lang, id, probe) => {
   return v.build === 'failed' ? 'build failed' : v.hang ? 'hang' : v.pass ? 'pass' : 'fail';
 };
 
-export const isChecked = (r) => r.expressed_as === 'native' || r.expressed_as === 'annotation';
-export const obstacles = (r) => (isChecked(r) ? 0 : 1) + (r.needs?.length ?? 0);
+// Checked = the language's compiler checks it. Not the same as having no obstacle: a checked inline_asm block is still hand-written assembly.
+export const isChecked = (r) => r.checked ?? (r.expressed_as === 'native' || r.expressed_as === 'annotation');
+export const obstacles = (r) => (r.expressed_as === 'config' || r.expressed_as === 'inline_asm' ? 1 : 0) + (r.needs?.length ?? 0);
 // Which variant stands for a cell: the most complete first, then the one the compiler checks, then the one with the fewest obstacles.
 const rank = (r) => [r.support === 'full' ? 1 : 0, isChecked(r) ? 1 : 0, -obstacles(r)];
 const better = (a, b) => { const x = rank(a), y = rank(b); for (let i = 0; i < x.length; i++) if (x[i] !== y[i]) return x[i] > y[i]; return false; };
@@ -69,10 +74,12 @@ const phrases = (name, r) => [
 ];
 
 export const cap = (s) => s[0].toUpperCase() + s.slice(1);
+const EXPRESSION = { native: 'Native', annotation: 'Annotation', config: 'Config', inline_asm: 'Inline asm' };
+export const expressionLabel = (r) => EXPRESSION[r.expressed_as] + (r.expressed_as === 'inline_asm' && isChecked(r) ? ', checked' : '');
 export const cellFlags = (c) => (c.pending ? [] : [...(c.derived ?? []), ...(c.flags ?? [])]);
 export const cellLabel = (c) => {
   if (c.pending) return 'Not yet probed';
-  const head = c.absent ? `Absent (${c.modifier})` : cap(c.selected.record.expressed_as);
+  const head = c.absent ? `Absent (${c.modifier})` : expressionLabel(c.selected.record);
   const fl = cellFlags(c);
   return fl.length ? `${head}, ${fl.join(', ')}` : head;
 };
@@ -113,6 +120,7 @@ export function loadCells() {
         for (const n of r.needs ?? []) if (!(n in NEEDS)) problems.push(`${where}/${name}: needs "${n}" is not one of ${Object.keys(NEEDS).join(' | ')}`);
         if (new Set(r.needs ?? []).size !== (r.needs ?? []).length) problems.push(`${where}/${name}: needs lists a kind twice`);
         if (r.needs?.includes('other-backend') && !/^wasm(-gc)?:/.test(name)) problems.push(`${where}/${name}: other-backend is for variants named after their backend (wasm:… or wasm-gc:…)`);
+        if (r.checked !== undefined && (typeof r.checked !== 'boolean' || r.expressed_as !== 'inline_asm')) problems.push(`${where}/${name}: checked is true or false and only goes with inline_asm (native and annotation are always checked, config never)`);
         if (r.support === 'partial' && !r.missing) problems.push(`${where}/${name}: partial support needs a "missing" text`);
         if (r.support === 'full' && r.missing) problems.push(`${where}/${name}: "missing" only goes with partial support`);
         const probes = (r.probes ?? [name]).map((t) => probeRef(lang, t));

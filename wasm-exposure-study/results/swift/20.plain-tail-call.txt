@@ -1,0 +1,7 @@
+# 20-tail-calls/swift/plain-tail-call spec=20
+$ swiftc -target wasm32-unknown-none-wasm -enable-experimental-feature Embedded -wmo -parse-as-library -O -Xcc -mtail-call main.swift -o out.wasm -Xlinker --no-entry -Xclang-linker -nostdlib
+FAIL 20 probes/20-tail-calls/swift/plain-tail-call//out.wasm (521 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ return_call emitted
+  ✓ instantiates
+  ✗ count(1000000, 0) == 1000000 without overflowing the stack  — Maximum call stack size exceeded

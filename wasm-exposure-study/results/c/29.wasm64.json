@@ -1,6 +1,6 @@
 {
   "feature": "29",
-  "file": "probes/29-memory64/c/wasm64/out.wasm",
+  "file": "probes/29-memory64/c/wasm64//out.wasm",
   "bytes": 387,
   "pass": true,
   "checks": [

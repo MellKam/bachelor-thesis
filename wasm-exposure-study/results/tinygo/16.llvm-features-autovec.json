@@ -1,0 +1,88 @@
+{
+  "feature": "16",
+  "file": "probes/16-simd-memory-ops/tinygo/llvm-features-autovec//out.wasm",
+  "bytes": 1105,
+  "pass": false,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "host called _initialize before any other export (reactor convention)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "v_copy: export present",
+      "ok": true,
+      "detail": "got undefined, expected 1"
+    },
+    {
+      "name": "v_copy: instruction emitted (^(?=[\\s\\S]*v128.load)[\\s\\S]*v128.store)",
+      "ok": false,
+      "detail": ""
+    },
+    {
+      "name": "v_copy: behaves",
+      "ok": false,
+      "detail": "got undefined, expected 1"
+    },
+    {
+      "name": "v_select: export present",
+      "ok": true,
+      "detail": "got 18, expected 303174162; memory contents differ"
+    },
+    {
+      "name": "v_select: instruction emitted (v128.bitselect)",
+      "ok": false,
+      "detail": ""
+    },
+    {
+      "name": "v_select: behaves",
+      "ok": false,
+      "detail": "got 18, expected 303174162; memory contents differ"
+    },
+    {
+      "name": "v_narrow: export present",
+      "ok": true,
+      "detail": "got 1, expected 127; memory contents differ"
+    },
+    {
+      "name": "v_narrow: instruction emitted (i8x16.narrow_i16x8_s)",
+      "ok": false,
+      "detail": ""
+    },
+    {
+      "name": "v_narrow: behaves",
+      "ok": false,
+      "detail": "got 1, expected 127; memory contents differ"
+    }
+  ],
+  "members": {
+    "v_copy": {
+      "export": true,
+      "emitted": false,
+      "behaves": false
+    },
+    "v_select": {
+      "export": true,
+      "emitted": false,
+      "behaves": false
+    },
+    "v_narrow": {
+      "export": true,
+      "emitted": false,
+      "behaves": false
+    }
+  },
+  "unsupported": []
+}

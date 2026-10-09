@@ -1,6 +1,6 @@
 {
   "feature": "06",
-  "file": "probes/06-data-segments/c/default/out.wasm",
+  "file": "probes/06-data-segments/c/default//out.wasm",
   "bytes": 395,
   "pass": false,
   "checks": [

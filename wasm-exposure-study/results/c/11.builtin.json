@@ -1,6 +1,6 @@
 {
   "feature": "11",
-  "file": "probes/11-conversions-sign-extension/c/builtin/out.wasm",
+  "file": "probes/11-conversions-sign-extension/c/builtin//out.wasm",
   "bytes": 425,
   "pass": true,
   "checks": [

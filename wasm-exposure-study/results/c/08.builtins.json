@@ -1,6 +1,6 @@
 {
   "feature": "08",
-  "file": "probes/08-integer-ops/c/builtins/out.wasm",
+  "file": "probes/08-integer-ops/c/builtins//out.wasm",
   "bytes": 597,
   "pass": true,
   "checks": [

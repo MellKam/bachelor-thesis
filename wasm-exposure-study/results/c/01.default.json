@@ -1,6 +1,6 @@
 {
   "feature": "01",
-  "file": "probes/01-imports-exports/c/default/out.wasm",
+  "file": "probes/01-imports-exports/c/default//out.wasm",
   "bytes": 396,
   "pass": true,
   "checks": [

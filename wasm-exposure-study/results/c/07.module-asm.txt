@@ -1,10 +1,6 @@
 # 07-custom-sections/c/module-asm spec=07
-$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -Wl,--no-entry main.c -o out.wasmPASS 07 probes/07-custom-sections/c/module-asm/out.wasm (372 bytes)
-  ✓ module validates (all extensions enabled)
-  ✓ custom section "meta"
-  ✓ payload is "hello"
-  ✓ instantiates
-PASS 07 probes/07-custom-sections/c/module-asm/out.wasm (372 bytes)
+$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -Wl,--no-entry main.c -o out.wasm
+PASS 07 probes/07-custom-sections/c/module-asm//out.wasm (372 bytes)
   ✓ module validates (all extensions enabled)
   ✓ custom section "meta"
   ✓ payload is "hello"

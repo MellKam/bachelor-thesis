@@ -1,0 +1,7 @@
+# 07-custom-sections/zig/module-asm spec=07
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm
+PASS 07 probes/07-custom-sections/zig/module-asm//out.wasm (77 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ custom section "meta"
+  ✓ payload is "hello"
+  ✓ instantiates

@@ -1,0 +1,9 @@
+# 10-globals/swift/expose-var spec=10
+$ swiftc -target wasm32-unknown-none-wasm -enable-experimental-feature Embedded -wmo -parse-as-library -O main.swift -o out.wasm -Xlinker --no-entry -Xclang-linker -nostdlib
+main.swift:2:2: error: '@_expose' with 'wasm' can only be applied to global functions
+1 | // @_expose(wasm) is accepted on global functions only; a variable cannot be exported by name.
+2 | @_expose(wasm, "counter")
+  |  `- error: '@_expose' with 'wasm' can only be applied to global functions
+3 | nonisolated(unsafe) var counter: Int32 = 0
+4 | 
+BUILD FAILED

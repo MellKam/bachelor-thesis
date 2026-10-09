@@ -1,6 +1,6 @@
 {
   "feature": "14",
-  "file": "probes/14-multi-value/c/experimental-abi/out.wasm",
+  "file": "probes/14-multi-value/c/experimental-abi//out.wasm",
   "bytes": 387,
   "pass": true,
   "checks": [

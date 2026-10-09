@@ -1,6 +1,6 @@
 {
   "feature": "09",
-  "file": "probes/09-float-builtins/c/c-builtins-allow-undefined/out.wasm",
+  "file": "probes/09-float-builtins/c/c-builtins-allow-undefined//out.wasm",
   "bytes": 634,
   "pass": false,
   "checks": [

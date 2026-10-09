@@ -1,0 +1,11 @@
+# 12-bulk-memory/swift/default spec=12
+$ swiftc -target wasm32-unknown-none-wasm -enable-experimental-feature Embedded -wmo -parse-as-library -O main.swift -o out.wasm -Xlinker --no-entry -Xclang-linker -nostdlib
+PASS 12 probes/12-bulk-memory/swift/default//out.wasm (854 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ export bulk_test
+  ✓ memory.fill emitted
+  ✓ memory.copy emitted
+  · array.fill / array.copy used instead (the GC-array equivalents; informational)
+  ✓ instantiates
+  ✓ bulk_test(8) == 40
+  ✓ bulk_test(40) == 200

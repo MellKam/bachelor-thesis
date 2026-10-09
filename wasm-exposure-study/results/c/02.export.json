@@ -1,6 +1,6 @@
 {
   "feature": "02:export",
-  "file": "probes/02-memory/c/export/out.wasm",
+  "file": "probes/02-memory/c/export//out.wasm",
   "bytes": 365,
   "pass": true,
   "checks": [

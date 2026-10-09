@@ -1,4 +1,4 @@
 # 10-globals/zig/default spec=10
 $ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm
-error: wasm-ld: /root/.cache/zig/tmp/7a6b5d3cdf782f70/out_zcu.o: undefined symbol: base
+error: wasm-ld: /root/.cache/zig/tmp/ea43b9914ffa21fa/out_zcu.o: undefined symbol: base
 BUILD FAILED

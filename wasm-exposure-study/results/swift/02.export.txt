@@ -1,0 +1,9 @@
+# 02-memory/swift/export spec=02:export
+$ swiftc -target wasm32-unknown-none-wasm -enable-experimental-feature Embedded -wmo -parse-as-library -O main.swift -o out.wasm -Xlinker --no-entry -Xclang-linker -nostdlib -Xlinker --initial-memory=65536 -Xlinker --max-memory=262144 -Xlinker -z -Xlinker stack-size=8192 -Xlinker --export-memory=mem
+PASS 02:export probes/02-memory/swift/export//out.wasm (353 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exactly one memory
+  ✓ limits min 1 max 4
+  ✓ defined in module (not imported)
+  ✓ exported as "mem"
+  ✓ instantiates

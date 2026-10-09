@@ -1,13 +1,6 @@
 # 10-globals/c/address-space spec=10
-$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -Wl,--no-entry -Wl,--export=counter -Wl,--allow-undefined main.c -o out.wasmFAIL 03 probes/10-globals/c/address-space/out.wasm (435 bytes)
-  ✓ module validates (all extensions enabled)
-  ✓ exported global "counter"
-  ✓ counter is mutable i32
-  ✗ imported global host.base (immutable i32)
-  ✓ instantiates
-  ✗ bump() == 42  — got 1, expected 42
-  ✗ counter global == 42  — 1
-FAIL 10 probes/10-globals/c/address-space/out.wasm (435 bytes)
+$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -Wl,--no-entry -Wl,--export=counter -Wl,--allow-undefined main.c -o out.wasm
+FAIL 10 probes/10-globals/c/address-space//out.wasm (435 bytes)
   ✓ module validates (all extensions enabled)
   ✓ exported global "counter"
   ✓ counter is mutable i32

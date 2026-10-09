@@ -7,15 +7,16 @@ All 30 features are probed. Nothing here is a score: each number is a count of c
 
 | Language | Reached | Full | Checked | No obstacle | 1 obstacle | 2+ obstacles | Absent (confirmed) | Absent (not found) | of which never probed |
 |---|---|---|---|---|---|---|---|---|---|
-| C/C++ | 24/30 | 22 | 13 | 11 | 9 | 4 | 5 | 1 | 2 |
-| Rust | 24/30 | 22 | 13 | 9 | 5 | 10 | 5 | 1 | 2 |
+| C/C++ | 24/30 | 22 | 13 | 11 | 9 | 4 | 6 | 0 | 2 |
+| Rust | 24/30 | 22 | 13 | 9 | 5 | 10 | 6 | 0 | 2 |
+| Zig | 23/30 | 20 | 8 | 7 | 16 | 0 | 7 | 0 | 3 |
+| MoonBit | 16/30 | 13 | 12 | 6 | 7 | 3 | 14 | 0 | 7 |
 | AssemblyScript | 15/30 | 13 | 12 | 12 | 3 | 0 | 15 | 0 | 4 |
-| MoonBit | 15/30 | 12 | 12 | 6 | 7 | 2 | 11 | 4 | 7 |
-| Zig | 14/30 | 11 | 7 | 7 | 7 | 0 | 8 | 8 | 4 |
-| Kotlin | 11/30 | 7 | 11 | 7 | 4 | 0 | 16 | 3 | 11 |
-| TinyGo | 10/30 | 5 | 5 | 5 | 5 | 0 | 18 | 2 | 11 |
+| Swift | 14/30 | 12 | 9 | 0 | 9 | 5 | 16 | 0 | 3 |
+| Kotlin | 11/30 | 7 | 11 | 7 | 4 | 0 | 18 | 1 | 10 |
+| TinyGo | 10/30 | 5 | 5 | 5 | 5 | 0 | 18 | 2 | 9 |
 
-**Reached**: the language can produce the feature in some way. **Full**: all of it, not part. **Checked**: the compiler type-checks it (native or annotation). **No obstacle / 1 / 2+**: among the reached features, how many obstacles stand between the developer and it. An obstacle is reaching it through a build config or through assembly, or any of:
+**Reached**: the language can produce the feature in some way. **Full**: all of it, not part. **Checked**: the compiler of the language checks it (native or annotation; an inline assembly block only if the compiler relates it to the program, see `checked` in `results/README.md`). **No obstacle / 1 / 2+**: among the reached features, how many obstacles stand between the developer and it. An obstacle is reaching it through a build config or through inline assembly (checked or not), or any of:
 
 - `nightly-compiler`: a nightly, unsupported compiler for the whole project
 - `experimental-api`: an API, flag or target feature marked experimental or unstable, on a supported compiler
@@ -26,25 +27,41 @@ All 30 features are probed. Nothing here is a score: each number is a count of c
 
 Sorted by reached, then by no obstacle. The "not found" column is the uncertainty: those cells could still be reached if a way exists. The sort order is only a layout; the comparison is below.
 
+## How the reached features are reached
+
+The same reached cells by how the selected variant is written. Language = native syntax or an annotation. Inline asm is hand-written assembly or Wasm text; it counts as checked only when the language's compiler checks the block against the program. Absent is confirmed plus not found.
+
+| Language | Reached | Language | Config | Inline asm, checked | Inline asm, unchecked | Absent |
+|---|---|---|---|---|---|---|
+| C/C++ | 24/30 | 13 | 6 | 0 | 5 | 6 |
+| Rust | 24/30 | 13 | 5 | 0 | 6 | 6 |
+| Zig | 23/30 | 8 | 5 | 0 | 10 | 7 |
+| MoonBit | 16/30 | 12 | 2 | 0 | 2 | 14 |
+| AssemblyScript | 15/30 | 12 | 3 | 0 | 0 | 15 |
+| Swift | 14/30 | 9 | 5 | 0 | 0 | 16 |
+| Kotlin | 11/30 | 11 | 0 | 0 | 0 | 19 |
+| TinyGo | 10/30 | 5 | 5 | 0 | 0 | 20 |
+
 ## Score
 
-One number between 0 and 1 per language, from the coefficients in `results/rating/weights.json` (a draft, set by the author). A cell scores its reach (full 1, partial 0.5) times the factor of each of its obstacles; a language scores the weighted mean of its cells over the features, where each feature has an importance weight. Absent (confirmed) counts 0 in that mean; Absent (not found) is left out of the mean entirely, like a pending cell, since no way was found but none was shown to not exist. The counts above are the evidence; this is their summary.
+One number between 0 and 1 per language, from the coefficients in `results/rating/weights.json` (our choice; it may not be ideal, which is why the ranking is re-run under random perturbations). A cell scores its reach (full 1, partial 0.5) times the factor of each of its obstacles; a language scores the weighted mean of its cells over the features, where each feature has an importance weight. Absent counts 0 in that mean, whether it is confirmed or not found: a not-found cell stays visible in the counts as the open uncertainty, but a language is not rewarded for a way nobody found. The counts above are the evidence; this is their summary.
 
 | Language | Score | Rank in 2000 perturbed runs (best–worst) |
 |---|---|---|
-| C/C++ | 0.76 | 1–1 |
-| Rust | 0.70 | 2–3 |
-| Zig | 0.61 | 2–5 |
-| AssemblyScript | 0.57 | 3–5 |
-| MoonBit | 0.48 | 4–6 |
-| TinyGo | 0.35 | 5–7 |
-| Kotlin | 0.35 | 5–7 |
+| C/C++ | 0.71 | 1–1 |
+| Rust | 0.65 | 2–3 |
+| Zig | 0.59 | 3–4 |
+| AssemblyScript | 0.57 | 2–4 |
+| Swift | 0.43 | 5–7 |
+| MoonBit | 0.39 | 5–8 |
+| TinyGo | 0.34 | 5–8 |
+| Kotlin | 0.31 | 5–8 |
 
 The ranks come from changing every coefficient at random (partial reach ±0.2; the damage of all obstacles together between half and one and a half times, plus ±15% each, in the same order; each feature weight between half and double) 2000 times. An order is robust only if it held in at least 95% of the runs.
 
-**Robust orderings:** C/C++ above Rust (100%); C/C++ above Zig (100%); C/C++ above AssemblyScript (100%); C/C++ above MoonBit (100%); C/C++ above TinyGo (100%); C/C++ above Kotlin (100%); Rust above Zig (100%); Rust above AssemblyScript (100%); Rust above MoonBit (100%); Rust above TinyGo (100%); Rust above Kotlin (100%); Zig above MoonBit (100%); Zig above TinyGo (100%); Zig above Kotlin (100%); AssemblyScript above MoonBit (98%); AssemblyScript above TinyGo (100%); AssemblyScript above Kotlin (100%); MoonBit above TinyGo (100%); MoonBit above Kotlin (100%).
+**Robust orderings:** C/C++ above Rust (100%); C/C++ above Zig (100%); C/C++ above AssemblyScript (100%); C/C++ above Swift (100%); C/C++ above MoonBit (100%); C/C++ above TinyGo (100%); C/C++ above Kotlin (100%); Rust above Zig (100%); Rust above Swift (100%); Rust above MoonBit (100%); Rust above TinyGo (100%); Rust above Kotlin (100%); Zig above Swift (100%); Zig above MoonBit (100%); Zig above TinyGo (100%); Zig above Kotlin (100%); AssemblyScript above Swift (100%); AssemblyScript above MoonBit (100%); AssemblyScript above TinyGo (100%); AssemblyScript above Kotlin (100%); Swift above TinyGo (100%); Swift above Kotlin (100%); MoonBit above Kotlin (96%).
 
-**Not robust** (the score gap is smaller than the uncertainty of the coefficients): Zig / AssemblyScript (87% / 13%); TinyGo / Kotlin (59% / 41%).
+**Not robust** (the score gap is smaller than the uncertainty of the coefficients): Rust / AssemblyScript (95% / 5%); Zig / AssemblyScript (60% / 40%); Swift / MoonBit (89% / 11%); MoonBit / TinyGo (83% / 17%); TinyGo / Kotlin (75% / 25%).
 
 **Obstacle factors**, from least to most damaging. A cell is worth its reach times the factor of each obstacle it has.
 
@@ -55,9 +72,9 @@ The ranks come from changing every coefficient at random (partial reach ±0.2; t
 | side-effect | 0.85 | The mechanism is an implementation detail of another construct: nothing in the language asks for it (a closure call that happens to be call_ref, casts that come from a class hierarchy, panic unwinding standing in for exceptions). The behaviour and the type checking are unchanged, but the developer cannot write the Wasm construct itself. Not for optimiser behaviour: if a better test makes the instruction appear reliably, there is no obstacle. |
 | nightly-compiler | 0.80 | The whole project, and every project that depends on it, needs a compiler that is not a supported release and can break from one day to the next. Wider than one call site, but the code is still type-checked and deterministic, and the constraint ends when the feature is stabilised. |
 | restricted-host | 0.80 | The module only runs on certain hosts: it imports WASI functions or JS glue code (C++ exceptions need a WASI host, Kotlin's externref build a JS host). Some deployment targets are lost, but most projects target one kind of host anyway and a wide set remains; the code itself is unaffected. |
-| opaque (expressed_as) | 0.75 | Hand-written assembly or Wasm text. Deterministic and supported, but the compiler stops checking it for good: mistakes surface at run time, it is tied to one target and maintained by hand. |
 | extra-runtime | 0.70 | Every module carries extra code: a runtime shipped inside it (322 KB of libc++abi for C++ exceptions). A permanent size cost paid by every user of the module, but the module still runs anywhere. |
-| other-backend | 0.50 | The module must be built for a different backend and gives up everything only the first backend offers. The features of the two backends are mutually exclusive in one module: using this one removes the others. |
+| inline_asm (expressed_as) | 0.50 | The feature is written as hand-written assembly or Wasm text. Deterministic and supported, but there is no language help: the syntax is per target, it is verbose and error-prone to write and to maintain, and unless the language happens to check the block against the program, mistakes surface only at assembly or run time. This is the price of the expression itself, so it is charged whether or not the compiler checks the block; that is recorded separately (`checked`) and does not change the factor. |
+| other-backend | 0.35 | The module must be built for a different backend and gives up everything only the first backend offers. The features of the two backends are mutually exclusive in one module: using this one removes the others. |
 
 Reach: full 1, partial 0.5. Feature weights (1–3): 01=3, 02=3, 03=3, 04=2, 05=2, 06=3, 07=1, 08=3, 09=3, 10=3, 11=2, 12=2, 13=1, 14=2, 15=1, 16=2, 17=2, 18=1, 19=1, 20=2, 21=1, 22=2, 23=2, 24=1, 25=1, 26=1, 27=2, 28=1, 29=2, 30=1.
 
@@ -67,19 +84,20 @@ True of every probe of the language. They are recorded here and count for nothin
 
 - **TinyGo**: The host must call the exported `_initialize` before any other export (the WASI reactor convention); Go's `init()` and the runtime start there. True of every probe, so it is not a cost on any one feature.
 - **Kotlin**: The host must run `_start` (the WASI command convention) before any other export; true of every module that built. Feature 17 (`externref`) is built for the `wasm-js` target, every other probe for `wasm-wasi`.
+- **Swift**: Every probe is built freestanding in Embedded Swift (`swiftc -target wasm32-unknown-none-wasm`, linked by the toolchain's `wasm-ld`), the lowest-level route in the 6.4.0 toolchain and the only one that yields a module without WASI imports or a runtime. Embedded mode is itself behind `-enable-experimental-feature Embedded` in 6.4.0 (`swift-frontend -print-supported-features` lists `Embedded`, `Extern` and `BuiltinModule` under "experimental"), so every variant carries `experimental-api`; so do the underscored attributes (`@_expose`, `@_cdecl`, `@_extern`) and the Builtin module. No start call is needed by the host.
 
 ## Which language is ahead of which
 
 A language is ahead of another only if it is at least as good on all 4 counts (reached, full, checked, no obstacle) and better on at least one.
 
-- **C/C++** is ahead of Rust, Zig, MoonBit, TinyGo, Kotlin.
-- **Rust** is ahead of Zig, MoonBit, TinyGo, Kotlin.
-- **AssemblyScript** is ahead of Zig, MoonBit, TinyGo, Kotlin.
-- **MoonBit** is ahead of TinyGo.
+- **C/C++** is ahead of Rust, Zig, MoonBit, TinyGo, Kotlin, Swift.
+- **Rust** is ahead of Zig, MoonBit, TinyGo, Kotlin, Swift.
 - **Zig** is ahead of TinyGo.
+- **MoonBit** is ahead of TinyGo, Swift.
+- **AssemblyScript** is ahead of TinyGo, Kotlin, Swift.
 - **Kotlin** is ahead of TinyGo.
 
-Not ordered, because each leads on something: Rust / AssemblyScript; Zig / MoonBit; Zig / Kotlin; C/C++ / AssemblyScript; MoonBit / Kotlin.
+Not ordered, because each leads on something: Rust / AssemblyScript; Zig / MoonBit; Zig / AssemblyScript; Zig / Kotlin; Zig / Swift; C/C++ / AssemblyScript; MoonBit / AssemblyScript; MoonBit / Kotlin; TinyGo / Swift; Kotlin / Swift.
 
 ## By spec version
 
@@ -88,49 +106,50 @@ The same counts for the features of each spec version (1.0 = module core, 2.0, 3
 | Language | 1.0 | 2.0 | 3.0 |
 |---|---|---|---|
 | Rust | 9/10 reached, 4 with none | 9/9 reached, 4 with none | 6/11 reached, 1 with none |
-| Zig | 7/10 reached, 3 with none | 5/9 reached, 3 with none | 2/11 reached, 1 with none |
+| Zig | 9/10 reached, 3 with none | 9/9 reached, 3 with none | 5/11 reached, 1 with none |
 | C/C++ | 9/10 reached, 4 with none | 9/9 reached, 5 with none | 6/11 reached, 2 with none |
-| MoonBit | 6/10 reached, 4 with none | 5/9 reached, 2 with none | 4/11 reached, 0 with none |
+| MoonBit | 7/10 reached, 4 with none | 5/9 reached, 2 with none | 4/11 reached, 0 with none |
 | AssemblyScript | 9/10 reached, 6 with none | 5/9 reached, 5 with none | 1/11 reached, 1 with none |
 | TinyGo | 7/10 reached, 4 with none | 3/9 reached, 1 with none | 0/11 reached, 0 with none |
 | Kotlin | 4/10 reached, 3 with none | 2/9 reached, 1 with none | 5/11 reached, 3 with none |
+| Swift | 7/10 reached, 0 with none | 5/9 reached, 0 with none | 2/11 reached, 0 with none |
 
 ## Per feature
 
 Each cell: `F` full or `P` partial, `✓` checked or `✗` not checked, then the number of obstacles; `–` Absent.
 
-| # | Feature | Spec | Rust | Zig | C/C++ | MoonBit | AssemblyScript | TinyGo | Kotlin |
-|---|---|---|---|---|---|---|---|---|---|
-| 01 | Imports and exports | 1.0 | F✓0 | F✓0 | F✓0 | F✓0 | F✓0 | F✓0 | F✓1 |
-| 02 | Memory configuration | 1.0 | F✗1 | P✗1 | F✗1 | F✗1 | P✗1 | P✗1 | – |
-| 03 | Table and indirect call | 1.0 | F✓0 | F✓0 | F✓0 | F✓1 | F✓0 | F✓0 | – |
-| 04 | Table import and export | 1.0 | P✗1 | P✗1 | P✗1 | – | P✗1 | P✗1 | – |
-| 05 | Start function | 1.0 | – | – | – | F✓0 | F✓0 | – | F✓0 |
-| 06 | Data segments | 1.0 | F✗1 | F✗1 | F✗1 | – | F✗1 | F✗1 | – |
-| 07 | Custom sections | 1.0 | F✓0 | – | F✗1 | – | – | – | – |
-| 08 | Integer operations | 1.0 | F✓0 | F✓0 | F✓0 | P✓0 | F✓0 | F✓0 | P✓0 |
-| 09 | Float builtins | 1.0 | F✓1 | F✗1 | F✓0 | P✓0 | F✓0 | P✓0 | P✓0 |
-| 10 | Globals | 1.0 | F✗2 | – | F✗1 | – | F✓0 | – | – |
-| 11 | Non-trapping conversions, sign extension | 2.0 | F✓0 | F✓0 | F✓0 | F✗1 | F✓0 | F✓0 | P✓0 |
-| 12 | Bulk memory | 2.0 | F✓0 | F✓0 | F✓0 | F✓0 | F✓0 | P✗1 | – |
-| 13 | Passive data segments | 2.0 | P✗2 | P✗1 | P✗1 | – | – | P✗1 | – |
-| 14 | Multi-value | 2.0 | F✗2 | – | F✗2 | – | – | – | – |
-| 15 | SIMD | 2.0 | F✓0 | F✓0 | F✓0 | F✓1 | F✓0 | – | – |
-| 16 | SIMD memory and bitwise operations | 2.0 | F✓0 | F✗1 | F✓0 | F✗1 | F✓0 | – | – |
-| 17 | `externref` | 2.0 | F✗2 | – | F✓0 | F✓0 | F✓0 | – | F✓1 |
-| 18 | Multiple tables | 2.0 | F✗2 | – | F✗1 | – | – | – | – |
-| 19 | Table operations on references | 2.0 | F✗2 | – | F✗1 | – | – | – | – |
-| 20 | Tail calls | 3.0 | F✓1 | F✓0 | F✓0 | – | – | – | – |
-| 21 | Extended constant expressions | 3.0 | – | – | – | – | – | – | – |
-| 22 | Typed function references | 3.0 | F✗2 | – | F✗2 | F✓2 | – | – | F✓1 |
-| 23 | GC structs and arrays | 3.0 | – | – | – | F✓1 | – | – | F✓0 |
-| 24 | GC casts, subtyping, i31, packed fields | 3.0 | – | – | – | P✓2 | – | – | P✓1 |
-| 25 | Multiple memories | 3.0 | – | – | – | – | – | – | – |
-| 26 | Relaxed SIMD | 3.0 | F✓0 | – | F✓0 | F✓1 | F✓0 | – | – |
-| 27 | Exception tags | 3.0 | F✓2 | – | F✓2 | – | – | – | F✓0 |
-| 28 | Exception handling with exnref | 3.0 | F✓2 | – | F✓2 | – | – | – | F✓0 |
-| 29 | 64-bit memory | 3.0 | F✗2 | F✗1 | F✗1 | – | – | – | – |
-| 30 | Branch hinting | 3.0 | – | – | – | – | – | – | – |
+| # | Feature | Spec | Rust | Zig | C/C++ | MoonBit | AssemblyScript | TinyGo | Kotlin | Swift |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 01 | Imports and exports | 1.0 | F✓0 | F✓0 | F✓0 | F✓0 | F✓0 | F✓0 | F✓1 | F✓1 |
+| 02 | Memory configuration | 1.0 | F✗1 | P✗1 | F✗1 | F✗1 | P✗1 | P✗1 | – | F✗2 |
+| 03 | Table and indirect call | 1.0 | F✓0 | F✓0 | F✓0 | F✓1 | F✓0 | F✓0 | – | F✓1 |
+| 04 | Table import and export | 1.0 | P✗1 | P✗1 | P✗1 | – | P✗1 | P✗1 | – | P✗2 |
+| 05 | Start function | 1.0 | – | – | – | F✓0 | F✓0 | – | F✓0 | – |
+| 06 | Data segments | 1.0 | F✗1 | F✗1 | F✗1 | F✗2 | F✗1 | F✗1 | – | F✗2 |
+| 07 | Custom sections | 1.0 | F✓0 | F✗1 | F✗1 | – | – | – | – | – |
+| 08 | Integer operations | 1.0 | F✓0 | F✓0 | F✓0 | P✓0 | F✓0 | F✓0 | P✓0 | F✓1 |
+| 09 | Float builtins | 1.0 | F✓1 | F✗1 | F✓0 | P✓0 | F✓0 | P✓0 | P✓0 | F✓1 |
+| 10 | Globals | 1.0 | F✗2 | F✗1 | F✗1 | – | F✓0 | – | – | – |
+| 11 | Non-trapping conversions, sign extension | 2.0 | F✓0 | F✓0 | F✓0 | F✗1 | F✓0 | F✓0 | P✓0 | F✓1 |
+| 12 | Bulk memory | 2.0 | F✓0 | F✓0 | F✓0 | F✓0 | F✓0 | P✗1 | – | F✓1 |
+| 13 | Passive data segments | 2.0 | P✗2 | P✗1 | P✗1 | – | – | P✗1 | – | P✗2 |
+| 14 | Multi-value | 2.0 | F✗2 | F✗1 | F✗2 | – | – | – | – | – |
+| 15 | SIMD | 2.0 | F✓0 | F✓0 | F✓0 | F✓1 | F✓0 | – | – | F✓1 |
+| 16 | SIMD memory and bitwise operations | 2.0 | F✓0 | F✗1 | F✓0 | F✗1 | F✓0 | – | – | F✓1 |
+| 17 | `externref` | 2.0 | F✗2 | F✗1 | F✓0 | F✓0 | F✓0 | – | F✓1 | – |
+| 18 | Multiple tables | 2.0 | F✗2 | F✗1 | F✗1 | – | – | – | – | – |
+| 19 | Table operations on references | 2.0 | F✗2 | F✗1 | F✗1 | – | – | – | – | – |
+| 20 | Tail calls | 3.0 | F✓1 | F✓0 | F✓0 | – | – | – | – | – |
+| 21 | Extended constant expressions | 3.0 | – | – | – | – | – | – | – | – |
+| 22 | Typed function references | 3.0 | F✗2 | – | F✗2 | F✓2 | – | – | F✓1 | – |
+| 23 | GC structs and arrays | 3.0 | – | – | – | F✓1 | – | – | F✓0 | – |
+| 24 | GC casts, subtyping, i31, packed fields | 3.0 | – | – | – | P✓2 | – | – | P✓1 | – |
+| 25 | Multiple memories | 3.0 | – | – | – | – | – | – | – | – |
+| 26 | Relaxed SIMD | 3.0 | F✓0 | F✓1 | F✓0 | F✓1 | F✓0 | – | – | F✓1 |
+| 27 | Exception tags | 3.0 | F✓2 | F✗1 | F✓2 | – | – | – | F✓0 | – |
+| 28 | Exception handling with exnref | 3.0 | F✓2 | F✗1 | F✓2 | – | – | – | F✓0 | – |
+| 29 | 64-bit memory | 3.0 | F✗2 | F✗1 | F✗1 | – | – | – | – | F✗2 |
+| 30 | Branch hinting | 3.0 | – | – | – | – | – | – | – | – |
 
 ## Selected variant per cell
 
@@ -138,155 +157,155 @@ The variant that stands for the cell: the most complete first, then the one the 
 
 ### Rust
 
-- **01 Imports and exports**: `default`, annotation; 0 obstacles.
-- **02 Memory configuration**: `export+import`, config; 1 obstacles. Limits, stack size and the exported/imported name are linker arguments in `.cargo/config.toml`.
-- **03 Table and indirect call**: `default`, native; 0 obstacles. A private or `const` array of function pointers is folded by LLVM into a `select`, leaving no table and no `call_indirect`; an exported `static mut` cannot be assumed constant, so the indirect call stays without any barrier (an earlier probe used `black_box` for the same effect).
-- **04 Table import and export**: `export+import`, config, partial (table name and limits are fixed (__indirect_function_table, 3/3)); 1 obstacles. `--export-table` / `--import-table` link arguments; the table is `__indirect_function_table` / `env.__indirect_function_table`, sized to the address-taken functions plus one (min 3, max 3 when exported). A private or `const` array of function pointers is folded by LLVM into a `select`, leaving no table and no `call_indirect`; an exported `static mut` cannot be assumed constant, so the indirect call stays without any barrier (an earlier probe used `black_box` for the same effect).
+- **01 Imports and exports**: `default`, Annotation; 0 obstacles.
+- **02 Memory configuration**: `export+import`, Config; 1 obstacles. Limits, stack size and the exported/imported name are linker arguments in `.cargo/config.toml`.
+- **03 Table and indirect call**: `default`, Native; 0 obstacles. A private or `const` array of function pointers is folded by LLVM into a `select`, leaving no table and no `call_indirect`; an exported `static mut` cannot be assumed constant, so the indirect call stays without any barrier (an earlier probe used `black_box` for the same effect).
+- **04 Table import and export**: `export+import`, Config, partial (table name and limits are fixed (__indirect_function_table, 3/3)); 1 obstacles. `--export-table` / `--import-table` link arguments; the table is `__indirect_function_table` / `env.__indirect_function_table`, sized to the address-taken functions plus one (min 3, max 3 when exported). A private or `const` array of function pointers is folded by LLVM into a `select`, leaving no table and no `call_indirect`; an exported `static mut` cannot be assumed constant, so the indirect call stays without any barrier (an earlier probe used `black_box` for the same effect).
 - **05 Start function**: Absent (confirmed).
-- **06 Data segments**: `global-base`, config; 1 obstacles. The default layout puts data after a 1 MiB stack, at 1048576.
-- **07 Custom sections**: `default`, annotation; 0 obstacles. `#[link_section = "meta"]` on a static.
-- **08 Integer operations**: `default`, native; 0 obstacles.
-- **09 Float builtins**: `nightly-minimum`, native, nightly-compiler; 1 obstacles. Also: `std` (native, partial, 0 obstacles). sqrt/ceil/floor/trunc/round_ties_even are not available in `no_std`; `f64::min/max` do not emit `f64.min/max` (only nightly `f64::minimum/maximum` do).
-- **10 Globals**: `nightly-asm`, opaque, nightly-compiler; 2 obstacles. A `static` is an address in linear memory, never a Wasm global; the global exists only in `global_asm!`.
-- **11 Non-trapping conversions, sign extension**: `default`, native; 0 obstacles. `as` casts; the saturating `f64 as i32` and the sign extensions are emitted with the default target features.
-- **12 Bulk memory**: `default`, native; 0 obstacles. `write_bytes`/`copy_nonoverlapping` become `memory.fill`/`memory.copy` because bulk-memory is on by default; small constant sizes would become plain stores. `memset`/`memcpy` of a run-time size lower to `memory.fill`/`memory.copy`. Copying bytes that were just filled is folded into a second fill (a valid optimisation), so the probe puts a barrier between the two; that is a property of the probe, not a limit of the language.
-- **13 Passive data segments**: `stable-shared-memory`, config, partial (memory.init only in the linker-generated initialiser; user code cannot run it), experimental-api; 2 obstacles. `--shared-memory` (with `+atomics,+bulk-memory`) makes the linker emit a passive segment and copy it from `__wasm_init_memory`; the program cannot request a segment or run `memory.init` itself. The nightly build with `-Zbuild-std` gives the same module.
-- **14 Multi-value**: `nightly-asm`, opaque, nightly-compiler; 2 obstacles. A tuple or struct return becomes an out-pointer, so the checker's two-argument call corrupts memory and hangs (`stable-tuple`).
-- **15 SIMD**: `memory-roundtrip`, native; 0 obstacles. `core::arch::wasm32`. The intrinsics are explicit requests, but LLVM folds `extract_lane(add(splat, splat))` back into scalar code, so the probe (`memory-roundtrip`) sends the splatted operands through volatile memory and uses the result twice; the plain forms (`attribute`, `flag`) keep only `i32x4.splat`.
-- **16 SIMD memory and bitwise operations**: `attribute`, native; 0 obstacles. `core::arch::wasm32` `v128_load`, `v128_store`, `v128_bitselect`, `i8x16_narrow_i16x8` with `#[target_feature(enable = "simd128")]`.
-- **17 `externref`**: `nightly-asm`, opaque, nightly-compiler; 2 obstacles. On stable, `global_asm!` on wasm32 is rejected (E0658).
-- **18 Multiple tables**: `nightly-asm`, opaque, nightly-compiler; 2 obstacles. Function pointers always share the one implicit table; two tables exist only in assembly. The functions must also be exported so `ref.func` is valid.
-- **19 Table operations on references**: `nightly-asm`, opaque, nightly-compiler; 2 obstacles. `global_asm!` declares a table and uses `table.grow/set/get/size`; `core::arch::wasm32` has no table operations.
-- **20 Tail calls**: `nightly-become`, native, nightly-compiler; 1 obstacles. `become` (explicit_tail_calls) plus `+tail-call`. Ordinary calls in tail position are only sometimes turned into `return_call` (`flag` emits it in one direction and still overflows).
+- **06 Data segments**: `global-base`, Config; 1 obstacles. The default layout puts data after a 1 MiB stack, at 1048576.
+- **07 Custom sections**: `default`, Annotation; 0 obstacles. `#[link_section = "meta"]` on a static.
+- **08 Integer operations**: `default`, Native; 0 obstacles.
+- **09 Float builtins**: `nightly-minimum`, Native, nightly-compiler; 1 obstacles. Also: `std` (Native, partial, 0 obstacles). sqrt/ceil/floor/trunc/round_ties_even are not available in `no_std`; `f64::min/max` do not emit `f64.min/max` (only nightly `f64::minimum/maximum` do).
+- **10 Globals**: `nightly-asm`, Inline asm, nightly-compiler; 2 obstacles. A `static` is an address in linear memory, never a Wasm global; the global exists only in `global_asm!`.
+- **11 Non-trapping conversions, sign extension**: `default`, Native; 0 obstacles. `as` casts; the saturating `f64 as i32` and the sign extensions are emitted with the default target features.
+- **12 Bulk memory**: `default`, Native; 0 obstacles. `write_bytes`/`copy_nonoverlapping` become `memory.fill`/`memory.copy` because bulk-memory is on by default; small constant sizes would become plain stores. `memset`/`memcpy` of a run-time size lower to `memory.fill`/`memory.copy`. Copying bytes that were just filled is folded into a second fill (a valid optimisation), so the probe puts a barrier between the two; that is a property of the probe, not a limit of the language.
+- **13 Passive data segments**: `stable-shared-memory`, Config, partial (memory.init only in the linker-generated initialiser; user code cannot run it), experimental-api; 2 obstacles. `--shared-memory` (with `+atomics,+bulk-memory`) makes the linker emit a passive segment and copy it from `__wasm_init_memory`; the program cannot request a segment or run `memory.init` itself. The nightly build with `-Zbuild-std` gives the same module.
+- **14 Multi-value**: `nightly-asm`, Inline asm, nightly-compiler; 2 obstacles. A tuple or struct return becomes an out-pointer, so the checker's two-argument call corrupts memory and hangs (`stable-tuple`).
+- **15 SIMD**: `memory-roundtrip`, Native; 0 obstacles. `core::arch::wasm32`. The intrinsics are explicit requests, but LLVM folds `extract_lane(add(splat, splat))` back into scalar code, so the probe (`memory-roundtrip`) sends the splatted operands through volatile memory and uses the result twice; the plain forms (`attribute`, `flag`) keep only `i32x4.splat`.
+- **16 SIMD memory and bitwise operations**: `attribute`, Native; 0 obstacles. `core::arch::wasm32` `v128_load`, `v128_store`, `v128_bitselect`, `i8x16_narrow_i16x8` with `#[target_feature(enable = "simd128")]`.
+- **17 `externref`**: `nightly-asm`, Inline asm, nightly-compiler; 2 obstacles. On stable, `global_asm!` on wasm32 is rejected (E0658).
+- **18 Multiple tables**: `nightly-asm`, Inline asm, nightly-compiler; 2 obstacles. Function pointers always share the one implicit table; two tables exist only in assembly. The functions must also be exported so `ref.func` is valid.
+- **19 Table operations on references**: `nightly-asm`, Inline asm, nightly-compiler; 2 obstacles. `global_asm!` declares a table and uses `table.grow/set/get/size`; `core::arch::wasm32` has no table operations.
+- **20 Tail calls**: `nightly-become`, Native, nightly-compiler; 1 obstacles. `become` (explicit_tail_calls) plus `+tail-call`. Ordinary calls in tail position are only sometimes turned into `return_call` (`flag` emits it in one direction and still overflows).
 - **21 Extended constant expressions**: Absent (confirmed).
-- **22 Typed function references**: `nightly-asm-gc`, opaque, nightly-compiler; 2 obstacles. `global_asm!` with `call_ref`; without `-C target-feature=+gc` the assembler rejects it (`nightly-asm`).
+- **22 Typed function references**: `nightly-asm-gc`, Inline asm, nightly-compiler; 2 obstacles. `global_asm!` with `call_ref`; without `-C target-feature=+gc` the assembler rejects it (`nightly-asm`).
 - **23 GC structs and arrays**: Absent (confirmed), never probed; see [`probes/23-gc-typed-refs/rust/ABSENT.md`](../../probes/23-gc-typed-refs/rust/ABSENT.md).
 - **24 GC casts, subtyping, i31, packed fields**: Absent (confirmed), never probed; see [`probes/24-gc-casts-subtyping/rust/ABSENT.md`](../../probes/24-gc-casts-subtyping/rust/ABSENT.md).
 - **25 Multiple memories**: Absent (confirmed).
-- **26 Relaxed SIMD**: `attribute`, native; 0 obstacles. `core::arch::wasm32` with `#[target_feature(enable = "simd128", enable = "relaxed-simd")]`.
-- **27 Exception tags**: `nightly-unwind`, native, nightly-compiler, side-effect; 2 obstacles. Also: `nightly-asm` (opaque, 2 obstacles). `catch_unwind` compiles to tags only with `-Zbuild-std`, `panic=unwind` and `+exception-handling`; on stable a panic traps and no tag exists. Obstacles: std rebuilt with panic=unwind; the mechanism is panic unwinding, not a language exception construct (no way to declare or throw a tag).
-- **28 Exception handling with exnref**: `nightly-unwind`, native, nightly-compiler, side-effect; 2 obstacles. `catch_unwind` / `resume_unwind` compile to `try_table` with `catch_ref` and `throw_ref`; the standardised encoding is already the default (`nightly-unwind-new-eh`, with the LLVM flag, is the same module). Obstacles: std rebuilt with panic=unwind; the mechanism is panic unwinding, not a language exception construct (no way to declare or throw a tag).
-- **29 64-bit memory**: `nightly-wasm64`, config, nightly-compiler; 2 obstacles. Obstacles: tier-3 target, -Zbuild-std.
-- **30 Branch hinting**: Absent (not found).
+- **26 Relaxed SIMD**: `attribute`, Native; 0 obstacles. `core::arch::wasm32` with `#[target_feature(enable = "simd128", enable = "relaxed-simd")]`.
+- **27 Exception tags**: `nightly-unwind`, Native, nightly-compiler, side-effect; 2 obstacles. Also: `nightly-asm` (Inline asm, 2 obstacles). `catch_unwind` compiles to tags only with `-Zbuild-std`, `panic=unwind` and `+exception-handling`; on stable a panic traps and no tag exists. Obstacles: std rebuilt with panic=unwind; the mechanism is panic unwinding, not a language exception construct (no way to declare or throw a tag).
+- **28 Exception handling with exnref**: `nightly-unwind`, Native, nightly-compiler, side-effect; 2 obstacles. `catch_unwind` / `resume_unwind` compile to `try_table` with `catch_ref` and `throw_ref`; the standardised encoding is already the default (`nightly-unwind-new-eh`, with the LLVM flag, is the same module). Obstacles: std rebuilt with panic=unwind; the mechanism is panic unwinding, not a language exception construct (no way to declare or throw a tag).
+- **29 64-bit memory**: `nightly-wasm64`, Config, nightly-compiler; 2 obstacles. Obstacles: tier-3 target, -Zbuild-std.
+- **30 Branch hinting**: Absent (confirmed).
 
 ### Zig
 
-- **01 Imports and exports**: `default`, native; 0 obstacles. `extern "host" fn` and `export fn`.
-- **02 Memory configuration**: `export+import`, config, partial (exported/imported memory name is fixed); 1 obstacles. Limits and stack are flags; the memory is always exported as `memory` and imported as `env.memory`.
-- **03 Table and indirect call**: `default`, native; 0 obstacles.
-- **04 Table import and export**: `export+import`, config, partial (table name and limits are fixed (__indirect_function_table, 3/3)); 1 obstacles. `--export-table` / `--import-table`; same fixed name and limits as Rust and C.
+- **01 Imports and exports**: `default`, Native; 0 obstacles. `extern "host" fn` and `export fn`.
+- **02 Memory configuration**: `export+import`, Config, partial (exported/imported memory name is fixed); 1 obstacles. Limits and stack are flags; the memory is always exported as `memory` and imported as `env.memory`.
+- **03 Table and indirect call**: `default`, Native; 0 obstacles.
+- **04 Table import and export**: `export+import`, Config, partial (table name and limits are fixed (__indirect_function_table, 3/3)); 1 obstacles. `--export-table` / `--import-table`; same fixed name and limits as Rust and C.
 - **05 Start function**: Absent (confirmed).
-- **06 Data segments**: `global-base`, config; 1 obstacles.
-- **07 Custom sections**: Absent (not found).
-- **08 Integer operations**: `default`, native; 0 obstacles.
-- **09 Float builtins**: `module-asm`, opaque; 1 obstacles. Also: `default` (native, partial, 0 obstacles). `@min/@max` do not emit `f64.min/max` (different NaN rules) and `@round` rounds half away from zero, so there is no ties-to-even builtin (`default`). Module-level assembly (`comptime { asm(...) }`) writes `f64.min`, `f64.max`, `f64.nearest` and `f64.copysign` (`module-asm`).
-- **10 Globals**: Absent (not found).
-- **11 Non-trapping conversions, sign extension**: `default`, native; 0 obstacles.
-- **12 Bulk memory**: `default`, native; 0 obstacles. `@memset`/`@memcpy`. `memset`/`memcpy` of a run-time size lower to `memory.fill`/`memory.copy`. Copying bytes that were just filled is folded into a second fill (a valid optimisation), so the probe puts a barrier between the two; that is a property of the probe, not a limit of the language.
-- **13 Passive data segments**: `shared-memory`, config, partial (memory.init only in the linker-generated initialiser; user code cannot run it); 1 obstacles. `--shared-memory --import-memory -mcpu=...+atomics+bulk_memory`: passive segment, initialised by the linker.
-- **14 Multi-value**: Absent (not found).
-- **15 SIMD**: `memory-roundtrip`, native; 0 obstacles. `@Vector`. The same folding as in Rust and C happens to the plain forms; `memory-roundtrip` sends the operands through volatile memory and uses the result twice, and every member is emitted.
-- **16 SIMD memory and bitwise operations**: `module-asm`, opaque; 1 obstacles. Also: `vector` (native, partial, 0 obstacles). `@Vector` loads, stores and bitwise select map to `v128.load/store/bitselect`; the saturating narrow, written as clamp and truncate, does not become `i8x16.narrow_i16x8_s`, in either of two forms tried (`vector`). Module-level assembly writes all three exports (`module-asm`).
-- **17 `externref`**: Absent (confirmed).
-- **18 Multiple tables**: Absent (not found).
-- **19 Table operations on references**: Absent (not found).
-- **20 Tail calls**: `always-tail`, native; 0 obstacles. `@call(.always_tail, ...)`. Plain calls get `return_call` in one direction at most (`mcpu-tail-call`) and still overflow.
+- **06 Data segments**: `global-base`, Config; 1 obstacles.
+- **07 Custom sections**: `module-asm`, Inline asm; 1 obstacles. Module-level `comptime { asm(...) }` with `.section .custom_section.meta,"",@` and `.ascii`. The language route fails: three `linksection` spellings put the bytes in the data section (ziglang/zig#5494, open since 2020 — the `.custom_section.X` prefix that works through Clang/Rust's `link_section` is not honoured when Zig emits the section itself).
+- **08 Integer operations**: `default`, Native; 0 obstacles.
+- **09 Float builtins**: `module-asm`, Inline asm; 1 obstacles. Also: `default` (Native, partial, 0 obstacles). `@min/@max` do not emit `f64.min/max` (different NaN rules) and `@round` rounds half away from zero, so there is no ties-to-even builtin (`default`). Module-level assembly (`comptime { asm(...) }`) writes `f64.min`, `f64.max`, `f64.nearest` and `f64.copysign` (`module-asm`).
+- **10 Globals**: `module-asm`, Inline asm; 1 obstacles. Module-level `comptime { asm(...) }` with `.globaltype` for the imported and the exported global, and `global.get`/`global.set` in an assembly function. The language route fails: `extern "host" const base` is a data symbol (link error without `--import-symbols`, then not a global); `export var counter` exports an immutable global holding the variable's address. Tracked as ziglang/zig#4866 (open since 2020, no progress).
+- **11 Non-trapping conversions, sign extension**: `default`, Native; 0 obstacles.
+- **12 Bulk memory**: `default`, Native; 0 obstacles. `@memset`/`@memcpy`. `memset`/`memcpy` of a run-time size lower to `memory.fill`/`memory.copy`. Copying bytes that were just filled is folded into a second fill (a valid optimisation), so the probe puts a barrier between the two; that is a property of the probe, not a limit of the language.
+- **13 Passive data segments**: `shared-memory`, Config, partial (memory.init only in the linker-generated initialiser; user code cannot run it); 1 obstacles. `--shared-memory --import-memory -mcpu=...+atomics+bulk_memory`: passive segment, initialised by the linker.
+- **14 Multi-value**: `module-asm`, Inline asm; 1 obstacles. Module-level assembly writes the two-result function (`.functype divmod (i32, i32) -> (i32, i32)`); no feature flag needed. The language route fails: LLVM's wasm backend supports multi-result codegen (`std.Target.wasm.Feature.multivalue`), but exported/imported functions always lower through the Clang-mirrored C ABI (struct return via out-pointer). zig#16639 (open, stalled since 2023) proposes a `callconv(.Wasm)` using `+multivalue`; not implemented.
+- **15 SIMD**: `memory-roundtrip`, Native; 0 obstacles. `@Vector`. The same folding as in Rust and C happens to the plain forms; `memory-roundtrip` sends the operands through volatile memory and uses the result twice, and every member is emitted.
+- **16 SIMD memory and bitwise operations**: `module-asm`, Inline asm; 1 obstacles. Also: `vector` (Native, partial, 0 obstacles). `@Vector` loads, stores and bitwise select map to `v128.load/store/bitselect`; the saturating narrow, written as clamp and truncate, does not become `i8x16.narrow_i16x8_s`, in either of two forms tried (`vector`). Module-level assembly writes all three exports (`module-asm`).
+- **17 `externref`**: `module-asm`, Inline asm; 1 obstacles. Module-level assembly writes `.functype identity (externref) -> (externref)`; Zig code cannot name, store or pass the value. The language route is closed: ziglang/zig#10491 ("Support WebAssembly Reference Types") closed as not-planned — core dev: "I'm afraid there's no such thing yet," gated behind Wasm-specific address spaces never built. Deliberate non-support, not just an unaddressed backlog item.
+- **18 Multiple tables**: `module-asm-table-get`, Inline asm; 1 obstacles. Module-level assembly declares two `.tabletype` tables and calls through each with `call_indirect <table>`. The C route (`ref.func` + `table.set`) does not build here: Zig 0.16 bundles LLVM 21.1, whose assembler reports "invalid instruction" on `ref.func` even through `zig cc` on a standalone .s file, while wasi-sdk's LLVM 23 accepts the same source (`module-asm`, `module-asm-reftypes`). The working variant takes the function pointers in Zig (`&add1`, an index into the implicit table 0) and copies the funcref with `table.get __indirect_function_table` + `table.set`. Not the cause: the `.tabletype` miscompilation tracked as ziglang/zig#13165, which did not occur.
+- **19 Table operations on references**: `module-asm-table-get`, Inline asm; 1 obstacles. No builtin for table operations. Function-level inline assembly assembles but yields an invalid module (`inline-asm`: the asm statement leaves two values on the stack where the compiler expects one). Module-level assembly declares the table and does `table.grow/set/get/size`; the funcref comes from the implicit table 0 via `table.get`, because Zig 0.16's bundled LLVM 21 assembler rejects `ref.func` (see 18).
+- **20 Tail calls**: `always-tail`, Native; 0 obstacles. `@call(.always_tail, ...)`. Plain calls get `return_call` in one direction at most (`mcpu-tail-call`) and still overflow.
 - **21 Extended constant expressions**: Absent (confirmed), never probed; see [`probes/21-extended-const/zig/ABSENT.md`](../../probes/21-extended-const/zig/ABSENT.md).
 - **22 Typed function references**: Absent (confirmed).
 - **23 GC structs and arrays**: Absent (confirmed), never probed; see [`probes/23-gc-typed-refs/zig/ABSENT.md`](../../probes/23-gc-typed-refs/zig/ABSENT.md).
 - **24 GC casts, subtyping, i31, packed fields**: Absent (confirmed), never probed; see [`probes/24-gc-casts-subtyping/zig/ABSENT.md`](../../probes/24-gc-casts-subtyping/zig/ABSENT.md).
 - **25 Multiple memories**: Absent (confirmed).
-- **26 Relaxed SIMD**: Absent (not found).
-- **27 Exception tags**: Absent (not found).
-- **28 Exception handling with exnref**: Absent (confirmed), never probed; see [`probes/28-exnref-exceptions/zig/ABSENT.md`](../../probes/28-exnref-exceptions/zig/ABSENT.md).
-- **29 64-bit memory**: `wasm64`, config; 1 obstacles.
-- **30 Branch hinting**: Absent (not found).
+- **26 Relaxed SIMD**: `llvm-intrinsic`, Native, experimental-api; 1 obstacles. Also: `module-asm` (Inline asm, 1 obstacles). `llvm-intrinsic` declares `extern fn @"llvm.wasm.relaxed.madd.v4f32"(V, V, V) V` and Zig type-checks the call. It is the LLVM intrinsic's name leaking through `extern`, not a documented Zig API, hence `experimental-api` (a judgement; the author should review). The language construct does not work: `@mulAdd` lowers through the generic `llvm.fma` intrinsic, which llvm-bugs#121311 confirms is not reliably pattern-matched to `f32x4.relaxed_madd` even with `+relaxed-simd` (`mulAdd`).
+- **27 Exception tags**: `module-asm`, Inline asm; 1 obstacles. Module-level assembly declares the tag with `.tagtype` and writes `try`/`throw`/`catch`; the assembler refuses the instructions without `-mcpu=generic+exception_handling`. The language route is closed: error unions are ordinary control flow (`error-union`), and Zig's error-union model never emits `invoke`/`landingpad` IR. The `.tagtype`/`.globaltype` miscompilation feared from zig#13165 did not occur.
+- **28 Exception handling with exnref**: `module-asm`, Inline asm; 1 obstacles. Module-level assembly writes the whole function: `try_table (catch_all_ref 0)` capturing the exception, `throw_ref`, and an outer `try_table (catch <tag> 0)`. There is no path from ordinary Zig code: LLVM's wasm backend emits `try_table`/`catch_ref`/`throw_ref` only as a lowering target for `invoke`/`landingpad` IR (llvm/llvm-project#124381), which Zig's error-union model never generates. The ABSENT.md that stood here said "Absent (confirmed)" for the language route and had not tried assembly.
+- **29 64-bit memory**: `wasm64`, Config; 1 obstacles.
+- **30 Branch hinting**: Absent (confirmed).
 
 ### C/C++
 
-- **01 Imports and exports**: `default`, annotation; 0 obstacles.
-- **02 Memory configuration**: `export+import`, config; 1 obstacles. Names, limits and stack are all `wasm-ld` options.
-- **03 Table and indirect call**: `default`, native; 0 obstacles. The table must be a non-const global; a `static const` array is folded into direct calls.
-- **04 Table import and export**: `export+import`, config, partial (table name and limits are fixed (__indirect_function_table, 3/3)); 1 obstacles. `-Wl,--export-table` / `--import-table`. Explicit `__funcref` tables cannot be exported or imported: clang rejects a non-static table (`export-funcref-table`, `import-funcref-table`).
+- **01 Imports and exports**: `default`, Annotation; 0 obstacles.
+- **02 Memory configuration**: `export+import`, Config; 1 obstacles. Names, limits and stack are all `wasm-ld` options.
+- **03 Table and indirect call**: `default`, Native; 0 obstacles. The table must be a non-const global; a `static const` array is folded into direct calls.
+- **04 Table import and export**: `export+import`, Config, partial (table name and limits are fixed (__indirect_function_table, 3/3)); 1 obstacles. `-Wl,--export-table` / `--import-table`. Explicit `__funcref` tables cannot be exported or imported: clang rejects a non-static table (`export-funcref-table`, `import-funcref-table`).
 - **05 Start function**: Absent (confirmed).
-- **06 Data segments**: `global-base`, config; 1 obstacles.
-- **07 Custom sections**: `module-asm`, opaque; 1 obstacles. The `section` attribute does not produce a custom section (the bytes go to a data segment); `.section .custom_section.meta` in module assembly does.
-- **08 Integer operations**: `builtins`, native; 0 obstacles.
-- **09 Float builtins**: `wasm-builtins`, native; 0 obstacles. Standard `fmin`/`fmax` become libm calls (undefined without a libc); `__builtin_wasm_min_f64` emits `f64.min`.
-- **10 Globals**: `module-asm`, opaque; 1 obstacles. Also: `address-space` (native, partial, 0 obstacles). Variables in clang address space 1 are Wasm globals and `counter` is exported mutable; an imported one comes from `env`, and attributes cannot set the module. Module-level assembly (`module-asm`) does the whole task.
-- **11 Non-trapping conversions, sign extension**: `plain-c`, native; 0 obstacles.
-- **12 Bulk memory**: `default`, native; 0 obstacles. Needs a compiler barrier between fill and copy or LLVM turns the copy into a second fill. `memset`/`memcpy` of a run-time size lower to `memory.fill`/`memory.copy`. Copying bytes that were just filled is folded into a second fill (a valid optimisation), so the probe puts a barrier between the two; that is a property of the probe, not a limit of the language.
-- **13 Passive data segments**: `shared-memory`, config, partial (memory.init only in the linker-generated initialiser; user code cannot run it); 1 obstacles. Also: `module-asm-shared-memory` (opaque, partial, 1 obstacles). `-matomics -mbulk-memory -Wl,--shared-memory`: the linker emits a passive segment and copies it at start-up. Module-level assembly can emit `memory.init` (`module-asm-shared-memory`), but the linker's initialiser has already dropped the segment, so the call traps.
-- **14 Multi-value**: `experimental-abi`, config, experimental-api; 2 obstacles. `-mmultivalue -Xclang -target-abi -Xclang experimental-mv`; the default ABI returns structs through an out-pointer.
-- **15 SIMD**: `memory-roundtrip`, native; 0 obstacles. `wasm_simd128.h`. The same folding as in Rust and Zig happens to the plain forms; `memory-roundtrip` sends the operands through volatile memory and uses the result twice, and every member is emitted.
-- **16 SIMD memory and bitwise operations**: `wasm_simd128`, native; 0 obstacles. `wasm_simd128.h`: `wasm_v128_load/store`, `wasm_v128_bitselect`, `wasm_i8x16_narrow_i16x8`.
-- **17 `externref`**: `externref-type`, native; 0 obstacles. `__externref_t`.
-- **18 Multiple tables**: `module-asm`, opaque; 1 obstacles. Also: `funcref-tables` (native, partial, 0 obstacles). clang's `__funcref` tables are declared and filled with builtins, but an indirect call always goes through table 0 (`funcref-tables`). Module-level assembly declares both tables and calls through each with an explicit table operand (`module-asm`).
-- **19 Table operations on references**: `module-asm`, opaque; 1 obstacles. Also: `funcref-table-builtins` (native, partial, 0 obstacles). `__builtin_wasm_table_grow/set/get/size` work on a zero-length `__funcref` table, but comparing a funcref with null crashes the backend ("Cannot select: setcc funcref"), so the null tests cannot be written (`funcref-null-test`). Module-level assembly does the whole task (`module-asm`).
-- **20 Tail calls**: `musttail`, annotation; 0 obstacles. `__attribute__((musttail))` on the return; unannotated tail calls overflow.
+- **06 Data segments**: `global-base`, Config; 1 obstacles.
+- **07 Custom sections**: `module-asm`, Inline asm; 1 obstacles. The `section` attribute does not produce a custom section (the bytes go to a data segment); `.section .custom_section.meta` in module assembly does.
+- **08 Integer operations**: `builtins`, Native; 0 obstacles.
+- **09 Float builtins**: `wasm-builtins`, Native; 0 obstacles. Standard `fmin`/`fmax` become libm calls (undefined without a libc); `__builtin_wasm_min_f64` emits `f64.min`.
+- **10 Globals**: `module-asm`, Inline asm; 1 obstacles. Also: `address-space` (Native, partial, 0 obstacles). Variables in clang address space 1 are Wasm globals and `counter` is exported mutable; an imported one comes from `env`, and attributes cannot set the module. Module-level assembly (`module-asm`) does the whole task.
+- **11 Non-trapping conversions, sign extension**: `plain-c`, Native; 0 obstacles.
+- **12 Bulk memory**: `default`, Native; 0 obstacles. Needs a compiler barrier between fill and copy or LLVM turns the copy into a second fill. `memset`/`memcpy` of a run-time size lower to `memory.fill`/`memory.copy`. Copying bytes that were just filled is folded into a second fill (a valid optimisation), so the probe puts a barrier between the two; that is a property of the probe, not a limit of the language.
+- **13 Passive data segments**: `shared-memory`, Config, partial (memory.init only in the linker-generated initialiser; user code cannot run it); 1 obstacles. Also: `module-asm-shared-memory` (Inline asm, partial, 1 obstacles). `-matomics -mbulk-memory -Wl,--shared-memory`: the linker emits a passive segment and copies it at start-up. Module-level assembly can emit `memory.init` (`module-asm-shared-memory`), but the linker's initialiser has already dropped the segment, so the call traps.
+- **14 Multi-value**: `experimental-abi`, Config, experimental-api; 2 obstacles. `-mmultivalue -Xclang -target-abi -Xclang experimental-mv`; the default ABI returns structs through an out-pointer.
+- **15 SIMD**: `memory-roundtrip`, Native; 0 obstacles. `wasm_simd128.h`. The same folding as in Rust and Zig happens to the plain forms; `memory-roundtrip` sends the operands through volatile memory and uses the result twice, and every member is emitted.
+- **16 SIMD memory and bitwise operations**: `wasm_simd128`, Native; 0 obstacles. `wasm_simd128.h`: `wasm_v128_load/store`, `wasm_v128_bitselect`, `wasm_i8x16_narrow_i16x8`.
+- **17 `externref`**: `externref-type`, Native; 0 obstacles. `__externref_t`.
+- **18 Multiple tables**: `module-asm`, Inline asm; 1 obstacles. Also: `funcref-tables` (Native, partial, 0 obstacles). clang's `__funcref` tables are declared and filled with builtins, but an indirect call always goes through table 0 (`funcref-tables`). Module-level assembly declares both tables and calls through each with an explicit table operand (`module-asm`).
+- **19 Table operations on references**: `module-asm`, Inline asm; 1 obstacles. Also: `funcref-table-builtins` (Native, partial, 0 obstacles). `__builtin_wasm_table_grow/set/get/size` work on a zero-length `__funcref` table, but comparing a funcref with null crashes the backend ("Cannot select: setcc funcref"), so the null tests cannot be written (`funcref-null-test`). Module-level assembly does the whole task (`module-asm`).
+- **20 Tail calls**: `musttail`, Annotation; 0 obstacles. `__attribute__((musttail))` on the return; unannotated tail calls overflow.
 - **21 Extended constant expressions**: Absent (confirmed).
-- **22 Typed function references**: `module-asm-gc`, opaque, experimental-api; 2 obstacles. Module-level assembly with `call_ref`, built with `-Xclang -target-feature -Xclang +gc`. A `__funcref` call in C is a `call_indirect` (`funcref-call`).
+- **22 Typed function references**: `module-asm-gc`, Inline asm, experimental-api; 2 obstacles. Module-level assembly with `call_ref`, built with `-Xclang -target-feature -Xclang +gc`. A `__funcref` call in C is a `call_indirect` (`funcref-call`).
 - **23 GC structs and arrays**: Absent (confirmed), never probed; see [`probes/23-gc-typed-refs/c/ABSENT.md`](../../probes/23-gc-typed-refs/c/ABSENT.md).
 - **24 GC casts, subtyping, i31, packed fields**: Absent (confirmed), never probed; see [`probes/24-gc-casts-subtyping/c/ABSENT.md`](../../probes/24-gc-casts-subtyping/c/ABSENT.md).
 - **25 Multiple memories**: Absent (confirmed).
-- **26 Relaxed SIMD**: `wasm_simd128`, native; 0 obstacles.
-- **27 Exception tags**: `cxx-wasip1-eh-newabi`, native, extra-runtime, restricted-host; 2 obstacles. With the default `-fwasm-exceptions` the module mixes legacy and new exception instructions and does not instantiate (`cxx-wasip1-eh`). The probe compiles as C++; C and C++ are rated as one language. Obstacles: hosted libc++abi (322 KB) in the module; the module imports 9 `wasi_snapshot_preview1` functions, so it needs a WASI host.
-- **28 Exception handling with exnref**: `cxx-wasip1-eh-newabi`, native, extra-runtime, restricted-host; 2 obstacles. `throw;` inside a `catch`; same toolchain and flags as feature 27. The probe compiles as C++; C and C++ are rated as one language. Obstacles: hosted libc++abi (322 KB) in the module; the module imports 9 `wasi_snapshot_preview1` functions, so it needs a WASI host.
-- **29 64-bit memory**: `wasm64`, config; 1 obstacles.
-- **30 Branch hinting**: Absent (not found).
+- **26 Relaxed SIMD**: `wasm_simd128`, Native; 0 obstacles.
+- **27 Exception tags**: `cxx-wasip1-eh-newabi`, Native, extra-runtime, restricted-host; 2 obstacles. With the default `-fwasm-exceptions` the module mixes legacy and new exception instructions and does not instantiate (`cxx-wasip1-eh`). The probe compiles as C++; C and C++ are rated as one language. Obstacles: hosted libc++abi (322 KB) in the module; the module imports 9 `wasi_snapshot_preview1` functions, so it needs a WASI host.
+- **28 Exception handling with exnref**: `cxx-wasip1-eh-newabi`, Native, extra-runtime, restricted-host; 2 obstacles. `throw;` inside a `catch`; same toolchain and flags as feature 27. The probe compiles as C++; C and C++ are rated as one language. Obstacles: hosted libc++abi (322 KB) in the module; the module imports 9 `wasi_snapshot_preview1` functions, so it needs a WASI host.
+- **29 64-bit memory**: `wasm64`, Config; 1 obstacles.
+- **30 Branch hinting**: Absent (confirmed).
 
 ### MoonBit
 
-- **01 Imports and exports**: `wasm:default`, native; 0 obstacles. Also: `wasm-gc:default` (native, 0 obstacles). wasm backend: Imports are declared in source (`fn log(x : Int) = "host" "log"`); exports are a list of function names in the build file. wasm-gc backend: Exports are listed in moon.pkg.json.
-- **02 Memory configuration**: `wasm:export+import`, config; 1 obstacles. Also: `wasm-gc:export+import` (config, 1 obstacles). wasm backend: The only language here where limits, the exported name and the imported module and field are all configurable. wasm-gc backend: The wasm-gc output still has a small linear memory whose limits, name and import module/field the build file sets (export and import both probed).
-- **03 Table and indirect call**: `wasm:default`, native, other-backend; 1 obstacles. On the wasm-gc backend: function values are GC closures, no table. The module has no table; indirect calls use `call_ref`.
+- **01 Imports and exports**: `wasm:default`, Native; 0 obstacles. Also: `wasm-gc:default` (Native, 0 obstacles). wasm backend: Imports are declared in source (`fn log(x : Int) = "host" "log"`); exports are a list of function names in the build file. wasm-gc backend: Exports are listed in moon.pkg.json.
+- **02 Memory configuration**: `wasm:export+import`, Config; 1 obstacles. Also: `wasm-gc:export+import` (Config, 1 obstacles). wasm backend: The only language here where limits, the exported name and the imported module and field are all configurable. wasm-gc backend: The wasm-gc output still has a small linear memory whose limits, name and import module/field the build file sets (export and import both probed).
+- **03 Table and indirect call**: `wasm:default`, Native, other-backend; 1 obstacles. On the wasm-gc backend: function values are GC closures, no table. The module has no table; indirect calls use `call_ref`.
 - **04 Table import and export**: Absent (confirmed), never probed; see [`probes/04-table-import-export/moonbit/ABSENT.md`](../../probes/04-table-import-export/moonbit/ABSENT.md), [`probes/04-table-import-export/moonbit-gc/ABSENT.md`](../../probes/04-table-import-export/moonbit-gc/ABSENT.md).
-- **05 Start function**: `wasm:init`, native; 0 obstacles. Also: `wasm-gc:init` (native, 0 obstacles). wasm backend: `fn init { ... }`.
-- **06 Data segments**: Absent (not found).
+- **05 Start function**: `wasm:init`, Native; 0 obstacles. Also: `wasm-gc:init` (Native, 0 obstacles). wasm backend: `fn init { ... }`.
+- **06 Data segments**: `wasm:heap-start-address`, Config, other-backend; 2 obstacles. `link.wasm.heap-start-address` in moon.pkg.json moves the segment the compiler places its static data in; the `Bytes` literal sits 16 bytes into it (an object header), so 1008 puts "WASM" at 1024. The address is chosen by knowing the compiler's object layout and moving the whole static region, like C's `--global-base`, not by naming the literal's address. wasm-gc has no linear data segments at all (`moonbit-gc/heap-start-address`: no segment), so the route exists on one backend only. Without the option the compiler puts the segment at 10000 (`default`).
 - **07 Custom sections**: Absent (confirmed), never probed; see [`probes/07-custom-sections/moonbit/ABSENT.md`](../../probes/07-custom-sections/moonbit/ABSENT.md), [`probes/07-custom-sections/moonbit-gc/ABSENT.md`](../../probes/07-custom-sections/moonbit-gc/ABSENT.md).
-- **08 Integer operations**: `wasm:default`, native, partial (no rotl/rotr operation; inline Wasm text can write i32.rotl, but its parser rejects i32.rotr); 0 obstacles. Also: `wasm-gc:default` (native, partial, 0 obstacles). wasm backend: `Int::clz/ctz/popcnt` are intrinsics; there is no rotate, so it is written with shifts. `inline-wasm`: `i32.rotl` parses and is emitted, `i32.rotr` is rejected by the inline Wasm parser.
-- **09 Float builtins**: `wasm:default`, native, partial (min/max/copysign have no operation that maps to the instruction; inline Wasm text can write f64.nearest, but its parser rejects f64.min, f64.max and f64.copysign); 0 obstacles. Also: `wasm-gc:default` (native, partial, 0 obstacles). wasm backend: `sqrt`, `ceil`, `floor`, `trunc`, `abs` map to opcodes; `min`/`max`/`round`/`copysign` do not (`round` rounds half away from zero). `inline-wasm`: `f64.nearest` parses and is emitted; `f64.min`, `f64.max` and `f64.copysign` are rejected by the inline Wasm parser.
+- **08 Integer operations**: `wasm:default`, Native, partial (no rotl/rotr operation; inline Wasm text can write i32.rotl, but its parser rejects i32.rotr); 0 obstacles. Also: `wasm-gc:default` (Native, partial, 0 obstacles). wasm backend: `Int::clz/ctz/popcnt` are intrinsics; there is no rotate, so it is written with shifts. `inline-wasm`: `i32.rotl` parses and is emitted, `i32.rotr` is rejected by the inline Wasm parser.
+- **09 Float builtins**: `wasm:default`, Native, partial (min/max/copysign have no operation that maps to the instruction; inline Wasm text can write f64.nearest, but its parser rejects f64.min, f64.max and f64.copysign); 0 obstacles. Also: `wasm-gc:default` (Native, partial, 0 obstacles). wasm backend: `sqrt`, `ceil`, `floor`, `trunc`, `abs` map to opcodes; `min`/`max`/`round`/`copysign` do not (`round` rounds half away from zero). `inline-wasm`: `f64.nearest` parses and is emitted; `f64.min`, `f64.max` and `f64.copysign` are rejected by the inline Wasm parser.
 - **10 Globals**: Absent (confirmed).
-- **11 Non-trapping conversions, sign extension**: `wasm:inline-wasm`, opaque; 1 obstacles. Also: `wasm:default` (native, partial, 0 obstacles), `wasm-gc:default` (native, partial, 0 obstacles), `wasm-gc:inline-wasm` (opaque, 1 obstacles). wasm backend: `Double::to_int` is saturating (`trunc_sat`); sign extension is not emitted for the shift idiom. Inline Wasm text writes `i32.extend8_s` and `i32.extend16_s` on both backends (`inline-wasm`).
-- **12 Bulk memory**: `wasm:array`, native; 0 obstacles. Also: `wasm:inline-wasm` (opaque, 1 obstacles), `wasm-gc:inline-wasm` (opaque, 1 obstacles). `Array::fill` / `blit_to` emit `memory.fill` / `memory.copy` on the wasm backend. On the wasm-gc backend they become `array.fill` / `array.copy` on GC arrays instead, but inline Wasm text writes `memory.fill` / `memory.copy` there too (`inline-wasm`).
+- **11 Non-trapping conversions, sign extension**: `wasm:inline-wasm`, Inline asm; 1 obstacles. Also: `wasm:default` (Native, partial, 0 obstacles), `wasm-gc:default` (Native, partial, 0 obstacles), `wasm-gc:inline-wasm` (Inline asm, 1 obstacles). wasm backend: `Double::to_int` is saturating (`trunc_sat`); sign extension is not emitted for the shift idiom. Inline Wasm text writes `i32.extend8_s` and `i32.extend16_s` on both backends (`inline-wasm`).
+- **12 Bulk memory**: `wasm:array`, Native; 0 obstacles. Also: `wasm:inline-wasm` (Inline asm, 1 obstacles), `wasm-gc:inline-wasm` (Inline asm, 1 obstacles). `Array::fill` / `blit_to` emit `memory.fill` / `memory.copy` on the wasm backend. On the wasm-gc backend they become `array.fill` / `array.copy` on GC arrays instead, but inline Wasm text writes `memory.fill` / `memory.copy` there too (`inline-wasm`).
 - **13 Passive data segments**: Absent (confirmed).
-- **14 Multi-value**: Absent (not found).
-- **15 SIMD**: `wasm:v128-library`, native, experimental-api; 1 obstacles. Also: `wasm:inline-wasm` (opaque, 1 obstacles), `wasm-gc:v128-library` (native, 1 obstacles). wasm backend: `@v128` in the core library; all four members emitted. Inline Wasm text (`inline-wasm`) also works.
-- **16 SIMD memory and bitwise operations**: `wasm:inline-wasm`, opaque; 1 obstacles. Also: `wasm:v128-library` (native, partial, 1 obstacles), `wasm-gc:v128-library` (native, partial, 1 obstacles), `wasm-gc:inline-wasm` (opaque, 1 obstacles). wasm backend: `v128_bitselect` and `i8x16_narrow_i16x8_s` are emitted; vectors are loaded from a `FixedArray[Byte]` the program owns, not from an address the host filled. wasm-gc backend: `v128_bitselect` and `i8x16_narrow_i16x8_s` are emitted; `v128_load/store` are software over GC arrays. Inline Wasm text can name an address, so it loads and stores vectors in the memory the host filled, on both backends (`inline-wasm`).
-- **17 `externref`**: `wasm:external`, annotation; 0 obstacles. Also: `wasm-gc:external` (annotation, 0 obstacles).
+- **14 Multi-value**: Absent (confirmed).
+- **15 SIMD**: `wasm:v128-library`, Native, experimental-api; 1 obstacles. Also: `wasm:inline-wasm` (Inline asm, 1 obstacles), `wasm-gc:v128-library` (Native, 1 obstacles). wasm backend: `@v128` in the core library; all four members emitted. Inline Wasm text (`inline-wasm`) also works.
+- **16 SIMD memory and bitwise operations**: `wasm:inline-wasm`, Inline asm; 1 obstacles. Also: `wasm:v128-library` (Native, partial, 1 obstacles), `wasm-gc:v128-library` (Native, partial, 1 obstacles), `wasm-gc:inline-wasm` (Inline asm, 1 obstacles). wasm backend: `v128_bitselect` and `i8x16_narrow_i16x8_s` are emitted; vectors are loaded from a `FixedArray[Byte]` the program owns, not from an address the host filled. wasm-gc backend: `v128_bitselect` and `i8x16_narrow_i16x8_s` are emitted; `v128_load/store` are software over GC arrays. Inline Wasm text can name an address, so it loads and stores vectors in the memory the host filled, on both backends (`inline-wasm`).
+- **17 `externref`**: `wasm:external`, Annotation; 0 obstacles. Also: `wasm-gc:external` (Annotation, 0 obstacles).
 - **18 Multiple tables**: Absent (confirmed), never probed; see [`probes/18-multiple-tables/moonbit/ABSENT.md`](../../probes/18-multiple-tables/moonbit/ABSENT.md), [`probes/18-multiple-tables/moonbit-gc/ABSENT.md`](../../probes/18-multiple-tables/moonbit-gc/ABSENT.md).
 - **19 Table operations on references**: Absent (confirmed), never probed; see [`probes/19-table-operations/moonbit/ABSENT.md`](../../probes/19-table-operations/moonbit/ABSENT.md), [`probes/19-table-operations/moonbit-gc/ABSENT.md`](../../probes/19-table-operations/moonbit-gc/ABSENT.md).
 - **20 Tail calls**: Absent (confirmed).
 - **21 Extended constant expressions**: Absent (confirmed), never probed; see [`probes/21-extended-const/moonbit/ABSENT.md`](../../probes/21-extended-const/moonbit/ABSENT.md), [`probes/21-extended-const/moonbit-gc/ABSENT.md`](../../probes/21-extended-const/moonbit-gc/ABSENT.md).
-- **22 Typed function references**: `wasm-gc:closure`, native, side-effect, other-backend; 2 obstacles. Closures are called with `call_ref`. On the wasm backend: Function values are closures called with `call_indirect` through the table. Side effect: the `call_ref` is how a closure's function field is called; the program cannot write or name a typed function reference.
-- **23 GC structs and arrays**: `wasm-gc:struct-array`, native, other-backend; 1 obstacles. Structs and arrays become GC types without any annotation. On the wasm backend: wasm-gc backend only. On this backend structs and arrays live in linear memory; the `moonbit-gc` column is the other backend.
-- **24 GC casts, subtyping, i31, packed fields**: `wasm-gc:enum-array`, native, partial (ref.i31 / i31.get not emitted), side-effect, other-backend; 2 obstacles. Enum variants are declared subtypes with `ref.cast`/`ref.test`, `FixedArray[Byte]` is a packed `i8` array; `i31` is not used for boxed values. Side effect: the subtype declarations and casts come from the enum's variants, not from anything the program writes as a GC type.
+- **22 Typed function references**: `wasm-gc:closure`, Native, side-effect, other-backend; 2 obstacles. Closures are called with `call_ref`. On the wasm backend: Function values are closures called with `call_indirect` through the table. Side effect: the `call_ref` is how a closure's function field is called; the program cannot write or name a typed function reference.
+- **23 GC structs and arrays**: `wasm-gc:struct-array`, Native, other-backend; 1 obstacles. Structs and arrays become GC types without any annotation. On the wasm backend: wasm-gc backend only. On this backend structs and arrays live in linear memory; the `moonbit-gc` column is the other backend.
+- **24 GC casts, subtyping, i31, packed fields**: `wasm-gc:enum-array`, Native, partial (ref.i31 / i31.get not emitted), side-effect, other-backend; 2 obstacles. Enum variants are declared subtypes with `ref.cast`/`ref.test`, `FixedArray[Byte]` is a packed `i8` array; `i31` is not used for boxed values. Side effect: the subtype declarations and casts come from the enum's variants, not from anything the program writes as a GC type.
 - **25 Multiple memories**: Absent (confirmed).
-- **26 Relaxed SIMD**: `wasm:v128-library`, native, experimental-api; 1 obstacles. Also: `wasm:inline-wasm` (opaque, 1 obstacles), `wasm-gc:v128-library` (native, 1 obstacles).
-- **27 Exception tags**: Absent (not found).
-- **28 Exception handling with exnref**: Absent (not found), never probed; see [`probes/28-exnref-exceptions/moonbit/ABSENT.md`](../../probes/28-exnref-exceptions/moonbit/ABSENT.md), [`probes/28-exnref-exceptions/moonbit-gc/ABSENT.md`](../../probes/28-exnref-exceptions/moonbit-gc/ABSENT.md).
+- **26 Relaxed SIMD**: `wasm:v128-library`, Native, experimental-api; 1 obstacles. Also: `wasm:inline-wasm` (Inline asm, 1 obstacles), `wasm-gc:v128-library` (Native, 1 obstacles).
+- **27 Exception tags**: Absent (confirmed).
+- **28 Exception handling with exnref**: Absent (confirmed), never probed; see [`probes/28-exnref-exceptions/moonbit/ABSENT.md`](../../probes/28-exnref-exceptions/moonbit/ABSENT.md), [`probes/28-exnref-exceptions/moonbit-gc/ABSENT.md`](../../probes/28-exnref-exceptions/moonbit-gc/ABSENT.md).
 - **29 64-bit memory**: Absent (confirmed).
 - **30 Branch hinting**: Absent (confirmed), never probed; see [`probes/30-branch-hinting/moonbit/ABSENT.md`](../../probes/30-branch-hinting/moonbit/ABSENT.md), [`probes/30-branch-hinting/moonbit-gc/ABSENT.md`](../../probes/30-branch-hinting/moonbit-gc/ABSENT.md).
 
 ### AssemblyScript
 
-- **01 Imports and exports**: `default`, annotation; 0 obstacles.
-- **02 Memory configuration**: `export+import`, config, partial (memory name fixed (memory / env.memory)); 1 obstacles. Limits via `--initialMemory/--maximumMemory`; always `memory` / `env.memory`.
-- **03 Table and indirect call**: `default`, native; 0 obstacles.
-- **04 Table import and export**: `export+import`, config, partial (table name is fixed (table / env.table) and the limits are not settable); 1 obstacles. `--exportTable` exports the table as `table`; `--importTable` imports `env.table`.
-- **05 Start function**: `global-init`, native; 0 obstacles. A non-constant top-level initialiser compiles into the start section.
-- **06 Data segments**: `memoryBase`, config; 1 obstacles. `memory.data` lays bytes out from the memory base; the default base happens to be 1024, so `default` passes too.
+- **01 Imports and exports**: `default`, Annotation; 0 obstacles.
+- **02 Memory configuration**: `export+import`, Config, partial (memory name fixed (memory / env.memory)); 1 obstacles. Limits via `--initialMemory/--maximumMemory`; always `memory` / `env.memory`.
+- **03 Table and indirect call**: `default`, Native; 0 obstacles.
+- **04 Table import and export**: `export+import`, Config, partial (table name is fixed (table / env.table) and the limits are not settable); 1 obstacles. `--exportTable` exports the table as `table`; `--importTable` imports `env.table`.
+- **05 Start function**: `global-init`, Native; 0 obstacles. A non-constant top-level initialiser compiles into the start section.
+- **06 Data segments**: `memoryBase`, Config; 1 obstacles. `memory.data` lays bytes out from the memory base; the default base happens to be 1024, so `default` passes too.
 - **07 Custom sections**: Absent (confirmed), never probed; see [`probes/07-custom-sections/assemblyscript/ABSENT.md`](../../probes/07-custom-sections/assemblyscript/ABSENT.md).
-- **08 Integer operations**: `builtins`, native; 0 obstacles.
-- **09 Float builtins**: `builtins`, native; 0 obstacles.
-- **10 Globals**: `default`, native; 0 obstacles. `export let counter` is a real mutable Wasm global; `@external("host","base") declare const` is a real global import.
-- **11 Non-trapping conversions, sign extension**: `default`, native; 0 obstacles.
-- **12 Bulk memory**: `builtins`, native; 0 obstacles. `memory.fill` / `memory.copy`; bulk memory is enabled by default.
+- **08 Integer operations**: `builtins`, Native; 0 obstacles.
+- **09 Float builtins**: `builtins`, Native; 0 obstacles.
+- **10 Globals**: `default`, Native; 0 obstacles. `export let counter` is a real mutable Wasm global; `@external("host","base") declare const` is a real global import.
+- **11 Non-trapping conversions, sign extension**: `default`, Native; 0 obstacles.
+- **12 Bulk memory**: `builtins`, Native; 0 obstacles. `memory.fill` / `memory.copy`; bulk memory is enabled by default.
 - **13 Passive data segments**: Absent (confirmed).
 - **14 Multi-value**: Absent (confirmed).
-- **15 SIMD**: `builtins`, native; 0 obstacles. All four members emitted without any anti-folding trick.
-- **16 SIMD memory and bitwise operations**: `builtins`, native; 0 obstacles. `v128.load/store/bitselect/narrow<i16>`. The default memory has no pages, so the probe sets `--initialMemory 1`.
-- **17 `externref`**: `externref`, native; 0 obstacles.
+- **15 SIMD**: `builtins`, Native; 0 obstacles. All four members emitted without any anti-folding trick.
+- **16 SIMD memory and bitwise operations**: `builtins`, Native; 0 obstacles. `v128.load/store/bitselect/narrow<i16>`. The default memory has no pages, so the probe sets `--initialMemory 1`.
+- **17 `externref`**: `externref`, Native; 0 obstacles.
 - **18 Multiple tables**: Absent (confirmed), never probed; see [`probes/18-multiple-tables/assemblyscript/ABSENT.md`](../../probes/18-multiple-tables/assemblyscript/ABSENT.md).
 - **19 Table operations on references**: Absent (confirmed), never probed; see [`probes/19-table-operations/assemblyscript/ABSENT.md`](../../probes/19-table-operations/assemblyscript/ABSENT.md).
 - **20 Tail calls**: Absent (confirmed).
@@ -295,7 +314,7 @@ The variant that stands for the cell: the most complete first, then the one the 
 - **23 GC structs and arrays**: Absent (confirmed).
 - **24 GC casts, subtyping, i31, packed fields**: Absent (confirmed), never probed; see [`probes/24-gc-casts-subtyping/assemblyscript/ABSENT.md`](../../probes/24-gc-casts-subtyping/assemblyscript/ABSENT.md).
 - **25 Multiple memories**: Absent (confirmed).
-- **26 Relaxed SIMD**: `builtins`, native; 0 obstacles.
+- **26 Relaxed SIMD**: `builtins`, Native; 0 obstacles.
 - **27 Exception tags**: Absent (confirmed).
 - **28 Exception handling with exnref**: Absent (confirmed).
 - **29 64-bit memory**: Absent (confirmed).
@@ -303,22 +322,22 @@ The variant that stands for the cell: the most complete first, then the one the 
 
 ### TinyGo
 
-- **01 Imports and exports**: `wasmimport`, annotation; 0 obstacles.
-- **02 Memory configuration**: `export-2-pages`, config, partial (a 1-page memory is not reachable); 1 obstacles. Flags go to wasm-ld through `-ldflags="-extldflags ..."`; the export name is settable, but the runtime needs more than one page, so `--initial-memory=65536` fails to link.
-- **03 Table and indirect call**: `func-values`, native; 0 obstacles.
-- **04 Table import and export**: `export+import`, config, partial (table name and limits are fixed (__indirect_function_table, 3/3)); 1 obstacles. `-ldflags="-extldflags --export-table"` / `--import-table`.
+- **01 Imports and exports**: `wasmimport`, Annotation; 0 obstacles.
+- **02 Memory configuration**: `export-2-pages`, Config, partial (a 1-page memory is not reachable); 1 obstacles. Flags go to wasm-ld through `-ldflags="-extldflags ..."`; the export name is settable, but the runtime needs more than one page, so `--initial-memory=65536` fails to link.
+- **03 Table and indirect call**: `func-values`, Native; 0 obstacles.
+- **04 Table import and export**: `export+import`, Config, partial (table name and limits are fixed (__indirect_function_table, 3/3)); 1 obstacles. `-ldflags="-extldflags --export-table"` / `--import-table`.
 - **05 Start function**: Absent (confirmed).
-- **06 Data segments**: `global-base`, config; 1 obstacles.
+- **06 Data segments**: `global-base`, Config; 1 obstacles.
 - **07 Custom sections**: Absent (confirmed).
-- **08 Integer operations**: `math-bits`, native; 0 obstacles.
-- **09 Float builtins**: `math`, native, partial (RoundToEven is not f64.nearest); 0 obstacles. `math.RoundToEven` is not `f64.nearest`; the other members map to opcodes.
+- **08 Integer operations**: `math-bits`, Native; 0 obstacles.
+- **09 Float builtins**: `math`, Native, partial (RoundToEven is not f64.nearest); 0 obstacles. `math.RoundToEven` is not `f64.nearest`; the other members map to opcodes.
 - **10 Globals**: Absent (confirmed).
-- **11 Non-trapping conversions, sign extension**: `default`, native; 0 obstacles.
-- **12 Bulk memory**: `target-json-bulk-memory`, config, partial (fill loop does not become memory.fill; needs a custom target JSON); 1 obstacles. The stock `wasm-unknown` target disables bulk-memory; with a target file enabling it, `copy()` becomes `memory.copy` but the fill loop does not become `memory.fill`.
-- **13 Passive data segments**: `target-json-shared-memory`, config, partial (memory.init only in the linker-generated initialiser; user code cannot run it); 1 obstacles. `+atomics,+bulk-memory` in a target file and `--shared-memory` for the linker: passive segment, initialised by the linker.
+- **11 Non-trapping conversions, sign extension**: `default`, Native; 0 obstacles.
+- **12 Bulk memory**: `target-json-bulk-memory`, Config, partial (fill loop does not become memory.fill; needs a custom target JSON); 1 obstacles. The stock `wasm-unknown` target disables bulk-memory; with a target file enabling it, `copy()` becomes `memory.copy` but the fill loop does not become `memory.fill`.
+- **13 Passive data segments**: `target-json-shared-memory`, Config, partial (memory.init only in the linker-generated initialiser; user code cannot run it); 1 obstacles. `+atomics,+bulk-memory` in a target file and `--shared-memory` for the linker: passive segment, initialised by the linker.
 - **14 Multi-value**: Absent (confirmed).
-- **15 SIMD**: Absent (not found), never probed; see [`probes/15-simd/tinygo/ABSENT.md`](../../probes/15-simd/tinygo/ABSENT.md).
-- **16 SIMD memory and bitwise operations**: Absent (not found), never probed; see [`probes/16-simd-memory-ops/tinygo/ABSENT.md`](../../probes/16-simd-memory-ops/tinygo/ABSENT.md).
+- **15 SIMD**: Absent (not found).
+- **16 SIMD memory and bitwise operations**: Absent (not found).
 - **17 `externref`**: Absent (confirmed), never probed; see [`probes/17-externref/tinygo/ABSENT.md`](../../probes/17-externref/tinygo/ABSENT.md).
 - **18 Multiple tables**: Absent (confirmed), never probed; see [`probes/18-multiple-tables/tinygo/ABSENT.md`](../../probes/18-multiple-tables/tinygo/ABSENT.md).
 - **19 Table operations on references**: Absent (confirmed), never probed; see [`probes/19-table-operations/tinygo/ABSENT.md`](../../probes/19-table-operations/tinygo/ABSENT.md).
@@ -336,36 +355,69 @@ The variant that stands for the cell: the most complete first, then the one the 
 
 ### Kotlin
 
-- **01 Imports and exports**: `wasi`, annotation, experimental-api; 1 obstacles.
+- **01 Imports and exports**: `wasi`, Annotation, experimental-api; 1 obstacles.
 - **02 Memory configuration**: Absent (confirmed).
 - **03 Table and indirect call**: Absent (confirmed).
 - **04 Table import and export**: Absent (confirmed), never probed; see [`probes/04-table-import-export/kotlin/ABSENT.md`](../../probes/04-table-import-export/kotlin/ABSENT.md).
-- **05 Start function**: `top-level-init`, native; 0 obstacles. A real start section (`$_initializeModule`).
+- **05 Start function**: `top-level-init`, Native; 0 obstacles. A real start section (`$_initializeModule`).
 - **06 Data segments**: Absent (confirmed).
 - **07 Custom sections**: Absent (confirmed), never probed; see [`probes/07-custom-sections/kotlin/ABSENT.md`](../../probes/07-custom-sections/kotlin/ABSENT.md).
-- **08 Integer operations**: `stdlib`, native, partial (rotateLeft/rotateRight not emitted as rotl/rotr); 0 obstacles. `rotateLeft/rotateRight` are not emitted as `i32.rotl/rotr`.
-- **09 Float builtins**: `kotlin-math`, native, partial (round is not f64.nearest); 0 obstacles. `kotlin.math.round` is not `f64.nearest`.
-- **10 Globals**: Absent (not found).
-- **11 Non-trapping conversions, sign extension**: `to-int`, native, partial (toByte/toShort not emitted as extend8_s/extend16_s); 0 obstacles. `toInt()` saturates; `toByte()/toShort()` are not emitted as `extend8_s/extend16_s`.
+- **08 Integer operations**: `stdlib`, Native, partial (rotateLeft/rotateRight not emitted as rotl/rotr); 0 obstacles. `rotateLeft/rotateRight` are not emitted as `i32.rotl/rotr`.
+- **09 Float builtins**: `kotlin-math`, Native, partial (round is not f64.nearest); 0 obstacles. `kotlin.math.round` is not `f64.nearest`.
+- **10 Globals**: Absent (confirmed).
+- **11 Non-trapping conversions, sign extension**: `to-int`, Native, partial (toByte/toShort not emitted as extend8_s/extend16_s); 0 obstacles. `toInt()` saturates; `toByte()/toShort()` are not emitted as `extend8_s/extend16_s`.
 - **12 Bulk memory**: Absent (confirmed).
 - **13 Passive data segments**: Absent (confirmed).
 - **14 Multi-value**: Absent (confirmed).
 - **15 SIMD**: Absent (confirmed), never probed; see [`probes/15-simd/kotlin/ABSENT.md`](../../probes/15-simd/kotlin/ABSENT.md).
 - **16 SIMD memory and bitwise operations**: Absent (confirmed), never probed; see [`probes/16-simd-memory-ops/kotlin/ABSENT.md`](../../probes/16-simd-memory-ops/kotlin/ABSENT.md).
-- **17 `externref`**: `js-any`, native, restricted-host; 1 obstacles. `JsAny` is `externref`; exported with `@JsExport`, not `@WasmExport`. Obstacles: built for the `wasm-js` target (every other Kotlin probe uses `wasm-wasi`); the module imports 89 `js_code` functions and 8 `wasm:js-string` builtins, so it needs a JS host.
+- **17 `externref`**: `js-any`, Native, restricted-host; 1 obstacles. `JsAny` is `externref`; exported with `@JsExport`, not `@WasmExport`. Obstacles: built for the `wasm-js` target (every other Kotlin probe uses `wasm-wasi`); the module imports 89 `js_code` functions and 8 `wasm:js-string` builtins, so it needs a JS host.
 - **18 Multiple tables**: Absent (confirmed), never probed; see [`probes/18-multiple-tables/kotlin/ABSENT.md`](../../probes/18-multiple-tables/kotlin/ABSENT.md).
 - **19 Table operations on references**: Absent (confirmed), never probed; see [`probes/19-table-operations/kotlin/ABSENT.md`](../../probes/19-table-operations/kotlin/ABSENT.md).
-- **20 Tail calls**: Absent (not found).
+- **20 Tail calls**: Absent (confirmed).
 - **21 Extended constant expressions**: Absent (confirmed), never probed; see [`probes/21-extended-const/kotlin/ABSENT.md`](../../probes/21-extended-const/kotlin/ABSENT.md).
-- **22 Typed function references**: `function-reference`, native, side-effect; 1 obstacles. Function references are GC closures called with `call_ref`. Side effect: the `call_ref` is how a closure's function field is called; the program cannot write or name a typed function reference.
-- **23 GC structs and arrays**: `class-array`, native; 0 obstacles. Classes and arrays become GC structs and arrays implicitly.
-- **24 GC casts, subtyping, i31, packed fields**: `class-hierarchy`, native, partial (ref.i31 / i31.get not emitted), side-effect; 1 obstacles. Class subtypes with casts and `ByteArray` as a packed `i8` array; `i31` is not used for a boxed `Int`. Side effect: the subtype declarations and casts come from the class hierarchy, not from anything the program writes as a GC type.
+- **22 Typed function references**: `function-reference`, Native, side-effect; 1 obstacles. Function references are GC closures called with `call_ref`. Side effect: the `call_ref` is how a closure's function field is called; the program cannot write or name a typed function reference.
+- **23 GC structs and arrays**: `class-array`, Native; 0 obstacles. Classes and arrays become GC structs and arrays implicitly.
+- **24 GC casts, subtyping, i31, packed fields**: `class-hierarchy`, Native, partial (ref.i31 / i31.get not emitted), side-effect; 1 obstacles. Class subtypes with casts and `ByteArray` as a packed `i8` array; `i31` is not used for a boxed `Int`. Side effect: the subtype declarations and casts come from the class hierarchy, not from anything the program writes as a GC type.
 - **25 Multiple memories**: Absent (confirmed), never probed; see [`probes/25-multiple-memories/kotlin/ABSENT.md`](../../probes/25-multiple-memories/kotlin/ABSENT.md).
 - **26 Relaxed SIMD**: Absent (confirmed), never probed; see [`probes/26-relaxed-simd/kotlin/ABSENT.md`](../../probes/26-relaxed-simd/kotlin/ABSENT.md).
-- **27 Exception tags**: `try-catch`, native; 0 obstacles. `try/catch` compiles to a tag and `try_table`; `-Xwasm-use-new-exception-proposal` selects the encoding.
-- **28 Exception handling with exnref**: `try-catch`, native; 0 obstacles. `throw e` inside a `catch` compiles to `try_table` and `throw_ref`; the default and `-Xwasm-use-new-exception-proposal` modules are identical.
+- **27 Exception tags**: `try-catch`, Native; 0 obstacles. `try/catch` compiles to a tag and `try_table`; `-Xwasm-use-new-exception-proposal` selects the encoding.
+- **28 Exception handling with exnref**: `try-catch`, Native; 0 obstacles. `throw e` inside a `catch` compiles to `try_table` and `throw_ref`; the default and `-Xwasm-use-new-exception-proposal` modules are identical.
 - **29 64-bit memory**: Absent (confirmed), never probed; see [`probes/29-memory64/kotlin/ABSENT.md`](../../probes/29-memory64/kotlin/ABSENT.md).
-- **30 Branch hinting**: Absent (not found), never probed; see [`probes/30-branch-hinting/kotlin/ABSENT.md`](../../probes/30-branch-hinting/kotlin/ABSENT.md).
+- **30 Branch hinting**: Absent (not found).
+
+### Swift
+
+- **01 Imports and exports**: `default`, Annotation, experimental-api; 1 obstacles. Also: `swiftpm-embedded` (Annotation, 2 obstacles), `swiftpm-wasip1` (Annotation, 3 obstacles). The import is `@_extern(wasm, module:, name:)` and the export `@_expose(wasm, "name")`, but each also needs `@_cdecl` / `@_extern(c)` for a C signature: without them the functions use Swift's calling convention and carry two hidden parameters (`expose-only`). The two `swiftpm-*` variants build the same source through SwiftPM and the official Swift SDK for WebAssembly: the embedded SDK still links wasi-libc (41 KB, WASI imports), the full SDK is a 7.2 MB command module.
+- **02 Memory configuration**: `export+import`, Config, experimental-api; 2 obstacles. Limits, stack size and the export or import of the memory are all `wasm-ld` options (`-Xlinker`); Swift has no memory declaration.
+- **03 Table and indirect call**: `default`, Native, experimental-api; 1 obstacles. A function pointer is a `@convention(c)` closure. It must live in a mutable global: a `let` is folded into direct calls.
+- **04 Table import and export**: `export+import`, Config, partial (table name and limits are fixed (__indirect_function_table, sized to the address-taken functions)), experimental-api; 2 obstacles. `-Xlinker --export-table` / `--import-table`, the same linker behaviour as in C, Rust and Zig.
+- **05 Start function**: Absent (confirmed).
+- **06 Data segments**: `global-base`, Config, experimental-api; 2 obstacles. `@used` on a global `let` keeps it. The default layout of `swiftc`'s link also puts the first data at 1024 (`default` passes), but that is the linker's default placement, not something the program asks for.
+- **07 Custom sections**: Absent (confirmed).
+- **08 Integer operations**: `default`, Native, experimental-api; 1 obstacles. Rotation has no Swift operator; it is written as masking shifts (`&<<`, `&>>`) that LLVM recognises as `i32.rotl` / `i32.rotr`.
+- **09 Float builtins**: `builtin-minimum`, Native, experimental-api; 1 obstacles. Also: `default` (Native, partial, 1 obstacles). The stdlib has no NaN-propagating min/max. `import Builtin` (behind `-enable-experimental-feature BuiltinModule`) exposes LLVM's intrinsics by name, `Builtin.int_minimum_FPIEEE64` emits `f64.min`.
+- **10 Globals**: Absent (confirmed).
+- **11 Non-trapping conversions, sign extension**: `plain`, Native, experimental-api; 1 obstacles. `Int32(x)` traps on NaN and out of range, so the saturating conversion is a hand-written clamp, which LLVM turns into `i32.trunc_sat_f64_s`. Sign extension is `Int32(Int8(truncatingIfNeeded:))`.
+- **12 Bulk memory**: `default`, Native, experimental-api; 1 obstacles. `initializeMemory(repeating:)` and `copyMemory(from:)` of a run-time size lower to `memory.fill` / `memory.copy`; a barrier between them stops the copy of freshly filled bytes from being folded into a second fill (a property of the probe).
+- **13 Passive data segments**: `shared-memory`, Config, partial (memory.init only in the linker-generated initialiser; user code cannot run it), experimental-api; 2 obstacles. `--shared-memory` makes wasm-ld emit a passive segment and copy it from its own initialiser; the program's `load` is an ordinary copy. Same as C and Zig.
+- **14 Multi-value**: Absent (confirmed).
+- **15 SIMD**: `simd-type`, Native, experimental-api; 1 obstacles. `SIMD4<Int32>`. The operands go through global memory, as in C, Rust and Zig, because LLVM folds `extract(splat + splat)` back to scalar code.
+- **16 SIMD memory and bitwise operations**: `builtin-narrow`, Native, experimental-api; 1 obstacles. Also: `simd-type` (Native, partial, 1 obstacles). `SIMD16<UInt8>` loads and stores and the bitwise select compile as written; the clamp-and-truncate narrow does not become `i8x16.narrow_i16x8_s` (`simd-type`). `Builtin.int_wasm_narrow_signed_Vec16xInt8_Vec8xInt16` emits it (`builtin-narrow`).
+- **17 `externref`**: Absent (confirmed).
+- **18 Multiple tables**: Absent (confirmed).
+- **19 Table operations on references**: Absent (confirmed).
+- **20 Tail calls**: Absent (confirmed).
+- **21 Extended constant expressions**: Absent (confirmed), never probed; see [`probes/21-extended-const/swift/ABSENT.md`](../../probes/21-extended-const/swift/ABSENT.md).
+- **22 Typed function references**: Absent (confirmed).
+- **23 GC structs and arrays**: Absent (confirmed), never probed; see [`probes/23-gc-typed-refs/swift/ABSENT.md`](../../probes/23-gc-typed-refs/swift/ABSENT.md).
+- **24 GC casts, subtyping, i31, packed fields**: Absent (confirmed), never probed; see [`probes/24-gc-casts-subtyping/swift/ABSENT.md`](../../probes/24-gc-casts-subtyping/swift/ABSENT.md).
+- **25 Multiple memories**: Absent (confirmed).
+- **26 Relaxed SIMD**: `builtin-intrinsic`, Native, experimental-api; 1 obstacles. `addingProduct` is the stdlib's fused multiply-add and lowers to `fmaf`, a libm call that does not link freestanding (`fma`). `Builtin.int_wasm_relaxed_madd_Vec4xFPIEEE32` emits `f32x4.relaxed_madd` directly.
+- **27 Exception tags**: Absent (confirmed).
+- **28 Exception handling with exnref**: Absent (confirmed).
+- **29 64-bit memory**: `wasm64`, Config, experimental-api; 2 obstacles. The 6.4.0 toolchain ships Embedded Swift stdlib modules for `wasm64-unknown-none-wasm`; no `-Zbuild-std`-style rebuild is needed.
+- **30 Branch hinting**: Absent (confirmed).
 
 ## Cross-checks against the verdicts
 

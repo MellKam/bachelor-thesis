@@ -334,6 +334,8 @@ export const FEATURES = {
   async '30'(ctx) { // branch hinting: custom section metadata.code.branch_hint with a hint on classify
     const { facts } = ctx; const r = new Result(); const c = facts.customData.find((x) => x.name === 'metadata.code.branch_hint');
     r.add('custom section "metadata.code.branch_hint"', c, 'custom sections: ' + facts.customs.join(', '));
+    const codeAt = facts.sections.indexOf(10); // the proposal: the hint section appears only before the code section, so an engine reading in order never sees one placed after it
+    if (c) r.add('hint section precedes the code section', codeAt < 0 || c.at < codeAt, `section order: ${facts.sections.join(',')}`);
     const hints = []; // vec(func: u32, vec(offset: u32, size: u32 = 1, value: u8))
     if (c) { const b = c.bytes; let p = 0; const u32 = () => { let v = 0, s = 0, x; do { x = b[p++]; v |= (x & 0x7f) << s; s += 7; } while (x & 0x80); return v >>> 0; };
       try { for (let n = u32(); n--;) { const fn = u32(); for (let k = u32(); k--;) { const off = u32(); u32(); hints.push({ fn, off, value: b[p++] }); } } } catch (e) { r.add('hint section decodes', false, e.message); } }

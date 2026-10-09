@@ -1,0 +1,7 @@
+# 07-custom-sections/swift/section-attribute spec=07
+$ swiftc -target wasm32-unknown-none-wasm -enable-experimental-feature Embedded -wmo -parse-as-library -O main.swift -o out.wasm -Xlinker --no-entry -Xclang-linker -nostdlib
+FAIL 07 probes/07-custom-sections/swift/section-attribute//out.wasm (479 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ custom section "meta"  — custom sections: name, target_features
+  ✗ payload is "hello"
+  ✓ instantiates

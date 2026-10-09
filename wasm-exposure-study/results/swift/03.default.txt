@@ -1,0 +1,10 @@
+# 03-table-indirect-call/swift/default spec=03
+$ swiftc -target wasm32-unknown-none-wasm -enable-experimental-feature Embedded -wmo -parse-as-library -O main.swift -o out.wasm -Xlinker --no-entry -Xclang-linker -nostdlib
+PASS 03 probes/03-table-indirect-call/swift/default//out.wasm (768 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ funcref table
+  ✓ element segment
+  ✓ call_indirect present
+  ✓ instantiates
+  ✓ call_slot(0,5) == 10
+  ✓ call_slot(1,5) == 105

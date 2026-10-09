@@ -1,0 +1,45 @@
+{
+  "feature": "10",
+  "file": "probes/10-globals/zig/module-asm//out.wasm",
+  "bytes": 112,
+  "pass": true,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "exported global \"counter\"",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "counter is mutable i32",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "imported global host.base (immutable i32)",
+      "ok": true,
+      "detail": "{\"module\":\"host\",\"name\":\"base\",\"kind\":\"global\",\"type\":\"i32\",\"mutable\":false}"
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "bump() == 42",
+      "ok": true,
+      "detail": "got 42, expected 42"
+    },
+    {
+      "name": "counter global == 42",
+      "ok": true,
+      "detail": "42"
+    }
+  ],
+  "unsupported": []
+}

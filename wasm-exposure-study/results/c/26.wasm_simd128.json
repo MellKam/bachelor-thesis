@@ -1,6 +1,6 @@
 {
   "feature": "26",
-  "file": "probes/26-relaxed-simd/c/wasm_simd128/out.wasm",
+  "file": "probes/26-relaxed-simd/c/wasm_simd128//out.wasm",
   "bytes": 423,
   "pass": true,
   "checks": [

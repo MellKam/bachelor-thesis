@@ -1,6 +1,6 @@
 {
   "feature": "05",
-  "file": "probes/05-start-function/c/module-asm-start/out.wasm",
+  "file": "probes/05-start-function/c/module-asm-start//out.wasm",
   "bytes": 401,
   "pass": false,
   "checks": [

@@ -1,6 +1,6 @@
 {
   "feature": "25",
-  "file": "probes/25-multiple-memories/c/builtin-index1/out.wasm",
+  "file": "probes/25-multiple-memories/c/builtin-index1//out.wasm",
   "bytes": 388,
   "pass": false,
   "checks": [

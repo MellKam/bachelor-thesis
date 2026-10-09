@@ -1,6 +1,6 @@
 {
   "feature": "07",
-  "file": "probes/07-custom-sections/zig/default/out.wasm",
+  "file": "probes/07-custom-sections/zig/default//out.wasm",
   "bytes": 96,
   "pass": false,
   "checks": [

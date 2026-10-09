@@ -1,35 +1,6 @@
 # 09-float-builtins/c/c-builtins-allow-undefined spec=09
-$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -Wl,--no-entry -Wl,--allow-undefined main.c -o out.wasmFAIL 09 probes/09-float-builtins/c/c-builtins-allow-undefined/out.wasm (634 bytes)
-  ✓ module validates (all extensions enabled)
-  ✓ instantiates
-  ✓ sqrt: export present
-  ✓ sqrt: instruction emitted (f64.sqrt)
-  ✓ sqrt: behaves
-  ✓ min: export present
-  ✗ min: instruction emitted (f64.min)
-  ✗ min: behaves  — got 0, expected 1
-  ✓ max: export present
-  ✗ max: instruction emitted (f64.max)
-  ✗ max: behaves  — got 0, expected 2
-  ✓ ceil: export present
-  ✓ ceil: instruction emitted (f64.ceil)
-  ✓ ceil: behaves
-  ✓ floor: export present
-  ✓ floor: instruction emitted (f64.floor)
-  ✓ floor: behaves
-  ✓ trunc: export present
-  ✓ trunc: instruction emitted (f64.trunc)
-  ✓ trunc: behaves
-  ✓ nearest: export present
-  ✓ nearest: instruction emitted (f64.nearest)
-  ✓ nearest: behaves
-  ✓ copysign: export present
-  ✓ copysign: instruction emitted (f64.copysign)
-  ✓ copysign: behaves
-  ✓ abs: export present
-  ✓ abs: instruction emitted (f64.abs)
-  ✓ abs: behaves
-FAIL 09 probes/09-float-builtins/c/c-builtins-allow-undefined/out.wasm (634 bytes)
+$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -Wl,--no-entry -Wl,--allow-undefined main.c -o out.wasm
+FAIL 09 probes/09-float-builtins/c/c-builtins-allow-undefined//out.wasm (634 bytes)
   ✓ module validates (all extensions enabled)
   ✓ instantiates
   ✓ sqrt: export present

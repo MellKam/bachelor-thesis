@@ -1,0 +1,30 @@
+{
+  "feature": "26",
+  "file": "probes/26-relaxed-simd/swift/builtin-intrinsic//out.wasm",
+  "bytes": 411,
+  "pass": true,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "f32x4.relaxed_madd (or nmadd) emitted",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "relaxed_madd(2,3,4) == 10",
+      "ok": true,
+      "detail": "got 10, expected 10"
+    }
+  ],
+  "unsupported": []
+}

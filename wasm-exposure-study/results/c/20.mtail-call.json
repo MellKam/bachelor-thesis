@@ -1,6 +1,6 @@
 {
   "feature": "20",
-  "file": "probes/20-tail-calls/c/mtail-call/out.wasm",
+  "file": "probes/20-tail-calls/c/mtail-call//out.wasm",
   "bytes": 458,
   "pass": false,
   "checks": [

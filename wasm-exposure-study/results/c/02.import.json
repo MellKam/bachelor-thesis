@@ -1,6 +1,6 @@
 {
   "feature": "02:import",
-  "file": "probes/02-memory/c/import/out.wasm",
+  "file": "probes/02-memory/c/import//out.wasm",
   "bytes": 369,
   "pass": true,
   "checks": [

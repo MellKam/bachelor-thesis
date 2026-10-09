@@ -1,0 +1,60 @@
+# 17-externref/swift/builtin-ref-null spec=17
+$ swiftc -target wasm32-unknown-none-wasm -enable-experimental-feature Embedded -wmo -parse-as-library -O -enable-experimental-feature BuiltinModule main.swift -o out.wasm -Xlinker --no-entry -Xclang-linker -nostdlib
+error: compile command failed due to signal 11 (use -v to see invocation)
+Please submit a bug report (https://swift.org/contributing/#reporting-bugs) and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /opt/swift/usr/bin/swift-frontend -frontend -c main.swift -target wasm32-unknown-none-wasm -disable-objc-interop -no-color-diagnostics -Xcc -fno-color-diagnostics -O -enable-experimental-feature Embedded -enable-experimental-feature BuiltinModule -empty-abi-descriptor -no-auto-bridging-header-chaining -module-name out -in-process-plugin-server-path /opt/swift/usr/lib/swift/host/libSwiftInProcPluginServer.so -plugin-path /opt/swift/usr/lib/swift/host/plugins -plugin-path /opt/swift/usr/local/lib/swift/host/plugins -enable-default-cmo -parse-as-library -o /tmp/TemporaryDirectory.0fUcYO/out-1.o
+1.	Swift version 6.4 (swift-6.4-RELEASE)
+2.	Compiling with effective version 5.10
+3.	While evaluating request TypeCheckPrimaryFileRequest(source_file "main.swift")
+4.	While evaluating request TypeCheckFunctionBodyRequest(out.(file).identity@main.swift:5:6)
+5.	While type-checking statement at [main.swift:5:36 - line:5:87] RangeText="{ _ = Builtin.int_wasm_ref_null_extern(); return x "
+6.	While type-checking expression at [main.swift:5:38 - line:5:75] RangeText="_ = Builtin.int_wasm_ref_null_extern("
+7.	While type-checking-target starting at main.swift:5:38
+8.	While evaluating request ModuleQualifiedLookupRequest(0x5db770c87be8 AbstractFunctionDecl name=identity(_:) : (Int32) -> Int32, Builtin, 'int_wasm_ref_null_extern', { NL_ProtocolMembers, NL_IgnoreMissingImports })
+9.	While evaluating request LookupInModuleRequest(0x5db770a96668 Module name=Builtin, 'int_wasm_ref_null_extern', 0, QualifiedLookup, Overloadable, 0x5db770c872c8 FileUnit file="main.swift", { NL_ProtocolMembers, NL_IgnoreMissingImports })
+
+*** Signal 11: Backtracing from 0x7854f485e5d7... done ***
+
+*** Program crashed: Bad pointer dereference at 0x0000000000003403 ***
+
+Platform: x86_64 Linux (Debian GNU/Linux 13 (trixie))
+
+Thread 0 "swift-frontend" crashed:
+
+0      0x00007854f485e5d7 <unknown> in libgcc_s.so.1
+1 [ra] 0x00005db770a73a08
+
+
+Registers:
+
+rax 0x0000000000003403  13315
+rdx 0x00005db770a735e0  d0 3f 80 f4 54 78 00 00 ca 3f 80 f4 54 78 00 00  Ð?·ôTx··Ê?·ôTx··
+rcx 0x00005db770a733f0  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ················
+rbx 0x00005db73e1bf000  7f 45 4c 46 02 01 01 03 00 00 00 00 00 00 00 00  ·ELF············
+rsi 0x0000000000003402  13314
+rdi 0x00005db770a733f0  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ················
+rbp 0x00005db770a734f0  10 3a a7 70 b7 5d 00 00 08 3a a7 70 b7 5d 00 00  ·:§p·]···:§p·]··
+rsp 0x00005db770a73490  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ················
+ r8 0x0000000000000000  0
+ r9 0x00007854f65a2ea0  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ················
+r10 0x0000000000000010  16
+r11 0x0000000000000246  582
+r12 0x0000000000000000  0
+r13 0x0000000000000000  0
+r14 0x00007854f4763990  55 48 89 e5 41 54 53 8b 56 18 48 89 f3 83 fa ff  UH·åATS·V·H·ó·úÿ
+r15 0x0000000000000021  33
+rip 0x00007854f485e5d7  80 38 48 0f 85 58 ff ff ff 48 ba c7 c0 0f 00 00  ·8H··XÿÿÿHºÇÀ···
+
+rflags 0x0000000000010246  ZF PF
+
+cs 0x0033  fs 0x0000  gs 0x0000
+
+
+Images (28 omitted):
+
+0x00007854f483d000–0x00007854f4863fa1 12eddb764a9c4e3c9ad99b3e645cbd206521af07 libgcc_s.so.1 /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+
+Backtrace took 0.01s
+
+BUILD FAILED

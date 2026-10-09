@@ -1,0 +1,7 @@
+# 17-externref/zig/module-asm spec=17
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm -mcpu=generic+reference_types
+PASS 17 probes/17-externref/zig/module-asm//out.wasm (67 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ identity (externref) -> (externref)
+  ✓ instantiates
+  ✓ returns the identical object

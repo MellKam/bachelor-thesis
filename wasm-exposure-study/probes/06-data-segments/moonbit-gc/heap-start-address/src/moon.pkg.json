@@ -1,0 +1,12 @@
+{
+  "is-main": false,
+  "link": {
+    "wasm": {
+      "exports": [
+        "peek",
+        "first"
+      ],
+      "heap-start-address": 1008
+    }
+  }
+}

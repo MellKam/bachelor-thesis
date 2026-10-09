@@ -1,11 +1,6 @@
 # 06-data-segments/c/default spec=06
-$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -Wl,--no-entry main.c -o out.wasmFAIL 06 probes/06-data-segments/c/default/out.wasm (395 bytes)
-  ✓ module validates (all extensions enabled)
-  ✗ active data segment puts "WASM" at address 1024  — bytes at 1024..1027 = [null,null,null,null]; segments: [["active",65536,4]]
-  ✓ instantiates
-  ✗ peek(1024) == 0x57  — got 0, expected 87
-  ✗ peek(1027) == 0x4d  — got 0, expected 77
-FAIL 06 probes/06-data-segments/c/default/out.wasm (395 bytes)
+$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -Wl,--no-entry main.c -o out.wasm
+FAIL 06 probes/06-data-segments/c/default//out.wasm (395 bytes)
   ✓ module validates (all extensions enabled)
   ✗ active data segment puts "WASM" at address 1024  — bytes at 1024..1027 = [null,null,null,null]; segments: [["active",65536,4]]
   ✓ instantiates

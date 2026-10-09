@@ -1,0 +1,1 @@
+sh ../../../kotlin-build.sh wasm-wasi -Xwasm-generate-closed-world-multimodule

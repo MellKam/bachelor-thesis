@@ -1,0 +1,10 @@
+# 18-multiple-tables/zig/module-asm-table-get spec=18
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm -mcpu=generic+reference_types
+PASS 18 probes/18-multiple-tables/zig/module-asm-table-get//out.wasm (246 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ two or more tables
+  · element segments initialise the tables (informational: a table may also be filled by table.set at run time)  — 1
+  ✓ call_indirect uses two different tables
+  ✓ instantiates
+  ✓ call_a(5) == 6
+  ✓ call_b(5) == 105

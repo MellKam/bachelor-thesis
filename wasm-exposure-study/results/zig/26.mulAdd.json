@@ -1,6 +1,6 @@
 {
   "feature": "26",
-  "file": "probes/26-relaxed-simd/zig/mulAdd/out.wasm",
+  "file": "probes/26-relaxed-simd/zig/mulAdd//out.wasm",
   "bytes": 106,
   "pass": false,
   "checks": [

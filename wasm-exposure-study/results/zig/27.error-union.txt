@@ -1,5 +1,6 @@
 # 27-exception-tags/zig/error-union spec=27
-$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasmFAIL 17 probes/27-exception-tags/zig/error-union/out.wasm (75 bytes)
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm
+FAIL 27 probes/27-exception-tags/zig/error-union//out.wasm (75 bytes)
   ✓ module validates (all extensions enabled)
   ✗ tag section with at least one tag  — tags: []
   ✓ tag payload types (informational; the reference uses i32)

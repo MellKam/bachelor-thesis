@@ -1,6 +1,6 @@
 {
   "feature": "17",
-  "file": "probes/17-externref/c/externref-type/out.wasm",
+  "file": "probes/17-externref/c/externref-type//out.wasm",
   "bytes": 374,
   "pass": true,
   "checks": [

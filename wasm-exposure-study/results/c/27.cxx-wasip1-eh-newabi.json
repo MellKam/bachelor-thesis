@@ -1,6 +1,6 @@
 {
   "feature": "27",
-  "file": "probes/27-exception-tags/c/cxx-wasip1-eh-newabi/out.wasm",
+  "file": "probes/27-exception-tags/c/cxx-wasip1-eh-newabi//out.wasm",
   "bytes": 322482,
   "pass": true,
   "checks": [

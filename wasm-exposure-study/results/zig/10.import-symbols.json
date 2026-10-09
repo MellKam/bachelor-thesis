@@ -1,6 +1,6 @@
 {
   "feature": "10",
-  "file": "probes/10-globals/zig/import-symbols/out.wasm",
+  "file": "probes/10-globals/zig/import-symbols//out.wasm",
   "bytes": 112,
   "pass": false,
   "checks": [

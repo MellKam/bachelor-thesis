@@ -1,6 +1,6 @@
 {
   "feature": "10",
-  "file": "probes/10-globals/kotlin/top-level-var/out.wasm",
+  "file": "probes/10-globals/kotlin/top-level-var//out.wasm",
   "bytes": 614791,
   "pass": false,
   "checks": [

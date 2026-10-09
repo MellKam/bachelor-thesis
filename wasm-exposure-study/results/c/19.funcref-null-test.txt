@@ -1,9 +1,9 @@
 # 19-table-operations/c/funcref-null-test spec=19
 $ clang --target=wasm32-unknown-unknown -O2 -nostdlib -mreference-types -Wl,--no-entry main.c -o out.wasm
-fatal error: error in backend: Cannot select: 0x30bd1180: i32 = setcc 0x30bd0e70, 0x30bd0af0, seteq:ch
-  0x30bd0e70: funcref,ch = llvm.wasm.table.get.funcref 0x30bd0d20:1, TargetConstant:i32<14670>, 0x30bd0f50, Constant:i32<2>
-    0x30bd0f50: i32 = WebAssemblyISD::Wrapper TargetGlobalAddress:i32<ptr addrspace(1) @tbl> 0
-  0x30bd0af0: funcref = llvm.wasm.ref.null.func TargetConstant:i32<14642>
+fatal error: error in backend: Cannot select: 0x305406e0: i32 = setcc 0x305403d0, 0x30540050, seteq:ch
+  0x305403d0: funcref,ch = llvm.wasm.table.get.funcref 0x30540280:1, TargetConstant:i32<14670>, 0x305404b0, Constant:i32<2>
+    0x305404b0: i32 = WebAssemblyISD::Wrapper TargetGlobalAddress:i32<ptr addrspace(1) @tbl> 0
+  0x30540050: funcref = llvm.wasm.ref.null.func TargetConstant:i32<14642>
 In function: table_ops
 clang: error: clang frontend command failed with exit code 70 (use -v to see invocation)
 clang version 23.1.0-wasi-sdk (https://github.com/llvm/llvm-project 895aa2c896ada719451be2e3673c83da8ddf1141)
@@ -15,8 +15,8 @@ clang: note: diagnostic msg:
 ********************
 
 PLEASE ATTACH THE FOLLOWING CRASH REPRODUCER FILES TO THE BUG REPORT:
-clang: note: diagnostic msg: /tmp/main-2afa81.c
-clang: note: diagnostic msg: /tmp/main-2afa81.sh
+clang: note: diagnostic msg: /tmp/main-8a3a26.c
+clang: note: diagnostic msg: /tmp/main-8a3a26.sh
 clang: note: diagnostic msg: 
 
 ********************

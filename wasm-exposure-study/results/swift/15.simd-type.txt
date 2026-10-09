@@ -1,0 +1,11 @@
+# 15-simd/swift/simd-type spec=15
+$ swiftc -target wasm32-unknown-none-wasm -enable-experimental-feature Embedded -wmo -parse-as-library -O -Xcc -msimd128 main.swift -o out.wasm -Xlinker --no-entry -Xclang-linker -nostdlib
+PASS 15 probes/15-simd/swift/simd-type//out.wasm (1566 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ instantiates
+  ✓ simd_add: i32x4.splat emitted
+  ✓ simd_add: i32x4.add emitted
+  ✓ simd_add: i32x4.extract_lane emitted
+  ✓ simd_shuffle: i8x16.shuffle emitted
+  ✓ simd_add(2,3) == 5
+  ✓ simd_shuffle(1,2) == 2

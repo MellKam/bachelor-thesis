@@ -1,6 +1,6 @@
 {
   "feature": "14",
-  "file": "probes/14-multi-value/c/struct-return/out.wasm",
+  "file": "probes/14-multi-value/c/struct-return//out.wasm",
   "bytes": 396,
   "pass": false,
   "checks": [

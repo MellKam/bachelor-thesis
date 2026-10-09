@@ -1,6 +1,6 @@
 {
   "feature": "07",
-  "file": "probes/07-custom-sections/c/module-asm/out.wasm",
+  "file": "probes/07-custom-sections/c/module-asm//out.wasm",
   "bytes": 372,
   "pass": true,
   "checks": [

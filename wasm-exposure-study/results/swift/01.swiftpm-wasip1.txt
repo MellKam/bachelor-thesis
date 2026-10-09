@@ -1,0 +1,15 @@
+# 01-imports-exports/swift/swiftpm-wasip1 spec=01
+$ swift build -c release --swift-sdk swift-6.4.0-RELEASE_wasm --scratch-path /tmp/sb && cp /tmp/sb/out/Products/Release-webassembly-wasm32/App.wasm out.wasm
+Building for production...
+[Planning deferred tasks]
+[7 / 9] App-product
+[9 / 9] App-product
+Build complete! (1.14 secs)
+PASS 01 probes/01-imports-exports/swift/swiftpm-wasip1//out.wasm (7158938 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ import host.log
+  ✓ import type (i32) -> ()
+  ✓ export run () -> ()
+  ✓ instantiates
+  ✓ host called _start before any other export (WASI command convention)
+  ✓ log received 42

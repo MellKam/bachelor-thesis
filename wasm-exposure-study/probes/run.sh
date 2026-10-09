@@ -1,7 +1,7 @@
 #!/bin/sh
 # Builds every probes/<NN>-<slug>/<lang>/<variant>/ (build command in its `cmd` file) and runs the checker on out.wasm.
 # Run inside the language's container, from the study root:   sh probes/run.sh <lang> [feature-id ...]      e.g.  sh probes/run.sh rust 01 02
-# <lang> is the directory name under each feature (rust, zig, c, moonbit, moonbit-gc, assemblyscript, tinygo, kotlin).
+# <lang> is the directory name under each feature (rust, zig, c, moonbit, moonbit-gc, assemblyscript, tinygo, kotlin, swift).
 # Per variant: `cmd` (the exact build command, run in that directory; must produce out.wasm), optional `spec` (checker spec,
 # default = the feature id; e.g. "02:import"). A failed build is a recorded result, not a runner error.
 # Outputs: results/<lang>/<id>.<variant>.txt (build log + checker verdict) and .json (the checker's structured verdict).

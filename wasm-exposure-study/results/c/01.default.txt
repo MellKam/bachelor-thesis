@@ -1,12 +1,6 @@
 # 01-imports-exports/c/default spec=01
-$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -Wl,--no-entry main.c -o out.wasmPASS 01 probes/01-imports-exports/c/default/out.wasm (396 bytes)
-  ✓ module validates (all extensions enabled)
-  ✓ import host.log
-  ✓ import type (i32) -> ()
-  ✓ export run () -> ()
-  ✓ instantiates
-  ✓ log received 42
-PASS 01 probes/01-imports-exports/c/default/out.wasm (396 bytes)
+$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -Wl,--no-entry main.c -o out.wasm
+PASS 01 probes/01-imports-exports/c/default//out.wasm (396 bytes)
   ✓ module validates (all extensions enabled)
   ✓ import host.log
   ✓ import type (i32) -> ()

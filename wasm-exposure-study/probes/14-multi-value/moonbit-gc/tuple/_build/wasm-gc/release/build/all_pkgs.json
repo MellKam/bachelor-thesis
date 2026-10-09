@@ -403,7 +403,7 @@
     {
       "root": "probe/p10",
       "rel": "src",
-      "artifact": "/study/probes/10-multi-value/moonbit-gc/tuple/_build/wasm-gc/release/build/src/src.mi"
+      "artifact": "/study/probes/14-multi-value/moonbit-gc/tuple/_build/wasm-gc/release/build/src/src.mi"
     }
   ]
 }

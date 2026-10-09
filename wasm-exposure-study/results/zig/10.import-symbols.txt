@@ -1,5 +1,6 @@
 # 10-globals/zig/import-symbols spec=10
-$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm --import-symbolsFAIL 03 probes/10-globals/zig/import-symbols/out.wasm (112 bytes)
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm --import-symbols
+FAIL 10 probes/10-globals/zig/import-symbols//out.wasm (112 bytes)
   ✓ module validates (all extensions enabled)
   ✓ exported global "counter"
   ✗ counter is mutable i32

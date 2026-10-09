@@ -1,10 +1,6 @@
 # 20-tail-calls/c/mtail-call spec=20
-$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -Wl,--no-entry -mtail-call main.c -o out.wasmFAIL 19 probes/20-tail-calls/c/mtail-call/out.wasm (458 bytes)
-  ✓ module validates (all extensions enabled)
-  ✓ return_call emitted
-  ✓ instantiates
-  ✗ count(1000000, 0) == 1000000 without overflowing the stack  — Maximum call stack size exceeded
-FAIL 20 probes/20-tail-calls/c/mtail-call/out.wasm (458 bytes)
+$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -Wl,--no-entry -mtail-call main.c -o out.wasm
+FAIL 20 probes/20-tail-calls/c/mtail-call//out.wasm (458 bytes)
   ✓ module validates (all extensions enabled)
   ✓ return_call emitted
   ✓ instantiates

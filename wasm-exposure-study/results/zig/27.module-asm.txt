@@ -1,0 +1,9 @@
+# 27-exception-tags/zig/module-asm spec=27
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm -mcpu=generic+exception_handling
+PASS 27 probes/27-exception-tags/zig/module-asm//out.wasm (92 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ tag section with at least one tag
+  ✓ tag payload types (informational; the reference uses i32)
+  ✓ exception-handling instructions
+  ✓ instantiates
+  ✓ roundtrip(5) == 5

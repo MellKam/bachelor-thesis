@@ -1,6 +1,6 @@
 {
   "feature": "10",
-  "file": "probes/10-globals/c/address-space/out.wasm",
+  "file": "probes/10-globals/c/address-space//out.wasm",
   "bytes": 435,
   "pass": false,
   "checks": [

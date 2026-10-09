@@ -1,6 +1,6 @@
 {
   "feature": "27",
-  "file": "probes/27-exception-tags/zig/error-union/out.wasm",
+  "file": "probes/27-exception-tags/zig/error-union//out.wasm",
   "bytes": 75,
   "pass": false,
   "checks": [

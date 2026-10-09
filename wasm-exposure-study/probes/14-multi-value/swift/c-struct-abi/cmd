@@ -1,0 +1,1 @@
+swiftc -target wasm32-unknown-none-wasm -enable-experimental-feature Embedded -wmo -parse-as-library -O -I . -Xcc -fmodule-map-file=module.modulemap -Xcc -mmultivalue -Xcc -Xclang -Xcc -target-abi -Xcc -Xclang -Xcc experimental-mv main.swift -o out.wasm -Xlinker --no-entry -Xclang-linker -nostdlib

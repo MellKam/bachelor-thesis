@@ -1,11 +1,6 @@
 # 10-globals/kotlin/top-level-var spec=10
-$ sh ../../../kotlin-build.sh wasm-wasiFAIL 03 probes/10-globals/kotlin/top-level-var/out.wasm (614791 bytes)
-  ✓ module validates (all extensions enabled)
-  ✗ exported global "counter"
-  ✗ counter is mutable i32
-  ✗ imported global host.base (immutable i32)
-  ✗ instantiates  — WebAssembly.instantiate(): Import #1 "host" "base": function import requires a callable
-  ✗ export bumpFAIL 03 probes/10-globals/kotlin/top-level-var/out.wasm (614791 bytes)
+$ sh ../../../kotlin-build.sh wasm-wasi
+FAIL 10 probes/10-globals/kotlin/top-level-var//out.wasm (614791 bytes)
   ✓ module validates (all extensions enabled)
   ✗ exported global "counter"
   ✗ counter is mutable i32

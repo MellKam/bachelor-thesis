@@ -1,6 +1,6 @@
 {
   "feature": "10",
-  "file": "probes/10-globals/c/module-asm/out.wasm",
+  "file": "probes/10-globals/c/module-asm//out.wasm",
   "bytes": 429,
   "pass": true,
   "checks": [

@@ -7,7 +7,7 @@ import { writeFileSync, existsSync, readdirSync } from 'node:fs';
 import { FEATURES as FEATURE_LIST } from './feature-list.mjs';
 import { loadCells, cellLabel, verdictOf, dirsOf, probeText } from './cells.mjs';
 
-const LANGS = [['rust', 'Rust'], ['zig', 'Zig'], ['c', 'C'], ['moonbit', 'MoonBit'], ['assemblyscript', 'AssemblyScript'], ['tinygo', 'TinyGo'], ['kotlin', 'Kotlin']];
+const LANGS = [['rust', 'Rust'], ['zig', 'Zig'], ['c', 'C'], ['moonbit', 'MoonBit'], ['assemblyscript', 'AssemblyScript'], ['tinygo', 'TinyGo'], ['kotlin', 'Kotlin'], ['swift', 'Swift']];
 const { cells, problems, caveats } = loadCells();
 if (problems.length) { console.error(problems.join('\n')); process.exit(1); }
 

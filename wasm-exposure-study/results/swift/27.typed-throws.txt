@@ -1,0 +1,9 @@
+# 27-exception-tags/swift/typed-throws spec=27
+$ swiftc -target wasm32-unknown-none-wasm -enable-experimental-feature Embedded -wmo -parse-as-library -O main.swift -o out.wasm -Xlinker --no-entry -Xclang-linker -nostdlib
+FAIL 27 probes/27-exception-tags/swift/typed-throws//out.wasm (478 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ tag section with at least one tag  — tags: []
+  ✓ tag payload types (informational; the reference uses i32)
+  ✗ exception-handling instructions
+  ✓ instantiates
+  ✓ roundtrip(5) == 5

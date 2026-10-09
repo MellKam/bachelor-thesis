@@ -1,0 +1,30 @@
+{
+  "feature": "14",
+  "file": "probes/14-multi-value/moonbit/inline-wasm//out.wasm",
+  "bytes": 214,
+  "pass": false,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": false,
+      "detail": "error: func 1 failed to validate",
+      "info": true
+    },
+    {
+      "name": "divmod has two results",
+      "ok": false,
+      "detail": "(i32, i32) -> (i32)"
+    },
+    {
+      "name": "divmod (i32, i32) -> (i32, i32)",
+      "ok": false,
+      "detail": "(i32, i32) -> (i32)"
+    },
+    {
+      "name": "instantiates",
+      "ok": false,
+      "detail": "WebAssembly.instantiate(): Compiling function #1 failed: expected 1 elements on the stack for fallthru, found 2 @+94"
+    }
+  ],
+  "unsupported": []
+}

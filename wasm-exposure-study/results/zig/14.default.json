@@ -1,6 +1,6 @@
 {
   "feature": "14",
-  "file": "probes/14-multi-value/zig/default/out.wasm",
+  "file": "probes/14-multi-value/zig/default//out.wasm",
   "bytes": 98,
   "pass": false,
   "checks": [

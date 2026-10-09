@@ -1,0 +1,11 @@
+# 19-table-operations/zig/module-asm-table-get spec=19
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm -mcpu=generic+reference_types
+PASS 19 probes/19-table-operations/zig/module-asm-table-get//out.wasm (188 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ table.grow emitted
+  ✓ table.set emitted
+  ✓ table.get emitted
+  ✓ table.size emitted
+  ✓ ref.is_null emitted
+  ✓ instantiates
+  ✓ table_ops(3) == 1104

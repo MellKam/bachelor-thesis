@@ -1,5 +1,6 @@
 # 14-multi-value/zig/default spec=14
-$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasmFAIL 10 probes/14-multi-value/zig/default/out.wasm (98 bytes)
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm
+FAIL 14 probes/14-multi-value/zig/default//out.wasm (98 bytes)
   ✓ module validates (all extensions enabled)
   ✗ divmod has two results  — (i32, i32, i32) -> ()
   ✗ divmod (i32, i32) -> (i32, i32)  — (i32, i32, i32) -> ()

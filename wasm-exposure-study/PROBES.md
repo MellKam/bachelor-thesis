@@ -17,7 +17,7 @@ language (a flag, an attribute, a nightly feature, inline assembly). A feature t
 variant directory; it has an `ABSENT.md` in `probes/<NN>-<slug>/<lang>/` saying what was checked.
 
 **Status.** All 30 features have a checker function, a reference module (checked by `make check-references`) and a probe or an
-`ABSENT.md` in every one of the eight columns. Features 04, 13, 16, 19, 21, 22, 24, 28 and 30 were added after the first 21 had been
+`ABSENT.md` in every one of the nine columns. Features 04, 13, 16, 19, 21, 22, 24, 28 and 30 were added after the first 21 had been
 run; they are described in the second half of the criteria below. A feature that is specified but not yet probed would be `Pending`
 in `results/coding.json` and left out of every mean in the rating (rather than scored as 0).
 

@@ -1,0 +1,10 @@
+# 06-data-segments/moonbit/heap-start-address spec=06
+$ moon build --release --target wasm && cp _build/wasm/release/build/src/src.wasm out.wasm
+Warning: `moon.mod.json` at '/study/probes/06-data-segments/moonbit/heap-start-address' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
+Finished. moon: ran 2 tasks, now up to date
+PASS 06 probes/06-data-segments/moonbit/heap-start-address//out.wasm (308 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ active data segment puts "WASM" at address 1024
+  ✓ instantiates
+  ✓ peek(1024) == 0x57
+  ✓ peek(1027) == 0x4d

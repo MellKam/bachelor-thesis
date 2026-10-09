@@ -1,6 +1,6 @@
 {
   "feature": "05",
-  "file": "probes/05-start-function/c/constructor/out.wasm",
+  "file": "probes/05-start-function/c/constructor//out.wasm",
   "bytes": 394,
   "pass": false,
   "checks": [

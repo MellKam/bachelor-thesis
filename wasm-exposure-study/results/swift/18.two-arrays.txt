@@ -1,0 +1,10 @@
+# 18-multiple-tables/swift/two-arrays spec=18
+$ swiftc -target wasm32-unknown-none-wasm -enable-experimental-feature Embedded -wmo -parse-as-library -O main.swift -o out.wasm -Xlinker --no-entry -Xclang-linker -nostdlib
+FAIL 18 probes/18-multiple-tables/swift/two-arrays//out.wasm (953 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ two or more tables  — 1
+  · element segments initialise the tables (informational: a table may also be filled by table.set at run time)  — 1
+  ✗ call_indirect uses two different tables  — table operands: ["0"]
+  ✓ instantiates
+  ✓ call_a(5) == 6
+  ✓ call_b(5) == 105

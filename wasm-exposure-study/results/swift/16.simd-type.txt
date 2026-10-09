@@ -1,0 +1,14 @@
+# 16-simd-memory-ops/swift/simd-type spec=16
+$ swiftc -target wasm32-unknown-none-wasm -enable-experimental-feature Embedded -wmo -parse-as-library -O -Xcc -msimd128 main.swift -o out.wasm -Xlinker --no-entry -Xclang-linker -nostdlib
+FAIL 16 probes/16-simd-memory-ops/swift/simd-type//out.wasm (1109 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ instantiates
+  ✓ v_copy: export present
+  ✓ v_copy: instruction emitted (^(?=[\s\S]*v128.load)[\s\S]*v128.store)
+  ✓ v_copy: behaves
+  ✓ v_select: export present
+  ✓ v_select: instruction emitted (v128.bitselect)
+  ✓ v_select: behaves
+  ✓ v_narrow: export present
+  ✗ v_narrow: instruction emitted (i8x16.narrow_i16x8_s)
+  ✓ v_narrow: behaves

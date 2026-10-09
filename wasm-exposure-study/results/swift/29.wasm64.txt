@@ -1,0 +1,7 @@
+# 29-memory64/swift/wasm64 spec=29
+$ swiftc -target wasm64-unknown-none-wasm -enable-experimental-feature Embedded -wmo -parse-as-library -O main.swift -o out.wasm -Xlinker --no-entry -Xclang-linker -nostdlib -Xlinker -mwasm64
+PASS 29 probes/29-memory64/swift/wasm64//out.wasm (372 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ a memory with a 64-bit index type
+  ✓ instantiates
+  ✓ touch() == 42

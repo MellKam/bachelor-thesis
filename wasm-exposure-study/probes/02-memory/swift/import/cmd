@@ -1,0 +1,1 @@
+swiftc -target wasm32-unknown-none-wasm -enable-experimental-feature Embedded -wmo -parse-as-library -O main.swift -o out.wasm -Xlinker --no-entry -Xclang-linker -nostdlib -Xlinker --initial-memory=65536 -Xlinker --max-memory=262144 -Xlinker -z -Xlinker stack-size=8192 -Xlinker --import-memory=host,mem

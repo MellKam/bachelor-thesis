@@ -1,5 +1,6 @@
 # 07-custom-sections/zig/default spec=07
-$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasmFAIL 07 probes/07-custom-sections/zig/default/out.wasm (96 bytes)
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm
+FAIL 07 probes/07-custom-sections/zig/default//out.wasm (96 bytes)
   ✓ module validates (all extensions enabled)
   ✗ custom section "meta"  — custom sections: 
   ✗ payload is "hello"
