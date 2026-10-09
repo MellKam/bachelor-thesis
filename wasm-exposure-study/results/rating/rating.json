@@ -601,7 +601,7 @@
     },
     {
       "id": "kotlin",
-      "name": "Kotlin/Wasm",
+      "name": "Kotlin",
       "features": 27,
       "reached": 11,
       "support": 0.37,

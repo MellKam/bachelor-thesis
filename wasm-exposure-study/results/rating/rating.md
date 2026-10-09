@@ -12,7 +12,7 @@ All 30 features are probed. Nothing here is a score: each number is a count of c
 | AssemblyScript | 15/30 | 13 | 12 | 12 | 3 | 0 | 15 | 0 | 4 |
 | MoonBit | 15/30 | 12 | 12 | 6 | 7 | 2 | 11 | 4 | 7 |
 | Zig | 14/30 | 11 | 7 | 7 | 7 | 0 | 8 | 8 | 4 |
-| Kotlin/Wasm | 11/30 | 7 | 11 | 7 | 4 | 0 | 16 | 3 | 11 |
+| Kotlin | 11/30 | 7 | 11 | 7 | 4 | 0 | 16 | 3 | 11 |
 | TinyGo | 10/30 | 5 | 5 | 5 | 5 | 0 | 18 | 2 | 11 |
 
 **Reached**: the language can produce the feature in some way. **Full**: all of it, not part. **Checked**: the compiler type-checks it (native or annotation). **No obstacle / 1 / 2+**: among the reached features, how many obstacles stand between the developer and it. An obstacle is reaching it through a build config or through assembly, or any of:
@@ -38,13 +38,13 @@ One number between 0 and 1 per language, from the coefficients in `results/ratin
 | AssemblyScript | 0.57 | 3–5 |
 | MoonBit | 0.48 | 4–6 |
 | TinyGo | 0.35 | 5–7 |
-| Kotlin/Wasm | 0.35 | 5–7 |
+| Kotlin | 0.35 | 5–7 |
 
 The ranks come from changing every coefficient at random (partial reach ±0.2; the damage of all obstacles together between half and one and a half times, plus ±15% each, in the same order; each feature weight between half and double) 2000 times. An order is robust only if it held in at least 95% of the runs.
 
-**Robust orderings:** C/C++ above Rust (100%); C/C++ above Zig (100%); C/C++ above AssemblyScript (100%); C/C++ above MoonBit (100%); C/C++ above TinyGo (100%); C/C++ above Kotlin/Wasm (100%); Rust above Zig (100%); Rust above AssemblyScript (100%); Rust above MoonBit (100%); Rust above TinyGo (100%); Rust above Kotlin/Wasm (100%); Zig above MoonBit (100%); Zig above TinyGo (100%); Zig above Kotlin/Wasm (100%); AssemblyScript above MoonBit (98%); AssemblyScript above TinyGo (100%); AssemblyScript above Kotlin/Wasm (100%); MoonBit above TinyGo (100%); MoonBit above Kotlin/Wasm (100%).
+**Robust orderings:** C/C++ above Rust (100%); C/C++ above Zig (100%); C/C++ above AssemblyScript (100%); C/C++ above MoonBit (100%); C/C++ above TinyGo (100%); C/C++ above Kotlin (100%); Rust above Zig (100%); Rust above AssemblyScript (100%); Rust above MoonBit (100%); Rust above TinyGo (100%); Rust above Kotlin (100%); Zig above MoonBit (100%); Zig above TinyGo (100%); Zig above Kotlin (100%); AssemblyScript above MoonBit (98%); AssemblyScript above TinyGo (100%); AssemblyScript above Kotlin (100%); MoonBit above TinyGo (100%); MoonBit above Kotlin (100%).
 
-**Not robust** (the score gap is smaller than the uncertainty of the coefficients): Zig / AssemblyScript (87% / 13%); TinyGo / Kotlin/Wasm (59% / 41%).
+**Not robust** (the score gap is smaller than the uncertainty of the coefficients): Zig / AssemblyScript (87% / 13%); TinyGo / Kotlin (59% / 41%).
 
 **Obstacle factors**, from least to most damaging. A cell is worth its reach times the factor of each obstacle it has.
 
@@ -66,20 +66,20 @@ Reach: full 1, partial 0.5. Feature weights (1–3): 01=3, 02=3, 03=3, 04=2, 05=
 True of every probe of the language. They are recorded here and count for nothing, because charging them to each feature would count one obligation thirty times.
 
 - **TinyGo**: The host must call the exported `_initialize` before any other export (the WASI reactor convention); Go's `init()` and the runtime start there. True of every probe, so it is not a cost on any one feature.
-- **Kotlin/Wasm**: The host must run `_start` (the WASI command convention) before any other export; true of every module that built. Feature 17 (`externref`) is built for the `wasm-js` target, every other probe for `wasm-wasi`.
+- **Kotlin**: The host must run `_start` (the WASI command convention) before any other export; true of every module that built. Feature 17 (`externref`) is built for the `wasm-js` target, every other probe for `wasm-wasi`.
 
 ## Which language is ahead of which
 
 A language is ahead of another only if it is at least as good on all 4 counts (reached, full, checked, no obstacle) and better on at least one.
 
-- **C/C++** is ahead of Rust, Zig, MoonBit, TinyGo, Kotlin/Wasm.
-- **Rust** is ahead of Zig, MoonBit, TinyGo, Kotlin/Wasm.
-- **AssemblyScript** is ahead of Zig, MoonBit, TinyGo, Kotlin/Wasm.
+- **C/C++** is ahead of Rust, Zig, MoonBit, TinyGo, Kotlin.
+- **Rust** is ahead of Zig, MoonBit, TinyGo, Kotlin.
+- **AssemblyScript** is ahead of Zig, MoonBit, TinyGo, Kotlin.
 - **MoonBit** is ahead of TinyGo.
 - **Zig** is ahead of TinyGo.
-- **Kotlin/Wasm** is ahead of TinyGo.
+- **Kotlin** is ahead of TinyGo.
 
-Not ordered, because each leads on something: Rust / AssemblyScript; Zig / MoonBit; Zig / Kotlin/Wasm; C/C++ / AssemblyScript; MoonBit / Kotlin/Wasm.
+Not ordered, because each leads on something: Rust / AssemblyScript; Zig / MoonBit; Zig / Kotlin; C/C++ / AssemblyScript; MoonBit / Kotlin.
 
 ## By spec version
 
@@ -93,13 +93,13 @@ The same counts for the features of each spec version (1.0 = module core, 2.0, 3
 | MoonBit | 6/10 reached, 4 with none | 5/9 reached, 2 with none | 4/11 reached, 0 with none |
 | AssemblyScript | 9/10 reached, 6 with none | 5/9 reached, 5 with none | 1/11 reached, 1 with none |
 | TinyGo | 7/10 reached, 4 with none | 3/9 reached, 1 with none | 0/11 reached, 0 with none |
-| Kotlin/Wasm | 4/10 reached, 3 with none | 2/9 reached, 1 with none | 5/11 reached, 3 with none |
+| Kotlin | 4/10 reached, 3 with none | 2/9 reached, 1 with none | 5/11 reached, 3 with none |
 
 ## Per feature
 
 Each cell: `F` full or `P` partial, `✓` checked or `✗` not checked, then the number of obstacles; `–` Absent.
 
-| # | Feature | Spec | Rust | Zig | C/C++ | MoonBit | AssemblyScript | TinyGo | Kotlin/Wasm |
+| # | Feature | Spec | Rust | Zig | C/C++ | MoonBit | AssemblyScript | TinyGo | Kotlin |
 |---|---|---|---|---|---|---|---|---|---|
 | 01 | Imports and exports | 1.0 | F✓0 | F✓0 | F✓0 | F✓0 | F✓0 | F✓0 | F✓1 |
 | 02 | Memory configuration | 1.0 | F✗1 | P✗1 | F✗1 | F✗1 | P✗1 | P✗1 | – |
@@ -334,7 +334,7 @@ The variant that stands for the cell: the most complete first, then the one the 
 - **29 64-bit memory**: Absent (confirmed).
 - **30 Branch hinting**: Absent (confirmed), never probed; see [`probes/30-branch-hinting/tinygo/ABSENT.md`](../../probes/30-branch-hinting/tinygo/ABSENT.md).
 
-### Kotlin/Wasm
+### Kotlin
 
 - **01 Imports and exports**: `wasi`, annotation, experimental-api; 1 obstacles.
 - **02 Memory configuration**: Absent (confirmed).

@@ -17,7 +17,7 @@ import { loadCells, isChecked, obstacles, NEEDS } from './cells.mjs';
 const FEATURES = FEATURE_LIST.map((f) => [f.id, f.name]);
 const SINCE = Object.fromEntries(FEATURE_LIST.map((f) => [f.id, f.since]));
 const VERSIONS = ['1.0', '2.0', '3.0'];
-const LANGS = [['rust', 'Rust'], ['zig', 'Zig'], ['c', 'C/C++'], ['moonbit', 'MoonBit'], ['assemblyscript', 'AssemblyScript'], ['tinygo', 'TinyGo'], ['kotlin', 'Kotlin/Wasm']];
+const LANGS = [['rust', 'Rust'], ['zig', 'Zig'], ['c', 'C/C++'], ['moonbit', 'MoonBit'], ['assemblyscript', 'AssemblyScript'], ['tinygo', 'TinyGo'], ['kotlin', 'Kotlin']];
 // The counts a language is compared on. "none" = reached with no obstacle at all.
 const COUNTS = [['reached', 'Reached'], ['full', 'Full'], ['checked', 'Checked'], ['none', 'No obstacle']];
 
