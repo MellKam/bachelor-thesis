@@ -158,7 +158,7 @@ A cell's **route** is the integration analogue of `expressed_as`: how the capabi
 | `hand-written` | the developer writes the glue (canonical ABI, string marshalling, WASI shims) |
 
 Each cell also records `tools` (the named extra tools, which feed I6) and the same closed `needs` list as the exposure cells where it
-applies (`nightly-compiler`, `experimental-api`, `restricted-host`, `extra-runtime`). `other-backend` and `side-effect` are not
+applies (`nightly-compiler`, `experimental-api`, `restricted-host`, `extra-runtime`). `other-backend` is not
 used here. Absent has the same two modifiers, `confirmed` and `not found`; a `not found` counts 0 in the mean, as in the exposure rating.
 
 ## Scoring

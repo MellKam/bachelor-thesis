@@ -16,11 +16,6 @@
    "why": "One call site depends on something marked experimental or unstable, on a supported compiler. It may change in an update, but the damage is local and the rest of the project builds on the stable release."
   },
   {
-   "kind": "side-effect",
-   "factor": 0.85,
-   "why": "The mechanism is an implementation detail of another construct: nothing in the language asks for it (a closure call that happens to be call_ref, casts that come from a class hierarchy, panic unwinding standing in for exceptions). The behaviour and the type checking are unchanged, but the developer cannot write the Wasm construct itself. Not for optimiser behaviour: if a better test makes the instruction appear reliably, there is no obstacle."
-  },
-  {
    "kind": "nightly-compiler",
    "factor": 0.8,
    "why": "The whole project, and every project that depends on it, needs a compiler that is not a supported release and can break from one day to the next. Wider than one call site, but the code is still type-checked and deterministic, and the constraint ends when the feature is stabilised."

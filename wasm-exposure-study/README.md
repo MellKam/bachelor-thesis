@@ -110,7 +110,7 @@ directory, requires an `out.wasm`, runs the checker, and writes `results/<lang>/
 4. Describe each variant that produced something in `results/coding.json` with categories (`expressed_as` native / annotation /
    config / inline_asm, `support` full or partial, `needs` from a closed list), or mark the cell Absent with a modifier
    (*confirmed*: the toolchain or documentation says there is no way, or rejects the attempt; *not found*: a way plausibly exists but
-   none was found). The cell's result and its flags (*partial*, *needs an unstable toolchain*, *a side effect*, ...) are derived from those
+   none was found). The cell's result and its flags (*partial*, *needs an unstable toolchain*, ...) are derived from those
    records; free-text `flags` and a `note` say what the categories cannot. The format is in `results/README.md`. `make matrix`
    refuses a missing cell, an unknown field or value, or a probe that does not exist.
 

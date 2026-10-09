@@ -1,0 +1,13 @@
+# 28-exnref-exceptions/rust/nightly-asm spec=28
+$ rm -rf /tmp/rt && cargo +nightly-2026-10-02 build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p28_nightly_asm v0.1.0 (/study/probes/28-exnref-exceptions/rust/nightly-asm)
+    Finished `release` profile [optimized] target(s) in 0.28s
+PASS 28 probes/28-exnref-exceptions/rust/nightly-asm//out.wasm (391 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ tag section with at least one tag
+  ✓ try_table emitted
+  ✓ throw_ref emitted
+  ✓ catch_ref / catch_all_ref used (informational)
+  · legacy try/catch/rethrow also used (informational)
+  ✓ instantiates
+  ✓ rethrow_test(5) == 5

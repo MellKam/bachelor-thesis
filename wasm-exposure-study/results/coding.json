@@ -165,16 +165,15 @@
   },
   "27": {
    "variants": {
-    "nightly-unwind": { "expressed_as": "native", "support": "full", "needs": ["nightly-compiler", "side-effect"] },
     "nightly-asm": { "expressed_as": "inline_asm", "support": "full", "needs": ["nightly-compiler"] }
    },
-   "note": "`catch_unwind` compiles to tags only with `-Zbuild-std`, `panic=unwind` and `+exception-handling`; on stable a panic traps and no tag exists. Obstacles: std rebuilt with panic=unwind; the mechanism is panic unwinding, not a language exception construct (no way to declare or throw a tag)."
+   "note": "Module-level assembly (`global_asm!`, unstable on wasm32) declares the tag with `.tagtype` and writes `try`/`throw`/`catch`. The language route is closed: `catch_unwind` compiles to a tag only with `-Zbuild-std`, `panic=unwind` and `+exception-handling` (on stable a panic traps and no tag exists), but that is panic unwinding, not an exception construct: there is no way to declare a tag or throw a value of your own. The `nightly-unwind` and `stable-catch-unwind` probes are kept as evidence and are not a route."
   },
   "28": {
    "variants": {
-    "nightly-unwind": { "expressed_as": "native", "support": "full", "needs": ["nightly-compiler", "side-effect"] }
+    "nightly-asm": { "expressed_as": "inline_asm", "support": "full", "needs": ["nightly-compiler"] }
    },
-   "note": "`catch_unwind` / `resume_unwind` compile to `try_table` with `catch_ref` and `throw_ref`; the standardised encoding is already the default (`nightly-unwind-new-eh`, with the LLVM flag, is the same module). Obstacles: std rebuilt with panic=unwind; the mechanism is panic unwinding, not a language exception construct (no way to declare or throw a tag)."
+   "note": "Module-level assembly writes the whole function: `try_table (catch_all_ref 0)` capturing the exception, `throw_ref`, and an outer `try_table (catch <tag> 0)` (the same function as Zig's). The language route is closed for the same reason as feature 27: `catch_unwind` / `resume_unwind` compile to `try_table` with `catch_ref` and `throw_ref` (the standardised encoding is already the default; `nightly-unwind-new-eh` is the same module), but only as panic unwinding with std rebuilt, not as an exception construct. The `nightly-unwind` probes are kept as evidence and are not a route."
   },
   "29": {
    "variants": {
@@ -701,7 +700,7 @@
   },
   "22": {
    "variants": {
-    "wasm-gc:closure": { "probes": ["moonbit-gc/closure"], "expressed_as": "native", "support": "full", "needs": ["side-effect", "other-backend"] }
+    "wasm-gc:closure": { "probes": ["moonbit-gc/closure"], "expressed_as": "native", "support": "full", "needs": ["other-backend"] }
    },
    "note": "Closures are called with `call_ref`. On the wasm backend: Function values are closures called with `call_indirect` through the table. Side effect: the `call_ref` is how a closure's function field is called; the program cannot write or name a typed function reference."
   },
@@ -713,7 +712,7 @@
   },
   "24": {
    "variants": {
-    "wasm-gc:enum-array": { "probes": ["moonbit-gc/enum-array"], "expressed_as": "native", "support": "partial", "missing": "ref.i31 / i31.get not emitted", "needs": ["side-effect", "other-backend"] }
+    "wasm-gc:enum-array": { "probes": ["moonbit-gc/enum-array"], "expressed_as": "native", "support": "partial", "missing": "ref.i31 / i31.get not emitted", "needs": ["other-backend"] }
    },
    "note": "Enum variants are declared subtypes with `ref.cast`/`ref.test`, `FixedArray[Byte]` is a packed `i8` array; `i31` is not used for boxed values. Side effect: the subtype declarations and casts come from the enum's variants, not from anything the program writes as a GC type."
   },
@@ -1193,7 +1192,7 @@
   },
   "22": {
    "variants": {
-    "function-reference": { "expressed_as": "native", "support": "full", "needs": ["side-effect"] }
+    "function-reference": { "expressed_as": "native", "support": "full" }
    },
    "note": "Function references are GC closures called with `call_ref`. Side effect: the `call_ref` is how a closure's function field is called; the program cannot write or name a typed function reference."
   },
@@ -1205,7 +1204,7 @@
   },
   "24": {
    "variants": {
-    "class-hierarchy": { "expressed_as": "native", "support": "partial", "missing": "ref.i31 / i31.get not emitted", "needs": ["side-effect"] }
+    "class-hierarchy": { "expressed_as": "native", "support": "partial", "missing": "ref.i31 / i31.get not emitted" }
    },
    "note": "Class subtypes with casts and `ByteArray` as a packed `i8` array; `i31` is not used for a boxed `Int`. Side effect: the subtype declarations and casts come from the class hierarchy, not from anything the program writes as a GC type."
   },

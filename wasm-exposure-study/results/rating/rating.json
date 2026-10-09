@@ -35,11 +35,6 @@
         "why": "One call site depends on something marked experimental or unstable, on a supported compiler. It may change in an update, but the damage is local and the rest of the project builds on the stable release."
       },
       {
-        "kind": "side-effect",
-        "factor": 0.85,
-        "why": "The mechanism is an implementation detail of another construct: nothing in the language asks for it (a closure call that happens to be call_ref, casts that come from a class hierarchy, panic unwinding standing in for exceptions). The behaviour and the type checking are unchanged, but the developer cannot write the Wasm construct itself. Not for optimiser behaviour: if a better test makes the instruction appear reliably, there is no obstacle."
-      },
-      {
         "kind": "nightly-compiler",
         "factor": 0.8,
         "why": "The whole project, and every project that depends on it, needs a compiler that is not a supported release and can break from one day to the next. Wider than one call site, but the code is still type-checked and deterministic, and the constraint ends when the feature is stabilised."
@@ -287,19 +282,19 @@
       "features": 30,
       "reached": 24,
       "support": 0.8304,
-      "checked": 0.5417,
-      "directness": 0.7884,
-      "score": 0.6529,
+      "checked": 0.4792,
+      "directness": 0.7709,
+      "score": 0.6379,
       "scoreRank": {
         "best": 2,
         "worst": 3,
-        "mean": 2.051
+        "mean": 2.087
       },
       "counts": {
         "probed": 30,
         "reached": 24,
         "full": 22,
-        "checked": 13,
+        "checked": 11,
         "noObstacle": 9,
         "oneObstacle": 5,
         "twoOrMoreObstacles": 10,
@@ -307,10 +302,10 @@
         "absentNotFound": 0,
         "neverProbed": 2,
         "reachedVia": {
-          "language": 13,
+          "language": 11,
           "config": 5,
           "inlineAsmChecked": 0,
-          "inlineAsmUnchecked": 6
+          "inlineAsmUnchecked": 8
         }
       },
       "bySpecVersion": {
@@ -334,9 +329,9 @@
           "features": 11,
           "reached": 6,
           "support": 0.625,
-          "checked": 0.6,
-          "directness": 0.688,
-          "score": 0.43
+          "checked": 0.3,
+          "directness": 0.604,
+          "score": 0.3775
         }
       }
     },
@@ -350,9 +345,9 @@
       "directness": 0.7772,
       "score": 0.5902,
       "scoreRank": {
-        "best": 3,
+        "best": 2,
         "worst": 4,
-        "mean": 3.4015
+        "mean": 3.387
       },
       "counts": {
         "probed": 30,
@@ -465,12 +460,12 @@
       "reached": 16,
       "support": 0.5625,
       "checked": 0.7143,
-      "directness": 0.7139,
-      "score": 0.39,
+      "directness": 0.7184,
+      "score": 0.3923,
       "scoreRank": {
         "best": 5,
         "worst": 8,
-        "mean": 6.098
+        "mean": 6.0685
       },
       "counts": {
         "probed": 30,
@@ -478,8 +473,8 @@
         "full": 13,
         "checked": 12,
         "noObstacle": 6,
-        "oneObstacle": 7,
-        "twoOrMoreObstacles": 3,
+        "oneObstacle": 9,
+        "twoOrMoreObstacles": 1,
         "absentConfirmed": 14,
         "absentNotFound": 0,
         "neverProbed": 7,
@@ -512,8 +507,8 @@
           "reached": 4,
           "support": 0.3438,
           "checked": 1,
-          "directness": 0.4071,
-          "score": 0.1434
+          "directness": 0.4333,
+          "score": 0.1516
         }
       }
     },
@@ -529,7 +524,7 @@
       "scoreRank": {
         "best": 2,
         "worst": 4,
-        "mean": 3.5475
+        "mean": 3.526
       },
       "counts": {
         "probed": 30,
@@ -586,9 +581,9 @@
       "directness": 0.956,
       "score": 0.3357,
       "scoreRank": {
-        "best": 5,
+        "best": 6,
         "worst": 8,
-        "mean": 7.0775
+        "mean": 7.1565
       },
       "counts": {
         "probed": 30,
@@ -642,20 +637,20 @@
       "reached": 11,
       "support": 0.3304,
       "checked": 1,
-      "directness": 0.9435,
-      "score": 0.3085,
+      "directness": 0.963,
+      "score": 0.3152,
       "scoreRank": {
         "best": 5,
         "worst": 8,
-        "mean": 7.7075
+        "mean": 7.6195
       },
       "counts": {
         "probed": 30,
         "reached": 11,
         "full": 7,
         "checked": 11,
-        "noObstacle": 7,
-        "oneObstacle": 4,
+        "noObstacle": 9,
+        "oneObstacle": 2,
         "twoOrMoreObstacles": 0,
         "absentConfirmed": 18,
         "absentNotFound": 1,
@@ -689,8 +684,8 @@
           "reached": 5,
           "support": 0.4688,
           "checked": 1,
-          "directness": 0.9438,
-          "score": 0.4453
+          "directness": 1,
+          "score": 0.4688
         }
       }
     },
@@ -706,7 +701,7 @@
       "scoreRank": {
         "best": 5,
         "worst": 7,
-        "mean": 5.117
+        "mean": 5.1555
       },
       "counts": {
         "probed": 30,
@@ -1204,16 +1199,16 @@
       "since": "3.0",
       "weight": 2,
       "status": "reached",
-      "variant": "nightly-unwind",
-      "expressedAs": "native",
+      "variant": "nightly-asm",
+      "expressedAs": "inline_asm",
       "partial": null,
       "support": 1,
-      "checked": 1,
-      "directness": 0.68,
-      "score": 0.68,
+      "checked": 0,
+      "directness": 0.4,
+      "score": 0.4,
       "obstacles": [
-        "nightly-compiler",
-        "side-effect"
+        "inline_asm",
+        "nightly-compiler"
       ]
     },
     {
@@ -1223,16 +1218,16 @@
       "since": "3.0",
       "weight": 1,
       "status": "reached",
-      "variant": "nightly-unwind",
-      "expressedAs": "native",
+      "variant": "nightly-asm",
+      "expressedAs": "inline_asm",
       "partial": null,
       "support": 1,
-      "checked": 1,
-      "directness": 0.68,
-      "score": 0.68,
+      "checked": 0,
+      "directness": 0.4,
+      "score": 0.4,
       "obstacles": [
-        "nightly-compiler",
-        "side-effect"
+        "inline_asm",
+        "nightly-compiler"
       ]
     },
     {
@@ -2630,10 +2625,9 @@
       "partial": null,
       "support": 1,
       "checked": 1,
-      "directness": 0.2975,
-      "score": 0.2975,
+      "directness": 0.35,
+      "score": 0.35,
       "obstacles": [
-        "side-effect",
         "other-backend"
       ]
     },
@@ -2667,10 +2661,9 @@
       "partial": "ref.i31 / i31.get not emitted",
       "support": 0.5,
       "checked": 1,
-      "directness": 0.2975,
-      "score": 0.1488,
+      "directness": 0.35,
+      "score": 0.175,
       "obstacles": [
-        "side-effect",
         "other-backend"
       ]
     },
@@ -4045,11 +4038,9 @@
       "partial": null,
       "support": 1,
       "checked": 1,
-      "directness": 0.85,
-      "score": 0.85,
-      "obstacles": [
-        "side-effect"
-      ]
+      "directness": 1,
+      "score": 1,
+      "obstacles": []
     },
     {
       "language": "kotlin",
@@ -4079,11 +4070,9 @@
       "partial": "ref.i31 / i31.get not emitted",
       "support": 0.5,
       "checked": 1,
-      "directness": 0.85,
-      "score": 0.425,
-      "obstacles": [
-        "side-effect"
-      ]
+      "directness": 1,
+      "score": 0.5,
+      "obstacles": []
     },
     {
       "language": "kotlin",
@@ -4726,127 +4715,127 @@
       {
         "higher": "rust",
         "lower": "zig",
-        "share": 1,
-        "robust": true
-      },
-      {
-        "higher": "rust",
-        "lower": "assemblyscript",
-        "share": 0.949,
-        "robust": false
-      },
-      {
-        "higher": "rust",
-        "lower": "swift",
-        "share": 1,
-        "robust": true
-      },
-      {
-        "higher": "rust",
-        "lower": "moonbit",
-        "share": 1,
-        "robust": true
-      },
-      {
-        "higher": "rust",
-        "lower": "tinygo",
-        "share": 1,
-        "robust": true
-      },
-      {
-        "higher": "rust",
-        "lower": "kotlin",
-        "share": 1,
-        "robust": true
-      },
-      {
-        "higher": "zig",
-        "lower": "assemblyscript",
-        "share": 0.5985,
-        "robust": false
-      },
-      {
-        "higher": "zig",
-        "lower": "swift",
-        "share": 1,
-        "robust": true
-      },
-      {
-        "higher": "zig",
-        "lower": "moonbit",
-        "share": 1,
-        "robust": true
-      },
-      {
-        "higher": "zig",
-        "lower": "tinygo",
-        "share": 1,
-        "robust": true
-      },
-      {
-        "higher": "zig",
-        "lower": "kotlin",
-        "share": 1,
-        "robust": true
-      },
-      {
-        "higher": "assemblyscript",
-        "lower": "swift",
-        "share": 1,
-        "robust": true
-      },
-      {
-        "higher": "assemblyscript",
-        "lower": "moonbit",
-        "share": 1,
-        "robust": true
-      },
-      {
-        "higher": "assemblyscript",
-        "lower": "tinygo",
-        "share": 1,
-        "robust": true
-      },
-      {
-        "higher": "assemblyscript",
-        "lower": "kotlin",
-        "share": 1,
-        "robust": true
-      },
-      {
-        "higher": "swift",
-        "lower": "moonbit",
-        "share": 0.8855,
-        "robust": false
-      },
-      {
-        "higher": "swift",
-        "lower": "tinygo",
         "share": 0.9995,
         "robust": true
       },
       {
+        "higher": "rust",
+        "lower": "assemblyscript",
+        "share": 0.9135,
+        "robust": false
+      },
+      {
+        "higher": "rust",
+        "lower": "swift",
+        "share": 1,
+        "robust": true
+      },
+      {
+        "higher": "rust",
+        "lower": "moonbit",
+        "share": 1,
+        "robust": true
+      },
+      {
+        "higher": "rust",
+        "lower": "tinygo",
+        "share": 1,
+        "robust": true
+      },
+      {
+        "higher": "rust",
+        "lower": "kotlin",
+        "share": 1,
+        "robust": true
+      },
+      {
+        "higher": "zig",
+        "lower": "assemblyscript",
+        "share": 0.6125,
+        "robust": false
+      },
+      {
+        "higher": "zig",
+        "lower": "swift",
+        "share": 1,
+        "robust": true
+      },
+      {
+        "higher": "zig",
+        "lower": "moonbit",
+        "share": 1,
+        "robust": true
+      },
+      {
+        "higher": "zig",
+        "lower": "tinygo",
+        "share": 1,
+        "robust": true
+      },
+      {
+        "higher": "zig",
+        "lower": "kotlin",
+        "share": 1,
+        "robust": true
+      },
+      {
+        "higher": "assemblyscript",
+        "lower": "swift",
+        "share": 1,
+        "robust": true
+      },
+      {
+        "higher": "assemblyscript",
+        "lower": "moonbit",
+        "share": 1,
+        "robust": true
+      },
+      {
+        "higher": "assemblyscript",
+        "lower": "tinygo",
+        "share": 1,
+        "robust": true
+      },
+      {
+        "higher": "assemblyscript",
+        "lower": "kotlin",
+        "share": 1,
+        "robust": true
+      },
+      {
+        "higher": "swift",
+        "lower": "moonbit",
+        "share": 0.8545,
+        "robust": false
+      },
+      {
+        "higher": "swift",
+        "lower": "tinygo",
+        "share": 1,
+        "robust": true
+      },
+      {
         "higher": "swift",
         "lower": "kotlin",
-        "share": 0.998,
+        "share": 0.99,
         "robust": true
       },
       {
         "higher": "moonbit",
         "lower": "tinygo",
-        "share": 0.8305,
+        "share": 0.8565,
         "robust": false
       },
       {
         "higher": "moonbit",
         "lower": "kotlin",
-        "share": 0.957,
-        "robust": true
+        "share": 0.9295,
+        "robust": false
       },
       {
         "higher": "tinygo",
         "lower": "kotlin",
-        "share": 0.7525,
+        "share": 0.7,
         "robust": false
       }
     ],
@@ -4854,10 +4843,6 @@
       {
         "ahead": "rust",
         "behind": "zig"
-      },
-      {
-        "ahead": "rust",
-        "behind": "moonbit"
       },
       {
         "ahead": "rust",

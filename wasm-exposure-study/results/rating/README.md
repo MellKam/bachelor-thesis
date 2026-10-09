@@ -19,7 +19,7 @@ obstacles):
 | Is it **checked** by the compiler? | `expressed_as` is `native` or `annotation`, or an `inline_asm` record with `checked: true` |
 | How many **obstacles** stand in the way? | one if `expressed_as` is `config` or `inline_asm` (checked or not), plus one per entry of `needs` |
 
-`needs` is a closed list (`experimental-api`, `side-effect`, `nightly-compiler`, `restricted-host`, `extra-runtime`, `other-backend`; defined in `../README.md`). Each kind
+`needs` is a closed list (`experimental-api`, `nightly-compiler`, `restricted-host`, `extra-runtime`, `other-backend`; defined in `../README.md`). Each kind
 counts once, however long the explanation in the note, so the count cannot depend on how a cell was worded.
 
 ## The score
@@ -35,10 +35,9 @@ visible as a separate count in the reports, because they are the open uncertaint
 - **Reach:** full 1, partial 0.5, Absent 0, whether confirmed or not found.
 - **Obstacle factors** (one per kind, applied once, never per word): `config` and `inline_asm` (from `expressed_as`) and the five `needs` kinds.
   They are listed in `weights.json` from least to most damaging, each with the reason it ranks there. The **order** is the reasoned part:
-  it follows what the obstacle takes away from the developer (a build setting < one experimental call site, or a mechanism that is only an
-  implementation detail of another construct (a closure call, panic unwinding) < a nightly compiler for the whole project, which still gives checked, deterministic code and
+  it follows what the obstacle takes away from the developer (a build setting < one experimental call site < a nightly compiler for the whole project, which still gives checked, deterministic code and
   ends when the feature is stabilised, or a module that only runs on certain hosts < extra code in every module < hand-written assembly, checked or not (no language help, per-target syntax, hard to write and maintain) < giving up
-  the other backend's features). The factors are 0.90, 0.85, 0.85, 0.80, 0.80, 0.70, 0.50 and 0.35 in that order. `checked` is deliberately not a factor: it changes the Checked count and the figures, and charging it again would count the cost of writing assembly twice.
+  the other backend's features). The factors are 0.90, 0.85, 0.80, 0.80, 0.70, 0.50 and 0.35 in that order. `checked` is deliberately not a factor: it changes the Checked count and the figures, and charging it again would count the cost of writing assembly twice.
 - **Importance weights:** 1 to 3 for each of the 30 features. The weights give 3 to the module core every program uses (imports and exports,
   memory, tables, data, globals, integer and float operations), 2 to common extensions, and 1 to specialised ones.
 - Every value is in `weights.json`. **We chose them and they may not be ideal**, which is why the report does not stop at the number: it re-ranks the languages under 2,000 random perturbations of all of them.

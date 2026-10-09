@@ -36,7 +36,6 @@ export const probeText = (lang, { dir, name }) => (dir === dirsOf(lang)[0] ? nam
 export const NEEDS = {
   'nightly-compiler': 'a nightly, unsupported compiler for the whole project',
   'experimental-api': 'an API, flag or target feature marked experimental or unstable, on a supported compiler',
-  'side-effect': 'the mechanism is an implementation detail of another construct: no construct of the language asks for it (a closure call, a class hierarchy, panic unwinding)',
   'extra-runtime': 'a runtime or library shipped in every module',
   'restricted-host': 'a module that only runs on certain hosts (it imports WASI functions or JS glue)',
   'other-backend': 'the other backend of the same language (a module uses one backend)',
@@ -69,7 +68,6 @@ const phrases = (name, r) => [
     'extra-runtime': 'ships an extra runtime',
     'restricted-host': 'needs a specific host (WASI or JS)',
     'other-backend': `only on the ${/^(wasm(?:-gc)?):/.exec(name)?.[1] ?? 'other'} backend (a module uses one backend)`,
-    'side-effect': 'a side effect, not requested',
   })[n]),
 ];
 
@@ -129,7 +127,7 @@ export function loadCells() {
           if (!dirsOf(lang).includes(p.dir) || !existsSync(`probes/${id}-${slug}/${p.dir}/${p.name}`)) problems.push(`${where}/${name}: probe "${probeText(lang, p)}" has no directory`);
           else if (verdicts[i] === null) problems.push(`${where}/${name}: probe "${probeText(lang, p)}" has no verdict`);
         });
-        if (r.support === 'full' && !r.needs?.includes('side-effect') && verdicts.some((v) => v && v !== 'pass'))
+        if (r.support === 'full' && verdicts.some((v) => v && v !== 'pass'))
           warnings.push(`${where}/${name}: support is full but the checker says ${verdicts.join(', ')}`);
         if (r.support === 'partial' && verdicts.every((v) => v === 'pass'))
           warnings.push(`${where}/${name}: support is partial but every probe passes the checker`);

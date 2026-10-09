@@ -8,19 +8,18 @@ All 30 features are probed. Nothing here is a score: each number is a count of c
 | Language | Reached | Full | Checked | No obstacle | 1 obstacle | 2+ obstacles | Absent (confirmed) | Absent (not found) | of which never probed |
 |---|---|---|---|---|---|---|---|---|---|
 | C/C++ | 24/30 | 22 | 13 | 11 | 9 | 4 | 6 | 0 | 2 |
-| Rust | 24/30 | 22 | 13 | 9 | 5 | 10 | 6 | 0 | 2 |
+| Rust | 24/30 | 22 | 11 | 9 | 5 | 10 | 6 | 0 | 2 |
 | Zig | 23/30 | 20 | 8 | 7 | 16 | 0 | 7 | 0 | 3 |
-| MoonBit | 16/30 | 13 | 12 | 6 | 7 | 3 | 14 | 0 | 7 |
+| MoonBit | 16/30 | 13 | 12 | 6 | 9 | 1 | 14 | 0 | 7 |
 | AssemblyScript | 15/30 | 13 | 12 | 12 | 3 | 0 | 15 | 0 | 4 |
 | Swift | 14/30 | 12 | 9 | 0 | 9 | 5 | 16 | 0 | 3 |
-| Kotlin | 11/30 | 7 | 11 | 7 | 4 | 0 | 18 | 1 | 10 |
+| Kotlin | 11/30 | 7 | 11 | 9 | 2 | 0 | 18 | 1 | 10 |
 | TinyGo | 10/30 | 5 | 5 | 5 | 5 | 0 | 18 | 2 | 9 |
 
 **Reached**: the language can produce the feature in some way. **Full**: all of it, not part. **Checked**: the compiler of the language checks it (native or annotation; an inline assembly block only if the compiler relates it to the program, see `checked` in `results/README.md`). **No obstacle / 1 / 2+**: among the reached features, how many obstacles stand between the developer and it. An obstacle is reaching it through a build config or through inline assembly (checked or not), or any of:
 
 - `nightly-compiler`: a nightly, unsupported compiler for the whole project
 - `experimental-api`: an API, flag or target feature marked experimental or unstable, on a supported compiler
-- `side-effect`: the mechanism is an implementation detail of another construct: no construct of the language asks for it (a closure call, a class hierarchy, panic unwinding)
 - `extra-runtime`: a runtime or library shipped in every module
 - `restricted-host`: a module that only runs on certain hosts (it imports WASI functions or JS glue)
 - `other-backend`: the other backend of the same language (a module uses one backend)
@@ -34,7 +33,7 @@ The same reached cells by how the selected variant is written. Language = native
 | Language | Reached | Language | Config | Inline asm, checked | Inline asm, unchecked | Absent |
 |---|---|---|---|---|---|---|
 | C/C++ | 24/30 | 13 | 6 | 0 | 5 | 6 |
-| Rust | 24/30 | 13 | 5 | 0 | 6 | 6 |
+| Rust | 24/30 | 11 | 5 | 0 | 8 | 6 |
 | Zig | 23/30 | 8 | 5 | 0 | 10 | 7 |
 | MoonBit | 16/30 | 12 | 2 | 0 | 2 | 14 |
 | AssemblyScript | 15/30 | 12 | 3 | 0 | 0 | 15 |
@@ -49,19 +48,19 @@ One number between 0 and 1 per language, from the coefficients in `results/ratin
 | Language | Score | Rank in 2000 perturbed runs (best–worst) |
 |---|---|---|
 | C/C++ | 0.71 | 1–1 |
-| Rust | 0.65 | 2–3 |
-| Zig | 0.59 | 3–4 |
+| Rust | 0.64 | 2–3 |
+| Zig | 0.59 | 2–4 |
 | AssemblyScript | 0.57 | 2–4 |
 | Swift | 0.43 | 5–7 |
 | MoonBit | 0.39 | 5–8 |
-| TinyGo | 0.34 | 5–8 |
-| Kotlin | 0.31 | 5–8 |
+| TinyGo | 0.34 | 6–8 |
+| Kotlin | 0.32 | 5–8 |
 
 The ranks come from changing every coefficient at random (partial reach ±0.2; the damage of all obstacles together between half and one and a half times, plus ±15% each, in the same order; each feature weight between half and double) 2000 times. An order is robust only if it held in at least 95% of the runs.
 
-**Robust orderings:** C/C++ above Rust (100%); C/C++ above Zig (100%); C/C++ above AssemblyScript (100%); C/C++ above Swift (100%); C/C++ above MoonBit (100%); C/C++ above TinyGo (100%); C/C++ above Kotlin (100%); Rust above Zig (100%); Rust above Swift (100%); Rust above MoonBit (100%); Rust above TinyGo (100%); Rust above Kotlin (100%); Zig above Swift (100%); Zig above MoonBit (100%); Zig above TinyGo (100%); Zig above Kotlin (100%); AssemblyScript above Swift (100%); AssemblyScript above MoonBit (100%); AssemblyScript above TinyGo (100%); AssemblyScript above Kotlin (100%); Swift above TinyGo (100%); Swift above Kotlin (100%); MoonBit above Kotlin (96%).
+**Robust orderings:** C/C++ above Rust (100%); C/C++ above Zig (100%); C/C++ above AssemblyScript (100%); C/C++ above Swift (100%); C/C++ above MoonBit (100%); C/C++ above TinyGo (100%); C/C++ above Kotlin (100%); Rust above Zig (100%); Rust above Swift (100%); Rust above MoonBit (100%); Rust above TinyGo (100%); Rust above Kotlin (100%); Zig above Swift (100%); Zig above MoonBit (100%); Zig above TinyGo (100%); Zig above Kotlin (100%); AssemblyScript above Swift (100%); AssemblyScript above MoonBit (100%); AssemblyScript above TinyGo (100%); AssemblyScript above Kotlin (100%); Swift above TinyGo (100%); Swift above Kotlin (99%).
 
-**Not robust** (the score gap is smaller than the uncertainty of the coefficients): Rust / AssemblyScript (95% / 5%); Zig / AssemblyScript (60% / 40%); Swift / MoonBit (89% / 11%); MoonBit / TinyGo (83% / 17%); TinyGo / Kotlin (75% / 25%).
+**Not robust** (the score gap is smaller than the uncertainty of the coefficients): Rust / AssemblyScript (91% / 9%); Zig / AssemblyScript (61% / 39%); Swift / MoonBit (85% / 15%); MoonBit / TinyGo (86% / 14%); MoonBit / Kotlin (93% / 7%); TinyGo / Kotlin (70% / 30%).
 
 **Obstacle factors**, from least to most damaging. A cell is worth its reach times the factor of each obstacle it has.
 
@@ -69,7 +68,6 @@ The ranks come from changing every coefficient at random (partial reach ±0.2; t
 |---|---|---|
 | config (expressed_as) | 0.90 | A build setting: a flag, config file or linker argument. One line of the build, supported, deterministic, reversible, nothing at run time. The type checker no longer sees the feature, but the toolchain still validates the setting. |
 | experimental-api | 0.85 | One call site depends on something marked experimental or unstable, on a supported compiler. It may change in an update, but the damage is local and the rest of the project builds on the stable release. |
-| side-effect | 0.85 | The mechanism is an implementation detail of another construct: nothing in the language asks for it (a closure call that happens to be call_ref, casts that come from a class hierarchy, panic unwinding standing in for exceptions). The behaviour and the type checking are unchanged, but the developer cannot write the Wasm construct itself. Not for optimiser behaviour: if a better test makes the instruction appear reliably, there is no obstacle. |
 | nightly-compiler | 0.80 | The whole project, and every project that depends on it, needs a compiler that is not a supported release and can break from one day to the next. Wider than one call site, but the code is still type-checked and deterministic, and the constraint ends when the feature is stabilised. |
 | restricted-host | 0.80 | The module only runs on certain hosts: it imports WASI functions or JS glue code (C++ exceptions need a WASI host, Kotlin's externref build a JS host). Some deployment targets are lost, but most projects target one kind of host anyway and a wide set remains; the code itself is unaffected. |
 | extra-runtime | 0.70 | Every module carries extra code: a runtime shipped inside it (322 KB of libc++abi for C++ exceptions). A permanent size cost paid by every user of the module, but the module still runs anywhere. |
@@ -91,13 +89,13 @@ True of every probe of the language. They are recorded here and count for nothin
 A language is ahead of another only if it is at least as good on all 4 counts (reached, full, checked, no obstacle) and better on at least one.
 
 - **C/C++** is ahead of Rust, Zig, MoonBit, TinyGo, Kotlin, Swift.
-- **Rust** is ahead of Zig, MoonBit, TinyGo, Kotlin, Swift.
+- **Rust** is ahead of Zig, TinyGo, Kotlin, Swift.
 - **Zig** is ahead of TinyGo.
 - **MoonBit** is ahead of TinyGo, Swift.
 - **AssemblyScript** is ahead of TinyGo, Kotlin, Swift.
 - **Kotlin** is ahead of TinyGo.
 
-Not ordered, because each leads on something: Rust / AssemblyScript; Zig / MoonBit; Zig / AssemblyScript; Zig / Kotlin; Zig / Swift; C/C++ / AssemblyScript; MoonBit / AssemblyScript; MoonBit / Kotlin; TinyGo / Swift; Kotlin / Swift.
+Not ordered, because each leads on something: Rust / MoonBit; Rust / AssemblyScript; Zig / MoonBit; Zig / AssemblyScript; Zig / Kotlin; Zig / Swift; C/C++ / AssemblyScript; MoonBit / AssemblyScript; MoonBit / Kotlin; TinyGo / Swift; Kotlin / Swift.
 
 ## By spec version
 
@@ -111,7 +109,7 @@ The same counts for the features of each spec version (1.0 = module core, 2.0, 3
 | MoonBit | 7/10 reached, 4 with none | 5/9 reached, 2 with none | 4/11 reached, 0 with none |
 | AssemblyScript | 9/10 reached, 6 with none | 5/9 reached, 5 with none | 1/11 reached, 1 with none |
 | TinyGo | 7/10 reached, 4 with none | 3/9 reached, 1 with none | 0/11 reached, 0 with none |
-| Kotlin | 4/10 reached, 3 with none | 2/9 reached, 1 with none | 5/11 reached, 3 with none |
+| Kotlin | 4/10 reached, 3 with none | 2/9 reached, 1 with none | 5/11 reached, 5 with none |
 | Swift | 7/10 reached, 0 with none | 5/9 reached, 0 with none | 2/11 reached, 0 with none |
 
 ## Per feature
@@ -141,13 +139,13 @@ Each cell: `F` full or `P` partial, `✓` checked or `✗` not checked, then the
 | 19 | Table operations on references | 2.0 | F✗2 | F✗1 | F✗1 | – | – | – | – | – |
 | 20 | Tail calls | 3.0 | F✓1 | F✓0 | F✓0 | – | – | – | – | – |
 | 21 | Extended constant expressions | 3.0 | – | – | – | – | – | – | – | – |
-| 22 | Typed function references | 3.0 | F✗2 | – | F✗2 | F✓2 | – | – | F✓1 | – |
+| 22 | Typed function references | 3.0 | F✗2 | – | F✗2 | F✓1 | – | – | F✓0 | – |
 | 23 | GC structs and arrays | 3.0 | – | – | – | F✓1 | – | – | F✓0 | – |
-| 24 | GC casts, subtyping, i31, packed fields | 3.0 | – | – | – | P✓2 | – | – | P✓1 | – |
+| 24 | GC casts, subtyping, i31, packed fields | 3.0 | – | – | – | P✓1 | – | – | P✓0 | – |
 | 25 | Multiple memories | 3.0 | – | – | – | – | – | – | – | – |
 | 26 | Relaxed SIMD | 3.0 | F✓0 | F✓1 | F✓0 | F✓1 | F✓0 | – | – | F✓1 |
-| 27 | Exception tags | 3.0 | F✓2 | F✗1 | F✓2 | – | – | – | F✓0 | – |
-| 28 | Exception handling with exnref | 3.0 | F✓2 | F✗1 | F✓2 | – | – | – | F✓0 | – |
+| 27 | Exception tags | 3.0 | F✗2 | F✗1 | F✓2 | – | – | – | F✓0 | – |
+| 28 | Exception handling with exnref | 3.0 | F✗2 | F✗1 | F✓2 | – | – | – | F✓0 | – |
 | 29 | 64-bit memory | 3.0 | F✗2 | F✗1 | F✗1 | – | – | – | – | F✗2 |
 | 30 | Branch hinting | 3.0 | – | – | – | – | – | – | – | – |
 
@@ -183,8 +181,8 @@ The variant that stands for the cell: the most complete first, then the one the 
 - **24 GC casts, subtyping, i31, packed fields**: Absent (confirmed), never probed; see [`probes/24-gc-casts-subtyping/rust/ABSENT.md`](../../probes/24-gc-casts-subtyping/rust/ABSENT.md).
 - **25 Multiple memories**: Absent (confirmed).
 - **26 Relaxed SIMD**: `attribute`, Native; 0 obstacles. `core::arch::wasm32` with `#[target_feature(enable = "simd128", enable = "relaxed-simd")]`.
-- **27 Exception tags**: `nightly-unwind`, Native, nightly-compiler, side-effect; 2 obstacles. Also: `nightly-asm` (Inline asm, 2 obstacles). `catch_unwind` compiles to tags only with `-Zbuild-std`, `panic=unwind` and `+exception-handling`; on stable a panic traps and no tag exists. Obstacles: std rebuilt with panic=unwind; the mechanism is panic unwinding, not a language exception construct (no way to declare or throw a tag).
-- **28 Exception handling with exnref**: `nightly-unwind`, Native, nightly-compiler, side-effect; 2 obstacles. `catch_unwind` / `resume_unwind` compile to `try_table` with `catch_ref` and `throw_ref`; the standardised encoding is already the default (`nightly-unwind-new-eh`, with the LLVM flag, is the same module). Obstacles: std rebuilt with panic=unwind; the mechanism is panic unwinding, not a language exception construct (no way to declare or throw a tag).
+- **27 Exception tags**: `nightly-asm`, Inline asm, nightly-compiler; 2 obstacles. Module-level assembly (`global_asm!`, unstable on wasm32) declares the tag with `.tagtype` and writes `try`/`throw`/`catch`. The language route is closed: `catch_unwind` compiles to a tag only with `-Zbuild-std`, `panic=unwind` and `+exception-handling` (on stable a panic traps and no tag exists), but that is panic unwinding, not an exception construct: there is no way to declare a tag or throw a value of your own. The `nightly-unwind` and `stable-catch-unwind` probes are kept as evidence and are not a route.
+- **28 Exception handling with exnref**: `nightly-asm`, Inline asm, nightly-compiler; 2 obstacles. Module-level assembly writes the whole function: `try_table (catch_all_ref 0)` capturing the exception, `throw_ref`, and an outer `try_table (catch <tag> 0)` (the same function as Zig's). The language route is closed for the same reason as feature 27: `catch_unwind` / `resume_unwind` compile to `try_table` with `catch_ref` and `throw_ref` (the standardised encoding is already the default; `nightly-unwind-new-eh` is the same module), but only as panic unwinding with std rebuilt, not as an exception construct. The `nightly-unwind` probes are kept as evidence and are not a route.
 - **29 64-bit memory**: `nightly-wasm64`, Config, nightly-compiler; 2 obstacles. Obstacles: tier-3 target, -Zbuild-std.
 - **30 Branch hinting**: Absent (confirmed).
 
@@ -277,9 +275,9 @@ The variant that stands for the cell: the most complete first, then the one the 
 - **19 Table operations on references**: Absent (confirmed), never probed; see [`probes/19-table-operations/moonbit/ABSENT.md`](../../probes/19-table-operations/moonbit/ABSENT.md), [`probes/19-table-operations/moonbit-gc/ABSENT.md`](../../probes/19-table-operations/moonbit-gc/ABSENT.md).
 - **20 Tail calls**: Absent (confirmed).
 - **21 Extended constant expressions**: Absent (confirmed), never probed; see [`probes/21-extended-const/moonbit/ABSENT.md`](../../probes/21-extended-const/moonbit/ABSENT.md), [`probes/21-extended-const/moonbit-gc/ABSENT.md`](../../probes/21-extended-const/moonbit-gc/ABSENT.md).
-- **22 Typed function references**: `wasm-gc:closure`, Native, side-effect, other-backend; 2 obstacles. Closures are called with `call_ref`. On the wasm backend: Function values are closures called with `call_indirect` through the table. Side effect: the `call_ref` is how a closure's function field is called; the program cannot write or name a typed function reference.
+- **22 Typed function references**: `wasm-gc:closure`, Native, other-backend; 1 obstacles. Closures are called with `call_ref`. On the wasm backend: Function values are closures called with `call_indirect` through the table. Side effect: the `call_ref` is how a closure's function field is called; the program cannot write or name a typed function reference.
 - **23 GC structs and arrays**: `wasm-gc:struct-array`, Native, other-backend; 1 obstacles. Structs and arrays become GC types without any annotation. On the wasm backend: wasm-gc backend only. On this backend structs and arrays live in linear memory; the `moonbit-gc` column is the other backend.
-- **24 GC casts, subtyping, i31, packed fields**: `wasm-gc:enum-array`, Native, partial (ref.i31 / i31.get not emitted), side-effect, other-backend; 2 obstacles. Enum variants are declared subtypes with `ref.cast`/`ref.test`, `FixedArray[Byte]` is a packed `i8` array; `i31` is not used for boxed values. Side effect: the subtype declarations and casts come from the enum's variants, not from anything the program writes as a GC type.
+- **24 GC casts, subtyping, i31, packed fields**: `wasm-gc:enum-array`, Native, partial (ref.i31 / i31.get not emitted), other-backend; 1 obstacles. Enum variants are declared subtypes with `ref.cast`/`ref.test`, `FixedArray[Byte]` is a packed `i8` array; `i31` is not used for boxed values. Side effect: the subtype declarations and casts come from the enum's variants, not from anything the program writes as a GC type.
 - **25 Multiple memories**: Absent (confirmed).
 - **26 Relaxed SIMD**: `wasm:v128-library`, Native, experimental-api; 1 obstacles. Also: `wasm:inline-wasm` (Inline asm, 1 obstacles), `wasm-gc:v128-library` (Native, 1 obstacles).
 - **27 Exception tags**: Absent (confirmed).
@@ -376,9 +374,9 @@ The variant that stands for the cell: the most complete first, then the one the 
 - **19 Table operations on references**: Absent (confirmed), never probed; see [`probes/19-table-operations/kotlin/ABSENT.md`](../../probes/19-table-operations/kotlin/ABSENT.md).
 - **20 Tail calls**: Absent (confirmed).
 - **21 Extended constant expressions**: Absent (confirmed), never probed; see [`probes/21-extended-const/kotlin/ABSENT.md`](../../probes/21-extended-const/kotlin/ABSENT.md).
-- **22 Typed function references**: `function-reference`, Native, side-effect; 1 obstacles. Function references are GC closures called with `call_ref`. Side effect: the `call_ref` is how a closure's function field is called; the program cannot write or name a typed function reference.
+- **22 Typed function references**: `function-reference`, Native; 0 obstacles. Function references are GC closures called with `call_ref`. Side effect: the `call_ref` is how a closure's function field is called; the program cannot write or name a typed function reference.
 - **23 GC structs and arrays**: `class-array`, Native; 0 obstacles. Classes and arrays become GC structs and arrays implicitly.
-- **24 GC casts, subtyping, i31, packed fields**: `class-hierarchy`, Native, partial (ref.i31 / i31.get not emitted), side-effect; 1 obstacles. Class subtypes with casts and `ByteArray` as a packed `i8` array; `i31` is not used for a boxed `Int`. Side effect: the subtype declarations and casts come from the class hierarchy, not from anything the program writes as a GC type.
+- **24 GC casts, subtyping, i31, packed fields**: `class-hierarchy`, Native, partial (ref.i31 / i31.get not emitted); 0 obstacles. Class subtypes with casts and `ByteArray` as a packed `i8` array; `i31` is not used for a boxed `Int`. Side effect: the subtype declarations and casts come from the class hierarchy, not from anything the program writes as a GC type.
 - **25 Multiple memories**: Absent (confirmed), never probed; see [`probes/25-multiple-memories/kotlin/ABSENT.md`](../../probes/25-multiple-memories/kotlin/ABSENT.md).
 - **26 Relaxed SIMD**: Absent (confirmed), never probed; see [`probes/26-relaxed-simd/kotlin/ABSENT.md`](../../probes/26-relaxed-simd/kotlin/ABSENT.md).
 - **27 Exception tags**: `try-catch`, Native; 0 obstacles. `try/catch` compiles to a tag and `try_table`; `-Xwasm-use-new-exception-proposal` selects the encoding.

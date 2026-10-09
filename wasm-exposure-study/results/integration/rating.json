@@ -163,8 +163,8 @@
     "I5": 0.677
    },
    "integration": 0.873090909090909,
-   "combined": 0.7409763636363637,
-   "exposure": 0.6529,
+   "combined": 0.7319763636363636,
+   "exposure": 0.6379,
    "rank": {
     "best": 2,
     "worst": 2
@@ -321,8 +321,8 @@
     "I5": 0.829
    },
    "integration": 0.7189090909090908,
-   "combined": 0.5215636363636363,
-   "exposure": 0.39,
+   "combined": 0.5229436363636364,
+   "exposure": 0.3923,
    "rank": {
     "best": 3,
     "worst": 8
@@ -472,8 +472,8 @@
     "I5": 0.222
    },
    "integration": 0.5449090909090909,
-   "combined": 0.40306363636363635,
-   "exposure": 0.3085,
+   "combined": 0.4070836363636363,
+   "exposure": 0.3152,
    "rank": {
     "best": 7,
     "worst": 8
