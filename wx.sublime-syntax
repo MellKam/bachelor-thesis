@@ -1,0 +1,96 @@
+%YAML 1.2
+---
+# Minimal sublime-syntax grammar for the wx language, for Typst's
+# `raw(syntaxes: ...)` custom-syntax support. Keyword list otherwise follows
+# `Keyword` in crates/wx-compiler/src/ast/mod.rs, except `func` is used in
+# place of the real lexer's `fn`, matching this thesis's prose convention.
+# Primitive types (i32, bool, ...) are deliberately NOT keywords here — in
+# wx they're ordinary stdlib items, not reserved words — so they highlight
+# as plain identifiers, like any other type name. Not a full grammar, just
+# enough to color keywords, literals, comments and attributes correctly.
+name: WX
+file_extensions: [wx]
+scope: source.wx
+
+contexts:
+  main:
+    - include: comments
+    - include: attributes
+    - include: strings
+    - include: chars
+    - include: numbers
+
+    # Declaration / item keywords
+    - match: '\b(func|struct|enum|trait|impl|mod|use|import|export|memory|const|global|typeset|type|pub|local|mut)\b'
+      scope: keyword.other.wx
+
+    # Control-flow keywords
+    - match: '\b(if|else|loop|match|break|continue|return|for|where|as|unreachable)\b'
+      scope: keyword.control.wx
+
+    # Path / receiver keywords
+    - match: '\b(self|Self|crate|super)\b'
+      scope: variable.language.wx
+
+    # Boolean literals
+    - match: '\b(true|false)\b'
+      scope: constant.language.wx
+
+  comments:
+    - match: "///.*$"
+      scope: comment.line.documentation.wx
+    - match: "//.*$"
+      scope: comment.line.double-slash.wx
+
+  attributes:
+    - match: '#\['
+      scope: punctuation.definition.attribute.begin.wx
+      push: attribute_body
+
+  attribute_body:
+    - meta_scope: meta.attribute.wx
+    - include: strings
+    - include: numbers
+    - match: "[A-Za-z_][A-Za-z0-9_]*"
+      scope: entity.other.attribute-name.wx
+    - match: '\]'
+      scope: punctuation.definition.attribute.end.wx
+      pop: true
+
+  strings:
+    - match: '"'
+      scope: punctuation.definition.string.begin.wx
+      push: string_body
+
+  string_body:
+    - meta_scope: string.quoted.double.wx
+    - match: '\\.'
+      scope: constant.character.escape.wx
+    - match: '"'
+      scope: punctuation.definition.string.end.wx
+      pop: true
+
+  chars:
+    - match: "'"
+      scope: punctuation.definition.string.begin.wx
+      push: char_body
+
+  char_body:
+    - meta_scope: string.quoted.single.wx
+    - match: '\\.'
+      scope: constant.character.escape.wx
+    - match: "'"
+      scope: punctuation.definition.string.end.wx
+      pop: true
+
+  numbers:
+    - match: '\b0[xX][0-9a-fA-F_]+\b'
+      scope: constant.numeric.integer.hexadecimal.wx
+    - match: '\b0[bB][01_]+\b'
+      scope: constant.numeric.integer.binary.wx
+    - match: '\b[0-9][0-9_]*\.[0-9][0-9_]*([eE][+-]?[0-9_]+)?\b'
+      scope: constant.numeric.float.wx
+    - match: '\b[0-9][0-9_]*[eE][+-]?[0-9_]+\b'
+      scope: constant.numeric.float.wx
+    - match: '\b[0-9][0-9_]*\b'
+      scope: constant.numeric.integer.decimal.wx

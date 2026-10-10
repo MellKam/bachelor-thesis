@@ -127,6 +127,10 @@
   // Code
   set raw(align: left)
   show raw: set text(font: layout.mono, size: 0.85em)
+  // Custom wx/wat grammars, each scoped to its own `lang` tag so neither
+  // overrides the built-in highlighting used for other languages.
+  show raw.where(lang: "wx"): set raw(syntaxes: "wx.sublime-syntax")
+  show raw.where(lang: "wat"): set raw(syntaxes: "wat.sublime-syntax")
   show raw.where(block: false): it => box(fill: luma(240), outset: (x: 2pt, y: 3pt), radius: 2pt, it)
   show raw.where(block: true): it => block(
     width: 100%,
