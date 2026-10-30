@@ -29,7 +29,8 @@
 
 #show: front-matter
 
-// Original Polish text, kept for the Polish edition (streszczenie):
+// Original Polish text from the thesis proposal. It no longer matches the thesis;
+// translate the English abstract below for the Polish edition (streszczenie).
 //
 //   WebAssembly (WASM) zajmuje obecnie istotną pozycję wśród platform docelowych dla
 //   języków programowania. Jednakże, wiele istniejących kompilatorów traktuje go
@@ -44,7 +45,11 @@
 //   funkcje języka i ilustruje jego praktyczne zastosowanie w procesach programowania
 //   webowego.
 #abstract[
-  WebAssembly (Wasm) currently holds a significant position among target platforms for programming languages. However, many existing compilers treat it much like a machine assembler, often producing bloated and inefficient bytecode. This thesis presents a programming language designed specifically for WebAssembly, optimized to make full use of Wasm's features and of ecosystem standards such as the WebAssembly Interface Types (WIT). The aim is to provide solid tooling support, including syntax highlighting and an implementation of the Language Server Protocol (LSP), while simplifying the debugging process through support for both the text and binary formats of Wasm. To demonstrate its effectiveness, I will present an example project that showcases the language's features and illustrates its practical use in web development workflows.
+  WebAssembly (Wasm) has been designed as a compilation target for a wide range of programming languages, but each language reaches it through its own programming model, which hides much of what the platform offers. A comparison of eight languages on thirty Wasm features, carried out for this thesis, shows that the entities of a module, such as memories, globals, tables and tags, are rarely available as language constructs, and that no language supports multiple memories.
+
+  This thesis explores representing Wasm's essential concepts in a language's semantics and type system, so that they are written in the source and checked by the compiler. In the proposed language, WX, every memory, global and function is an item with its own zero-sized type, and a trait implemented by the compiler describes what the item can do. Pointer types name the memory they point into, so a program can use several memories, both 32-bit and 64-bit, and write code that is generic over them. The same mechanism describes how any type is held on the Wasm stack: it decides which types a global can hold, checks reinterpretation between types, and makes the Wasm signature of a function follow directly from its source. Wasm instructions are typed functions in the standard library that take entities as items, never as integer indices. No runtime or memory-management model is imposed, so a program adopts the platform's capabilities as it needs them.
+
+  The idea is realised in WX, a proof-of-concept compiler written in Rust, and examined through its design, its implementation, a set of example programs and a comparison with other languages that target Wasm.
 ]
 
 #contents()
@@ -55,6 +60,9 @@
 #include "chapters/en/01-introduction.typ"
 #include "chapters/en/02-background.typ"
 #include "chapters/en/03-items.typ"
+#include "chapters/en/04-stack-values.typ"
+#include "chapters/en/05-calls.typ"
+#include "chapters/en/06-intrinsics.typ"
 
 #unnumbered[Bibliography]
 #bibliography("refs.bib", title: none, style: "ieee")

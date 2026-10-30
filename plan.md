@@ -13,10 +13,14 @@ deliberately declining to hide. Framing/versioning discipline (hybrid design-fir
 > is not asked to trust the design. The sections carried over from the earlier outline are kept verbatim as
 > source material under the chapter they now feed.
 > Chapter 3 was reordered on 2026-10-09: problem first, syntax last, with the table, tag and reference designs from
-> `notes/wx-tables-references-design.md` folded in as designed items. Chapter 7 gained a coverage map of the 30 features.
+> `notes/wx-tables-references-design.md` folded in as designed items. Chapter 9 (then 7) gained a coverage map of the 30 features.
 > Sections 1 and 2 below are the original plan. The written chapters differ: chapter 2 is a survey of eight
 > languages (exposure, integration, combined ranking, then design questions) and not the primer plus related work
 > that section 2 describes.
+> On 2026-10-30 a new chapter 4, "Stack Values", was inserted after Items (written:
+> `chapters/en/04-stack-values.typ`). Every chapter after it moved down by one, and again when chapter 5 (Functions, Calls and Structs) was
+> inserted the same day; the references below follow the new
+> numbers, except inside sections 1 and 2 and the carried-over source material, which keep the old ones.
 
 ## 1. Introduction
 
@@ -79,18 +83,18 @@ Chapter 2 ends on five design questions. Each one is answered in a named place, 
 
 | # | Question (Chapter 2) | Answered in | Checked in |
 |---|---|---|---|
-| 1 | Declared entities: memories, globals, imports and exports as typed constructs | Ch. 3 (items) | Ch. 7, wx through the Chapter 2 probes |
-| 2 | Several memories as part of the type system | Ch. 3, "Pointers carry their memory" | Ch. 7, probe 25 |
-| 3 | No imposed runtime or memory model | Ch. 3 (minimal core), Ch. 5 | Ch. 7, module sizes |
-| 4 | Checked access to raw instructions | Ch. 4 (intrinsics) | Ch. 7 |
-| 5 | Declared host boundary | Ch. 3, "Imports and exports" | Ch. 7, WASI example programs |
+| 1 | Declared entities: memories, globals, imports and exports as typed constructs | Ch. 3 (items) | Ch. 9, wx through the Chapter 2 probes |
+| 2 | Several memories as part of the type system | Ch. 3, "Pointers carry their memory" | Ch. 9, probe 25 |
+| 3 | No imposed runtime or memory model | Ch. 3 (minimal core), Ch. 7 | Ch. 9, module sizes |
+| 4 | Checked access to raw instructions | Ch. 6 (intrinsics) | Ch. 9 |
+| 5 | Declared host boundary | Ch. 3, "Imports and exports" | Ch. 9, WASI example programs |
 
 ## 3. Items: representing the platform's entities
 
 **The one idea of the chapter:** every WebAssembly entity (function, global, memory, tag, table) becomes a language
 *item*. An item's **identity** is a unique zero-sized type; its **shape** is what the compiler implements for that
 type. Everything else follows from taking that seriously. The chapter ends on the type-level guarantees only. The
-claim "no raw indexes" is completed in chapter 4, once it is shown that no intrinsic accepts an index. Say so in a
+claim "no raw indexes" is completed in chapter 6, once it is shown that no intrinsic accepts an index. Say so in a
 forward pointer.
 
 **Voice and order (revised 2026-10-09: problem first, syntax last).** Open with the problem in WAT, which readers
@@ -148,7 +152,7 @@ problem precise is ..."), because the storytelling rule forbids presenting the d
      `fn(i32) -> i32`. Handles are integers carrying their table and may live in memory; references are Wasm values
      and may not. Why Wasm has both (cross-module exchange, no per-call checks, no table needed; indices because C
      function pointers must be integers).
-   - *Where operations live.* `h.*` is `table.get`; `as_ref()` is `ref.func`. The mechanics belong to chapter 4.
+   - *Where operations live.* `h.*` is `table.get`; `as_ref()` is `ref.func`. The mechanics belong to chapter 6.
 8. **Imports and exports.** Principle: an imported item is the same kind of item as a defined one, only its origin
    differs. Evidence in the code: declared and imported memories and globals share one signature routine
    (`resolve_memory_signature`, `resolve_global_signature`). The import block (functions by signature; globals and
@@ -191,7 +195,7 @@ Scope each claim to what can be defended; the chapter must not drift from these.
 - **Status:** tables, tags, host types and references are designed only until codegen is back. Say so once per
   section, and put it in the status table.
 - **Completeness:** the aim is to expose every Wasm feature; the checkable form of that aim is the coverage map in
-  chapter 7 (Wasm 3.0 plus tracked proposals), not an unqualified statement.
+  chapter 9 (Wasm 3.0 plus tracked proposals), not an unqualified statement.
 
 **Extras to include**
 - Comparison box against Chapter 2 (for example memory limits: attribute in wx, linker flag elsewhere).
@@ -243,11 +247,8 @@ Scope each claim to what can be defended; the chapter must not drift from these.
 - `memory_copy<Size, SrcMem: Memory, DstMem: Memory where { Size = Size }>(...)` — memory as
   a genuine generic parameter, one function over *any two* declared memories. No other
   WASM-targeting language in the comparison set can express this half of the argument.
-- One-scalar-per-global restriction: type-checked by flattening the declared type to its
-  underlying WASM value slots and rejecting anything but exactly one — reuses whatever
-  flattening logic already backs multi-value returns/aggregate layout, rather than a new
-  special case. Diagnostic should name both standard workarounds (split into multiple
-  globals; store a pointer into linear memory instead).
+- ~~One-scalar-per-global restriction~~: moved to chapter 4 (Stack Values), where it is the bound
+  `Global::Value: StackValue where { Repr: StackScalar }`. Chapter 3 only points forward to it.
 - Global initializers: **constant-expression-only, no runtime/lazy initialization** —
   decided during this design pass after two real designs (a `lazy init` block, then a
   `#[start]`-attributed function) both ran into unresolved problems: combining multiple
@@ -257,7 +258,66 @@ Scope each claim to what can be defended; the chapter must not drift from these.
   in-progress subsystem, scoped back deliberately" material — cite it as exactly that, not
   as an oversight.
 
-## 4. Function bodies and intrinsics
+## 4. Stack Values: types on the WebAssembly stack
+
+*Written 2026-10-30: `chapters/en/04-stack-values.typ`.* Placed after Items because it answers what chapter 3's
+"value type" of a global means for WX types; the intrinsics chapter then uses `transmute` as known.
+
+**The one idea:** a WebAssembly restriction (a global holds exactly one value) becomes an ordinary trait bound instead
+of a special check, and the concept it needs (`StackValue::Repr`, a type's representation on the stack) also gives
+`transmute` and lets intrinsics be typed exactly as Wasm reads their operands. The second is presented as a consequence
+of the first.
+
+1. A global holds one value (WAT; requirements: one item one entity, generic code, no special case).
+2. Approaches considered: splitting a global (breaks platform transparency and the ABI), storing in memory (no longer
+   a global), the earlier `ValueType` marker (`4a2922a`, 2026-10-17; yes/no only, did not scale).
+3. `StackValue`/`StackScalar`, the `Repr` table, `!` excluded, stack versus memory values, declaration order (short).
+   `v128` in one sentence.
+4. `Global::Value: StackValue where { Repr: StackScalar }`, with a real E2063 diagnostic (`186ba25`).
+5. `transmute`; the reorder diagnostic (E2112); `Repr` not injective; `as` split into ascription and `transmute`
+   (one or two sentences, no history); `u32`'s `add` over `i32_add`.
+6. Generic code: canonical self type, kept light, with the soundness paragraph.
+7. The cost of a computed trait: lazy, so `Point::Repr` does not resolve; write `<Point as StackValue>::Repr`.
+8. Comparison with Rust, Zig, AssemblyScript. **Open:** rows are from knowledge; verify against docs and cite, or
+   extend probe 10 with a struct global.
+9. No status section: the chapter is written as if implemented. Status (TIR only, MIR must lower in declaration
+   order, `transmute` not yet unsafe) is a comment at the end of the `.typ` file; effects notes are added later.
+
+## 5. Functions, Calls and Structs
+
+*Written 2026-10-30: `chapters/en/05-calls.typ`.* Origin: designing the `Call` trait so generic code can take functions
+apart and rebuild them (`compose`). Everything else follows from it: one value per function (ML), no one-element tuple
+(`(T)`, `(T,)` and `T` are one type, unlike Rust), structs as calls, calls by name generalized from Rust's record
+structs to every declaration. Sources: `notes/wx-function-types.md` (rejected alternatives, §7),
+`notes/tir-body-checking-plan.md` ("Calls", "Named calls and parameter names", "Patterns").
+
+1. Describing a callable: `compose`; Rust's `Fn<(A,)>` and `"rust-call"`; variadic generics elsewhere.
+2. Every function takes one value: parameter-type table, no tuple of one, `Call`, a user `Call` impl; the `..` slot
+   design that came first and was dropped the same day; the surprising part, accepted.
+3. Filling the parameters: three cases, nothing regrouped, methods; real E2016 diagnostic.
+4. Structs are called: one form, optional field names, constructor checked as a call, visibility. The constructor is
+   not a value (E2110); possibly a function item later, kept as a comment in the `.typ`.
+5. Calls by name: rules; names belong to declarations, not types; traits own names; `self` as a name; order.
+6. Destructuring: basics only.
+7. Composition without variadics: `compose` with `add`, `divmod`, `Scale`, by name (all checked at `186ba25`).
+8. One value on the stack: Wasm type = `Repr` of `Args` -> `Repr` of `Result` (back to chapter 4).
+9. Comparison: Standard ML, Rust, Swift (SE-0029, SE-0110), Python, Kotlin. **Open:** verify and cite.
+   Function references (`call_ref`, `as_ref()`) get one sentence here; their design belongs to chapters 3 and 6.
+
+## 6. Intrinsics: Instructions as Functions
+
+*Written 2026-10-30: `chapters/en/06-intrinsics.typ`.* Decided in the interview: the user's view only. An intrinsic is a
+bodiless function in the core library whose meaning the compiler supplies; how the compiler recognizes it is an
+internal detail and not settled (kept as a comment in the `.typ`). No history of earlier intrinsic syntaxes. Native
+lowering of primitive operators is an internal detail too and is left out. Sections: instructions in the core library
+(typed as Wasm reads them, signed/unsigned split, explicit conversions, coverage grows by declarations); entities as
+arguments (completes "no raw indexes"; real E2112 for `memory_copy` across address types); from instruction to
+method (intrinsic, trait default, user code; `global_get` private); `trap` and `!`; memory access is syntax (places,
+postfix `.*`/`.&`/`[i]`/`.field`, not overloadable for now); comparison with clang, Rust, Zig, AssemblyScript
+(**open:** verify and cite). Control flow is not covered here.
+
+The notes below are the earlier plan for this chapter, kept as source material.
+
 
 *Decided: intrinsics are introduced here, not in chapter 3.* Chapter 3 ends by pointing forward to this chapter.
 
@@ -290,10 +350,10 @@ Scope each claim to what can be defended; the chapter must not drift from these.
   the first place, so there's no such pass hiding in the pipeline. Brief mention of `match`
   → `br_table` as another instance, full treatment deferred to wherever enums/match land.
 
-## 5. Types, values and ownership
+## 7. Types, values and ownership
 
 *Open: where structs, pointers and the ownership sigils belong in the story. Decide before writing this chapter.*
-It may merge into chapter 4. Material carried over from the earlier outline, sections 5 and 6:
+It may merge into chapter 6. Structs, construction and patterns moved to chapter 5. Material carried over from the earlier outline, sections 5 and 6:
 
 - Untyped literals: `Type::Integer`/`Type::Float` as real placeholder types (pre-interned
   indices 4/5), forced annotation, **no default-to-i32** (deliberate departure from Rust —
@@ -301,9 +361,8 @@ It may merge into chapter 4. Material carried over from the earlier outline, sec
   `i32.const`/`i64.const`/etc. are different instructions). `{integer}`/`{float}` diagnostic
   spelling mirrors Rust's own convention — a borrowed-on-purpose detail.
 - String literals as `&[u8]` — no dedicated string type, reuse over invention.
-- `as` casts: explicit-only, no implicit widening. Forward-pointer only here; the honest
-  limitations (`u32 as char` lossy, `&T as *T` ownership-erasing) belong in §9's evaluation,
-  not here.
+- ~~`as` casts~~: removed (`90b7601`, 2026-10-29). Ascription `(5: u8)` gives a value its type,
+  `transmute` reinterprets (chapter 4), an intrinsic changes a representation. Mention ascription here only.
 - `!` (bottom type, renamed from `never` — decided during this design pass, see devlog) and
   diverging expressions' interaction with block-value typing. Sets up the effects chapter's
   `-> !` usage without re-deriving it there. Note the considered-and-kept-as-sugar
@@ -322,7 +381,7 @@ It may merge into chapter 4. Material carried over from the earlier outline, sec
 - Flag honestly: **this is still-evolving design as of this writing**, not settled/shipped —
   don't overclaim status here.
 
-## 6. The compiler pipeline (full chapter)
+## 8. The compiler pipeline (full chapter)
 
 *Decided: a full pipeline chapter, parser to codegen, not a short current-state chapter.* Framed as evidence for the
 design chapters, not a parallel narrative.
@@ -336,7 +395,7 @@ design chapters, not a parallel narrative.
 - Status stated plainly per claim: MIR, opt and codegen are disabled mid-`tir-refactor` and are planned to work
   again before submission. Cite a commit and date for anything taken from `tir-refactor`.
 
-## 7. Evaluation
+## 9. Evaluation
 
 - **Run wx through the Chapter 2 probes** for the features it ships (memory configuration, globals, imports and
   exports, multiple memories). This turns the survey into a measured yardstick. It depends on codegen working again.
@@ -371,8 +430,8 @@ design chapters, not a parallel narrative.
 | 20 | Tail calls | Absent | no `return_call` |
 | 21 | Extended constant expressions | Unchecked | |
 | 22 | Typed function references | Designed | reference form of `fn`, `as_ref()`, `call_ref` |
-| 23 | GC structs and arrays | Idea | chapter 9 future work only |
-| 24 | GC casts, subtyping, i31, packed fields | Idea | chapter 9 future work only |
+| 23 | GC structs and arrays | Idea | chapter 11 future work only |
+| 24 | GC casts, subtyping, i31, packed fields | Idea | chapter 11 future work only |
 | 25 | Multiple memories | Implemented | several `memory` items; pointers carry their memory |
 | 26 | Relaxed SIMD | Absent | |
 | 27 | Exception tags | Designed | `tag`, `Tag`, `Exception` (`notes/post.md`) |
@@ -395,14 +454,15 @@ design chapters, not a parallel narrative.
   intellectual core; don't give this chapter-level depth.
 - **Honest limitations section**, reconciling every earlier "shipped" claim against what
   actually compiles and runs today:
-  - `as`-cast gaps: lossy casts (`u32 as char`) pass; pointer casts only compare `memory`,
-    not ownership (`&T as *T` silently defeats read-only).
+  - ~~`as`-cast gaps~~: resolved by removing `as` (chapter 4). What remains: `transmute` is not yet
+    unsafe, so a `Bool` from 2 or an invalid enum discriminant still type-checks; reinterpreting through memory
+    pointers (`M::*S` as `M::*T`) has no check at all.
   - Struct positional-construction safety tradeoff from §6 (transposition risk on
     same-typed fields, mitigated only by choosing to keep fields private).
   - Effect system: fully unimplemented, plus the still-open init/allocation conflict.
   - Any other gaps surfaced while writing §4–§8 that didn't get flagged inline.
 
-## 8. Effect tracking (separate chapter, designed and not implemented)
+## 10. Effect tracking (separate chapter, designed and not implemented)
 
 *Decided: its own chapter, placed after the evaluation so that the implemented story is not interrupted. Deferred for
 now: first finish the chapters on items and function bodies.* Opens with an explicit "designed, not implemented"
@@ -464,7 +524,7 @@ for implementation mechanics; `notes/effect-system.md` (2026-08-11) only for
   effect-clause parsing, no `Effect` type, no `tag`/`catch` keyword in
   `crates/wx-compiler/src` as of this writing).
 
-## 9. Conclusion and future work
+## 11. Conclusion and future work
 
 - Ownership/borrowing (if not folded into an earlier chapter).
 - Remaining effect-system open questions: multi-start-function ordering, init-time effects.

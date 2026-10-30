@@ -99,7 +99,7 @@ This section captures where the WebAssembly ecosystem stands today, as seen from
 
 The route column matters for reading the results. Rust, Zig, C/C++, Swift and TinyGo all compile through LLVM and link with `wasm-ld`, so they share whatever that path can and cannot express. AssemblyScript emits WebAssembly directly and uses Binaryen as its optimiser. MoonBit and Kotlin have their own backends, which is how they can offer features, such as Wasm GC, that LLVM does not. #todo[Verify the `wasm-ld` and Binaryen claims against primary sources.]
 
-*How it was verified.* For every test, we write a small program with the language's official documentation and idioms and build it with its standard toolchain, pinned in a container. A checker inspects the compiled `.wasm`, by decoding it, instantiating it in V8 or running it under Wasmtime or Node; our own impression never decides a result. Everything below is a snapshot of pinned versions taken between 2026-10-02 and 2026-10-09. It is indicative, not exact: a later release, a more idiomatic program or a cleverer approach could move individual cells. The full study, with every probe, the checker and the per-cell evidence, is in the project repository @wx-study. #todo[pin commit hash or tag]
+*How it was verified.* For every test, I wrote a small program following the language's official documentation and idioms, and built it with its standard toolchain, pinned in a container. A checker script inspects the compiled `.wasm`: it decodes it, instantiates it in V8, or runs it under Wasmtime or Node. My own impression never decides a result. Everything below is a snapshot of pinned versions taken between 2026-10-02 and 2026-10-09. It is indicative, not exact: a later release, a more idiomatic program or a cleverer approach could move individual cells. The full study, with every probe, the checker and the per-cell evidence, is in the project repository @wx-study. #todo[pin commit hash or tag]
 
 == Exposure <sec:exposure>
 
@@ -124,7 +124,7 @@ Thirty features from the released versions of the specification (1.0, 2.0 and 3.
 
 === How it is rated <sec:exposure-rating>
 
-The counts of results are the evidence. A single score between 0 and 1 per language summarises them: each feature counts fully, partially or not at all, is discounted for every obstacle on the way (a build option, hand-written assembly, an experimental or nightly compiler, a runtime shipped in every module, a restricted host, or a different backend), and counts more if it belongs to the module core that every program uses. The discounts and weights are our own choice and are listed in the repository. They are meant to order the languages roughly, not to measure them to the second decimal.
+The counts of results are the evidence. A single score between 0 and 1 per language summarises them: each feature counts fully, partially or not at all, is discounted for every obstacle on the way (a build option, hand-written assembly, an experimental or nightly compiler, a runtime shipped in every module, a restricted host, or a different backend), and counts more if it belongs to the module core that every program uses. The discounts and weights are my own choice and are listed in the repository. They are meant to order the languages roughly, not to measure them to the second decimal.
 
 === Results <sec:results>
 
@@ -193,7 +193,7 @@ Exposure says how much of the platform a language lets the developer reach. Inte
 
 === How it is rated <sec:integration-rating>
 
-Criteria I1 to I3 are scored by *route*, from best to worst: built into the language's own toolchain, an official extra tool (from the language's project or the Bytecode Alliance), a community tool, or glue the developer writes by hand. A route without direct support scores 0. Size is scored on a log scale, so that one very large runtime does not flatten the rest: a build 1000 times the smallest scores 0. The integration score is the weighted mean of I1 to I5, with the weights given in @fig:integration. As with exposure, these coefficients are our choice and the score is only a summary.
+Criteria I1 to I3 are scored by *route*, from best to worst: built into the language's own toolchain, an official extra tool (from the language's project or the Bytecode Alliance), a community tool, or glue the developer writes by hand. A route without direct support scores 0. Size is scored on a log scale, so that one very large runtime does not flatten the rest: a build 1000 times the smallest scores 0. The integration score is the weighted mean of I1 to I5, with the weights given in @fig:integration. As with exposure, these coefficients are my choice and the score is only a summary.
 
 === Results <sec:integration-results>
 
@@ -217,7 +217,7 @@ Criteria I1 to I3 are scored by *route*, from best to worst: built into the lang
 
 #todo[First draft, written from the generated data; the commentary needs a review pass.]
 
-The two scores are combined as #ch.w-exposure × exposure + #ch.w-integration × integration, so that exposure, the subject of this thesis, counts a little more. The split is our choice. @fig:combined shows the result, with each bar divided into the part contributed by each axis.
+The two scores are combined as #ch.w-exposure × exposure + #ch.w-integration × integration, so that exposure, the subject of this thesis, counts a little more. The split is my choice. @fig:combined shows the result, with each bar divided into the part contributed by each axis.
 
 #figure(
   ch.combined-figure(),
@@ -230,7 +230,7 @@ The two scores are combined as #ch.w-exposure × exposure + #ch.w-integration ×
 
 *The axes pull in different directions.* TinyGo moves from place #ch.place-of(ch.by-exposure, "tinygo") to place #ch.place-of(ch.by-combined, "tinygo"): it covers little of the platform but its modules are among the best integrated. Swift moves from place #ch.place-of(ch.by-exposure, "swift") to place #ch.place-of(ch.by-combined, "swift"), with no component route and the largest modules.
 
-*How to read these numbers.* They are a snapshot of our probes against pinned toolchains, and we are not equally expert in every language. The probe set samples the specification rather than covering it, the integration programs are small, and a cell marked _not found_ means no way was found, which is weaker than impossible. Some routes are counted conservatively: a hand-built component is not support for components. The study does not test whether a language checks the host boundary for safety. The scores summarise the counts and are not a verdict on any language.
+*How to read these numbers.* They are a snapshot of my probes against pinned toolchains, and I am not equally expert in every language. The probe set samples the specification rather than covering it, the integration programs are small, and a cell marked _not found_ means no way was found, which is weaker than impossible. Some routes are counted conservatively: a hand-built component is not support for components. The study does not test whether a language checks the host boundary for safety. The scores summarise the counts and are not a verdict on any language.
 
 == Synthesis and design questions <sec:synthesis>
 
@@ -247,7 +247,7 @@ The core of WebAssembly is well covered. #ch.cap-first(ch.list-of(ch.construct-i
 
 Some of these gaps belong to the toolchain more than to the language. Where the five languages that compile through LLVM and `wasm-ld` all lack a construct that a language with its own backend offers, the toolchain is the more likely cause: this holds for #ch.list-of(ch.llvm-gap). Where no language offers a construct at all (#ch.list-of(ch.construct-in-none)), the cause is more likely the platform's youth, or an interface, such as linker flags, that every toolchain exposes in the same way. A language that controls its own compiler is not bound by either, which is why the questions below are about the language and not only about one toolchain. #todo[Verify that the shared LLVM gaps (single memory, no start section, memory and data placement) come from `wasm-ld`, with primary sources.]
 
-The gaps lead to five questions, which the design in Chapter 3 sets out to answer.
+The gaps lead to five questions. Chapters 3 to 6 answer them for WX.
 
 + *Declared entities.* Memory limits and names are set by a build option in #ch.n-by-route("02", "config") of the #ch.n-languages languages and cannot be reached at all in Kotlin. Globals are a language construct only in #ch.languages-where("10", ch.is-construct).map(ch.lang-name).join(", ", last: " and "). Tables appear only implicitly, as the target of indirect calls (a construct in #ch.n-by-route("03", "construct") languages): importing or exporting one is a build option in #ch.n-by-route("04", "config") languages, and a second table needs inline assembly in #ch.n-by-route("18", "asm") and is absent in the rest. Tags are a construct only in #ch.languages-where("27", ch.is-construct).map(ch.lang-name).join(", ", last: " and "). Imports and exports are a construct in every language, which shows that a module entity can be declared in the source. Can memories, globals and a module's imports and exports all be typed constructs, instead of build options or assembly? Tables and tags raise the same question, but the implementation does not cover them (@sec:scope).
 + *Several memories.* Multiple memories are reached by no language. Can a program use more than one memory, with each memory part of the type system and not an accident of the toolchain?

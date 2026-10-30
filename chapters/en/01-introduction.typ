@@ -32,6 +32,16 @@ The implementation follows these design principles:
 + *Minimal core, opt-in capabilities.* The baseline language is as lean as core WebAssembly. No memory-management model, runtime, or extension is forced onto the developer. Programs adopt additional capabilities incrementally, as needed.
 + *Uniform mechanisms.* There is one mechanism for each kind of problem. New WebAssembly features, such as garbage collection or stack switching, should be expressible through existing mechanisms instead of requiring a new category of language construct.
 
+== Contributions <sec:contributions>
+
+The thesis makes the following contributions:
+
++ *A comparison of how languages expose WebAssembly* (@ch:background). Eight languages are tested on thirty features of the specification and on how easy their modules are to use. Every result comes from a small program, compiled with a pinned toolchain and checked automatically. The study is published with all its programs, so it can be repeated.
++ *Items: the platform's entities as types* (@ch:items). In WX, every memory, global and function is an item with its own zero-sized type, and a trait that the compiler implements describes what the item can do. A pointer type says which memory it points into. This makes several memories, and code that is generic over memories, part of the type system.
++ *The same mechanism for values and calls* (@ch:stack-values, @ch:calls). A trait computed by the compiler describes how any WX type is held on the WebAssembly stack. It decides which types a global can hold, checks reinterpretation between types, and makes a function's WebAssembly signature follow directly from its WX signature.
++ *Instructions as typed functions* (@ch:intrinsics). WebAssembly instructions are functions in the standard library. An instruction that names an entity takes the entity's item, never an integer index.
++ *A compiler* written in Rust that implements this design, with tests for each part. Every error message shown in the design chapters was produced by it.
+
 == Scope <sec:scope>
 
 The main scope of this thesis is to design such a language and show how the idea works in practice. The implementation therefore serves as a proof of concept, built to show whether the language is practical to write real programs in, while objectively outlining its limitations and the future work needed to fully implement the idea.
@@ -44,6 +54,14 @@ The implementation covers the following:
 + *Imports and exports.* Explicit declarations in the source.
 + *Code generation and optimization.* WebAssembly code generation, with passes such as inlining and dead-code elimination.
 
+During this thesis the type checker was rewritten from scratch. The design chapters describe the language as the new type checker implements it. The code generator worked with the first type checker and is being connected to the new one.
+
+#todo[Update this paragraph when code generation works again on the new type checker.]
+
 Practicality is tested through a set of example programs, each exercising a different part of the design, including programs that use the operating system through WASI Preview 1. The results are checked against the principles in @sec:goals, and any limitations found along the way are reported as findings.
 
 More advanced ideas, including effect tracking, WebAssembly GC integration, stack switching, and parts of the memory-safety model, remain design work or future extensions.
+
+== Structure of the thesis <sec:structure>
+
+@ch:background introduces the structure of a WebAssembly module and compares how eight languages expose it. The comparison ends with five design questions. @ch:items answers the first two: it shows how WX represents memories, globals and functions as items with their own types, and how pointers carry their memory. @ch:stack-values uses the same mechanism to describe how values are held on the WebAssembly stack. @ch:calls shows how function calls follow from that description. @ch:intrinsics shows how instructions become typed functions. #todo[Add the remaining chapters when they exist: the compiler, the evaluation (WX through the Chapter 2 probes), and the conclusion with future work.]
