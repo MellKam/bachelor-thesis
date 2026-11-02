@@ -10,38 +10,38 @@ WX syntax is based on Rust, and its keywords for entities come from the WebAssem
 
 #figure(
   ```wx
-  memory heap: u32;                   // a linear memory with 32-bit addresses
-  global mut count: u32 = 0;          // a mutable global
-
-  import "env" as env {
-      func log(value: u32);           // a function the host provides
+  import "host" as host {
+      global step: i32;
+      func log(value: i32);
   }
 
-  func sum(xs: heap::&[u32]) -> u32 {
-      local mut total: u32 = 0;
-      local mut i: u32 = 0;
-      loop {
-          if i == xs.len() { break };
-          total += xs[i];
-          i += 1;
-      };
-      count.set(count.get() + 1);
-      env::log(total);
-      total
+  global mut count: i32 = 0;
+
+  func increment() {
+      local next = count.get() + host::step.get();
+      count.set(next);
+      host::log(next);
   }
 
-  export { heap as "memory", sum }
+  func decrement() {
+      local next = count.get() - host::step.get();
+      count.set(next);
+      host::log(next);
+  }
+
+  export { count, increment, decrement }
   ```,
   caption: [A small WX module.],
 ) <lst:wx-tour>
 
-A few things in this listing differ from Rust and are used in every chapter:
+When the module is instantiated, the host supplies the global `step` and an implementation of `log`. Calling `increment` or `decrement` changes the counter by that step and logs its new value. The counter is also exported, so the host can read or update it directly. The listing introduces a few basic constructs:
 
-- `func`, `global` and `memory` declare the WebAssembly entity of the same name. `local` declares a local variable.
-- Every pointer type names the memory it points into: `heap::&u32` is a shared pointer to a `u32` in `heap`, and `heap::*u32` is an exclusive one. `heap::&[u32]` is a slice. The compiler rejects a write through a `&` pointer, but the full ownership rules behind the two are designed and not checked yet.
-- `p.*` reads or writes the value a pointer points at, and `xs[i]` an element of a slice (@sec:memory-access).
-- A bound can fix an associated type: `M: Memory where { Size = u32 }` means "any memory with 32-bit addresses". This is Rust's `Iterator<Item = u8>`, written differently.
-- A literal such as `0` has no default type. Its type always comes from the context, here from `u32` in the declaration.
+- `global mut` declares a mutable WebAssembly global. Its value persists between calls, and `get` and `set` read and update it.
+- `func` declares a function, and `local` declares a variable within it. Each call computes a new `next`, whose type is inferred as `i32`. It needs no `mut` because it is never reassigned.
+- `import` declares entities supplied by the host. In `import "host" as host`, the string names the external import namespace, and the name after `as` is used to access its entities in WX. The imported global has no initializer; its value comes from the host. Without `mut`, `step` can be read but not updated by the module.
+- `export` makes globals and functions available to the host. The exported `count` is the same global that the two functions update.
+
+Globals are accessed through `get` and `set` to distinguish access to module state from ordinary local computation. The traits behind these methods are explained in @sec:global-access.
 
 == Entities are numbers in WebAssembly <sec:identity-shape>
 
@@ -70,11 +70,21 @@ So a program needs both: what kind of entity it is and which one (its *identity*
     align: (left, left, left),
     table.header([Kind], [Shape: what a use is checked against], [In WX]),
     table.hline(stroke: 0.5pt),
-    [Function], [parameter and result types], [implemented],
-    [Global], [value type, mutability], [implemented],
-    [Memory], [address type (32 or 64 bits)], [implemented],
-    [Table], [reference type, address type], [designed],
-    [Tag], [payload types], [designed],
+    [Function],
+    [parameter and result types],
+    [implemented],
+    [Global],
+    [value type, mutability],
+    [implemented],
+    [Memory],
+    [address type (32 or 64 bits)],
+    [implemented],
+    [Table],
+    [reference type, address type],
+    [designed],
+    [Tag],
+    [payload types],
+    [designed],
   ),
   caption: [The kinds of WebAssembly entity and their shape.],
 ) <tbl:kinds>
@@ -87,7 +97,7 @@ This gives three goals for the design:
 
 == Every item is a type <sec:items-as-types>
 
-In WX, every entity is declared as an item, and every item has its own type. The declaration `memory heap: u32;` creates an item `heap` and a type that is also called `heap`. This type is *zero-sized*: its values take no space at run time. It has exactly one value, which is also written `heap`. So the name `heap` can be used in three places:
+In WX, every entity is declared as an item, and every item has its own type. The declaration `memory heap: u32;` creates an item `heap` and a type that is also called `heap`. This type is *zero-sized*: its values take no space at run time. It has exactly one value, which is also written `heap`. Item names can be used in three roles:
 
 - *As a type:* in a pointer type `heap::&u32`, or as a generic argument, as in `size_of::<T, heap>()`.
 - *As a value:* `count.get()` calls a method on the global `count`.
@@ -101,6 +111,8 @@ Rust has a similar idea. Every Rust function has its own zero-sized type, so two
 
 == Pointers carry their memory <sec:pointers-memory>
 
+A linear memory is a growable array of bytes, measured in 64 KiB pages @wasm-spec-modules. The `u32` in `memory heap: u32;` is its address type, not its current size. WX also accepts `memory heap: u64;` for Memory64. These address types describe potential address spaces of 4 GiB and 16 EiB respectively; neither size is allocated by the declaration alone.
+
 With the multi-memory extension, a module can have several linear memories @wasm-multi-memory. Each memory has its own addresses, and every load and store instruction names its memory as an immediate. A pointer type that only says what it points to, like `*u8`, is not enough: two pointers of that type can point into different memories, and the compiler must know which memory to use for each load.
 
 One option is a *fat pointer*, which stores the memory index next to the address at run time. This costs space for every pointer, and because a load names its memory as an immediate, a memory index known only at run time would need a branch over all memories at every access.
@@ -111,17 +123,17 @@ WX puts the memory in the pointer's type instead. `heap::*u8` is a pointer to a 
   kind: raw,
   supplement: [Listing],
   text(size: 0.8em)[
-  ```text
-  // memory heap: u32;
-  // memory io: u32;
-  // func read(p: heap::&u32) -> u32 { p.* }
+    ```text
+    // memory heap: u32;
+    // memory io: u32;
+    // func read(p: heap::&u32) -> u32 { p.* }
 
-  error[E2001]: type mismatch
-       ┌─ /main.wx:2381:39
-       │
-  2381 │ func wrong(p: io::&u32) -> u32 { read(p) }
-       │                                       ^ expected `heap::&u32`, found `io::&u32`
-  ```
+    error[E2001]: type mismatch
+         ┌─ /main.wx:2381:39
+         │
+    2381 │ func wrong(p: io::&u32) -> u32 { read(p) }
+         │                                       ^ expected `heap::&u32`, found `io::&u32`
+    ```
   ],
   caption: [A pointer into one memory used where a pointer into another is expected. The test appends its source to the standard library, hence the line number. Compiler at `186ba25`, branch `tir-refactor`, 2026-10-30.],
 ) <fig:cross-memory>
@@ -132,15 +144,15 @@ There is no default memory. A pointer type without a memory is an error, even in
   kind: raw,
   supplement: [Listing],
   text(size: 0.8em)[
-  ```text
-  error[E2038]: a pointer type must name its memory
-       ┌─ /main.wx:2378:14
-       │
-  2378 │ func read(p: *u32) -> u32 { p.* }
-       │              ^^^^ no memory written here
-       │
-       = write the memory before the sigil: `heap::*T`, or a memory parameter `Mem::*T`
-  ```
+    ```text
+    error[E2038]: a pointer type must name its memory
+         ┌─ /main.wx:2378:14
+         │
+    2378 │ func read(p: *u32) -> u32 { p.* }
+         │              ^^^^ no memory written here
+         │
+         = write the memory before the sigil: `heap::*T`, or a memory parameter `Mem::*T`
+    ```
   ],
   caption: [A pointer type without a memory. The test appends its source to the standard library, hence the line numbers. Compiler at `186ba25`, branch `tir-refactor`, 2026-10-30.],
 ) <fig:untagged-pointer>
@@ -175,23 +187,21 @@ Generic code can now work with any memory and still use the right address type. 
   kind: raw,
   supplement: [Listing],
   text(size: 0.8em)[
-  ```text
-  error[E2112]: type mismatch resolving `<M as Memory>::Size == u32`
-       ┌─ /main.wx:2379:63
-       │
-  2079 │     DstMem: Memory where { Size = Size },
-       │                                   ---- required by this equality in `memory_copy`
-       ·
-  2379 │ func copy<M: Memory>(dst: M::*u8, src: heap::&u8, len: u32) { memory_copy(dst, src, len) }
-       │                                                               ^^^^^^^^^^^ expected `u32`, found `<M as Memory>::Size`
-  ```
+    ```text
+    error[E2112]: type mismatch resolving `<M as Memory>::Size == u32`
+         ┌─ /main.wx:2379:63
+         │
+    2079 │     DstMem: Memory where { Size = Size },
+         │                                   ---- required by this equality in `memory_copy`
+         ·
+    2379 │ func copy<M: Memory>(dst: M::*u8, src: heap::&u8, len: u32) { memory_copy(dst, src, len) }
+         │                                                               ^^^^^^^^^^^ expected `u32`, found `<M as Memory>::Size`
+    ```
   ],
   caption: [Generic code that assumes a 32-bit memory. `memory_copy` is shown in @sec:intrinsic-entities. The test appends its source to the standard library, hence the line numbers. Compiler at `186ba25`, branch `tir-refactor`, 2026-10-30.],
 ) <fig:generic-memory>
 
- A program cannot implement `Memory` for its own types, because its methods need a real WebAssembly memory behind them.
-
-Globals work the same way. For `global mut count: u32 = 0;` the compiler implements `Global` with `type Value = u32`, which gives the method `get`, and `GlobalMut`, which gives `set`. A global declared without `mut` gets only `Global`, so a program cannot write to it: the `set` method does not exist for it. Which values a global may hold is the subject of @ch:stack-values.
+A program cannot implement `Memory` for its own types, because its methods need a real WebAssembly memory behind them.
 
 === Typesets <sec:typesets>
 
@@ -229,6 +239,51 @@ Globals work the same way. For `global mut count: u32 = 0;` the compiler impleme
 
 A typeset is used in bounds like a trait, but it cannot be implemented: its members are listed only in its declaration. It can also require traits, so every member of `PointerSize` also has addition, comparison and the other operations that generic code needs on an address.
 
+=== Globals and explicit access <sec:global-access>
+
+Globals use the same item-and-trait mechanism. For `global mut count: i32 = 0;`, the compiler implements `Global` with `type Value = i32` and also implements `GlobalMut`. The first trait provides `get`, and the second adds `set`. An immutable global, such as the imported `step` in @lst:wx-tour, gets only `Global`, so it has no `set` method.
+
+The traits below are shortened to show their associated value type and operations. The bounds that restrict which values a global can hold are explained in @ch:stack-values.
+
+```wx
+pub trait Global {
+    type Value;
+
+    func get(self: Self) -> Self::Value {
+        global_get(self)
+    }
+}
+
+pub trait GlobalMut: Global {
+    func set(self: Self, value: Self::Value) {
+        global_set(self, value)
+    }
+}
+```
+
+The functions `global_get` and `global_set` provide typed access to the corresponding WebAssembly instructions (@ch:intrinsics). `GlobalMut: Global` means that every writable global also supports reading.
+
+The name `count` identifies the global item; `count.get()` produces its stored `i32` value. The arithmetic in `count.get() + 1` therefore operates on an ordinary integer, while `get` and `set` explicitly identify access to module state. A local variable such as `next` holds a value within one call and can be used directly in expressions.
+
+This distinction is deliberate. Reading a mutable global observes state that other calls or the host can change, and writing it changes that state. The extra syntax makes both operations visible in the source. Reading an immutable global does not have the same dependence on changing state, but uses the same access method for consistency. Keeping global access in functions also provides a basis for future effect tracking, where effect information can be attached to those calls.
+
+Generic code uses the same methods. The counter update in @lst:wx-tour can be written as a function that accepts any mutable global holding an `i32`:
+
+```wx
+func adjust<G: GlobalMut where { Value = i32 }>(g: G, delta: i32) -> i32 {
+    local next = g.get() + delta;
+    g.set(next);
+    next
+}
+
+func increment() {
+    local next = adjust(count, host::step.get());
+    host::log(next);
+}
+```
+
+The bound `G: GlobalMut` provides both methods, and `Value = i32` fixes the stored value type so that addition is valid. Passing `count` supplies its item value, whose type identifies the global; it does not copy the stored integer. The compiler infers `G` from that argument. The same function can update another mutable `i32` global, including an imported one. Passing the immutable `host::step` as the first argument is rejected because it does not implement `GlobalMut`.
+
 == Imports and exports <sec:items-imports>
 
 An imported entity is the same kind of item as a defined one. Only its origin is different. An import block names the host module and declares what it expects from it:
@@ -251,6 +306,31 @@ export { sum, heap as "memory" }
 
 The compiler assigns all indices at code generation, imports first. A program never writes or computes an index, so adding an import never changes existing code.
 
+Memory limits are written with `#[memory_limits(min_pages = 1, max_pages = 10)]` before a memory declaration. The compiler raises the initial page count when static data needs more space, and raises a stated maximum as well if it falls below that count. Thus `max_pages` is not checked as a strict source-level limit.
+
+== Multiple memories at the host boundary <sec:multi-memory-host>
+
+An address passed to an imported function is only a number. To read the bytes at that address, the host must also have access to the memory containing them. A module can import a memory supplied by the host or define one and export it. Either way, the party receiving access can read or write the *whole memory*, not just the range passed to a function @wasm-spec-modules. If a module exports the memory holding its internal data merely to pass a string, that data becomes accessible to the host too. The multiple-memories proposal names separation of public and private data as one motivation @wasm-multi-memory.
+
+WX gives the exchange its own memory:
+
+```wx
+memory host_io: u32;
+memory private_mem: u32;
+
+import "host" as host {
+    func write(message: host_io::&[u8]);
+}
+
+func main() {
+    host::write("hello world");
+}
+
+export { main, host_io as "memory" }
+```
+
+The parameter type `host_io::&[u8]` fixes the string literal's memory. The host receives its offset and length and reads those bytes from the exported `host_io`. `private_mem` is not exported, so the host has no direct memory access to it. A value of type `private_mem::&[u8]` cannot be passed to `host::write`: the two pointers name different memories, and the mismatch is checked by the type system (@sec:pointers-memory). The same separation can use a host-supplied `host_io` imported into the module, provided the host reserves that entire memory for exchange. WX's memory names are a source-level guarantee; the host function must still interpret the numeric offset against the agreed memory.
+
 == Tables and tags: designed, not implemented <sec:items-kinds>
 
 Tables and tags are not implemented. The design follows the same pattern. A table would be declared like a memory, and the compiler would implement a trait that gives its operations (`table.get`, `table.set`, `table.grow`). A handle to a table slot would carry its table in its type, as a pointer carries its memory. A tag would be declared like a struct with a payload, and the compiler would implement a `Tag` trait for it. These designs are kept short here because none of them can be tested yet. #todo[Expand only if tables or tags are implemented before submission; source: `notes/wx-tables-references-design.md`.]
@@ -265,9 +345,15 @@ Every part of this chapter uses the same mechanism: a short declaration creates 
     align: (left, left, left),
     table.header([Declaration], [Type], [Impl written by the compiler]),
     table.hline(stroke: 0.5pt),
-    [`memory heap: u32;`], [`heap`], [`Memory` with `Size = u32`],
-    [`global mut count: u32 = 0;`], [`count`], [`Global` with `Value = u32`, and `GlobalMut`],
-    [`func add(a: i32, b: i32) -> i32`], [`add`], [`Call` with `Args = (i32, i32)`, `Result = i32` (@ch:calls)],
+    [`memory heap: u32;`],
+    [`heap`],
+    [`Memory` with `Size = u32`],
+    [`global mut count: u32 = 0;`],
+    [`count`],
+    [`Global` with `Value = u32`, and `GlobalMut`],
+    [`func add(a: i32, b: i32) -> i32`],
+    [`add`],
+    [`Call` with `Args = (i32, i32)`, `Result = i32` (@ch:calls)],
   ),
   caption: [Declarations, their item types and the traits the compiler implements for them.],
 ) <tbl:items-mechanism>

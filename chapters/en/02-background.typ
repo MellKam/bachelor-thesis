@@ -6,6 +6,8 @@
 
 = Background and Related Work <ch:background>
 
+This chapter introduces the WebAssembly concepts needed to understand WX, then compares how existing languages expose them. The comparison examines access to platform features and integration with hosts, and ends with questions that guide WX's design.
+
 // Chapter plan (see also chapter-2-test-matrix.md):
 //   2.1 The structure of a WebAssembly module          written
 //   2.2 Comparing languages                             first draft (shared design, evidence, scores)
@@ -26,9 +28,7 @@ A WebAssembly program is delivered as a module: a self-contained unit that a hos
 
 A module can define these entities itself or import them from the host, and it can choose which of its entities to export @wasm-spec-modules.
 
-This thesis uses WAT, the text format of WebAssembly, to illustrate modules. Parentheses group the different parts of a module, and names beginning with `$` identify entities. Instructions can be nested for readability. For example, `(call $log (i32.const 42))` passes the constant `42` to `$log`. Although written in nested form, the instructions execute in sequence: the constant is evaluated before the function is called.
-
-Consider the small module in @lst:wat-example.
+This thesis uses WAT, the text format of WebAssembly, to illustrate modules. Parentheses group the parts of a module, and names beginning with `$` identify entities. In @lst:wat-example, the nested instructions pass the constant `42` to the imported function `$log`.
 
 #figure(
   ```wat
@@ -55,27 +55,25 @@ Three properties help enforce this boundary:
 + *Structured control flow.* Branches follow WebAssembly's structured control-flow rules, and indirect calls are checked against the expected function type. These rules constrain execution, although they do not prevent bugs within the module.
 + *External access goes through imports.* Files, network access, and the system clock are not inherently available to a module. The host must expose such capabilities through imported functions or other interfaces.
 
-The sandbox has important limits. It protects the host environment from direct, unauthorized access by the module, but it does not protect the module from its own bugs: linear memory is an untyped byte array, so a program can corrupt its own data while remaining within its memory bounds. Furthermore, an imported function can grant substantial authority. WASI, for example, defines interfaces for filesystem access and other system services, but the capabilities available to a module depend on what the host actually provides. WASI is not part of the core WebAssembly specification.
+The sandbox does not protect a module from its own bugs: a program can corrupt data within its linear memory while staying inside its bounds. Imported functions can also grant substantial authority. WASI defines interfaces for filesystem access and other system services, but the host chooses which capabilities to provide. WASI is separate from the core WebAssembly specification.
 
 === Extensions to the core <sec:extensions>
 
-The WebAssembly core specification defines the platform's basic instruction set and execution model. Additional features have been incorporated into the specification over time, while other proposals continue to evolve @wasm-proposals. Some capabilities can be approximated using existing instructions and runtime support, but such workarounds may add complexity, reduce performance, or provide different safety guarantees. Others require new platform support.
+WebAssembly's instruction set and execution model have expanded through extensions incorporated into the core specification, while other proposals continue to evolve @wasm-proposals.
 
 Several extensions are particularly relevant to the language design explored in this thesis:
 
-- *Multi-memory* allows a module to use multiple linear memories. These memories can serve different purposes, such as separating private data from memory shared with the host or keeping independently managed data in distinct address spaces. Multiple memories can also help when composing components that expect different memories.
-- *Reference types* allow a module to hold and pass references to objects it cannot inspect directly. For example, a host can provide an opaque reference to an external object, such as a DOM node, through an `externref`. The module can pass the reference around or store it in a suitable table without representing it as a manually managed integer handle.
+- *Multi-memory* allows a module to use multiple linear memories, for example to separate private data from memory shared with the host.
+- *Reference types* let a module hold and pass opaque references. An `externref` can refer to a host object, such as a DOM node, without representing it as a manually managed integer handle.
 - *Multi-value* allows functions and blocks to produce multiple results. This can avoid the need to pass an output pointer when a function needs to return several values.
 - *SIMD* introduces the `v128` value type and vector instructions that can perform operations on multiple numeric lanes in parallel.
-- *Exception handling* allows a module to throw and catch typed exceptions. Tags identify exception types, allowing handlers to distinguish between different kinds of exceptions. This is separate from WebAssembly traps, which represent execution failures and are not ordinary catchable exceptions.
+- *Exception handling* uses tags to distinguish typed exceptions that a module can throw and catch. These are separate from traps, which represent execution failures.
 
-These features expand the set of capabilities available to WebAssembly programs, but their presence in the platform does not guarantee that a particular source language exposes them directly. A language may provide native constructs for a feature, require library support or compiler-specific mechanisms, or not support it at all.
-
-These entities and instructions form the surface of the platform: the concepts a developer may want to express in a program. The rest of this chapter examines how different programming languages expose this surface, and how their design choices affect the way developers work with WebAssembly.
+These entities and instructions are concepts a developer may want to express in source code. A language may expose them directly, provide access through libraries or compiler-specific mechanisms, or leave them unavailable.
 
 == Comparing languages <sec:method>
 
-This section captures where the WebAssembly ecosystem stands today, as seen from eight languages. It asks two questions of each. The first is about *exposure*: for each feature WebAssembly provides, how much of it can a developer name, configure and control from source code? The second is about *integration*: what does it cost to use the module that comes out, that is, to run it outside a browser, package it as a component, call it from JavaScript, debug it and keep it small? Neither question concerns performance or code quality, and neither ranks languages by merit: several of the languages compared deliberately hide the platform. The two axes are tested and reported separately (@sec:exposure, @sec:integration) and combined only at the end (@sec:combined).
+Eight languages are compared along two axes. *Exposure* asks which WebAssembly features a developer can name, configure, and control from source code. *Integration* asks how the resulting module is run, called, packaged, and debugged, and how large it is. These axes describe access to the platform and its tooling; hiding platform details may be a deliberate language choice. They are reported separately (@sec:exposure, @sec:integration) and combined in @sec:combined.
 
 *Languages.* Eight language columns were studied (@tbl:languages). C and C++ share a column because they use one toolchain. MoonBit has two backends, `wasm` and `wasm-gc`, that cannot be combined in one module; each probe is run on both and a feature that only the other backend offers is counted as an obstacle. The set was chosen for current use as a WebAssembly target and for variety in design intent. It is not complete: Emscripten, Go's standard compiler and Dart are known omissions.
 
@@ -97,9 +95,9 @@ This section captures where the WebAssembly ecosystem stands today, as seen from
   caption: [The languages compared, in the order used by all figures: grouped by memory model.],
 ) <tbl:languages>
 
-The route column matters for reading the results. Rust, Zig, C/C++, Swift and TinyGo all compile through LLVM and link with `wasm-ld`, so they share whatever that path can and cannot express. AssemblyScript emits WebAssembly directly and uses Binaryen as its optimiser. MoonBit and Kotlin have their own backends, which is how they can offer features, such as Wasm GC, that LLVM does not. #todo[Verify the `wasm-ld` and Binaryen claims against primary sources.]
+The memory-model column distinguishes garbage collection implemented by a language runtime in linear memory from WebAssembly's own GC features. The route column records the compiler infrastructure used to produce the module.
 
-*How it was verified.* For every test, I wrote a small program following the language's official documentation and idioms, and built it with its standard toolchain, pinned in a container. A checker script inspects the compiled `.wasm`: it decodes it, instantiates it in V8, or runs it under Wasmtime or Node. My own impression never decides a result. Everything below is a snapshot of pinned versions taken between 2026-10-02 and 2026-10-09. It is indicative, not exact: a later release, a more idiomatic program or a cleverer approach could move individual cells. The full study, with every probe, the checker and the per-cell evidence, is in the project repository @wx-study. #todo[pin commit hash or tag]
+*How it was verified.* Each test uses a small program based on the language's documentation and built with a toolchain pinned in a container. A checker inspects the compiled `.wasm` or runs it under V8, Wasmtime, or Node. The results are a snapshot taken between 2026-10-02 and 2026-10-09. The programs, checker, and per-cell evidence are available in the project repository @wx-study. #todo[pin commit hash or tag]
 
 == Exposure <sec:exposure>
 
@@ -130,7 +128,7 @@ The counts of results are the evidence. A single score between 0 and 1 per langu
 
 #todo[First draft, written from the generated data. All counts below are computed from `rating.json`; the commentary needs a review pass against the per-cell evidence before it is final.]
 
-@fig:matrix gives the complete result. Of the #ch.n-pairs language–feature pairs, #ch.n-reached are reached in some way and #ch.n-absent are absent. Only #ch.n-construct are reached as a language construct or annotation; #ch.n-config need a build option outside the source and #ch.n-asm are possible only as hand-written assembly or Wasm text.
+@fig:matrix shows how each language reaches each feature, distinguishing source constructs from configuration, assembly, and features for which no route was found.
 
 #figure(
   ch.matrix-figure(),
@@ -140,9 +138,9 @@ The counts of results are the evidence. A single score between 0 and 1 per langu
   placement: auto,
 ) <fig:matrix>
 
-*Coverage is uneven across features.* Only #ch.reached-by-all.len() features are reached by every language (#ch.list-of(ch.reached-by-all)), and only #ch.construct-in-all.len() of those, #ch.list-of(ch.construct-in-all), are a language construct or annotation in all #ch.n-languages. #ch.reached-by-none.len() features are reached by none: #ch.list-of(ch.reached-by-none). For #ch.construct-in-none.len() of the #ch.n-features features no language offers a construct or annotation at all; the best any of them manages is a build option or hand-written assembly. These include the memory's limits and names, the placement of data, multi-value results and 64-bit memory, that is, the parts of the module that describe its shape rather than its computation.
+For #ch.construct-in-none.len() of the #ch.n-features features, no language offers a source construct or annotation. These gaps include control over memory limits and data placement, both of which affect the structure of the resulting module.
 
-*No language covers the platform.* @fig:reach counts how each language reaches the thirty features. Even the broadest, which reaches #ch.broadest.reached of #ch.n-features, reaches #(ch.broadest.reached - ch.broadest.counts.reachedVia.language) of them only through configuration or assembly, and the narrowest reaches #ch.narrowest.reached.
+*Coverage differs between languages.* @fig:reach counts how each language reaches the thirty tested features. Even the broadest, which reaches #ch.broadest.reached of #ch.n-features, reaches #(ch.broadest.reached - ch.broadest.counts.reachedVia.language) of them only through configuration or assembly.
 
 #figure(
   ch.reach-figure(),
@@ -151,7 +149,7 @@ The counts of results are the evidence. A single score between 0 and 1 per langu
   caption: [Number of the #ch.n-features features each language reaches as a language construct or annotation, through build configuration, as inline assembly, or not at all.],
 ) <fig:reach>
 
-*The profiles are complementary, not nested.* @fig:versions splits the same result by specification version. The languages built on linear memory reach most of versions 1.0 and 2.0 but fewer of the 3.0 features, while Kotlin's profile is the reverse: it reaches the GC and exception features of 3.0 but only 4 of the 10 core features. The two GC features are reached only by Kotlin and by MoonBit's `wasm-gc` backend; passive data segments and 64-bit memory are reached only by languages on linear memory. No language reaches both groups, and MoonBit, which has both, offers them on separate backends that cannot be combined in one module. This is the pattern @sec:problem describes: using both usually means combining languages.
+*The profiles are complementary, not nested.* @fig:versions shows that languages built on linear memory reach more of the sampled 1.0 and 2.0 features, while Kotlin reaches the GC and exception features of 3.0. No language reaches both the GC features and the tested linear-memory features in full. MoonBit offers both groups on separate backends that cannot be combined in one module. This is the pattern @sec:problem describes: using both usually means combining languages.
 
 #figure(
   ch.version-figure(),
@@ -160,7 +158,7 @@ The counts of results are the evidence. A single score between 0 and 1 per langu
   caption: [Features reached, out of those probed, per specification version.],
 ) <fig:versions>
 
-*The exposure score.* @fig:exposure orders the languages. #ch.lang-name(ch.by-exposure.first()) is first at #ch.fmt2(ch.lang.at(ch.by-exposure.first()).score) and #ch.lang-name(ch.by-exposure.last()) last at #ch.fmt2(ch.lang.at(ch.by-exposure.last()).score). The ordering is firm between two groups, C/C++, Rust, Zig and AssemblyScript above Swift, MoonBit, TinyGo and Kotlin, and loose within them, which is why the figure gives a rank range. The score follows how many features a language reaches more than how cleanly it reaches them.
+@fig:exposure summarises coverage and the obstacles to reaching each feature. The rank ranges show how the ordering changes when the scoring coefficients are varied.
 
 #figure(
   ch.exposure-figure(),
@@ -173,7 +171,7 @@ The counts of results are the evidence. A single score between 0 and 1 per langu
 
 === What is tested <sec:integration-tests>
 
-Exposure says how much of the platform a language lets the developer reach. Integration asks what it costs to use the module that comes out. A language can reach little of the platform and still produce modules that are easy to run, call and debug, and the reverse is also possible. Five criteria are scored and a sixth is only reported (@tbl:criteria). They use three small programs, each with one host script shared by all languages: `life` (pure computation on linear memory), `cat` (a WASI command that copies standard input to standard output) and `words` (a string in, a record out).
+Access to platform features is only part of using WebAssembly: the resulting module must also work with its host. Five integration criteria are scored and a sixth is reported separately (@tbl:criteria). They use three small programs with host scripts shared across languages: `life` (computation on linear memory), `cat` (a WASI command that copies standard input to standard output), and `words` (a string in, a record out).
 
 #figure(
   booktable(
@@ -199,7 +197,7 @@ Criteria I1 to I3 are scored by *route*, from best to worst: built into the lang
 
 #todo[First draft, written from the generated data; the commentary needs a review pass against the per-cell evidence.]
 
-@fig:integration gives the score of every language on each criterion. #ch.lang-name(ch.by-integration.first()) is the easiest module to use (#ch.fmt2(ch.integ.at(ch.by-integration.first()).integration)) and #ch.lang-name(ch.by-integration.last()) the hardest (#ch.fmt2(ch.integ.at(ch.by-integration.last()).integration)).
+@fig:integration reports the five scored criteria and their weighted summary.
 
 #figure(
   ch.integration-figure(),
@@ -209,9 +207,9 @@ Criteria I1 to I3 are scored by *route*, from best to worst: built into the lang
   placement: auto,
 ) <fig:integration>
 
-*Running outside a browser is nearly solved.* All eight languages run `cat` as a WASI command, six with their ordinary toolchain. *The Component Model separates them.* Only #ch.order.filter(l => ch.integ.at(l).per.I2 > 0).len() have a direct route, all through an official tool and none through the compiler itself; Zig, AssemblyScript, Kotlin and Swift have none. *JavaScript bindings* come from the language's own tooling in AssemblyScript and TinyGo, from an official tool in Rust, C/C++ and MoonBit, from a community tool in Swift, and by hand in Zig. Debug builds are almost uniformly fine, with MoonBit partial.
+All eight languages run `cat` as a WASI command, six with their ordinary toolchain. Component Model support is less uniform: only #ch.order.filter(l => ch.integ.at(l).per.I2 > 0).len() have a direct route, all through an official extra tool. JavaScript integration also varies, from generated bindings to hand-written glue.
 
-*Size separates the languages with a bundled runtime.* On `life`, the smallest builds range from 408 bytes for AssemblyScript to 61 KB for Kotlin, and Swift's default build is 3.4 MB. Swift and Kotlin therefore score lowest on I5 (#ch.fmt2(ch.integ.swift.per.I5) and #ch.fmt2(ch.integ.kotlin.per.I5)). Toolchain cost (I6) is not scored, but it shows the same split: Swift's toolchain is #ch.fmt2(ch.i6.swift.footprintMB / 1000) GB, the largest, and Kotlin's cold build of `words` the slowest at #calc.round(ch.i6.kotlin.buildSeconds, digits: 1) s.
+Module size also varies substantially: the smallest builds of `life` range from 408 bytes for AssemblyScript to 61 KB for Kotlin.
 
 == Combined ranking <sec:combined>
 
@@ -234,7 +232,7 @@ The two scores are combined as #ch.w-exposure × exposure + #ch.w-integration ×
 
 == Synthesis and design questions <sec:synthesis>
 
-The core of WebAssembly is well covered. #ch.cap-first(ch.list-of(ch.construct-in-all)) are a language construct in all #ch.n-languages languages, and #ch.order.filter(l => ch.lang.at(l).bySpecVersion.at("1.0").reached >= 7).len() of them reach at least 7 of the 10 features of specification 1.0. The gaps are in the parts that shape the module and in the newer extensions. They are not defects: a language that hides the platform may be the right choice for its audience. But they show what a developer working in any of these languages cannot ask for, and each one is a question for a language built around the platform's own model.
+The recurring gaps concern module structure and newer extensions. These may reflect deliberate choices suited to a language's audience. For WX, they identify concepts that a language built around WebAssembly could make explicit.
 
 @fig:entities isolates the #ch.entity-features.len() features that correspond to WebAssembly's module entities: the memory section, multiple memories, globals, tables (indirect calls, import and export, and multiple tables) and exception tags. No language offers a construct for more than #ch.max-entity-constructs of them.
 
@@ -245,12 +243,12 @@ The core of WebAssembly is well covered. #ch.cap-first(ch.list-of(ch.construct-i
   caption: [How each language reaches the features that correspond to WebAssembly's module entities. A subset of @fig:matrix.],
 ) <fig:entities>
 
-Some of these gaps belong to the toolchain more than to the language. Where the five languages that compile through LLVM and `wasm-ld` all lack a construct that a language with its own backend offers, the toolchain is the more likely cause: this holds for #ch.list-of(ch.llvm-gap). Where no language offers a construct at all (#ch.list-of(ch.construct-in-none)), the cause is more likely the platform's youth, or an interface, such as linker flags, that every toolchain exposes in the same way. A language that controls its own compiler is not bound by either, which is why the questions below are about the language and not only about one toolchain. #todo[Verify that the shared LLVM gaps (single memory, no start section, memory and data placement) come from `wasm-ld`, with primary sources.]
+The comparison concerns each language together with its tested toolchain. It establishes which routes were found, but does not by itself identify whether a gap comes from the language, its backend, or its linker.
 
-The gaps lead to five questions. Chapters 3 to 6 answer them for WX.
+The gaps lead to five questions that guide WX's design:
 
-+ *Declared entities.* Memory limits and names are set by a build option in #ch.n-by-route("02", "config") of the #ch.n-languages languages and cannot be reached at all in Kotlin. Globals are a language construct only in #ch.languages-where("10", ch.is-construct).map(ch.lang-name).join(", ", last: " and "). Tables appear only implicitly, as the target of indirect calls (a construct in #ch.n-by-route("03", "construct") languages): importing or exporting one is a build option in #ch.n-by-route("04", "config") languages, and a second table needs inline assembly in #ch.n-by-route("18", "asm") and is absent in the rest. Tags are a construct only in #ch.languages-where("27", ch.is-construct).map(ch.lang-name).join(", ", last: " and "). Imports and exports are a construct in every language, which shows that a module entity can be declared in the source. Can memories, globals and a module's imports and exports all be typed constructs, instead of build options or assembly? Tables and tags raise the same question, but the implementation does not cover them (@sec:scope).
-+ *Several memories.* Multiple memories are reached by no language. Can a program use more than one memory, with each memory part of the type system and not an accident of the toolchain?
-+ *No imposed model.* No language reaches both the linear-memory features and the GC features, and MoonBit, which has both, offers them on backends that cannot be combined in one module (@fig:versions). Even the languages built for WebAssembly reach #ch.lang.assemblyscript.reached (AssemblyScript) and #ch.lang.moonbit.reached (MoonBit) of the #ch.n-features features, fewer than Rust, Zig and C/C++. Can a language avoid a mandatory runtime or memory-management model, so that capabilities are adopted as a program needs them and the two kinds could eventually meet in one module?
-+ *Checked access to instructions.* Where a language offers a route to a feature through inline assembly (#ch.n-asm-routes cells), its compiler checks none of them (#ch.n-asm-checked checked). Can a language give typed access to raw platform instructions, so that the compiler checks them?
-+ *Declared host boundary.* Only #ch.n-i-route("builtin") of #ch.n-i-cells cells for WASI, components and JavaScript bindings work with the language's own toolchain alone. #ch.n-i-tool need an extra tool, #ch.n-i-route("hand-written") hand-written glue, and #ch.n-i-absent have no support. Can the interface to the host be written in the source, so that less glue is needed?
++ *Declared entities.* Can memories, globals, imports, and exports be typed source constructs, rather than controlled through build options or assembly?
++ *Several memories.* Can a program use several memories, with memory identity represented in types and checked by the compiler?
++ *No imposed model.* Can programs adopt capabilities as needed without committing to a fixed runtime or memory-management strategy?
++ *Checked access to instructions.* Can raw WebAssembly instructions be exposed through typed operations that the compiler checks?
++ *Declared host boundary.* Can source declarations make the interface to the host explicit and reduce dependence on hand-written glue?
