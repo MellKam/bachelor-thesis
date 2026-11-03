@@ -130,9 +130,30 @@ This helps where several parameters have the same type and are easy to swap, lik
   caption: [A call by name needs a declaration. A function reference has only a type, and a type has no parameter names. The test appends its source to the standard library, hence the line numbers. Compiler at `186ba25`, branch `tir-refactor`, 2026-10-30.],
 ) <fig:named-reference>
 
+Named arguments also separate the order of evaluation from the order of parameters. Expressions are evaluated from left to right, as written at the call site, even when the names appear in a different order from the declaration. The resulting values are then arranged into parameter order. For example:
+
+```rust
+struct Point(x: i32, y: i32);
+
+Point({
+    y: compute_y(),
+    x: compute_x(),
+})
+```
+
+This is equivalent, in evaluation order and result, to:
+
+```rust
+local y = compute_y();
+local x = compute_x();
+Point(x, y)
+```
+
+Here, `compute_y` runs before `compute_x`, which matters if either call has side effects. The resulting `Point` still has its fields in declaration order, `(x, y)`. The same rule applies to named function arguments. The compiler may optimize the evaluation, but only when doing so preserves observable behavior.
+
 A pattern takes a struct apart with the same syntax that builds it: `local Point(a, b) = p;` or `local Point({ x, y: py }) = p;`. WX has no positional field access like Rust's `t.0`. A tuple is taken apart by a pattern, and a struct field is read by its name.
 
-== Functions on the stack <sec:calls-abi>
+== Function representation and ABI <sec:calls-abi>
 
 Treating `func(A, B)` and `func((A, B))` as one type is only correct if both compile to the same WebAssembly function type. They do. A function's WebAssembly parameters are the stack representation of its `Args` (@sec:stack-repr), and its results are the representation of its `Result` (@tbl:call-abi).
 
@@ -156,9 +177,11 @@ Treating `func(A, B)` and `func((A, B))` as one type is only correct if both com
   caption: [The WebAssembly type of a WX function is the stack representation of its `Args` and `Result`.],
 ) <tbl:call-abi>
 
-A function that returns several values uses multi-value, with no hidden pointer for the result. A struct passed or returned by value is its fields, in declaration order. So the host sees the signature that was written in the source. This is where declaration order in `Repr` matters: if parameters followed the memory layout, `func(u8, u64)` would become `(param i64 i32)`, and the signature of an exported function would depend on the compiler's rules for sorting fields.
+A function that returns several values uses multi-value, with no hidden pointer for the result. A struct passed or returned by value is flattened into its fields in declaration order. This order follows `StackValue::Repr` (Section 4.3), not the struct's layout in linear memory. For example, `func(u8, u64)` becomes `(param i32 i64)`, regardless of how these types would be arranged in memory.
 
-#todo[This table is the design. Confirm it with real output (`wasm2wat`) once code generation works on the new type checker.]
+For imported and exported functions, this representation determines the exact sequence of WebAssembly parameter and result types exposed to the host. It remains stable regardless of memory layout optimizations or the order of named arguments at a call site. Internal functions may undergo transformations such as inlining or removal of unused parameters, provided their observable behavior is preserved. Functions at the module boundary, however, must retain their declared signatures. This lets WX optimize its internal code without changing the interface seen by the host.
+
+`Repr` defines the core WebAssembly calling representation, rather than a complete cross-language ABI. Types with the same representation may still carry different meanings: `(u32, i32)` and `(i32, u32)` both become `(i32, i32)`. The host must therefore agree on the meaning and order of the values, not only their WebAssembly types.
 
 == Comparison <sec:calls-comparison>
 

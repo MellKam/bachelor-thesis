@@ -87,7 +87,9 @@ Because no impl is recorded, a short path such as `Point::Repr` does not work: t
 
 `StackScalar` is a typeset (@sec:typesets) of the types of one WebAssembly value. `v128` is missing only because WX does not support SIMD yet. `funcref` is a WebAssembly function reference of any signature.
 
-*Stack, not memory.* `StackValue` describes values on the stack: in locals, parameters, results and globals. How a value is stored in linear memory is a different question, with alignment, padding, and a field order that the compiler may change to reduce padding. `Repr` ignores all of that and always uses declaration order.
+*Stack, not memory.* `StackValue` describes values on the WebAssembly stack: in locals, parameters, results and globals. This representation is separate from how values are stored in linear memory. In memory, the compiler controls field offsets, alignment and padding, so WX reorders struct fields by default to reduce padding. A struct marked with `#[fixed_order]` instead preserves declaration order, although alignment may still require padding.
+
+The WebAssembly stack has no equivalent layout requirements. Its values are handled by the runtime, which may keep them in registers or physical stack memory. Their physical placement is not controlled by WX. Therefore, `Repr` always flattens fields in declaration order, dropping zero-sized parts, regardless of their layout in memory. This gives every type a predictable stack representation without imposing memory layout decisions on function calls or local values.
 
 == Globals as a bound <sec:globals-bound>
 

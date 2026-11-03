@@ -107,8 +107,6 @@ The identity of an item is its type. The compiler knows it everywhere the item i
 
 Rust has a similar idea. Every Rust function has its own zero-sized type, so two functions with the same signature have different types. But a Rust program cannot write that type, and the type is lost when the function is converted to a function pointer. In WX, the type of every item can be written in the source, and every kind of entity has one, not only functions.
 
-*Status.* In the current type checker, items are fully supported as types. Functions and globals can also be used as values. Using a memory as a value, as in `memory_size(heap)`, is reported as not supported yet (E2114).
-
 == Pointers carry their memory <sec:pointers-memory>
 
 A linear memory is a growable array of bytes, measured in 64 KiB pages @wasm-spec-modules. The `u32` in `memory heap: u32;` is its address type, not its current size. WX also accepts `memory heap: u64;` for Memory64. These address types describe potential address spaces of 4 GiB and 16 EiB respectively; neither size is allocated by the declaration alone.
