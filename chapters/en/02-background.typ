@@ -133,7 +133,6 @@ The counts of results are the evidence. A single score between 0 and 1 per langu
 #figure(
   ch.matrix-figure(),
   kind: image,
-  supplement: [Figure],
   caption: [How each language reaches each of the #ch.n-features WebAssembly features, grouped by memory model and by specification version. The cell shows the best route found.],
   placement: auto,
 ) <fig:matrix>
@@ -145,7 +144,6 @@ For #ch.construct-in-none.len() of the #ch.n-features features, no language offe
 #figure(
   ch.reach-figure(),
   kind: image,
-  supplement: [Figure],
   caption: [Number of the #ch.n-features features each language reaches as a language construct or annotation, through build configuration, as inline assembly, or not at all.],
 ) <fig:reach>
 
@@ -154,7 +152,6 @@ For #ch.construct-in-none.len() of the #ch.n-features features, no language offe
 #figure(
   ch.version-figure(),
   kind: image,
-  supplement: [Figure],
   caption: [Features reached, out of those probed, per specification version.],
 ) <fig:versions>
 
@@ -163,7 +160,6 @@ For #ch.construct-in-none.len() of the #ch.n-features features, no language offe
 #figure(
   ch.exposure-figure(),
   kind: image,
-  supplement: [Figure],
   caption: [Exposure score (0 to 1) per language, ordered, with the range of its rank when the scoring coefficients are varied at random 2000 times.],
 ) <fig:exposure>
 
@@ -202,7 +198,6 @@ Criteria I1 to I3 are scored by *route*, from best to worst: built into the lang
 #figure(
   ch.integration-figure(),
   kind: image,
-  supplement: [Figure],
   caption: [Score of each language on the five scored integration criteria (0 to 1; – means no direct support) and the integration score, their weighted mean. The weight of each criterion is given under its name.],
   placement: auto,
 ) <fig:integration>
@@ -220,7 +215,6 @@ The two scores are combined as #ch.w-exposure × exposure + #ch.w-integration ×
 #figure(
   ch.combined-figure(),
   kind: image,
-  supplement: [Figure],
   caption: [Combined score per language (#ch.w-exposure × exposure + #ch.w-integration × integration), ordered, with the range of its rank when the coefficients are varied at random 2000 times. A full-length bar would be 1.0.],
 ) <fig:combined>
 
@@ -239,7 +233,6 @@ The recurring gaps concern module structure and newer extensions. These may refl
 #figure(
   ch.entity-figure(),
   kind: image,
-  supplement: [Figure],
   caption: [How each language reaches the features that correspond to WebAssembly's module entities. A subset of @fig:matrix.],
 ) <fig:entities>
 

@@ -16,7 +16,7 @@
 #let c-asm = rgb("#e69f00")        // hand-written assembly / Wasm text
 #let c-absent = luma(230)          // no way found
 #let muted = luma(105)
-#let sans = ("Liberation Sans", "Inter", "Libertinus Serif")
+#let sans = ("Liberation Serif", "Libertinus Serif")
 #let c-exposure = rgb("#1f4e79")
 #let c-integration = rgb("#8f5aa8")
 
@@ -115,13 +115,17 @@
 #let cap-first(s) = upper(s.first()) + s.slice(1)
 
 // --- shared pieces -------------------------------------------------------------
+#let grid-stroke = 0.5pt + black
+#let header-fill = luma(230)
+#let section-fill = luma(242)
+
 #let swatch(color, label) = box(inset: (right: 1.1em))[
-  #box(width: 0.85em, height: 0.85em, fill: color, radius: 1pt, baseline: 0.1em)
+  #box(width: 0.85em, height: 0.85em, fill: color, stroke: 0.4pt + luma(140), radius: 1pt, baseline: 0.1em)
   #h(0.3em)#label
 ]
 
 #let legend() = {
-  set text(font: sans, size: 0.78em)
+  set text(font: sans, size: 9pt)
   align(center)[
     #swatch(c-construct, [construct or annotation])
     #swatch(c-config, [build configuration])
@@ -132,7 +136,7 @@
 
 #let lang-name(l) = lang.at(l).name
 // Narrow matrix columns need a manual break in the two long names.
-#let head-name(l) = if l == "assemblyscript" [Assembly­Script] else if l == "moonbit" [Moon­Bit] else { lang-name(l) }
+#let head-name(l) = if l == "assemblyscript" [Assembly-\ Script] else if l == "moonbit" [MoonBit] else { lang-name(l) }
 // 0.4 -> "0.40"
 #let fmt2(x) = {
   let n = int(calc.round(x * 100))
@@ -145,6 +149,7 @@
 #let route-factor(kind) = integration.weights.routes.find(r => r.kind == kind).factor
 #let icrit = ("I1", "I2", "I3", "I4", "I5")
 #let criterion(c) = integration.criteria.at(c)
+#let icrit-head(c) = if c == "I2" [I2: Component\ Model] else if c == "I3" [I3: JS\ bindings] else if c == "I4" [I4: Debugga-\ bility] else [#c: #criterion(c).name]
 #let w-exposure = integration.weights.combined.exposure
 #let w-integration = integration.weights.combined.integration
 #let weight-sum = icrit.map(c => criterion(c).weight).sum()
@@ -157,9 +162,9 @@
 #let rank-text(r) = if r.best == r.worst [#r.best] else [#r.best–#r.worst]
 
 // A value on a 0..1 scale: a faint full-length track with the bar on top.
-#let bar-track(value, color, width, height: 0.34cm) = box(width: width, height: height, fill: luma(240),
+#let bar-track(value, color, width, height: 0.36cm) = box(width: width, height: height, fill: luma(240), stroke: 0.3pt + luma(190),
   place(left + top, rect(width: value * width, height: height, fill: color, stroke: none)))
-#let bar-label(body) = box(height: 0.34cm, align(horizon, text(size: 0.8em, weight: "bold", body)))
+#let bar-label(body) = box(height: 0.36cm, align(horizon, text(size: 9pt, weight: "bold", body)))
 
 // ===========================================================================
 // Figure A. Feature × language matrix
@@ -173,78 +178,79 @@
   } else if r == "asm" {
     (c-asm, black, "I")
   } else {
-    (c-absent, luma(120), if c.absent == "not found" { "?" } else { "–" })
+    (c-absent, luma(100), if c.absent == "not found" { "?" } else { "–" })
   }
   let partial = if is-reached(c) and c.partial != none and c.partial != false { super("p") } else { none }
-  table.cell(fill: fill, align: center + horizon, text(fill: ink, size: 0.8em, weight: "bold")[#code#partial])
+  table.cell(fill: fill, align: center + horizon, text(fill: ink, size: 8.5pt, weight: "bold")[#code#partial])
 }
 
 #let matrix-figure() = {
-  set text(font: sans)
+  set text(font: sans, size: 9pt)
   let first-ids = language-groups.map(g => g.ids.first())
   let versions = ("1.0", "2.0", "3.0")
-  // A thicker rule between memory-model groups.
-  let group-start = i => order.at(i) in first-ids and i > 0
   let rows = ()
   for v in versions {
-    rows.push(table.cell(colspan: 1 + order.len(), align: left, fill: luma(245),
-      text(size: 0.78em, weight: "bold", fill: muted)[Specification #v]))
+    rows.push(table.cell(colspan: 1 + order.len(), align: left + horizon, fill: section-fill, inset: (x: 5pt, y: 3pt),
+      text(size: 8.5pt, weight: "bold")[Specification #v]))
     for f in feature-ids.filter(f => rating.features.find(x => x.id == f).since == v) {
-      rows.push(table.cell(align: left + horizon, text(size: 0.7em)[#text(fill: muted)[#f] #h(0.4em) #short-names.at(f)]))
+      rows.push(table.cell(align: left + horizon, inset: (x: 5pt, y: 0pt), text(size: 8.5pt)[#text(fill: muted)[#f] #h(0.35em) #short-names.at(f)]))
       for (i, l) in order.enumerate() {
         rows.push(matrix-cell(cell(l, f)))
       }
     }
   }
-  set par(justify: false)
+  set par(justify: false, leading: 0.45em)
   table(
-    columns: (5.0cm,) + (1.2cm,) * order.len(),
-    rows: 0.46cm,
-    inset: (x: 3pt, y: 0pt),
-    stroke: (x, y) => if x > 0 and group-start(x - 1) { (left: 0.8pt + white, rest: 0.4pt + white) } else { 0.4pt + white },
+    columns: (4.8cm,) + (1.25cm,) * order.len(),
+    rows: (auto,) + (0.48cm,) * (versions.len() + feature-ids.len()),
+    inset: (x: 3pt, y: 2pt),
+    stroke: grid-stroke,
     table.header(
-      table.cell(align: left + bottom, inset: (y: 5pt), text(size: 0.8em, fill: muted)[Feature]),
-      ..order.map(l => table.cell(align: center + bottom, inset: (x: 0pt, y: 5pt),
-        text(size: 0.62em, weight: "bold")[#head-name(l)])),
+      table.cell(align: left + horizon, fill: header-fill, inset: (x: 5pt, y: 4pt), text(size: 8.5pt, weight: "bold")[Feature]),
+      ..order.map(l => table.cell(align: center + horizon, fill: header-fill, inset: (x: 2pt, y: 4pt),
+        text(size: 8pt, weight: "bold")[#head-name(l)])),
     ),
     ..rows,
   )
-  v(0.2em)
+  v(0.4em)
   legend()
-  v(-0.3em)
-  align(center, text(size: 0.78em, fill: muted)[N native construct · A annotation · C build configuration · I inline assembly · – absent (confirmed) · ? absent (not found) · #super[p] partial])
+  v(-0.2em)
+  align(center, text(size: 8.5pt, fill: muted)[N native construct · A annotation · C build configuration · I inline assembly · – absent (confirmed) · ? absent (not found) · #super[p] partial])
 }
 
 // ===========================================================================
 // Figure B. How each language reaches the 30 features (stacked bars)
 // ===========================================================================
 #let reach-figure() = {
-  set text(font: sans)
-  let unit = 0.36cm
+  set text(font: sans, size: 10pt)
+  let unit = 0.34cm
   let seg(n, color, ink: black) = if n > 0 {
-    box(width: n * unit, height: 0.52cm, fill: color,
-      align(center + horizon, text(size: 0.78em, fill: ink, weight: "bold")[#n]))
+    box(width: n * unit, height: 0.48cm, fill: color,
+      align(center + horizon, text(size: 8.5pt, fill: ink, weight: "bold")[#n]))
   }
   let rows = ()
   for l in order {
     let cs = feature-ids.map(f => cell(l, f))
     let n(r) = cs.filter(c => route-of(c) == r).len()
-    rows.push(table.cell(align: right + horizon, text(size: 0.88em)[#lang-name(l)]))
-    rows.push(table.cell(align: left + horizon, stack(dir: ltr,
+    rows.push(table.cell(align: left + horizon, inset: (x: 6pt, y: 3pt), text(size: 9.5pt)[#lang-name(l)]))
+    rows.push(table.cell(align: left + horizon, inset: (x: 6pt, y: 3pt), box(stroke: 0.3pt + luma(180), stack(dir: ltr,
       seg(n("construct"), c-construct, ink: white),
       seg(n("config"), c-config),
       seg(n("asm"), c-asm),
       seg(n("absent"), c-absent, ink: luma(90)),
-    )))
+    ))))
   }
   table(
-    columns: (3.1cm, auto),
-    column-gutter: 0.2cm,
-    inset: (x: 0pt, y: 1.6pt),
-    stroke: none,
+    columns: (3.2cm, auto),
+    inset: (x: 4pt, y: 3pt),
+    stroke: grid-stroke,
+    table.header(
+      table.cell(align: center + horizon, fill: header-fill, inset: (x: 6pt, y: 5pt), text(size: 9.5pt, weight: "bold")[Language]),
+      table.cell(align: center + horizon, fill: header-fill, inset: (x: 6pt, y: 5pt), text(size: 9.5pt, weight: "bold")[Features reached (out of #n-features)]),
+    ),
     ..rows,
   )
-  v(0.3em)
+  v(0.4em)
   legend()
 }
 
@@ -252,29 +258,30 @@
 // Figure C. Reached features by specification version
 // ===========================================================================
 #let version-figure() = {
-  set text(font: sans)
+  set text(font: sans, size: 10pt)
   let versions = ("1.0", "2.0", "3.0")
   let n-in(v) = rating.features.filter(f => f.since == v).len()
   let tint(ratio) = color.mix((c-construct, ratio * 100%), (white, (1 - ratio) * 100%), space: oklab)
   let rows = ()
   for l in order {
-    rows.push(table.cell(align: left + horizon, text(size: 0.88em)[#lang-name(l)]))
+    rows.push(table.cell(align: left + horizon, inset: (x: 6pt, y: 0pt), text(size: 9.5pt)[#lang-name(l)]))
     for v in versions {
       let k = lang.at(l).bySpecVersion.at(v)
       let ratio = k.reached / k.features
       rows.push(table.cell(fill: tint(ratio), align: center + horizon,
-        text(size: 0.85em, fill: if ratio > 0.55 { white } else { black })[#k.reached / #k.features]))
+        text(size: 9.5pt, fill: if ratio > 0.55 { white } else { black })[#k.reached / #k.features]))
     }
   }
+  set par(justify: false, leading: 0.45em)
   table(
-    columns: (3.1cm,) + (2.2cm,) * 3,
-    rows: 0.55cm,
-    inset: (x: 4pt, y: 0pt),
-    stroke: 0.6pt + white,
+    columns: (3.2cm,) + (2.5cm,) * 3,
+    rows: (auto,) + (0.55cm,) * order.len(),
+    inset: (x: 5pt, y: 3pt),
+    stroke: grid-stroke,
     table.header(
-      [],
-      ..versions.map(v => table.cell(align: center + bottom, inset: (y: 3pt),
-        text(size: 0.82em, weight: "bold")[Spec #v \ #text(weight: "regular", fill: muted)[#n-in(v) features]])),
+      table.cell(align: center + horizon, fill: header-fill, inset: (x: 6pt, y: 5pt), text(size: 9.5pt, weight: "bold")[Language]),
+      ..versions.map(v => table.cell(align: center + horizon, fill: header-fill, inset: (y: 4pt),
+        text(size: 9pt, weight: "bold")[Spec #v \ #text(size: 8pt, weight: "regular")[#n-in(v) features]])),
     ),
     ..rows,
   )
@@ -308,55 +315,55 @@
 #let n-asm-checked = order.map(l => lang.at(l).counts.reachedVia.inlineAsmChecked).sum()
 
 #let entity-figure() = {
-  set text(font: sans)
-  set par(justify: false)
+  set text(font: sans, size: 9pt)
+  set par(justify: false, leading: 0.45em)
   let rows = ()
   for f in entity-features {
-    rows.push(table.cell(align: left + horizon, text(size: 0.8em)[#entity-names.at(f)]))
+    rows.push(table.cell(align: left + horizon, inset: (x: 5pt, y: 0pt), text(size: 8.5pt)[#entity-names.at(f)]))
     for l in order { rows.push(matrix-cell(cell(l, f))) }
   }
   table(
-    columns: (4.4cm,) + (1.25cm,) * order.len(),
-    rows: (auto,) + (0.55cm,) * entity-features.len(),
-    inset: (x: 3pt, y: 0pt),
-    stroke: 0.4pt + white,
+    columns: (4.6cm,) + (1.25cm,) * order.len(),
+    rows: (auto,) + (0.52cm,) * entity-features.len(),
+    inset: (x: 3pt, y: 2pt),
+    stroke: grid-stroke,
     table.header(
-      table.cell(align: left + bottom, inset: (y: 5pt), text(size: 0.8em, fill: muted)[Feature]),
-      ..order.map(l => table.cell(align: center + bottom, inset: (x: 0pt, y: 5pt),
-        text(size: 0.62em, weight: "bold")[#head-name(l)])),
+      table.cell(align: left + horizon, fill: header-fill, inset: (x: 5pt, y: 4pt), text(size: 8.5pt, weight: "bold")[Feature]),
+      ..order.map(l => table.cell(align: center + horizon, fill: header-fill, inset: (x: 2pt, y: 4pt),
+        text(size: 8pt, weight: "bold")[#head-name(l)])),
     ),
     ..rows,
   )
-  v(0.2em)
+  v(0.4em)
   legend()
-  v(-0.3em)
-  align(center, text(size: 0.78em, fill: muted)[N native construct · A annotation · C build configuration · I inline assembly · – absent (confirmed) · ? absent (not found) · #super[p] partial])
+  v(-0.2em)
+  align(center, text(size: 8.5pt, fill: muted)[N native construct · A annotation · C build configuration · I inline assembly · – absent (confirmed) · ? absent (not found) · #super[p] partial])
 }
 
 // ===========================================================================
 // Figure D. Exposure score, ordered
 // ===========================================================================
 #let exposure-figure() = {
-  set text(font: sans)
+  set text(font: sans, size: 10pt)
   let rows = ()
   for (i, l) in by-exposure.enumerate() {
     let s = lang.at(l).score
-    rows.push(table.cell(align: right + horizon, text(size: 0.8em, fill: muted)[#(i + 1)]))
-    rows.push(table.cell(align: left + horizon, text(size: 0.88em)[#lang-name(l)]))
-    rows.push(table.cell(align: left + horizon, stack(dir: ltr, spacing: 5pt,
-      bar-track(s, c-exposure, 6.5cm), bar-label(fmt2(s)))))
-    rows.push(table.cell(align: center + horizon, text(size: 0.85em)[#rank-text(lang.at(l).scoreRank)]))
+    rows.push(table.cell(align: center + horizon, text(size: 9pt)[#(i + 1).]))
+    rows.push(table.cell(align: left + horizon, inset: (x: 6pt), text(size: 9.5pt)[#lang-name(l)]))
+    rows.push(table.cell(align: left + horizon, inset: (x: 6pt), stack(dir: ltr, spacing: 6pt,
+      bar-track(s, c-exposure, 6.2cm), bar-label(fmt2(s)))))
+    rows.push(table.cell(align: center + horizon, text(size: 9.5pt)[#rank-text(lang.at(l).scoreRank)]))
   }
   table(
-    columns: (0.6cm, 3.0cm, 8.0cm, 2.6cm),
-    inset: (x: 3pt, y: 3pt),
-    stroke: none,
+    columns: (0.9cm, 3.1cm, 7.8cm, 2.4cm),
+    inset: (x: 4pt, y: 4pt),
+    stroke: grid-stroke,
     table.header(
-      [], [],
-      table.cell(align: left, text(size: 0.8em, fill: muted)[exposure score, 0 to 1]),
-      table.cell(align: center, text(size: 0.8em, fill: muted)[rank range]),
+      table.cell(align: center + horizon, fill: header-fill, text(size: 9pt, weight: "bold")[#sym.numero]),
+      table.cell(align: center + horizon, fill: header-fill, text(size: 9pt, weight: "bold")[Language]),
+      table.cell(align: center + horizon, fill: header-fill, text(size: 9pt, weight: "bold")[Exposure score (0 to 1)]),
+      table.cell(align: center + horizon, fill: header-fill, text(size: 9pt, weight: "bold")[Rank range]),
     ),
-    table.hline(stroke: 0.4pt + muted),
     ..rows,
   )
 }
@@ -365,37 +372,38 @@
 // Figure E. Integration criteria × language, ordered by integration score
 // ===========================================================================
 #let integration-figure() = {
-  set text(font: sans)
+  set text(font: sans, size: 9.5pt)
+  set par(justify: false, leading: 0.45em)
   let tint(ratio) = color.mix((c-integration, ratio * 100%), (white, (1 - ratio) * 100%), space: oklab)
   let rows = ()
   for (i, l) in by-integration.enumerate() {
     let s = integ.at(l)
-    rows.push(table.cell(align: left + horizon, inset: (x: 3pt, y: 0pt), text(size: 0.88em)[#lang-name(l)]))
+    rows.push(table.cell(align: left + horizon, inset: (x: 5pt, y: 0pt), text(size: 9pt)[#lang-name(l)]))
     for c in icrit {
       let v = s.per.at(c)
       let unsupported = s.detail.at(c).at("absent", default: none) != none
       rows.push(table.cell(
         fill: if unsupported { c-absent } else { tint(v) },
         align: center + horizon,
-        text(size: 0.85em, fill: if unsupported { luma(110) } else if v > 0.55 { white } else { black })[
+        text(size: 9pt, fill: if unsupported { luma(100) } else if v > 0.55 { white } else { black })[
           #if unsupported [–] else [#fmt2(v)]
         ],
       ))
     }
-    rows.push(table.cell(align: left + horizon, inset: (x: 8pt, y: 0pt), stack(dir: ltr, spacing: 5pt,
-      bar-track(s.integration, c-integration, 2.2cm), bar-label(fmt2(s.integration)))))
+    rows.push(table.cell(align: left + horizon, inset: (x: 6pt, y: 0pt), stack(dir: ltr, spacing: 5pt,
+      bar-track(s.integration, c-integration, 2.1cm), bar-label(fmt2(s.integration)))))
   }
   table(
-    columns: (2.9cm,) + (1.65cm,) * icrit.len() + (3.6cm,),
-    rows: (auto,) + (0.62cm,) * order.len(),
-    inset: (x: 3pt, y: 0pt),
-    stroke: 0.6pt + white,
+    columns: (2.8cm,) + (1.75cm,) * icrit.len() + (3.4cm,),
+    rows: (auto,) + (0.58cm,) * order.len(),
+    inset: (x: 3pt, y: 3pt),
+    stroke: grid-stroke,
     table.header(
-      [],
-      ..icrit.map(c => table.cell(align: center + bottom, inset: (y: 3pt),
-        text(size: 0.66em, weight: "bold")[#c \ #criterion(c).name \ #text(weight: "regular", fill: muted)[weight #criterion(c).weight]])),
-      table.cell(align: left + bottom, inset: (x: 8pt, y: 3pt),
-        text(size: 0.66em, weight: "bold")[Integration \ #text(weight: "regular", fill: muted)[weighted mean]]),
+      table.cell(align: center + horizon, fill: header-fill, inset: (x: 4pt, y: 4pt), text(size: 8.5pt, weight: "bold")[Language]),
+      ..icrit.map(c => table.cell(align: center + horizon, fill: header-fill, inset: (x: 2pt, y: 4pt),
+        text(size: 8pt, weight: "bold")[#icrit-head(c) \ #text(size: 7.5pt, weight: "regular")[weight #criterion(c).weight]])),
+      table.cell(align: center + horizon, fill: header-fill, inset: (x: 4pt, y: 4pt),
+        text(size: 8pt, weight: "bold")[Integration \ #text(size: 7.5pt, weight: "regular")[weighted mean]]),
     ),
     ..rows,
   )
@@ -405,33 +413,38 @@
 // Figure F. Combined score, ordered: the two weighted parts stacked
 // ===========================================================================
 #let combined-figure() = {
-  set text(font: sans)
-  let width = 6.5cm
-  let height = 0.34cm
+  set text(font: sans, size: 10pt)
+  let width = 6.2cm
+  let height = 0.36cm
   let part(value, color) = box(width: value * width, height: height, fill: color,
-    align(center + horizon, text(size: 0.72em, fill: white, weight: "bold")[#fmt2(value)]))
+    align(center + horizon, text(size: 7.5pt, fill: white, weight: "bold")[#fmt2(value)]))
   let rows = ()
   for (i, l) in by-combined.enumerate() {
     let s = integ.at(l)
-    rows.push(table.cell(align: right + horizon, text(size: 0.8em, fill: muted)[#(i + 1)]))
-    rows.push(table.cell(align: left + horizon, text(size: 0.88em)[#lang-name(l)]))
-    rows.push(table.cell(align: left + horizon, stack(dir: ltr, spacing: 5pt,
-      box(width: width, height: height, fill: luma(240),
+    rows.push(table.cell(align: center + horizon, text(size: 9pt)[#(i + 1).]))
+    rows.push(table.cell(align: left + horizon, inset: (x: 6pt), text(size: 9.5pt)[#lang-name(l)]))
+    rows.push(table.cell(align: left + horizon, inset: (x: 6pt), stack(dir: ltr, spacing: 6pt,
+      box(width: width, height: height, fill: luma(240), stroke: 0.3pt + luma(190),
         place(left + top, stack(dir: ltr, part(w-exposure * s.exposure, c-exposure), part(w-integration * s.integration, c-integration)))),
       bar-label(fmt2(s.combined)))))
-    rows.push(table.cell(align: center + horizon, text(size: 0.85em)[#rank-text(s.rank)]))
+    rows.push(table.cell(align: center + horizon, text(size: 9.5pt)[#rank-text(s.rank)]))
   }
   table(
-    columns: (0.6cm, 3.0cm, 8.0cm, 2.6cm),
-    inset: (x: 3pt, y: 3pt),
-    stroke: none,
+    columns: (0.9cm, 3.1cm, 7.8cm, 2.4cm),
+    inset: (x: 4pt, y: 4pt),
+    stroke: grid-stroke,
     table.header(
-      [], [],
-      table.cell(align: left, text(size: 0.8em)[
-        #swatch(c-exposure, [#w-exposure × exposure]) #swatch(c-integration, [#w-integration × integration])]),
-      table.cell(align: center, text(size: 0.8em, fill: muted)[rank range]),
+      table.cell(align: center + horizon, fill: header-fill, text(size: 9pt, weight: "bold")[#sym.numero]),
+      table.cell(align: center + horizon, fill: header-fill, text(size: 9pt, weight: "bold")[Language]),
+      table.cell(align: center + horizon, fill: header-fill, text(size: 9pt, weight: "bold")[Combined score]),
+      table.cell(align: center + horizon, fill: header-fill, text(size: 9pt, weight: "bold")[Rank range]),
     ),
-    table.hline(stroke: 0.4pt + muted),
     ..rows,
   )
+  v(0.4em)
+  set text(font: sans, size: 9pt)
+  align(center)[
+    #swatch(c-exposure, [#w-exposure × exposure])
+    #swatch(c-integration, [#w-integration × integration])
+  ]
 }

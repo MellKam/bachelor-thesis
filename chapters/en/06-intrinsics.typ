@@ -133,7 +133,7 @@ All these operations are written after their operand, so a chain reads from left
 
 #figure(
   booktable(
-    columns: (auto, 1fr, 1fr),
+    columns: (auto, auto, 1fr),
     align: (left, left, left),
     table.header([Language], [Growing a memory], [The memory is named by]),
     table.hline(stroke: 0.5pt),

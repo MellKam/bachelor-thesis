@@ -1,25 +1,20 @@
 #import "template.typ": *
 
-// Everything a department is likely to want on the title page. Placeholders are
-// marked TBD; they are the only things to fill in before the first full build.
+// Everything a department is likely to want on the title page.
+// Metadata follows the WSZiB-ANS standard (Rysunek 1).
 #let meta = (
   lang: "en",
-  // Polish: "Projektowanie i implementacja języka programowania opartego na WebAssembly"
-  title: "Design and Implementation of a Programming Language Based on WebAssembly",
+  title: "Projektowanie i implementacja języka programowania opartego na WebAssembly",
+  subtitle: "Design and Implementation of a Programming Language Based on WebAssembly",
   author: "Artem Melnyk",
-  // Polish: prof. WSZiB - ANS dr inż. Janusz Majewski (promotor),
-  //         mgr inż. Marta Majewska (promotor pomocniczy)
-  supervisor: "Prof. Janusz Majewski, PhD Eng.",
-  auxiliary-supervisor: "Marta Majewska, MSc Eng.",
-  // Polish: Wyższa Szkoła Zarządzania i Bankowości w Krakowie
-  university: "School of Management and Banking in Kraków",
-  // Polish: Wydział Nauk Stosowanych
-  faculty: "Faculty of Applied Sciences",
-  // Polish: Informatyka (stacjonarne), zakres kształcenia: Programowanie obiektowe
-  programme: "Computer Science, specialisation: Object-Oriented Programming",
-  // Polish: Praca inżynierska
-  degree: "Engineering thesis",
-  place: "Kraków",
+  supervisor: "prof. WSZiB - ANS dr inż. Janusz Majewski",
+  auxiliary-supervisor: "mgr inż. Marta Majewska",
+  university: "Wyższa Szkoła Zarządzania i Bankowości\n- Akademia Nauk Stosowanych w Krakowie",
+  faculty: "Wydział Nauk Stosowanych",
+  field: "Informatyka",
+  scope: "Programowanie obiektowe",
+  degree: "PRACA DYPLOMOWA",
+  place: "KRAKÓW",
   date: "2026",
 )
 
@@ -28,6 +23,8 @@
 #title-page(meta)
 
 #show: front-matter
+
+#contents()
 
 // Original Polish text from the thesis proposal. It no longer matches the thesis;
 // translate the English abstract below for the Polish edition (streszczenie).
@@ -52,9 +49,6 @@
   The thesis presents the language design, implements its core in a proof-of-concept Rust compiler, and examines it with example programs and a comparison with other languages that target Wasm.
 ]
 
-#contents()
-#figure-lists()
-
 #show: main-matter
 
 #include "chapters/en/01-introduction.typ"
@@ -64,5 +58,7 @@
 #include "chapters/en/05-calls.typ"
 #include "chapters/en/06-intrinsics.typ"
 
-#unnumbered[Bibliography]
+#unnumbered[Bibliografia]
 #bibliography("refs.bib", title: none, style: "ieee")
+
+#figure-lists()
