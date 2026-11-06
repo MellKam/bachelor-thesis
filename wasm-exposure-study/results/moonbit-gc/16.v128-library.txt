@@ -1,0 +1,100 @@
+# 16-simd-memory-ops/moonbit-gc/v128-library spec=16
+$ moon build --release --target wasm-gc && cp _build/wasm-gc/release/build/src/src.wasm out.wasm
+Warning: `moon.mod.json` at '/study/probes/16-simd-memory-ops/moonbit-gc/v128-library' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
+Warning: [0014]
+    ╭─[ /study/probes/16-simd-memory-ops/moonbit-gc/v128-library/src/lib.mbt:23:3 ]
+    │
+ 23 │   @v128.v128_store(buf, 16, @v128.v128_load(buf, 0))
+    │   ────────┬───────  
+    │           ╰───────── Warning (alert_experimental): subject to breaking change without notice
+────╯
+Warning: [0014]
+    ╭─[ /study/probes/16-simd-memory-ops/moonbit-gc/v128-library/src/lib.mbt:23:29 ]
+    │
+ 23 │   @v128.v128_store(buf, 16, @v128.v128_load(buf, 0))
+    │                             ───────┬───────  
+    │                                    ╰───────── Warning (alert_experimental): subject to breaking change without notice
+────╯
+Warning: [0014]
+    ╭─[ /study/probes/16-simd-memory-ops/moonbit-gc/v128-library/src/lib.mbt:34:11 ]
+    │
+ 34 │   let r = @v128.v128_bitselect(@v128.v128_load(buf, 0), @v128.v128_load(buf, 16), @v128.v128_load(buf, 32))
+    │           ──────────┬─────────  
+    │                     ╰─────────── Warning (alert_experimental): subject to breaking change without notice
+────╯
+Warning: [0014]
+    ╭─[ /study/probes/16-simd-memory-ops/moonbit-gc/v128-library/src/lib.mbt:34:32 ]
+    │
+ 34 │   let r = @v128.v128_bitselect(@v128.v128_load(buf, 0), @v128.v128_load(buf, 16), @v128.v128_load(buf, 32))
+    │                                ───────┬───────  
+    │                                       ╰───────── Warning (alert_experimental): subject to breaking change without notice
+────╯
+Warning: [0014]
+    ╭─[ /study/probes/16-simd-memory-ops/moonbit-gc/v128-library/src/lib.mbt:34:57 ]
+    │
+ 34 │   let r = @v128.v128_bitselect(@v128.v128_load(buf, 0), @v128.v128_load(buf, 16), @v128.v128_load(buf, 32))
+    │                                                         ───────┬───────  
+    │                                                                ╰───────── Warning (alert_experimental): subject to breaking change without notice
+────╯
+Warning: [0014]
+    ╭─[ /study/probes/16-simd-memory-ops/moonbit-gc/v128-library/src/lib.mbt:34:83 ]
+    │
+ 34 │   let r = @v128.v128_bitselect(@v128.v128_load(buf, 0), @v128.v128_load(buf, 16), @v128.v128_load(buf, 32))
+    │                                                                                   ───────┬───────  
+    │                                                                                          ╰───────── Warning (alert_experimental): subject to breaking change without notice
+────╯
+Warning: [0014]
+    ╭─[ /study/probes/16-simd-memory-ops/moonbit-gc/v128-library/src/lib.mbt:35:3 ]
+    │
+ 35 │   @v128.v128_store(buf, 48, r)
+    │   ────────┬───────  
+    │           ╰───────── Warning (alert_experimental): subject to breaking change without notice
+────╯
+Warning: [0014]
+    ╭─[ /study/probes/16-simd-memory-ops/moonbit-gc/v128-library/src/lib.mbt:36:3 ]
+    │
+ 36 │   @v128.i32x4_extract_lane(r, 0).reinterpret_as_int()
+    │   ────────────┬───────────  
+    │               ╰───────────── Warning (alert_experimental): subject to breaking change without notice
+────╯
+Warning: [0014]
+    ╭─[ /study/probes/16-simd-memory-ops/moonbit-gc/v128-library/src/lib.mbt:49:11 ]
+    │
+ 49 │   let r = @v128.i8x16_narrow_i16x8_s(@v128.v128_load(buf, 0), @v128.v128_load(buf, 16))
+    │           ─────────────┬────────────  
+    │                        ╰────────────── Warning (alert_experimental): subject to breaking change without notice
+────╯
+Warning: [0014]
+    ╭─[ /study/probes/16-simd-memory-ops/moonbit-gc/v128-library/src/lib.mbt:49:38 ]
+    │
+ 49 │   let r = @v128.i8x16_narrow_i16x8_s(@v128.v128_load(buf, 0), @v128.v128_load(buf, 16))
+    │                                      ───────┬───────  
+    │                                             ╰───────── Warning (alert_experimental): subject to breaking change without notice
+────╯
+Warning: [0014]
+    ╭─[ /study/probes/16-simd-memory-ops/moonbit-gc/v128-library/src/lib.mbt:49:63 ]
+    │
+ 49 │   let r = @v128.i8x16_narrow_i16x8_s(@v128.v128_load(buf, 0), @v128.v128_load(buf, 16))
+    │                                                               ───────┬───────  
+    │                                                                      ╰───────── Warning (alert_experimental): subject to breaking change without notice
+────╯
+Warning: [0014]
+    ╭─[ /study/probes/16-simd-memory-ops/moonbit-gc/v128-library/src/lib.mbt:50:3 ]
+    │
+ 50 │   @v128.v128_store(buf, 32, r)
+    │   ────────┬───────  
+    │           ╰───────── Warning (alert_experimental): subject to breaking change without notice
+────╯
+Finished. moon: ran 2 tasks, now up to date (12 warnings, 0 errors)
+FAIL 16 probes/16-simd-memory-ops/moonbit-gc/v128-library//out.wasm (1335 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ instantiates
+  ✓ v_copy: export present
+  ✗ v_copy: instruction emitted (^(?=[\s\S]*v128.load)[\s\S]*v128.store)
+  ✗ v_copy: behaves  — no exported memory for the host to write test data into
+  ✓ v_select: export present
+  ✓ v_select: instruction emitted (v128.bitselect)
+  ✗ v_select: behaves  — no exported memory for the host to write test data into
+  ✓ v_narrow: export present
+  ✓ v_narrow: instruction emitted (i8x16.narrow_i16x8_s)
+  ✗ v_narrow: behaves  — no exported memory for the host to write test data into

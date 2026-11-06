@@ -1,0 +1,12 @@
+# 11-conversions-sign-extension/zig/lossy-cast spec=11
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm -mcpu=generic+nontrapping_fptoint+sign_extPASS 14 probes/11-conversions-sign-extension/zig/lossy-cast/out.wasm (174 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ instantiates
+  ✓ i32.trunc_sat_f64 emitted
+  ✓ i32.extend8_s emitted
+  ✓ i32.extend16_s emitted
+  ✓ sat_trunc(1e20) == i32 max
+  ✓ sat_trunc(-1e20) == i32 min
+  ✓ sat_trunc(NaN) == 0
+  ✓ ext8(0x80) == -128
+  ✓ ext16(0x8000) == -32768

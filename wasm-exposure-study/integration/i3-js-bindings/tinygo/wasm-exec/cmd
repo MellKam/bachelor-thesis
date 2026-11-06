@@ -1,0 +1,2 @@
+cp "$(tinygo env TINYGOROOT)/targets/wasm_exec.js" wasm_exec.js
+tinygo build -o out.wasm -target=wasm -no-debug .

@@ -1,0 +1,10 @@
+# 25-multiple-memories/assemblyscript/memory-index spec=25
+$ asc main.ts -o out.wasm -O --noAssert
+ERROR TS2554: Expected 0 arguments, but got 1.
+   :
+ 3 │ return memory.size(1);
+   │        ~~~~~~~~~~~~~~
+   └─ in main.ts(3,10)
+
+FAILURE 1 compile error(s)
+BUILD FAILED

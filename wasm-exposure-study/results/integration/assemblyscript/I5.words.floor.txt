@@ -1,0 +1,8 @@
+# i5-size/words/assemblyscript/floor
+$ asc main.ts -o out.wasm -O --noAssert --runtime stub
+PASS I5:words integration/i5-size/words/assemblyscript/floor//out.wasm (324 bytes)
+  ✓ analyse("the quick brown fox") is right
+  ✓ analyse("") is right
+  ✓ analyse("  a  bb ccc  ") is right
+  ✓ analyse("héllo wörld") is right
+  ✓ analyse("lorem ipsum … (100001 bytes)") is right

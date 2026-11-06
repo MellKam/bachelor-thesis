@@ -1,0 +1,7 @@
+# i5-size/life/rust/floor
+$ rm -rf /tmp/i5-life-floor && cargo build --release --target wasm32-unknown-unknown --target-dir /tmp/i5-life-floor && cp /tmp/i5-life-floor/wasm32-unknown-unknown/release/life.wasm out.wasm
+   Compiling life v0.1.0 (/study/integration/i5-size/life/rust/floor)
+    Finished `release` profile [optimized] target(s) in 0.24s
+PASS I5:life integration/i5-size/life/rust/floor//out.wasm (677 bytes)
+  ✓ width x height is 64 x 64
+  ✓ matches the reference after 100 steps

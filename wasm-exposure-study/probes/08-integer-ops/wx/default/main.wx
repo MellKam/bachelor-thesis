@@ -1,0 +1,13 @@
+func i_add(a: i32, b: i32) -> i32 { a + b }
+func i_sub(a: i32, b: i32) -> i32 { a - b }
+func i_mul(a: i32, b: i32) -> i32 { a * b }
+func i_div(a: i32, b: i32) -> i32 { a / b }
+func i_rem(a: i32, b: i32) -> i32 { a % b }
+
+export {
+    i_add,
+    i_sub,
+    i_mul,
+    i_div,
+    i_rem,
+}

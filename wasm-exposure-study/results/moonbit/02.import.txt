@@ -1,0 +1,10 @@
+# 02-memory/moonbit/import spec=02:import
+$ moon build --release --target wasm && cp _build/wasm/release/build/src/src.wasm out.wasm
+Warning: `moon.mod.json` at '/study/probes/02-memory/moonbit/import' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
+Finished. moon: no work to do
+PASS 02:import probes/02-memory/moonbit/import//out.wasm (195 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exactly one memory
+  ✓ limits min 1 max 4
+  ✓ imported as host.mem
+  ✓ instantiates

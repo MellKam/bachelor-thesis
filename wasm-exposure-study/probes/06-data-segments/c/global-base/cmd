@@ -1,0 +1,1 @@
+clang --target=wasm32-unknown-unknown -O2 -nostdlib -Wl,--no-entry -Wl,--global-base=1024 -Wl,-z,stack-size=1024 main.c -o out.wasm

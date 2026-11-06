@@ -1,0 +1,37 @@
+# 08-integer-ops/moonbit/inline-wasm spec=08
+$ moon build --release --target wasm && cp _build/wasm/release/build/src/src.wasm out.wasm
+Warning: `moon.mod.json` at '/study/probes/08-integer-ops/moonbit/inline-wasm' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
+Finished. moon: ran 2 tasks, now up to date
+FAIL 08 probes/08-integer-ops/moonbit/inline-wasm//out.wasm (384 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ instantiates
+  ✓ add: export present
+  ✓ add: instruction emitted (i32.add)
+  ✓ add: behaves
+  ✓ sub: export present
+  ✓ sub: instruction emitted (i32.sub)
+  ✓ sub: behaves
+  ✓ mul: export present
+  ✓ mul: instruction emitted (i32.mul)
+  ✓ mul: behaves
+  ✓ div: export present
+  ✓ div: instruction emitted (i32.div_[su])
+  ✓ div: behaves
+  ✓ rem: export present
+  ✓ rem: instruction emitted (i32.rem_[su])
+  ✓ rem: behaves
+  ✓ clz: export present
+  ✓ clz: instruction emitted (i32.clz)
+  ✓ clz: behaves
+  ✓ ctz: export present
+  ✓ ctz: instruction emitted (i32.ctz)
+  ✓ ctz: behaves
+  ✓ popcnt: export present
+  ✓ popcnt: instruction emitted (i32.popcnt)
+  ✓ popcnt: behaves
+  ✓ rotl: export present
+  ✓ rotl: instruction emitted (i32.rotl)
+  ✓ rotl: behaves
+  ✓ rotr: export present
+  ✗ rotr: instruction emitted (i32.rotr)
+  ✓ rotr: behaves

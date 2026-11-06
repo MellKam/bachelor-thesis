@@ -1,0 +1,15 @@
+# i2-component/kotlin/hand-abi-wasm-tools
+$ sh ../../../kotlin-build.sh wasm-wasi
+wasm-tools component embed ../../../wit out.wasm --world words-world -o embedded.wasm
+wasm-tools component new embedded.wasm --adapt wasi_snapshot_preview1=/opt/wasi-adapter/wasi_snapshot_preview1.reactor.wasm -o component.wasm && mv component.wasm out.wasm
+PASS I2 integration/i2-component/kotlin/hand-abi-wasm-tools//out.wasm (623582 bytes)
+  ✓ the file is a component, not a core module
+  ✓ wasm-tools validate (component-model)
+  ✓ exports study:words/words
+  ✓ the interface has the reference types
+  ✓ analyse("the quick brown fox") is right
+  ✓ analyse("") is right
+  ✓ analyse("  a  bb ccc  ") is right
+  ✓ analyse("héllo wörld") is right
+  ✓ analyse("lorem ipsum … (100001 bytes)") is right
+  ✓ imports: 4 WASI interfaces

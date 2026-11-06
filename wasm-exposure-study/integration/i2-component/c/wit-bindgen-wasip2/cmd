@@ -1,0 +1,1 @@
+rm -rf gen && wit-bindgen c ../../../wit/words.wit --out-dir gen && clang --target=wasm32-wasip2 -Os -mexec-model=reactor main.c gen/words_world.c gen/words_world_component_type.o -o out.wasm

@@ -1,0 +1,15 @@
+# 02-memory/assemblyscript/export spec=02:export
+$ asc main.ts -o out.wasm -O --noAssert --initialMemory 1 --maximumMemory 4FAIL 02:export probes/02-memory/assemblyscript/export/out.wasm (53 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exactly one memory
+  ✓ limits min 1 max 4
+  ✓ defined in module (not imported)
+  ✗ exported as "mem"  — memory exports: memory
+  ✓ instantiates
+FAIL 02:export probes/02-memory/assemblyscript/export/out.wasm (53 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exactly one memory
+  ✓ limits min 1 max 4
+  ✓ defined in module (not imported)
+  ✗ exported as "mem"  — memory exports: memory
+  ✓ instantiates

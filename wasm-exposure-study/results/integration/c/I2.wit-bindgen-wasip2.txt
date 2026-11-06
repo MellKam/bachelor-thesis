@@ -1,0 +1,16 @@
+# i2-component/c/wit-bindgen-wasip2
+$ rm -rf gen && wit-bindgen c ../../../wit/words.wit --out-dir gen && clang --target=wasm32-wasip2 -Os -mexec-model=reactor main.c gen/words_world.c gen/words_world_component_type.o -o out.wasm
+Generating "gen/words_world.c"
+Generating "gen/words_world.h"
+Generating "gen/words_world_component_type.o"
+PASS I2 integration/i2-component/c/wit-bindgen-wasip2//out.wasm (52645 bytes)
+  ✓ the file is a component, not a core module
+  ✓ wasm-tools validate (component-model)
+  ✓ exports study:words/words
+  ✓ the interface has the reference types
+  ✓ analyse("the quick brown fox") is right
+  ✓ analyse("") is right
+  ✓ analyse("  a  bb ccc  ") is right
+  ✓ analyse("héllo wörld") is right
+  ✓ analyse("lorem ipsum … (100001 bytes)") is right
+  ✓ imports: none

@@ -1,0 +1,9 @@
+# 05-start-function/moonbit-gc/init spec=05
+$ moon build --release --target wasm-gc && cp _build/wasm-gc/release/build/src/src.wasm out.wasm
+Warning: `moon.mod.json` at '/study/probes/05-start-function/moonbit-gc/init' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
+Finished. moon: ran 2 tasks, now up to date
+PASS 05 probes/05-start-function/moonbit-gc/init//out.wasm (200 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ start section references a function
+  ✓ instantiates
+  ✓ get() == 7 on first call

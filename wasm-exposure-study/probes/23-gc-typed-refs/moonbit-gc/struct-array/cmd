@@ -1,0 +1,1 @@
+moon build --release --target wasm-gc && cp _build/wasm-gc/release/build/src/src.wasm out.wasm

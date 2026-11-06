@@ -1,0 +1,10 @@
+# 12-bulk-memory/zig/mcpu-bulk-memory spec=12
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm -mcpu=generic+bulk_memoryPASS 13 probes/12-bulk-memory/zig/mcpu-bulk-memory/out.wasm (230 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ export bulk_test
+  ✓ memory.fill emitted
+  ✓ memory.copy emitted
+  · array.fill / array.copy used instead (the GC-array equivalents; informational)
+  ✓ instantiates
+  ✓ bulk_test(8) == 40
+  ✓ bulk_test(40) == 200

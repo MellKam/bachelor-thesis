@@ -1,0 +1,11 @@
+# 27-exception-tags/moonbit/raise spec=27
+$ moon build --release --target wasm && cp _build/wasm/release/build/src/src.wasm out.wasm
+Warning: `moon.mod.json` at '/study/probes/27-exception-tags/moonbit/raise' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
+Finished. moon: no work to do
+FAIL 27 probes/27-exception-tags/moonbit/raise//out.wasm (2461 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ tag section with at least one tag  — tags: []
+  ✓ tag payload types (informational; the reference uses i32)
+  ✗ exception-handling instructions
+  ✓ instantiates
+  ✓ roundtrip(5) == 5

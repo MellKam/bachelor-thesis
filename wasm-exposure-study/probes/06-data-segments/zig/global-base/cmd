@@ -1,0 +1,1 @@
+zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm --global-base=1024 --stack 1024

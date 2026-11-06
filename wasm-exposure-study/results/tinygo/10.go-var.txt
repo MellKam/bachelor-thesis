@@ -1,0 +1,8 @@
+# 10-globals/tinygo/go-var spec=10
+$ tinygo build -o out.wasm -target=wasm-unknown -no-debug main.goFAIL 03 probes/10-globals/tinygo/go-var/out.wasm (774 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ exported global "counter"
+  ✗ counter is mutable i32
+  ✗ imported global host.base (immutable i32)
+  ✗ instantiates  — WebAssembly.instantiate(): Import #0 "host" "base": function import requires a callable
+  ✗ export bump

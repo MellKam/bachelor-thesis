@@ -1,0 +1,35 @@
+{
+  "feature": "25",
+  "file": "probes/25-multiple-memories/zig/default/out.wasm",
+  "bytes": 74,
+  "pass": false,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": false,
+      "detail": "error: func 0 failed to validate",
+      "info": true
+    },
+    {
+      "name": "two or more memories",
+      "ok": false,
+      "detail": "1"
+    },
+    {
+      "name": "memory.copy with differing memory operands",
+      "ok": false,
+      "detail": "copies: []"
+    },
+    {
+      "name": "instantiates",
+      "ok": false,
+      "detail": "WebAssembly.instantiate(): Compiling function #0 failed: memory index 1 exceeds number of declared memories (1) @+72"
+    },
+    {
+      "name": "export copy_test",
+      "ok": false,
+      "detail": ""
+    }
+  ],
+  "unsupported": []
+}

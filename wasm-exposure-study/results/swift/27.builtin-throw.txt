@@ -1,0 +1,121 @@
+# 27-exception-tags/swift/builtin-throw spec=27
+$ swiftc -target wasm32-unknown-none-wasm -enable-experimental-feature Embedded -wmo -parse-as-library -O -enable-experimental-feature BuiltinModule main.swift -o out.wasm -Xlinker --no-entry -Xclang-linker -nostdlib
+error: compile command failed due to signal 11 (use -v to see invocation)
+Please submit a bug report (https://swift.org/contributing/#reporting-bugs) and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /opt/swift/usr/bin/swift-frontend -frontend -c main.swift -target wasm32-unknown-none-wasm -disable-objc-interop -no-color-diagnostics -Xcc -fno-color-diagnostics -O -enable-experimental-feature Embedded -enable-experimental-feature BuiltinModule -empty-abi-descriptor -no-auto-bridging-header-chaining -module-name out -in-process-plugin-server-path /opt/swift/usr/lib/swift/host/libSwiftInProcPluginServer.so -plugin-path /opt/swift/usr/lib/swift/host/plugins -plugin-path /opt/swift/usr/local/lib/swift/host/plugins -enable-default-cmo -parse-as-library -o /tmp/TemporaryDirectory.T1GXRx/out-1.o
+1.	Swift version 6.4 (swift-6.4-RELEASE)
+2.	Compiling with effective version 5.10
+3.	While evaluating request TypeCheckPrimaryFileRequest(source_file "main.swift")
+4.	While evaluating request TypeCheckFunctionBodyRequest(out.(file).roundtrip@main.swift:5:6)
+5.	While type-checking statement at [main.swift:5:37 - line:8:1] RangeText="{
+    Builtin.int_wasm_throw(Int32(0)._value, UnsafeMutableRawPointer(bitPattern: 16)!._rawValue)
+    return x
+"
+6.	While type-checking expression at [main.swift:6:5 - line:6:95] RangeText="Builtin.int_wasm_throw(Int32(0)._value, UnsafeMutableRawPointer(bitPattern: 16)!._rawValue"
+7.	While type-checking-target starting at main.swift:6:13
+8.	While evaluating request ModuleQualifiedLookupRequest(0x5c2492db7d98 AbstractFunctionDecl name=roundtrip(_:) : (Int32) -> Int32, Builtin, 'int_wasm_throw', { NL_ProtocolMembers, NL_RemoveNonVisible, NL_RemoveOverridden, NL_OnlyTypes })
+9.	While evaluating request LookupInModuleRequest(0x5c2492bc6808 Module name=Builtin, 'int_wasm_throw', 0, QualifiedLookup, TypesOnly, 0x5c2492db7478 FileUnit file="main.swift", { NL_ProtocolMembers, NL_RemoveNonVisible, NL_RemoveOverridden, NL_OnlyTypes })
+ #0 0x00005c248f29a9d8 llvm::sys::PrintStackTrace(llvm::raw_ostream&, int) (/opt/swift/usr/bin/swift-frontend+0x76569d8)
+ #1 0x00005c248f298425 llvm::sys::RunSignalHandlers() (/opt/swift/usr/bin/swift-frontend+0x7654425)
+ #2 0x00005c248f29b641 SignalHandler(int, siginfo_t*, void*) Signals.cpp:0:0
+ #3 0x0000761468390d70 (/lib/x86_64-linux-gnu/libc.so.6+0x3fd70)
+ #4 0x00005c248a4da2ce $s20_CompilerRegexParser0C0V22classifyScriptProperty33_A405E94D6914CE79D1EDDF2FD3CF5458LLys7UnicodeOAAE0E0OSgSSFZAJSSXEfU_ crtstuff.c:0:0
+ #5 0x00005c248f21423d llvm::allocate_buffer(unsigned long, unsigned long) (/opt/swift/usr/bin/swift-frontend+0x75d023d)
+ #6 0x00005c248a045a66 llvm::DenseMap<swift::BuiltinIntegerWidth, swift::BuiltinIntegerType*, llvm::DenseMapInfo<swift::BuiltinIntegerWidth, void>, llvm::detail::DenseMapPair<swift::BuiltinIntegerWidth, swift::BuiltinIntegerType*>>::grow(unsigned int) crtstuff.c:0:0
+ #7 0x00005c248a026edb llvm::DenseMapBase<llvm::DenseMap<swift::BuiltinIntegerWidth, swift::BuiltinIntegerType*, llvm::DenseMapInfo<swift::BuiltinIntegerWidth, void>, llvm::detail::DenseMapPair<swift::BuiltinIntegerWidth, swift::BuiltinIntegerType*>>, swift::BuiltinIntegerWidth, swift::BuiltinIntegerType*, llvm::DenseMapInfo<swift::BuiltinIntegerWidth, void>, llvm::detail::DenseMapPair<swift::BuiltinIntegerWidth, swift::BuiltinIntegerType*>>::operator[](swift::BuiltinIntegerWidth const&) crtstuff.c:0:0
+ #8 0x00005c248a026d0f swift::BuiltinIntegerType::get(swift::BuiltinIntegerWidth, swift::ASTContext const&) (/opt/swift/usr/bin/swift-frontend+0x23e2d0f)
+ #9 0x00005c248a150948 swift::getBuiltinValueDecl(swift::ASTContext&, swift::Identifier) (/opt/swift/usr/bin/swift-frontend+0x250c948)
+#10 0x00005c248a2e4699 swift::BuiltinUnit::LookupCache::lookupValue(swift::Identifier, swift::NLKind, swift::BuiltinUnit const&, llvm::SmallVectorImpl<swift::ValueDecl*>&) (/opt/swift/usr/bin/swift-frontend+0x26a0699)
+#11 0x00005c248a2e9d67 swift::ModuleDecl::lookupValue(swift::DeclName, swift::NLKind, swift::optionset::OptionSet<swift::ModuleLookupFlags, unsigned int>, llvm::SmallVectorImpl<swift::ValueDecl*>&) const (/opt/swift/usr/bin/swift-frontend+0x26a5d67)
+#12 0x00005c248a327ee3 (anonymous namespace)::ModuleNameLookup<(anonymous namespace)::LookupByName>::lookupInModule(llvm::SmallVectorImpl<swift::ValueDecl*>&, swift::DeclContext const*, swift::ImportPath::Access, swift::DeclContext const*, bool, swift::NLOptions) ModuleNameLookup.cpp:0:0
+#13 0x00005c248a327cb3 swift::LookupInModuleRequest::evaluate(swift::Evaluator&, swift::DeclContext const*, swift::DeclName, bool, swift::NLKind, swift::namelookup::ResolutionKind, swift::DeclContext const*, swift::NLOptions) const (/opt/swift/usr/bin/swift-frontend+0x26e3cb3)
+#14 0x00005c248a359278 swift::SimpleRequest<swift::LookupInModuleRequest, llvm::SmallVector<swift::ValueDecl*, 4u> (swift::DeclContext const*, swift::DeclName, bool, swift::NLKind, swift::namelookup::ResolutionKind, swift::DeclContext const*, swift::NLOptions), (swift::RequestFlags)33>::evaluateRequest(swift::LookupInModuleRequest const&, swift::Evaluator&) crtstuff.c:0:0
+#15 0x00005c248a32a6e0 swift::LookupInModuleRequest::OutputType swift::Evaluator::getResultUncached<swift::LookupInModuleRequest, swift::LookupInModuleRequest::OutputType swift::evaluateOrDefault<swift::LookupInModuleRequest>(swift::Evaluator&, swift::LookupInModuleRequest, swift::LookupInModuleRequest::OutputType)::'lambda'()>(swift::LookupInModuleRequest const&, swift::LookupInModuleRequest::OutputType swift::evaluateOrDefault<swift::LookupInModuleRequest>(swift::Evaluator&, swift::LookupInModuleRequest, swift::LookupInModuleRequest::OutputType)::'lambda'())::'lambda'()::operator()() const crtstuff.c:0:0
+#16 0x00005c248a32a626 swift::LookupInModuleRequest::OutputType swift::Evaluator::getResultUncached<swift::LookupInModuleRequest, swift::LookupInModuleRequest::OutputType swift::evaluateOrDefault<swift::LookupInModuleRequest>(swift::Evaluator&, swift::LookupInModuleRequest, swift::LookupInModuleRequest::OutputType)::'lambda'()>(swift::LookupInModuleRequest const&, swift::LookupInModuleRequest::OutputType swift::evaluateOrDefault<swift::LookupInModuleRequest>(swift::Evaluator&, swift::LookupInModuleRequest, swift::LookupInModuleRequest::OutputType)::'lambda'()) crtstuff.c:0:0
+#17 0x00005c248a329116 swift::LookupInModuleRequest::OutputType swift::evaluateOrDefault<swift::LookupInModuleRequest>(swift::Evaluator&, swift::LookupInModuleRequest, swift::LookupInModuleRequest::OutputType) (/opt/swift/usr/bin/swift-frontend+0x26e5116)
+#18 0x00005c248a328fa9 swift::namelookup::lookupInModule(swift::DeclContext const*, swift::DeclName, bool, llvm::SmallVectorImpl<swift::ValueDecl*>&, swift::NLKind, swift::namelookup::ResolutionKind, swift::DeclContext const*, swift::SourceLoc, swift::NLOptions) (/opt/swift/usr/bin/swift-frontend+0x26e4fa9)
+#19 0x00005c248a3399ef swift::ModuleQualifiedLookupRequest::evaluate(swift::Evaluator&, swift::DeclContext const*, swift::ModuleDecl*, swift::DeclNameRef, swift::NLOptions) const (/opt/swift/usr/bin/swift-frontend+0x26f59ef)
+#20 0x00005c248a3592ae swift::SimpleRequest<swift::ModuleQualifiedLookupRequest, llvm::SmallVector<swift::ValueDecl*, 4u> (swift::DeclContext const*, swift::ModuleDecl*, swift::DeclNameRef, swift::NLOptions), (swift::RequestFlags)33>::evaluateRequest(swift::ModuleQualifiedLookupRequest const&, swift::Evaluator&) crtstuff.c:0:0
+#21 0x00005c248a349f90 swift::ModuleQualifiedLookupRequest::OutputType swift::Evaluator::getResultUncached<swift::ModuleQualifiedLookupRequest, swift::ModuleQualifiedLookupRequest::OutputType swift::evaluateOrDefault<swift::ModuleQualifiedLookupRequest>(swift::Evaluator&, swift::ModuleQualifiedLookupRequest, swift::ModuleQualifiedLookupRequest::OutputType)::'lambda'()>(swift::ModuleQualifiedLookupRequest const&, swift::ModuleQualifiedLookupRequest::OutputType swift::evaluateOrDefault<swift::ModuleQualifiedLookupRequest>(swift::Evaluator&, swift::ModuleQualifiedLookupRequest, swift::ModuleQualifiedLookupRequest::OutputType)::'lambda'())::'lambda'()::operator()() const crtstuff.c:0:0
+#22 0x00005c248a349ed6 swift::ModuleQualifiedLookupRequest::OutputType swift::Evaluator::getResultUncached<swift::ModuleQualifiedLookupRequest, swift::ModuleQualifiedLookupRequest::OutputType swift::evaluateOrDefault<swift::ModuleQualifiedLookupRequest>(swift::Evaluator&, swift::ModuleQualifiedLookupRequest, swift::ModuleQualifiedLookupRequest::OutputType)::'lambda'()>(swift::ModuleQualifiedLookupRequest const&, swift::ModuleQualifiedLookupRequest::OutputType swift::evaluateOrDefault<swift::ModuleQualifiedLookupRequest>(swift::Evaluator&, swift::ModuleQualifiedLookupRequest, swift::ModuleQualifiedLookupRequest::OutputType)::'lambda'()) crtstuff.c:0:0
+#23 0x00005c248a334b06 swift::ModuleQualifiedLookupRequest::OutputType swift::evaluateOrDefault<swift::ModuleQualifiedLookupRequest>(swift::Evaluator&, swift::ModuleQualifiedLookupRequest, swift::ModuleQualifiedLookupRequest::OutputType) (/opt/swift/usr/bin/swift-frontend+0x26f0b06)
+#24 0x00005c248a3385df swift::DeclContext::lookupQualified(swift::ModuleDecl*, swift::DeclNameRef, swift::SourceLoc, swift::NLOptions, llvm::SmallVectorImpl<swift::ValueDecl*>&) const (/opt/swift/usr/bin/swift-frontend+0x26f45df)
+#25 0x00005c2489c45564 swift::TypeChecker::lookupMemberType(swift::DeclContext*, swift::Type, swift::DeclNameRef, swift::SourceLoc, swift::optionset::OptionSet<swift::NameLookupFlags, unsigned int>) (/opt/swift/usr/bin/swift-frontend+0x2001564)
+#26 0x00005c2489b10aa9 (anonymous namespace)::TypeExprSimplifier::simplifyNestedTypeExpr(swift::UnresolvedDotExpr*)::$_0::operator()(swift::TypeDecl*, swift::DeclNameLoc) const PreCheckTarget.cpp:0:0
+#27 0x00005c2489b0f445 (anonymous namespace)::TypeExprSimplifier::simplifyTypeExpr(swift::Expr*) PreCheckTarget.cpp:0:0
+#28 0x00005c2489b11c91 (anonymous namespace)::PreCheckTarget::walkToExprPost(swift::Expr*) PreCheckTarget.cpp:0:0
+#29 0x00005c248a105fe3 (anonymous namespace)::Traversal::visitApplyExpr(swift::ApplyExpr*) ASTWalker.cpp:0:0
+#30 0x00005c248a101dff (anonymous namespace)::Traversal::visit(swift::Expr*) ASTWalker.cpp:0:0
+#31 0x00005c248a101470 swift::Expr::walk(swift::ASTWalker&) (/opt/swift/usr/bin/swift-frontend+0x24bd470)
+#32 0x00005c2489b18de9 swift::constraints::SyntacticElementTarget::walk(swift::ASTWalker&) const (/opt/swift/usr/bin/swift-frontend+0x1ed4de9)
+#33 0x00005c2489b0cebc swift::constraints::ConstraintSystem::preCheckTarget(swift::constraints::SyntacticElementTarget&) (/opt/swift/usr/bin/swift-frontend+0x1ec8ebc)
+#34 0x00005c2489bae8fd swift::TypeChecker::typeCheckTarget(swift::constraints::SyntacticElementTarget&, swift::optionset::OptionSet<swift::TypeCheckExprFlags, unsigned int>, swift::DiagnosticTransaction*) (/opt/swift/usr/bin/swift-frontend+0x1f6a8fd)
+#35 0x00005c2489bae84d swift::TypeChecker::typeCheckExpression(swift::constraints::SyntacticElementTarget&, swift::optionset::OptionSet<swift::TypeCheckExprFlags, unsigned int>, swift::DiagnosticTransaction*) (/opt/swift/usr/bin/swift-frontend+0x1f6a84d)
+#36 0x00005c2489bae741 swift::TypeChecker::typeCheckExpression(swift::Expr*&, swift::DeclContext*, swift::constraints::ContextualTypeInfo, swift::optionset::OptionSet<swift::TypeCheckExprFlags, unsigned int>) (/opt/swift/usr/bin/swift-frontend+0x1f6a741)
+#37 0x00005c2489c8eadf (anonymous namespace)::StmtChecker::typeCheckASTNode(swift::ASTNode&) TypeCheckStmt.cpp:0:0
+#38 0x00005c2489c940ec swift::ASTVisitor<(anonymous namespace)::StmtChecker, void, swift::Stmt*, void, void, void, void>::visit(swift::Stmt*) TypeCheckStmt.cpp:0:0
+#39 0x00005c2489c964ac bool (anonymous namespace)::StmtChecker::typeCheckStmt<swift::BraceStmt>(swift::BraceStmt*&) TypeCheckStmt.cpp:0:0
+#40 0x00005c2489c8fd23 (anonymous namespace)::StmtChecker::typeCheckBody(swift::BraceStmt*&) TypeCheckStmt.cpp:0:0
+#41 0x00005c2489c8fae6 swift::TypeCheckFunctionBodyRequest::evaluate(swift::Evaluator&, swift::AbstractFunctionDecl*) const (/opt/swift/usr/bin/swift-frontend+0x204bae6)
+#42 0x00005c248a237bdd swift::TypeCheckFunctionBodyRequest::OutputType swift::Evaluator::getResultUncached<swift::TypeCheckFunctionBodyRequest, swift::TypeCheckFunctionBodyRequest::OutputType swift::evaluateOrDefault<swift::TypeCheckFunctionBodyRequest>(swift::Evaluator&, swift::TypeCheckFunctionBodyRequest, swift::TypeCheckFunctionBodyRequest::OutputType)::'lambda'()>(swift::TypeCheckFunctionBodyRequest const&, swift::TypeCheckFunctionBodyRequest::OutputType swift::evaluateOrDefault<swift::TypeCheckFunctionBodyRequest>(swift::Evaluator&, swift::TypeCheckFunctionBodyRequest, swift::TypeCheckFunctionBodyRequest::OutputType)::'lambda'()) crtstuff.c:0:0
+#43 0x00005c248a237ae7 swift::TypeCheckFunctionBodyRequest::OutputType swift::Evaluator::getResultCached<swift::TypeCheckFunctionBodyRequest, swift::TypeCheckFunctionBodyRequest::OutputType swift::evaluateOrDefault<swift::TypeCheckFunctionBodyRequest>(swift::Evaluator&, swift::TypeCheckFunctionBodyRequest, swift::TypeCheckFunctionBodyRequest::OutputType)::'lambda'(), (void*)0>(swift::TypeCheckFunctionBodyRequest const&, swift::TypeCheckFunctionBodyRequest::OutputType swift::evaluateOrDefault<swift::TypeCheckFunctionBodyRequest>(swift::Evaluator&, swift::TypeCheckFunctionBodyRequest, swift::TypeCheckFunctionBodyRequest::OutputType)::'lambda'()) crtstuff.c:0:0
+#44 0x00005c248a19ac5b swift::AbstractFunctionDecl::getTypecheckedBody() const (/opt/swift/usr/bin/swift-frontend+0x2556c5b)
+#45 0x00005c248a2f964c swift::SourceFile::typeCheckDelayedFunctions() (/opt/swift/usr/bin/swift-frontend+0x26b564c)
+#46 0x00005c2489cddda1 swift::TypeCheckPrimaryFileRequest::evaluate(swift::Evaluator&, swift::SourceFile*) const (/opt/swift/usr/bin/swift-frontend+0x2099da1)
+#47 0x00005c2489ce1ace swift::TypeCheckPrimaryFileRequest::OutputType swift::Evaluator::getResultUncached<swift::TypeCheckPrimaryFileRequest, swift::TypeCheckPrimaryFileRequest::OutputType swift::evaluateOrDefault<swift::TypeCheckPrimaryFileRequest>(swift::Evaluator&, swift::TypeCheckPrimaryFileRequest, swift::TypeCheckPrimaryFileRequest::OutputType)::'lambda'()>(swift::TypeCheckPrimaryFileRequest const&, swift::TypeCheckPrimaryFileRequest::OutputType swift::evaluateOrDefault<swift::TypeCheckPrimaryFileRequest>(swift::Evaluator&, swift::TypeCheckPrimaryFileRequest, swift::TypeCheckPrimaryFileRequest::OutputType)::'lambda'()) crtstuff.c:0:0
+#48 0x00005c2489ce1978 swift::TypeCheckPrimaryFileRequest::OutputType swift::Evaluator::getResultCached<swift::TypeCheckPrimaryFileRequest, swift::TypeCheckPrimaryFileRequest::OutputType swift::evaluateOrDefault<swift::TypeCheckPrimaryFileRequest>(swift::Evaluator&, swift::TypeCheckPrimaryFileRequest, swift::TypeCheckPrimaryFileRequest::OutputType)::'lambda'(), (void*)0>(swift::TypeCheckPrimaryFileRequest const&, swift::TypeCheckPrimaryFileRequest::OutputType swift::evaluateOrDefault<swift::TypeCheckPrimaryFileRequest>(swift::Evaluator&, swift::TypeCheckPrimaryFileRequest, swift::TypeCheckPrimaryFileRequest::OutputType)::'lambda'()) crtstuff.c:0:0
+#49 0x00005c2489cddc64 swift::performTypeChecking(swift::SourceFile&) (/opt/swift/usr/bin/swift-frontend+0x2099c64)
+#50 0x00005c2488ac66c9 bool llvm::function_ref<bool (swift::SourceFile&)>::callback_fn<swift::CompilerInstance::performSema()::$_0>(long, swift::SourceFile&) Frontend.cpp:0:0
+#51 0x00005c2488abbb21 swift::CompilerInstance::forEachFileToTypeCheck(llvm::function_ref<bool (swift::SourceFile&)>) (/opt/swift/usr/bin/swift-frontend+0xe77b21)
+#52 0x00005c2488abba5b swift::CompilerInstance::performSema() (/opt/swift/usr/bin/swift-frontend+0xe77a5b)
+#53 0x00005c24887b6189 performCompile(swift::CompilerInstance&, int&, swift::FrontendObserver*, llvm::ArrayRef<char const*>) FrontendTool.cpp:0:0
+#54 0x00005c24887b3a88 swift::performFrontend(llvm::ArrayRef<char const*>, char const*, void*, swift::FrontendObserver*) (/opt/swift/usr/bin/swift-frontend+0xb6fa88)
+#55 0x00005c24884f267a swift::mainEntry(int, char const**) (/opt/swift/usr/bin/swift-frontend+0x8ae67a)
+#56 0x000076146837aca8 (/lib/x86_64-linux-gnu/libc.so.6+0x29ca8)
+#57 0x000076146837ad65 __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x29d65)
+#58 0x00005c24884f1bc1 _start (/opt/swift/usr/bin/swift-frontend+0x8adbc1)
+
+*** Signal 11: Backtracing from 0x76146845f4f9... done ***
+
+*** Program crashed: Bad pointer dereference at 0x0000000000000000 ***
+
+Platform: x86_64 Linux (Debian GNU/Linux 13 (trixie))
+
+Thread 0 "swift-frontend" crashed:
+
+0  0x000076146845f4f9 <unknown> in libc.so.6
+
+
+Registers:
+
+rax 0x0000000000000000  0
+rdx 0x000000000000000b  11
+rcx 0x000076146845f4f9  48 3d 01 f0 ff ff 73 01 c3 48 8b 0d e7 68 0d 00  H=·ðÿÿs·ÃH··çh··
+rbx 0x000000000000000b  11
+rsi 0x0000000000000bdc  3036
+rdi 0x0000000000000bdc  3036
+rbp 0x0000000000000bdc  3036
+rsp 0x00005c2492ba3828  6b b6 29 8f 24 5c 00 00 b0 3a ba 92 24 5c 00 00  k¶)·$\··°:º·$\··
+ r8 0x00005c2492ba3ab0  0b 00 00 00 00 00 00 00 80 00 00 00 00 00 00 00  ················
+ r9 0x00005c2492ba3ab0  0b 00 00 00 00 00 00 00 80 00 00 00 00 00 00 00  ················
+r10 0x00005c2492ba3ab0  0b 00 00 00 00 00 00 00 80 00 00 00 00 00 00 00  ················
+r11 0x0000000000000246  582
+r12 0x00007fff21f4c1d8  28 c2 f4 21 ff 7f 00 00 ff ff ff ff ff ff ff ff  (Âô!ÿ···ÿÿÿÿÿÿÿÿ
+r13 0x00007fff21f4c198  d8 c1 f4 21 ff 7f 00 00 10 c1 f4 21 ff 7f 00 00  ØÁô!ÿ····Áô!ÿ···
+r14 0x0000000000000000  0
+r15 0x00005c2492ba38c8  ff ff ff 7f fe ff ff ff 00 00 00 00 00 00 00 00  ÿÿÿ·þÿÿÿ········
+rip 0x000076146845f4f9  48 3d 01 f0 ff ff 73 01 c3 48 8b 0d e7 68 0d 00  H=·ðÿÿs·ÃH··çh··
+
+rflags 0x0000000000000246  ZF PF
+
+cs 0x0033  fs 0x0000  gs 0x0000
+
+
+Images (28 omitted):
+
+0x0000761468351000–0x00007614684db63d 5e5b51f4c39af9ac589408c1dc432ba390a273cc libc.so.6 /usr/lib/x86_64-linux-gnu/libc.so.6
+
+Backtrace took 0.01s
+
+BUILD FAILED

@@ -1,0 +1,11 @@
+# 20-tail-calls/assemblyscript/default spec=20
+$ asc main.ts -o out.wasm -O --noAssertFAIL 19 probes/20-tail-calls/assemblyscript/default/out.wasm (104 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ return_call emitted
+  ✓ instantiates
+  ✗ count(1000000, 0) == 1000000 without overflowing the stack  — Maximum call stack size exceeded
+FAIL 20 probes/20-tail-calls/assemblyscript/default/out.wasm (104 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ return_call emitted
+  ✓ instantiates
+  ✗ count(1000000, 0) == 1000000 without overflowing the stack  — Maximum call stack size exceeded

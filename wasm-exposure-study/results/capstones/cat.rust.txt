@@ -1,0 +1,5 @@
+# cat/rust
+$ cargo build --release --target wasm32-wasip1 --target-dir /tmp/t-cat && cp /tmp/t-cat/wasm32-wasip1/release/cat.wasm out.wasm
+   Compiling cat v0.1.0 (/study/capstones/cat/rust)
+    Finished `release` profile [optimized] target(s) in 0.41s
+{"bytes":76673,"imports":["wasi_snapshot_preview1.environ_get (func)","wasi_snapshot_preview1.environ_sizes_get (func)","wasi_snapshot_preview1.fd_read (func)","wasi_snapshot_preview1.fd_write (func)","wasi_snapshot_preview1.proc_exit (func)"],"exports":["memory (memory)","_start (func)","__main_void (func)"],"ok":true,"detail":"stdout equals stdin for text, empty and 100000 random bytes"}

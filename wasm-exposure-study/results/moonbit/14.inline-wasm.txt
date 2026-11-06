@@ -1,0 +1,9 @@
+# 14-multi-value/moonbit/inline-wasm spec=14
+$ moon build --release --target wasm && cp _build/wasm/release/build/src/src.wasm out.wasm
+Warning: `moon.mod.json` at '/study/probes/14-multi-value/moonbit/inline-wasm' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
+Finished. moon: no work to do
+FAIL 14 probes/14-multi-value/moonbit/inline-wasm//out.wasm (214 bytes)
+  · module validates (all extensions enabled)  — error: func 1 failed to validate
+  ✗ divmod has two results  — (i32, i32) -> (i32)
+  ✗ divmod (i32, i32) -> (i32, i32)  — (i32, i32) -> (i32)
+  ✗ instantiates  — WebAssembly.instantiate(): Compiling function #1 failed: expected 1 elements on the stack for fallthru, found 2 @+94

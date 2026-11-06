@@ -1,0 +1,7 @@
+# 21-extended-const/c/address-space-initialiser spec=21
+$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -mextended-const -Wl,--no-entry -Wl,--allow-undefined main.c -o out.wasm
+main.c:3:54: error: initializer element is not a compile-time constant
+    3 | __attribute__((address_space(1))) const int g = base + 4 * 3;
+      |                                                 ~~~~~^~~~~~~
+1 error generated.
+BUILD FAILED

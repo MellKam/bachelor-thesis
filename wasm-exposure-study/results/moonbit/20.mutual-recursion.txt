@@ -1,0 +1,9 @@
+# 20-tail-calls/moonbit/mutual-recursion spec=20
+$ moon build --release --target wasm && cp _build/wasm/release/build/src/src.wasm out.wasm
+Warning: `moon.mod.json` at '/study/probes/20-tail-calls/moonbit/mutual-recursion' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
+Finished. moon: ran 2 tasks, now up to date
+FAIL 20 probes/20-tail-calls/moonbit/mutual-recursion//out.wasm (265 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ return_call emitted
+  ✓ instantiates
+  ✗ count(1000000, 0) == 1000000 without overflowing the stack  — Maximum call stack size exceeded

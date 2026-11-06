@@ -1,0 +1,10 @@
+# 03-table-indirect-call/c/default spec=03
+$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -Wl,--no-entry main.c -o out.wasm
+PASS 03 probes/03-table-indirect-call/c/default//out.wasm (481 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ funcref table
+  ✓ element segment
+  ✓ call_indirect present
+  ✓ instantiates
+  ✓ call_slot(0,5) == 10
+  ✓ call_slot(1,5) == 105

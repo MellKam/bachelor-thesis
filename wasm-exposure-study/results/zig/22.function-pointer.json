@@ -1,0 +1,47 @@
+{
+  "feature": "22",
+  "file": "probes/22-typed-function-references/zig/function-pointer//out.wasm",
+  "bytes": 124,
+  "pass": false,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "ref.func emitted (anywhere in the module: the reference may be built in an initialiser)",
+      "ok": false,
+      "detail": ""
+    },
+    {
+      "name": "call_ref emitted in apply",
+      "ok": false,
+      "detail": ""
+    },
+    {
+      "name": "reference type is non-nullable (informational)",
+      "ok": false,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "call_indirect or a table also present (informational)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "apply(5) == 10",
+      "ok": true,
+      "detail": "got 10, expected 10"
+    }
+  ],
+  "unsupported": []
+}

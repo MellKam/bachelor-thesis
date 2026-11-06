@@ -1,0 +1,11 @@
+# 29-memory64/assemblyscript/enable-memory64 spec=29
+$ asc main.ts -o out.wasm -O --noAssert --enable memory64FAIL 18 probes/29-memory64/assemblyscript/enable-memory64/out.wasm (62 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ a memory with a 64-bit index type  — [{"min":0,"max":null,"shared":false,"memory64":false}]
+  ✓ instantiates
+  ✗ touch() == 42  — memory access out of bounds
+FAIL 29 probes/29-memory64/assemblyscript/enable-memory64/out.wasm (62 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ a memory with a 64-bit index type  — [{"min":0,"max":null,"shared":false,"memory64":false}]
+  ✓ instantiates
+  ✗ touch() == 42  — memory access out of bounds

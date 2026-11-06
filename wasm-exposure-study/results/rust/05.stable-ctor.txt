@@ -1,0 +1,13 @@
+# 05-start-function/rust/stable-ctor spec=05
+$ rm -rf /tmp/rt && cargo build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p7_stable_ctor v0.1.0 (/study/probes/05-start-function/rust/stable-ctor)
+    Finished `release` profile [optimized] target(s) in 0.16sFAIL 05 probes/05-start-function/rust/stable-ctor/out.wasm (463 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ start section references a function  — start = null (if absent, record a documented equivalent as partial)
+  ✓ instantiates
+  ✓ get() == 7 on first call
+FAIL 05 probes/05-start-function/rust/stable-ctor/out.wasm (463 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ start section references a function  — start = null (if absent, record a documented equivalent as partial)
+  ✓ instantiates
+  ✓ get() == 7 on first call

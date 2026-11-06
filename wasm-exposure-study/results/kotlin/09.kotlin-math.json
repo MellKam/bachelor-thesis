@@ -1,0 +1,208 @@
+{
+  "feature": "09",
+  "file": "probes/09-float-builtins/kotlin/kotlin-math/out.wasm",
+  "bytes": 618281,
+  "pass": false,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "host called _start before any other export (WASI command convention)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "sqrt: export present",
+      "ok": true,
+      "detail": "got 4, expected 4"
+    },
+    {
+      "name": "sqrt: instruction emitted (f64.sqrt)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "sqrt: behaves",
+      "ok": true,
+      "detail": "got 4, expected 4"
+    },
+    {
+      "name": "min: export present",
+      "ok": true,
+      "detail": "got 1, expected 1"
+    },
+    {
+      "name": "min: instruction emitted (f64.min)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "min: behaves",
+      "ok": true,
+      "detail": "got 1, expected 1"
+    },
+    {
+      "name": "max: export present",
+      "ok": true,
+      "detail": "got 2, expected 2"
+    },
+    {
+      "name": "max: instruction emitted (f64.max)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "max: behaves",
+      "ok": true,
+      "detail": "got 2, expected 2"
+    },
+    {
+      "name": "ceil: export present",
+      "ok": true,
+      "detail": "got 2, expected 2"
+    },
+    {
+      "name": "ceil: instruction emitted (f64.ceil)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ceil: behaves",
+      "ok": true,
+      "detail": "got 2, expected 2"
+    },
+    {
+      "name": "floor: export present",
+      "ok": true,
+      "detail": "got 1, expected 1"
+    },
+    {
+      "name": "floor: instruction emitted (f64.floor)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "floor: behaves",
+      "ok": true,
+      "detail": "got 1, expected 1"
+    },
+    {
+      "name": "trunc: export present",
+      "ok": true,
+      "detail": "got -1, expected -1"
+    },
+    {
+      "name": "trunc: instruction emitted (f64.trunc)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "trunc: behaves",
+      "ok": true,
+      "detail": "got -1, expected -1"
+    },
+    {
+      "name": "nearest: export present",
+      "ok": true,
+      "detail": "got 2, expected 2"
+    },
+    {
+      "name": "nearest: instruction emitted (f64.nearest)",
+      "ok": false,
+      "detail": ""
+    },
+    {
+      "name": "nearest: behaves",
+      "ok": true,
+      "detail": "got 2, expected 2"
+    },
+    {
+      "name": "copysign: export present",
+      "ok": true,
+      "detail": "got -3, expected -3"
+    },
+    {
+      "name": "copysign: instruction emitted (f64.copysign)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "copysign: behaves",
+      "ok": true,
+      "detail": "got -3, expected -3"
+    },
+    {
+      "name": "abs: export present",
+      "ok": true,
+      "detail": "got 2, expected 2"
+    },
+    {
+      "name": "abs: instruction emitted (f64.abs)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "abs: behaves",
+      "ok": true,
+      "detail": "got 2, expected 2"
+    }
+  ],
+  "members": {
+    "sqrt": {
+      "export": true,
+      "emitted": true,
+      "behaves": true
+    },
+    "min": {
+      "export": true,
+      "emitted": true,
+      "behaves": true
+    },
+    "max": {
+      "export": true,
+      "emitted": true,
+      "behaves": true
+    },
+    "ceil": {
+      "export": true,
+      "emitted": true,
+      "behaves": true
+    },
+    "floor": {
+      "export": true,
+      "emitted": true,
+      "behaves": true
+    },
+    "trunc": {
+      "export": true,
+      "emitted": true,
+      "behaves": true
+    },
+    "nearest": {
+      "export": true,
+      "emitted": false,
+      "behaves": true
+    },
+    "copysign": {
+      "export": true,
+      "emitted": true,
+      "behaves": true
+    },
+    "abs": {
+      "export": true,
+      "emitted": true,
+      "behaves": true
+    }
+  },
+  "unsupported": []
+}

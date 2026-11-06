@@ -1,0 +1,40 @@
+{
+  "feature": "10",
+  "file": "probes/10-globals/tinygo/go-var/out.wasm",
+  "bytes": 774,
+  "pass": false,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "exported global \"counter\"",
+      "ok": false,
+      "detail": ""
+    },
+    {
+      "name": "counter is mutable i32",
+      "ok": false,
+      "detail": ""
+    },
+    {
+      "name": "imported global host.base (immutable i32)",
+      "ok": false,
+      "detail": ""
+    },
+    {
+      "name": "instantiates",
+      "ok": false,
+      "detail": "WebAssembly.instantiate(): Import #0 \"host\" \"base\": function import requires a callable"
+    },
+    {
+      "name": "export bump",
+      "ok": false,
+      "detail": ""
+    }
+  ],
+  "unsupported": []
+}

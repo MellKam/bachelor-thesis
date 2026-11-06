@@ -1,0 +1,8 @@
+# 17-externref/rust/nightly-asm spec=17
+$ rm -rf /tmp/rt && cargo +nightly-2026-10-02 build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p8_nightly_asm v0.1.0 (/study/probes/17-externref/rust/nightly-asm)
+    Finished `release` profile [optimized] target(s) in 0.14sPASS 11 probes/17-externref/rust/nightly-asm/out.wasm (321 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ identity (externref) -> (externref)
+  ✓ instantiates
+  ✓ returns the identical object

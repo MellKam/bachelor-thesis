@@ -1,0 +1,14 @@
+# 16-simd-memory-ops/zig/vector spec=16
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm -mcpu=generic+simd128
+FAIL 16 probes/16-simd-memory-ops/zig/vector//out.wasm (262 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ instantiates
+  ✓ v_copy: export present
+  ✓ v_copy: instruction emitted (^(?=[\s\S]*v128.load)[\s\S]*v128.store)
+  ✓ v_copy: behaves
+  ✓ v_select: export present
+  ✓ v_select: instruction emitted (v128.bitselect)
+  ✓ v_select: behaves
+  ✓ v_narrow: export present
+  ✗ v_narrow: instruction emitted (i8x16.narrow_i16x8_s)
+  ✓ v_narrow: behaves

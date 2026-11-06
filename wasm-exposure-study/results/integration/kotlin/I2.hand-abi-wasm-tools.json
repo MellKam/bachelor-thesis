@@ -1,0 +1,73 @@
+{
+  "criterion": "I2",
+  "file": "integration/i2-component/kotlin/hand-abi-wasm-tools//out.wasm",
+  "bytes": 623582,
+  "pass": true,
+  "checks": [
+    {
+      "name": "the file is a component, not a core module",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "wasm-tools validate (component-model)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "exports study:words/words",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the interface has the reference types",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "analyse(\"the quick brown fox\") is right",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "analyse(\"\") is right",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "analyse(\"  a  bb ccc  \") is right",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "analyse(\"héllo wörld\") is right",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "analyse(\"lorem ipsum … (100001 bytes)\") is right",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "imports: 4 WASI interfaces",
+      "ok": true,
+      "detail": "",
+      "info": true
+    }
+  ],
+  "wasi": {
+    "kind": "component",
+    "versions": [
+      "p2"
+    ],
+    "entry": "component",
+    "imports": [
+      "wasi:io/error@0.2.12",
+      "wasi:io/streams@0.2.12",
+      "wasi:cli/stderr@0.2.12",
+      "wasi:random/random@0.2.12"
+    ],
+    "nonWasiImports": []
+  }
+}

@@ -1,0 +1,12 @@
+# 15-simd/tinygo/llvm-features-autovec spec=15
+$ tinygo build -o out.wasm -target=wasm-unknown -no-debug -llvm-features=+simd128 main.go
+FAIL 15 probes/15-simd/tinygo/llvm-features-autovec//out.wasm (1036 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ instantiates
+  ✓ host called _initialize before any other export (reactor convention)
+  ✗ simd_add: i32x4.splat emitted
+  ✗ simd_add: i32x4.add emitted
+  ✗ simd_add: i32x4.extract_lane emitted
+  ✗ simd_shuffle: i8x16.shuffle emitted
+  ✓ simd_add(2,3) == 5
+  ✓ simd_shuffle(1,2) == 2

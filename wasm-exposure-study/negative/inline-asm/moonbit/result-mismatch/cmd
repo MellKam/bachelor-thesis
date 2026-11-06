@@ -1,0 +1,1 @@
+rm -rf _build; for t in wasm wasm-gc; do moon build --release --target $t > build-$t.log 2>&1; echo "$t: exit $?"; done; true

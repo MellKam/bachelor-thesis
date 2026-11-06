@@ -1,0 +1,5 @@
+# bindings are generated into the package, impl.mbt is the program; MoonBit strings are UTF-16, hence --encoding utf16
+rm -rf _build && moon build --release --target wasm 2>&1 | tail -20
+core=$(find _build -name "gen.wasm" | head -1)
+wasm-tools component embed ../../../wit "$core" --encoding utf16 -o embedded.wasm
+wasm-tools component new embedded.wasm -o out.wasm

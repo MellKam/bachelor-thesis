@@ -1,0 +1,4 @@
+# cat/wx
+$ wx build . -o out.wasm
+Wrote 782 bytes to out.wasm
+{"bytes":782,"imports":["wasi_snapshot_preview1.fd_read (func)","wasi_snapshot_preview1.proc_exit (func)","wasi_snapshot_preview1.fd_write (func)"],"exports":["memory (memory)","_start (func)"],"ok":true,"detail":"stdout equals stdin for text, empty and 100000 random bytes"}

@@ -1,0 +1,9 @@
+# 14-multi-value/moonbit-gc/inline-wasm spec=14
+$ moon build --release --target wasm-gc && cp _build/wasm-gc/release/build/src/src.wasm out.wasm
+Warning: `moon.mod.json` at '/study/probes/14-multi-value/moonbit-gc/inline-wasm' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
+Finished. moon: ran 2 tasks, now up to date
+FAIL 14 probes/14-multi-value/moonbit-gc/inline-wasm//out.wasm (144 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ divmod has two results
+  ✗ divmod (i32, i32) -> (i32, i32)
+  ✓ instantiates

@@ -1,0 +1,12 @@
+# 13-passive-data-segments/assemblyscript/memory-init spec=13
+$ asc main.ts -o out.wasm -O --noAssert
+FAIL 13 probes/13-passive-data-segments/assemblyscript/memory-init//out.wasm (219 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ a passive data segment holding "WASM"  — segments: [["active",1024,4],["active",1036,1],["active",1048,37],["active",1100,1],["active",1112,35]]
+  ✗ memory.init emitted in load
+  · data.drop emitted  — informational
+  ✓ instantiates
+  ✓ peek(2048) == 0 before load
+  ✗ load(2048) ok  — unreachable
+  ✗ peek(2048) == 0x57 after load  — got 0, expected 87
+  ✗ peek(2051) == 0x4d after load  — got 0, expected 77

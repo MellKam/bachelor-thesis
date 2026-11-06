@@ -1,0 +1,11 @@
+# 04-table-import-export/swift/export-table-flag spec=04:export
+$ swiftc -target wasm32-unknown-none-wasm -enable-experimental-feature Embedded -wmo -parse-as-library -O main.swift -o out.wasm -Xlinker --no-entry -Xclang-linker -nostdlib -Xlinker --export-table
+FAIL 04:export probes/04-table-import-export/swift/export-table-flag//out.wasm (796 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exactly one table
+  ✗ funcref table with limits min 2 max 8  — {"reftype":"funcref","min":4,"max":4,"shared":false,"memory64":false}
+  ✓ call_indirect present
+  ✓ defined in module (not imported)
+  ✗ exported as "tbl"  — table exports: __indirect_function_table
+  ✓ instantiates
+  ✗ exported table is reachable from the host

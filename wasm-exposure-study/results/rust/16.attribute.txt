@@ -1,0 +1,16 @@
+# 16-simd-memory-ops/rust/attribute spec=16
+$ rm -rf /tmp/rt && cargo build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p16_attribute v0.1.0 (/study/probes/16-simd-memory-ops/rust/attribute)
+    Finished `release` profile [optimized] target(s) in 0.16s
+PASS 16 probes/16-simd-memory-ops/rust/attribute//out.wasm (441 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ instantiates
+  ✓ v_copy: export present
+  ✓ v_copy: instruction emitted (^(?=[\s\S]*v128.load)[\s\S]*v128.store)
+  ✓ v_copy: behaves
+  ✓ v_select: export present
+  ✓ v_select: instruction emitted (v128.bitselect)
+  ✓ v_select: behaves
+  ✓ v_narrow: export present
+  ✓ v_narrow: instruction emitted (i8x16.narrow_i16x8_s)
+  ✓ v_narrow: behaves

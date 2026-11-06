@@ -1,0 +1,45 @@
+{
+  "feature": "10",
+  "file": "probes/10-globals/rust/stable-static/out.wasm",
+  "bytes": 351,
+  "pass": false,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "exported global \"counter\"",
+      "ok": false,
+      "detail": ""
+    },
+    {
+      "name": "counter is mutable i32",
+      "ok": false,
+      "detail": ""
+    },
+    {
+      "name": "imported global host.base (immutable i32)",
+      "ok": false,
+      "detail": ""
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "bump() == 42",
+      "ok": false,
+      "detail": "got 1, expected 42"
+    },
+    {
+      "name": "counter global == 42",
+      "ok": false,
+      "detail": "undefined"
+    }
+  ],
+  "unsupported": []
+}

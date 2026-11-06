@@ -1,0 +1,4 @@
+# 10-globals/kotlin/closed-world-multimodule spec=10
+$ sh ../../../kotlin-build.sh wasm-wasi -Xwasm-generate-closed-world-multimodule
+cp: cannot stat 'out/app.wasm': No such file or directory
+BUILD FAILED

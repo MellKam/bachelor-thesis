@@ -1,0 +1,16 @@
+{
+  "is-main": false,
+  "link": {
+    "wasm": {
+      "exports": [
+        "load",
+        "peek"
+      ],
+      "shared-memory": true,
+      "memory-limits": {
+        "min": 17,
+        "max": 256
+      }
+    }
+  }
+}

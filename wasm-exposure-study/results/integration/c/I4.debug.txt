@@ -1,0 +1,8 @@
+# i4-debug/c/debug
+$ clang --target=wasm32-unknown-unknown -g -O0 -nostdlib -Wl,--no-entry -Wl,--export-memory main.c -o out.wasm
+PASS I4 integration/i4-debug/c/debug//out.wasm (2696 bytes)
+  ✓ name section present
+  ✓ DWARF sections present
+  · source-map reference present
+  ✓ a trap names the source function in the stack
+  ✓ the debug build still runs life correctly

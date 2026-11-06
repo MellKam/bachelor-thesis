@@ -1,0 +1,15 @@
+# 11-conversions-sign-extension/moonbit/inline-wasm spec=11
+$ moon build --release --target wasm && cp _build/wasm/release/build/src/src.wasm out.wasm
+Warning: `moon.mod.json` at '/study/probes/11-conversions-sign-extension/moonbit/inline-wasm' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
+Finished. moon: ran 2 tasks, now up to date
+PASS 11 probes/11-conversions-sign-extension/moonbit/inline-wasm//out.wasm (242 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ instantiates
+  ✓ i32.trunc_sat_f64 emitted
+  ✓ i32.extend8_s emitted
+  ✓ i32.extend16_s emitted
+  ✓ sat_trunc(1e20) == i32 max
+  ✓ sat_trunc(-1e20) == i32 min
+  ✓ sat_trunc(NaN) == 0
+  ✓ ext8(0x80) == -128
+  ✓ ext16(0x8000) == -32768

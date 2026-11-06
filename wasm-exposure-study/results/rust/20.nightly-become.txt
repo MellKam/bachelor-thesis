@@ -1,0 +1,8 @@
+# 20-tail-calls/rust/nightly-become spec=20
+$ rm -rf /tmp/rt && cargo +nightly-2026-10-02 build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p19_nightly_become v0.1.0 (/study/probes/20-tail-calls/rust/nightly-become)
+    Finished `release` profile [optimized] target(s) in 0.17sPASS 19 probes/20-tail-calls/rust/nightly-become/out.wasm (483 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ return_call emitted
+  ✓ instantiates
+  ✓ count(1000000, 0) == 1000000 without overflowing the stack

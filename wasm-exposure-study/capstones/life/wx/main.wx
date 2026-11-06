@@ -1,0 +1,74 @@
+import "host" as host {
+  fn random() -> i32;
+}
+
+#[memory_limits(min_pages = 1)]
+memory heap: Memory where { Size = u32 };
+
+global mut cur: u32 = 0;
+
+// Grid g (0 or 1) lives at heap address g * 4096. The pointer type names the memory it points into.
+fn at(grid: u32, i: u32) -> heap::*u8 {
+  (grid * 4096 + i) as heap::*u8
+}
+
+fn init() {
+  local mut i: u32 = 0;
+  loop {
+    if i == 4096 { break }
+    at(0, i).* = (host::random() & 1) as u8;
+    i += 1;
+  }
+  cur = 0;
+}
+
+fn step() {
+  local mut y: u32 = 0;
+  loop {
+    if y == 64 { break }
+    local mut x: u32 = 0;
+    loop {
+      if x == 64 { break }
+      local mut n: u32 = 0;
+      local mut dy: u32 = 0;
+      loop {
+        if dy == 3 { break }
+        local mut dx: u32 = 0;
+        loop {
+          if dx == 3 { break }
+          if !(dy == 1 && dx == 1) {
+            n += at(cur, ((y + 63 + dy) % 64) * 64 + (x + 63 + dx) % 64).* as u32;
+          }
+          dx += 1;
+        }
+        dy += 1;
+      }
+      local alive = at(cur, y * 64 + x).* != 0;
+      at(1 - cur, y * 64 + x).* = if n == 3 || (alive && n == 2) { 1 } else { 0 };
+      x += 1;
+    }
+    y += 1;
+  }
+  cur = 1 - cur;
+}
+
+fn cells_ptr() -> i32 {
+  (cur * 4096) as i32
+}
+
+fn width() -> i32 {
+  64
+}
+
+fn height() -> i32 {
+  64
+}
+
+export {
+  heap as "memory",
+  init,
+  step,
+  cells_ptr,
+  width,
+  height,
+}

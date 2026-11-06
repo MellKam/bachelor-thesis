@@ -1,0 +1,10 @@
+# 10-globals/zig/module-asm spec=10
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm
+PASS 10 probes/10-globals/zig/module-asm//out.wasm (112 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exported global "counter"
+  ✓ counter is mutable i32
+  ✓ imported global host.base (immutable i32)
+  ✓ instantiates
+  ✓ bump() == 42
+  ✓ counter global == 42

@@ -1,0 +1,15 @@
+{
+  "is-main": false,
+  "link": {
+    "wasm-gc": {
+      "exports": [
+        "touch"
+      ],
+      "memory-limits": {
+        "min": 1,
+        "max": 4
+      },
+      "export-memory-name": "mem"
+    }
+  }
+}

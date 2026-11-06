@@ -1,0 +1,27 @@
+# 12-bulk-memory/moonbit-gc/array spec=12
+$ moon build --release --target wasm-gc && cp _build/wasm-gc/release/build/src/src.wasm out.wasm
+Warning: `moon.mod.json` at '/study/probes/12-bulk-memory/moonbit-gc/array' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
+Warning: [0020]
+   ╭─[ /study/probes/12-bulk-memory/moonbit-gc/array/src/lib.mbt:4:16 ]
+   │
+ 4 │   a.blit_to(a, len=n, src_offset=0, dst_offset=256)
+   │                ─┬─  
+   │                 ╰─── Warning (deprecated): Use ArrayView::blit_to instead
+───╯
+Warning: [0020]
+   ╭─[ /study/probes/12-bulk-memory/moonbit-gc/array/src/lib.mbt:4:23 ]
+   │
+ 4 │   a.blit_to(a, len=n, src_offset=0, dst_offset=256)
+   │                       ─────┬────  
+   │                            ╰────── Warning (deprecated): Use ArrayView::blit_to instead
+───╯
+Finished. moon: ran 2 tasks, now up to date (2 warnings, 0 errors)
+FAIL 12 probes/12-bulk-memory/moonbit-gc/array//out.wasm (4535 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ export bulk_test
+  ✗ memory.fill emitted
+  ✗ memory.copy emitted
+  ✓ array.fill / array.copy used instead (the GC-array equivalents; informational)
+  ✓ instantiates
+  ✓ bulk_test(8) == 40
+  ✓ bulk_test(40) == 200

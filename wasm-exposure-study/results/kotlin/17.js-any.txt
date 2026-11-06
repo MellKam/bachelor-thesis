@@ -1,0 +1,24 @@
+# 17-externref/kotlin/js-any spec=17
+$ sh ../../../kotlin-build.sh wasm-js
+main.kt:8:2: warning: this declaration needs opt-in. Its usage should be marked with '@kotlin.js.ExperimentalJsExport' or '@OptIn(kotlin.js.ExperimentalJsExport::class)'
+@JsExport
+ ^^^^^^^^
+main.kt:9:17: warning: this declaration needs opt-in. Its usage should be marked with '@kotlin.js.ExperimentalWasmJsInterop' or '@OptIn(kotlin.js.ExperimentalWasmJsInterop::class)'
+fun identity(x: JsAny?): JsAny? = x
+                ^^^^^
+main.kt:9:26: warning: this declaration needs opt-in. Its usage should be marked with '@kotlin.js.ExperimentalWasmJsInterop' or '@OptIn(kotlin.js.ExperimentalWasmJsInterop::class)'
+fun identity(x: JsAny?): JsAny? = x
+                         ^^^^^
+main.kt:9:35: warning: this declaration needs opt-in. Its usage should be marked with '@kotlin.js.ExperimentalWasmJsInterop' or '@OptIn(kotlin.js.ExperimentalWasmJsInterop::class)'
+fun identity(x: JsAny?): JsAny? = x
+                                  ^PASS 11 probes/17-externref/kotlin/js-any/out.wasm (623195 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ identity (externref) -> (externref)
+  ✓ instantiates
+  ✓ host called _start before any other export (WASI command convention)
+  ✓ returns the identical objectPASS 11 probes/17-externref/kotlin/js-any/out.wasm (623195 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ identity (externref) -> (externref)
+  ✓ instantiates
+  ✓ host called _start before any other export (WASI command convention)
+  ✓ returns the identical object

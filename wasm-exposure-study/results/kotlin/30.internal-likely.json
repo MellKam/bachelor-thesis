@@ -1,0 +1,57 @@
+{
+  "feature": "30",
+  "file": "probes/30-branch-hinting/kotlin/internal-likely//out.wasm",
+  "bytes": 614744,
+  "pass": false,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "custom section \"metadata.code.branch_hint\"",
+      "ok": true,
+      "detail": "custom sections: metadata.code.branch_hint, name"
+    },
+    {
+      "name": "hint section precedes the code section",
+      "ok": false,
+      "detail": "section order: 1,2,3,4,5,13,6,7,8,9,12,10,0,11,0"
+    },
+    {
+      "name": "at least one hint targets classify",
+      "ok": true,
+      "detail": "hints: [{\"fn\":3059,\"off\":33,\"value\":0}]; classify = function 3059"
+    },
+    {
+      "name": "hint values (0 unlikely, 1 likely)",
+      "ok": true,
+      "detail": "[0]",
+      "info": true
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "host called _start before any other export (WASI command convention)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "classify(5) == 10",
+      "ok": true,
+      "detail": "got 10, expected 10"
+    },
+    {
+      "name": "classify(-1) == -1",
+      "ok": true,
+      "detail": "got -1, expected -1"
+    }
+  ],
+  "unsupported": []
+}

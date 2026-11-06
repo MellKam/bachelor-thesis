@@ -1,0 +1,11 @@
+# 13-passive-data-segments/swift/shared-memory spec=13
+$ swiftc -target wasm32-unknown-none-wasm -enable-experimental-feature Embedded -wmo -parse-as-library -O -Xcc -matomics -Xcc -mbulk-memory main.swift -o out.wasm -Xlinker --no-entry -Xclang-linker -nostdlib -Xlinker --shared-memory -Xlinker --import-memory -Xlinker --max-memory=16777216
+FAIL 13 probes/13-passive-data-segments/swift/shared-memory//out.wasm (670 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ a passive data segment holding "WASM"
+  ✗ memory.init emitted in load
+  · data.drop emitted  — informational
+  ✓ instantiates
+  ✓ peek(2048) == 0 before load
+  ✓ peek(2048) == 0x57 after load
+  ✓ peek(2051) == 0x4d after load

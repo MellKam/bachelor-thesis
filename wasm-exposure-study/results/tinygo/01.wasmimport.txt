@@ -1,0 +1,9 @@
+# 01-imports-exports/tinygo/wasmimport spec=01
+$ tinygo build -o out.wasm -target=wasm-unknown -no-debug main.goPASS 01 probes/01-imports-exports/tinygo/wasmimport/out.wasm (773 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ import host.log
+  ✓ import type (i32) -> ()
+  ✓ export run () -> ()
+  ✓ instantiates
+  ✓ host called _initialize before any other export (reactor convention)
+  ✓ log received 42

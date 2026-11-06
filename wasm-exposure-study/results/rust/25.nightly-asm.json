@@ -1,0 +1,35 @@
+{
+  "feature": "25",
+  "file": "probes/25-multiple-memories/rust/nightly-asm/out.wasm",
+  "bytes": 335,
+  "pass": false,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": false,
+      "detail": "error: func 0 failed to validate",
+      "info": true
+    },
+    {
+      "name": "two or more memories",
+      "ok": false,
+      "detail": "1"
+    },
+    {
+      "name": "memory.copy with differing memory operands",
+      "ok": true,
+      "detail": "copies: [[\"1\",\"0\"]]"
+    },
+    {
+      "name": "instantiates",
+      "ok": false,
+      "detail": "WebAssembly.instantiate(): Compiling function #0:\"copy_test\" failed: memory index 1 exceeds number of declared memories (1) @+62"
+    },
+    {
+      "name": "export copy_test",
+      "ok": false,
+      "detail": ""
+    }
+  ],
+  "unsupported": []
+}

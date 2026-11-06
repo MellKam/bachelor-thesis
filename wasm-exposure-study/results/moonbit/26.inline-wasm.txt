@@ -1,0 +1,9 @@
+# 26-relaxed-simd/moonbit/inline-wasm spec=26
+$ moon build --release --target wasm && cp _build/wasm/release/build/src/src.wasm out.wasm
+Warning: `moon.mod.json` at '/study/probes/26-relaxed-simd/moonbit/inline-wasm' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
+Finished. moon: ran 2 tasks, now up to date
+PASS 26 probes/26-relaxed-simd/moonbit/inline-wasm//out.wasm (223 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ f32x4.relaxed_madd (or nmadd) emitted
+  ✓ instantiates
+  ✓ relaxed_madd(2,3,4) == 10

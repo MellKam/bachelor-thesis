@@ -1,0 +1,55 @@
+{
+  "criterion": "I1",
+  "file": "integration/i1-wasi/rust/wasip2//out.wasm",
+  "bytes": 97248,
+  "optBytes": null,
+  "pass": true,
+  "checks": [
+    {
+      "name": "stdout equals stdin (text), exit 0",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "stdout equals stdin (empty), exit 0",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "binary-safe: stdout equals stdin (100000 random bytes), exit 0",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "WASI p2, component, entry command",
+      "ok": true,
+      "detail": "",
+      "info": true
+    }
+  ],
+  "wasi": {
+    "kind": "component",
+    "versions": [
+      "p2"
+    ],
+    "entry": "command",
+    "imports": [
+      "wasi:io/poll@0.2.12",
+      "wasi:clocks/monotonic-clock@0.2.12",
+      "wasi:io/error@0.2.12",
+      "wasi:io/streams@0.2.12",
+      "wasi:cli/stdout@0.2.12",
+      "wasi:cli/stderr@0.2.12",
+      "wasi:cli/stdin@0.2.12",
+      "wasi:cli/environment@0.2.12",
+      "wasi:cli/exit@0.2.12",
+      "wasi:cli/terminal-input@0.2.12",
+      "wasi:cli/terminal-output@0.2.12",
+      "wasi:cli/terminal-stdin@0.2.12",
+      "wasi:cli/terminal-stdout@0.2.12",
+      "wasi:cli/terminal-stderr@0.2.12"
+    ],
+    "nonWasiImports": []
+  }
+}

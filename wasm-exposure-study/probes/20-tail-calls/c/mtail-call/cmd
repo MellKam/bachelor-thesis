@@ -1,0 +1,1 @@
+clang --target=wasm32-unknown-unknown -O2 -nostdlib -Wl,--no-entry -mtail-call main.c -o out.wasm

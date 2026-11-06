@@ -1,0 +1,21 @@
+func f_sqrt(x: f64) -> f64 { f64_sqrt(x) }
+func f_min(a: f64, b: f64) -> f64 { f64_min(a, b) }
+func f_max(a: f64, b: f64) -> f64 { f64_max(a, b) }
+func f_ceil(x: f64) -> f64 { f64_ceil(x) }
+func f_floor(x: f64) -> f64 { f64_floor(x) }
+func f_trunc(x: f64) -> f64 { f64_trunc(x) }
+func f_nearest(x: f64) -> f64 { f64_nearest(x) }
+func f_copysign(a: f64, b: f64) -> f64 { f64_copysign(a, b) }
+func f_abs(x: f64) -> f64 { f64_abs(x) }
+
+export {
+    f_sqrt,
+    f_min,
+    f_max,
+    f_ceil,
+    f_floor,
+    f_trunc,
+    f_nearest,
+    f_copysign,
+    f_abs,
+}

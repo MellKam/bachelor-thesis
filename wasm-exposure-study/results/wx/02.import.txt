@@ -1,0 +1,9 @@
+# 02-memory/wx/import spec=02:import
+$ wx build . -o out.wasm
+Wrote 61 bytes to out.wasm
+FAIL 02:import probes/02-memory/wx/import//out.wasm (61 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exactly one memory
+  ✗ limits min 1 max 4  — {"module":"host","name":"mem","kind":"memory","min":0,"max":null,"shared":false,"memory64":false}
+  ✓ imported as host.mem
+  ✓ instantiates

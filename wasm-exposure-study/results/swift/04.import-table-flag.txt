@@ -1,0 +1,11 @@
+# 04-table-import-export/swift/import-table-flag spec=04:import
+$ swiftc -target wasm32-unknown-none-wasm -enable-experimental-feature Embedded -wmo -parse-as-library -O main.swift -o out.wasm -Xlinker --no-entry -Xclang-linker -nostdlib -Xlinker --import-table
+FAIL 04:import probes/04-table-import-export/swift/import-table-flag//out.wasm (798 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exactly one table
+  ✗ funcref table with limits min 2 max 8  — {"module":"env","name":"__indirect_function_table","kind":"table","reftype":"funcref","min":4,"max":null,"shared":false,"memory64":false}
+  ✓ call_indirect present
+  ✗ imported as host.tbl  — table imports: env.__indirect_function_table
+  ✓ instantiates
+  ✗ slot 0 of the host table is filled by the module  — the module must place a function into the imported table
+  ✓ call_slot(0,5) == 10

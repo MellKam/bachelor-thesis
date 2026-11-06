@@ -1,0 +1,12 @@
+(module
+  (tag $t (param i32))
+  (func (export "rethrow_test") (param $x i32) (result i32) (local $e exnref)
+    (block $done (result i32)
+      (try_table (catch $t $done)
+        (block $cap (result i32 exnref)
+          (try_table (catch_ref $t $cap) (throw $t (local.get $x)))
+          (unreachable))
+        (local.set $e)
+        (drop)
+        (throw_ref (local.get $e)))
+      (unreachable))))

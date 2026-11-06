@@ -1,0 +1,15 @@
+import "host" as host {
+    global base: i32;
+}
+
+global mut counter: i32 = 0;
+
+func bump() -> i32 {
+    counter.set(host::base.get() + 1);
+    counter.get()
+}
+
+export {
+    counter,
+    bump,
+}

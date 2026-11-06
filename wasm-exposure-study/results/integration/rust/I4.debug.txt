@@ -1,0 +1,10 @@
+# i4-debug/rust/debug
+$ rm -rf /tmp/i4 && cargo build --target wasm32-unknown-unknown --target-dir /tmp/i4 && cp /tmp/i4/wasm32-unknown-unknown/debug/life.wasm out.wasm
+   Compiling life v0.1.0 (/study/integration/i4-debug/rust/debug)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.43s
+PASS I4 integration/i4-debug/rust/debug//out.wasm (658688 bytes)
+  ✓ name section present
+  ✓ DWARF sections present
+  · source-map reference present
+  ✓ a trap names the source function in the stack
+  ✓ the debug build still runs life correctly

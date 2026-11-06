@@ -1,0 +1,1 @@
+rm -rf /tmp/neg && cargo +nightly-2026-10-02 build --release --target wasm32-unknown-unknown --target-dir /tmp/neg && cp /tmp/neg/wasm32-unknown-unknown/release/neg.wasm out.wasm

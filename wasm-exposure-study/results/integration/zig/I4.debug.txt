@@ -1,0 +1,8 @@
+# i4-debug/zig/debug
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O Debug -femit-bin=out.wasm
+PASS I4 integration/i4-debug/zig/debug//out.wasm (567160 bytes)
+  ✓ name section present
+  ✓ DWARF sections present
+  · source-map reference present
+  ✓ a trap names the source function in the stack
+  ✓ the debug build still runs life correctly

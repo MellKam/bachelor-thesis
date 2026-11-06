@@ -1,0 +1,5 @@
+# i5-size/life/assemblyscript/default
+$ asc main.ts -o out.wasm
+PASS I5:life integration/i5-size/life/assemblyscript/default//out.wasm (8717 bytes)
+  ✓ width x height is 64 x 64
+  ✓ matches the reference after 100 steps

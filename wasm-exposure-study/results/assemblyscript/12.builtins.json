@@ -1,0 +1,51 @@
+{
+  "feature": "12",
+  "file": "probes/12-bulk-memory/assemblyscript/builtins/out.wasm",
+  "bytes": 115,
+  "pass": true,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "export bulk_test",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "memory.fill emitted",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "memory.copy emitted",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "array.fill / array.copy used instead (the GC-array equivalents; informational)",
+      "ok": false,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "bulk_test(8) == 40",
+      "ok": true,
+      "detail": "got 40, expected 40"
+    },
+    {
+      "name": "bulk_test(40) == 200",
+      "ok": true,
+      "detail": "got 200, expected 200"
+    }
+  ],
+  "unsupported": []
+}

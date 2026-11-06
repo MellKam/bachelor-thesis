@@ -1,0 +1,53 @@
+{
+  "criterion": "I1",
+  "file": "integration/i1-wasi/c/wasip3//out.wasm",
+  "bytes": 287593,
+  "optBytes": null,
+  "pass": true,
+  "checks": [
+    {
+      "name": "stdout equals stdin (text), exit 0",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "stdout equals stdin (empty), exit 0",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "binary-safe: stdout equals stdin (100000 random bytes), exit 0",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "WASI p3, component, entry command",
+      "ok": true,
+      "detail": "",
+      "info": true
+    }
+  ],
+  "wasi": {
+    "kind": "component",
+    "versions": [
+      "p3"
+    ],
+    "entry": "command",
+    "imports": [
+      "wasi:cli/types@0.3.0",
+      "wasi:cli/stdin@0.3.0",
+      "wasi:cli/stdout@0.3.0",
+      "wasi:cli/stderr@0.3.0",
+      "wasi:cli/terminal-input@0.3.0",
+      "wasi:cli/terminal-output@0.3.0",
+      "wasi:cli/terminal-stdin@0.3.0",
+      "wasi:cli/terminal-stdout@0.3.0",
+      "wasi:cli/terminal-stderr@0.3.0",
+      "wasi:clocks/types@0.3.0",
+      "wasi:clocks/monotonic-clock@0.3.0",
+      "wasi:clocks/system-clock@0.3.0"
+    ],
+    "nonWasiImports": []
+  }
+}

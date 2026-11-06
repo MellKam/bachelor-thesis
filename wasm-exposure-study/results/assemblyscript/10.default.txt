@@ -1,0 +1,17 @@
+# 10-globals/assemblyscript/default spec=10
+$ asc main.ts -o out.wasm -O --noAssertPASS 03 probes/10-globals/assemblyscript/default/out.wasm (92 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exported global "counter"
+  ✓ counter is mutable i32
+  ✓ imported global host.base (immutable i32)
+  ✓ instantiates
+  ✓ bump() == 42
+  ✓ counter global == 42
+PASS 10 probes/10-globals/assemblyscript/default/out.wasm (92 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exported global "counter"
+  ✓ counter is mutable i32
+  ✓ imported global host.base (immutable i32)
+  ✓ instantiates
+  ✓ bump() == 42
+  ✓ counter global == 42

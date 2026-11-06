@@ -1,0 +1,8 @@
+# 20-tail-calls/rust/flag spec=20
+$ rm -rf /tmp/rt && cargo build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p19_flag v0.1.0 (/study/probes/20-tail-calls/rust/flag)
+    Finished `release` profile [optimized] target(s) in 0.17sFAIL 19 probes/20-tail-calls/rust/flag/out.wasm (446 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ return_call emitted
+  ✓ instantiates
+  ✗ count(1000000, 0) == 1000000 without overflowing the stack  — Maximum call stack size exceeded

@@ -1,0 +1,6 @@
+# 26-relaxed-simd/swift/fma spec=26
+$ swiftc -target wasm32-unknown-none-wasm -enable-experimental-feature Embedded -wmo -parse-as-library -O -Xcc -msimd128 -Xcc -mrelaxed-simd main.swift -o out.wasm -Xlinker --no-entry -Xclang-linker -nostdlib
+error: link command failed with exit code 1 (use -v to see invocation)
+wasm-ld: error: /tmp/TemporaryDirectory.hpDY0n/out-1.o: undefined symbol: fmaf
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+BUILD FAILED

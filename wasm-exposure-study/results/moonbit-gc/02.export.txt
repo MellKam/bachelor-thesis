@@ -1,0 +1,11 @@
+# 02-memory/moonbit-gc/export spec=02:export
+$ moon build --release --target wasm-gc && cp _build/wasm-gc/release/build/src/src.wasm out.wasm
+Warning: `moon.mod.json` at '/study/probes/02-memory/moonbit-gc/export' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
+Finished. moon: no work to do
+PASS 02:export probes/02-memory/moonbit-gc/export//out.wasm (168 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exactly one memory
+  ✓ limits min 1 max 4
+  ✓ defined in module (not imported)
+  ✓ exported as "mem"
+  ✓ instantiates

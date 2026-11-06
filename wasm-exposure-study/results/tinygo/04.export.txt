@@ -1,0 +1,12 @@
+# 04-table-import-export/tinygo/export spec=04:export
+$ tinygo build -o out.wasm -target=wasm-unknown -no-debug -ldflags="-extldflags \"--export-table\"" main.go
+FAIL 04:export probes/04-table-import-export/tinygo/export//out.wasm (897 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exactly one table
+  ✗ funcref table with limits min 2 max 8  — {"reftype":"funcref","min":3,"max":3,"shared":false,"memory64":false}
+  ✓ call_indirect present
+  ✓ defined in module (not imported)
+  ✗ exported as "tbl"  — table exports: __indirect_function_table
+  ✓ instantiates
+  ✓ host called _initialize before any other export (reactor convention)
+  ✗ exported table is reachable from the host

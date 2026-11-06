@@ -1,0 +1,17 @@
+# 22-typed-function-references/rust/nightly-asm spec=22
+$ rm -rf /tmp/rt && cargo +nightly-2026-10-02 build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p22_nightly_asm v0.1.0 (/study/probes/22-typed-function-references/rust/nightly-asm)
+error: <inline asm>:19:3: instruction requires: gc
+  call_ref (i32) -> (i32)
+  ^
+
+error: instruction requires: gc
+   |
+note: instantiated into assembly here
+  --> <inline asm>:19:3
+   |
+19 |   call_ref (i32) -> (i32)
+   |   ^
+
+error: could not compile `p22_nightly_asm` (lib) due to 1 previous error
+BUILD FAILED

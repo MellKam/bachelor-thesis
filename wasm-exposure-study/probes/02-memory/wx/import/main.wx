@@ -1,0 +1,11 @@
+import "host" as host {
+    memory mem: u32;
+}
+
+func first(at: host::mem::&u8) -> u8 {
+    at.*
+}
+
+export {
+    first,
+}

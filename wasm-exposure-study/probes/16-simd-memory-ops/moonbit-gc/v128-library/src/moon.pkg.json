@@ -1,0 +1,15 @@
+{
+  "is-main": false,
+  "link": {
+    "wasm-gc": {
+      "exports": [
+        "v_copy",
+        "v_select",
+        "v_narrow"
+      ]
+    }
+  },
+  "import": [
+    "moonbitlang/core/v128"
+  ]
+}

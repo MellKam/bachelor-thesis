@@ -1,0 +1,11 @@
+# 19-table-operations/c/module-asm spec=19
+$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -mreference-types -Wl,--no-entry main.c -o out.wasm
+PASS 19 probes/19-table-operations/c/module-asm//out.wasm (449 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ table.grow emitted
+  ✓ table.set emitted
+  ✓ table.get emitted
+  ✓ table.size emitted
+  ✓ ref.is_null emitted
+  ✓ instantiates
+  ✓ table_ops(3) == 1104

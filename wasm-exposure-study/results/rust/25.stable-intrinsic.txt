@@ -1,0 +1,25 @@
+# 25-multiple-memories/rust/stable-intrinsic spec=25
+$ rm -rf /tmp/rt && cargo build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p3_stable_intrinsic v0.1.0 (/study/probes/25-multiple-memories/rust/stable-intrinsic)
+error[E0080]: evaluation panicked: assertion failed: MEM == 0
+ --> /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/core/src/../../stdarch/crates/core_arch/src/macros.rs:7:12
+  |
+  = note: evaluation of `core::arch::wasm32::memory_size::<1>::{constant#0}` failed here
+ --> /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/core/src/../../stdarch/crates/core_arch/src/wasm32/memory.rs:31:4
+  |
+  = note: in this macro invocation
+  |
+  = note: this error originates in the macro `assert` which comes from the expansion of the macro `static_assert` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+note: erroneous constant encountered
+ --> /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/core/src/../../stdarch/crates/core_arch/src/macros.rs:6:8
+  |
+ --> /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/core/src/../../stdarch/crates/core_arch/src/wasm32/memory.rs:31:4
+  |
+  = note: in this macro invocation
+  |
+  = note: this note originates in the macro `static_assert` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+For more information about this error, try `rustc --explain E0080`.
+error: could not compile `p3_stable_intrinsic` (lib) due to 1 previous error
+BUILD FAILED

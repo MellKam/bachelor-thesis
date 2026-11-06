@@ -1,0 +1,9 @@
+# 25-multiple-memories/wx/default spec=25
+$ wx build . -o out.wasm
+Wrote 882 bytes to out.wasm
+PASS 25 probes/25-multiple-memories/wx/default//out.wasm (882 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ two or more memories
+  ✓ memory.copy with differing memory operands
+  ✓ instantiates
+  ✓ copy_test() == 10

@@ -1,0 +1,64 @@
+%YAML 1.2
+---
+# Basic sublime-syntax grammar for WebAssembly Text format (wat), for
+# Typst's `raw(syntaxes: ...)` custom-syntax support. Not exhaustive —
+# covers comments, strings, numbers, $names, structural keywords and
+# dotted instruction mnemonics (i32.add, local.get, ...).
+name: WAT
+file_extensions: [wat]
+scope: source.wat
+
+contexts:
+  main:
+    - include: comments
+    - include: strings
+    - include: numbers
+    - include: names
+
+    # Instruction mnemonics, e.g. i32.add, local.get, memory.size — tried
+    # before the keyword list so "local.get" highlights as one unit rather
+    # than "local" (keyword) + ".get" (unstyled).
+    - match: '\b[a-z][a-z0-9]*\.[a-z][a-z0-9_]*\b'
+      scope: support.function.wat
+
+    # Structural keywords
+    - match: '\b(module|func|param|result|local|global|export|import|memory|table|type|mut|offset|start|elem|data|if|then|else|loop|block|end|br|br_if|br_table|call|call_indirect|return|drop|select|unreachable|nop)\b'
+      scope: keyword.other.wat
+
+  comments:
+    - match: ';;.*$'
+      scope: comment.line.wat
+    - match: '\(;'
+      scope: punctuation.definition.comment.begin.wat
+      push: block_comment
+
+  block_comment:
+    - meta_scope: comment.block.wat
+    - match: ';\)'
+      scope: punctuation.definition.comment.end.wat
+      pop: true
+
+  strings:
+    - match: '"'
+      scope: punctuation.definition.string.begin.wat
+      push: string_body
+
+  string_body:
+    - meta_scope: string.quoted.double.wat
+    - match: '\\.'
+      scope: constant.character.escape.wat
+    - match: '"'
+      scope: punctuation.definition.string.end.wat
+      pop: true
+
+  names:
+    - match: '\$[A-Za-z0-9_.\-]+'
+      scope: variable.other.wat
+
+  numbers:
+    - match: '[+-]?\b0[xX][0-9a-fA-F_]+\b'
+      scope: constant.numeric.integer.hexadecimal.wat
+    - match: '[+-]?\b[0-9][0-9_]*\.[0-9][0-9_]*([eE][+-]?[0-9_]+)?\b'
+      scope: constant.numeric.float.wat
+    - match: '[+-]?\b[0-9][0-9_]*\b'
+      scope: constant.numeric.integer.decimal.wat

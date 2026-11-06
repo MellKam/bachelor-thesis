@@ -1,0 +1,20 @@
+{
+  "criterion": "I5",
+  "program": "life",
+  "file": "integration/i5-size/life/swift/default//out.wasm",
+  "bytes": 7164699,
+  "optBytes": 3359391,
+  "pass": true,
+  "checks": [
+    {
+      "name": "width x height is 64 x 64",
+      "ok": true,
+      "detail": "64x64"
+    },
+    {
+      "name": "matches the reference after 100 steps",
+      "ok": true,
+      "detail": "0 of 4096 cells differ"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+# 01-imports-exports/wx/default spec=01
+$ wx build . -o out.wasm
+Wrote 55 bytes to out.wasm
+PASS 01 probes/01-imports-exports/wx/default//out.wasm (55 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ import host.log
+  ✓ import type (i32) -> ()
+  ✓ export run () -> ()
+  ✓ instantiates
+  ✓ log received 42

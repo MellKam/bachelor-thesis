@@ -1,0 +1,87 @@
+// life, floor route: a 64x64 torus, two grids of 4096 bytes in linear memory at address 1024, the host supplies `random`.
+#[memory_limits({ min_pages: 1 })]
+memory heap: u32;
+
+import "host" as host {
+    func random() -> i32;
+}
+
+const SIDE: u32 = 64;
+const CELLS: u32 = 4096;
+
+global mut cur: u32 = 0;
+
+func grid() -> heap::*[u8] {
+    slice_from_parts_mut::<heap, u8>(
+        RawPtr::<heap, u8>::from_addr(1024).as_ptr(),
+        2 * CELLS,
+    )
+}
+
+func init() {
+    local cells = grid();
+    local mut i: u32 = 0;
+    loop {
+        if i == CELLS { break };
+        cells[i] = transmute(transmute::<i32, u32>(host::random()) & 1);
+        i += 1;
+    }
+    cur.set(0);
+}
+
+func step() {
+    local cells = grid();
+    local from = cur.get() * CELLS;
+    local to = (1 - cur.get()) * CELLS;
+    local mut y: u32 = 0;
+    loop {
+        if y == SIDE { break };
+        local mut x: u32 = 0;
+        loop {
+            if x == SIDE { break };
+            local mut n: u32 = 0;
+            local mut dy: u32 = SIDE - 1;
+            loop {
+                if dy == SIDE + 2 { break };
+                local mut dx: u32 = SIDE - 1;
+                loop {
+                    if dx == SIDE + 2 { break };
+                    if !(dy == SIDE && dx == SIDE) {
+                        n += transmute::<u8, u32>(
+                            cells[from + ((y + dy) % SIDE) * SIDE + (x + dx) % SIDE],
+                        );
+                    }
+                    dx += 1;
+                }
+                dy += 1;
+            }
+            local alive = cells[from + y * SIDE + x] != 0;
+            cells[to + y * SIDE + x] = if n == 3 || (alive && n == 2) { 1 } else { 0 };
+            x += 1;
+        }
+        y += 1;
+    }
+    cur.set(1 - cur.get());
+}
+
+func cells_ptr() -> u32 {
+    1024 + cur.get() * CELLS
+}
+
+func width() -> u32 { SIDE }
+
+func height() -> u32 { SIDE }
+
+export {
+    heap as "memory",
+    init,
+    step,
+    cells_ptr,
+    width,
+    height,
+    crash_here,
+}
+
+func crash_here() {
+    trap()
+}

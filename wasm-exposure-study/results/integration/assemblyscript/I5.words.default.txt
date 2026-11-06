@@ -1,0 +1,8 @@
+# i5-size/words/assemblyscript/default
+$ asc main.ts -o out.wasm
+PASS I5:words integration/i5-size/words/assemblyscript/default//out.wasm (1049027 bytes)
+  ✓ analyse("the quick brown fox") is right
+  ✓ analyse("") is right
+  ✓ analyse("  a  bb ccc  ") is right
+  ✓ analyse("héllo wörld") is right
+  ✓ analyse("lorem ipsum … (100001 bytes)") is right

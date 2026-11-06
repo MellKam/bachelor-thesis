@@ -1,0 +1,10 @@
+# 29-memory64/rust/nightly-wasm64 spec=29
+$ rm -rf /tmp/rt && cargo +nightly-2026-10-02 build --release -Z build-std=core --target wasm64-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm64-unknown-unknown/release/*.wasm out.wasm
+   Compiling compiler_builtins v0.1.160 (/opt/rust/rustup/toolchains/nightly-2026-10-02-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/compiler-builtins/compiler-builtins)
+   Compiling core v0.0.0 (/opt/rust/rustup/toolchains/nightly-2026-10-02-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core)
+   Compiling p18_nightly_wasm64 v0.1.0 (/study/probes/29-memory64/rust/nightly-wasm64)
+    Finished `release` profile [optimized] target(s) in 16.14sPASS 18 probes/29-memory64/rust/nightly-wasm64/out.wasm (338 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ a memory with a 64-bit index type
+  ✓ instantiates
+  ✓ touch() == 42

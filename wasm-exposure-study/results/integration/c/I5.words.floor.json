@@ -1,0 +1,35 @@
+{
+  "criterion": "I5",
+  "program": "words",
+  "file": "integration/i5-size/words/c/floor//out.wasm",
+  "bytes": 408,
+  "optBytes": 368,
+  "pass": true,
+  "checks": [
+    {
+      "name": "analyse(\"the quick brown fox\") is right",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "analyse(\"\") is right",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "analyse(\"  a  bb ccc  \") is right",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "analyse(\"héllo wörld\") is right",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "analyse(\"lorem ipsum … (100001 bytes)\") is right",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}

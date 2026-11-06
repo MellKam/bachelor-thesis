@@ -1,0 +1,36 @@
+# 08-integer-ops/wx/default spec=08
+$ wx build . -o out.wasm
+Wrote 119 bytes to out.wasm
+FAIL 08 probes/08-integer-ops/wx/default//out.wasm (119 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ instantiates
+  ✓ add: export present
+  ✓ add: instruction emitted (i32.add)
+  ✓ add: behaves
+  ✓ sub: export present
+  ✓ sub: instruction emitted (i32.sub)
+  ✓ sub: behaves
+  ✓ mul: export present
+  ✓ mul: instruction emitted (i32.mul)
+  ✓ mul: behaves
+  ✓ div: export present
+  ✓ div: instruction emitted (i32.div_[su])
+  ✓ div: behaves
+  ✓ rem: export present
+  ✓ rem: instruction emitted (i32.rem_[su])
+  ✓ rem: behaves
+  ✗ clz: export present  — export missing
+  ✗ clz: instruction emitted (i32.clz)  — export missing
+  ✗ clz: behaves  — export missing
+  ✗ ctz: export present  — export missing
+  ✗ ctz: instruction emitted (i32.ctz)  — export missing
+  ✗ ctz: behaves  — export missing
+  ✗ popcnt: export present  — export missing
+  ✗ popcnt: instruction emitted (i32.popcnt)  — export missing
+  ✗ popcnt: behaves  — export missing
+  ✗ rotl: export present  — export missing
+  ✗ rotl: instruction emitted (i32.rotl)  — export missing
+  ✗ rotl: behaves  — export missing
+  ✗ rotr: export present  — export missing
+  ✗ rotr: instruction emitted (i32.rotr)  — export missing
+  ✗ rotr: behaves  — export missing

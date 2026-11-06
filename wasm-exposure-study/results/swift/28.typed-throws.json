@@ -1,0 +1,52 @@
+{
+  "feature": "28",
+  "file": "probes/28-exnref-exceptions/swift/typed-throws//out.wasm",
+  "bytes": 557,
+  "pass": false,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "tag section with at least one tag",
+      "ok": false,
+      "detail": ""
+    },
+    {
+      "name": "try_table emitted",
+      "ok": false,
+      "detail": ""
+    },
+    {
+      "name": "throw_ref emitted",
+      "ok": false,
+      "detail": ""
+    },
+    {
+      "name": "catch_ref / catch_all_ref used (informational)",
+      "ok": false,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "legacy try/catch/rethrow also used (informational)",
+      "ok": false,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "rethrow_test(5) == 5",
+      "ok": true,
+      "detail": "got 5, expected 5"
+    }
+  ],
+  "unsupported": []
+}

@@ -1,0 +1,1 @@
+rm -rf _build && moon build --target wasm && cp _build/wasm/debug/build/src/src.wasm out.wasm

@@ -1,0 +1,1 @@
+rm -rf /tmp/i5-words-floor && cargo build --release --target wasm32-unknown-unknown --target-dir /tmp/i5-words-floor && cp /tmp/i5-words-floor/wasm32-unknown-unknown/release/words.wasm out.wasm

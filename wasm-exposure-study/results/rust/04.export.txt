@@ -1,0 +1,13 @@
+# 04-table-import-export/rust/export spec=04:export
+$ rm -rf /tmp/rt && cargo build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p04_export v0.1.0 (/study/probes/04-table-import-export/rust/export)
+    Finished `release` profile [optimized] target(s) in 0.19s
+FAIL 04:export probes/04-table-import-export/rust/export//out.wasm (533 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exactly one table
+  ✗ funcref table with limits min 2 max 8  — {"reftype":"funcref","min":3,"max":3,"shared":false,"memory64":false}
+  ✓ call_indirect present
+  ✓ defined in module (not imported)
+  ✗ exported as "tbl"  — table exports: __indirect_function_table
+  ✓ instantiates
+  ✗ exported table is reachable from the host

@@ -1,0 +1,30 @@
+{
+  "feature": "29",
+  "file": "probes/29-memory64/rust/nightly-wasm64/out.wasm",
+  "bytes": 338,
+  "pass": true,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "a memory with a 64-bit index type",
+      "ok": true,
+      "detail": "[{\"min\":16,\"max\":null,\"shared\":false,\"memory64\":true}]"
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "touch() == 42",
+      "ok": true,
+      "detail": "got 42, expected 42"
+    }
+  ],
+  "unsupported": []
+}

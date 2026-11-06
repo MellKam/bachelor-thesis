@@ -1,0 +1,1 @@
+clang++ --target=wasm32-wasip1 -O2 -fwasm-exceptions -mllvm -wasm-use-legacy-eh=false -mexception-handling -Wl,--no-entry main.cpp -lunwind -o out.wasm

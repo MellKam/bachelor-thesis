@@ -1,0 +1,8 @@
+{
+  "name": "wasm-exposure-assemblyscript-toolchain",
+  "private": true,
+  "description": "Pins the AssemblyScript compiler (and, via the lockfile, its Binaryen dependency) for wasm-exposure-study.",
+  "dependencies": {
+    "assemblyscript": "0.28.20"
+  }
+}

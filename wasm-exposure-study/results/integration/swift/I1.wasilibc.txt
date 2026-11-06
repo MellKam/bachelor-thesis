@@ -1,0 +1,12 @@
+# i1-wasi/swift/wasilibc
+$ swift build -c release --swift-sdk swift-6.4.0-RELEASE_wasm --scratch-path /tmp/sb && cp /tmp/sb/out/Products/Release-webassembly-wasm32/App.wasm out.wasm
+Building for production...
+[Planning deferred tasks]
+[7 / 9] App-product
+[9 / 9] App-product
+Build complete! (1.32 secs)
+PASS I1 integration/i1-wasi/swift/wasilibc//out.wasm (7790129 bytes)
+  ✓ stdout equals stdin (text), exit 0
+  ✓ stdout equals stdin (empty), exit 0
+  ✓ binary-safe: stdout equals stdin (100000 random bytes), exit 0
+  ✓ WASI p1, module, entry command

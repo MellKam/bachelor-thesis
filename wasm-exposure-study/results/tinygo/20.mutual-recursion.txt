@@ -1,0 +1,7 @@
+# 20-tail-calls/tinygo/mutual-recursion spec=20
+$ tinygo build -o out.wasm -target=wasm-unknown -no-debug main.goFAIL 19 probes/20-tail-calls/tinygo/mutual-recursion/out.wasm (805 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ return_call emitted
+  ✓ instantiates
+  ✓ host called _initialize before any other export (reactor convention)
+  ✗ count(1000000, 0) == 1000000 without overflowing the stack  — Maximum call stack size exceeded

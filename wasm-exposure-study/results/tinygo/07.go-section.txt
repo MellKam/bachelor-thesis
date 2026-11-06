@@ -1,0 +1,7 @@
+# 07-custom-sections/tinygo/go-section spec=07
+$ tinygo build -o out.wasm -target=wasm-unknown -no-debug main.goFAIL 07 probes/07-custom-sections/tinygo/go-section/out.wasm (737 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ custom section "meta"  — custom sections: name, producers, target_features
+  ✗ payload is "hello"
+  ✓ instantiates
+  ✓ host called _initialize before any other export (reactor convention)

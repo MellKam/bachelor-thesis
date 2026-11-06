@@ -1,0 +1,57 @@
+{
+  "feature": "12",
+  "file": "probes/12-bulk-memory/kotlin/bytearray/out.wasm",
+  "bytes": 615207,
+  "pass": false,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "export bulk_test",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "memory.fill emitted",
+      "ok": false,
+      "detail": ""
+    },
+    {
+      "name": "memory.copy emitted",
+      "ok": false,
+      "detail": ""
+    },
+    {
+      "name": "array.fill / array.copy used instead (the GC-array equivalents; informational)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "host called _start before any other export (WASI command convention)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "bulk_test(8) == 40",
+      "ok": true,
+      "detail": "got 40, expected 40"
+    },
+    {
+      "name": "bulk_test(40) == 200",
+      "ok": true,
+      "detail": "got 200, expected 200"
+    }
+  ],
+  "unsupported": []
+}

@@ -1,0 +1,51 @@
+{
+  "feature": "23",
+  "file": "probes/23-gc-typed-refs/moonbit-gc/struct-array//out.wasm",
+  "bytes": 296,
+  "pass": true,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "module defines a struct type",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "module defines an array type",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "struct.new + struct.get present in the module",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "array.new* + array.get present in the module",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "typed function references (call_ref / ref.func) used",
+      "ok": false,
+      "detail": "informational",
+      "info": true
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "gc_test() == 15",
+      "ok": true,
+      "detail": "got 15, expected 15"
+    }
+  ],
+  "unsupported": []
+}

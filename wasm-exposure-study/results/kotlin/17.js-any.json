@@ -1,0 +1,36 @@
+{
+  "feature": "17",
+  "file": "probes/17-externref/kotlin/js-any/out.wasm",
+  "bytes": 623195,
+  "pass": true,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "identity (externref) -> (externref)",
+      "ok": true,
+      "detail": "(externref) -> (externref)"
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "host called _start before any other export (WASI command convention)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "returns the identical object",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "unsupported": []
+}

@@ -1,0 +1,7 @@
+# 26-relaxed-simd/swift/builtin-intrinsic spec=26
+$ swiftc -target wasm32-unknown-none-wasm -enable-experimental-feature Embedded -wmo -parse-as-library -O -enable-experimental-feature BuiltinModule -Xcc -msimd128 -Xcc -mrelaxed-simd main.swift -o out.wasm -Xlinker --no-entry -Xclang-linker -nostdlib
+PASS 26 probes/26-relaxed-simd/swift/builtin-intrinsic//out.wasm (411 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ f32x4.relaxed_madd (or nmadd) emitted
+  ✓ instantiates
+  ✓ relaxed_madd(2,3,4) == 10

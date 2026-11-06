@@ -1,0 +1,16 @@
+# 16-simd-memory-ops/moonbit/v128-library spec=16
+$ moon build --release --target wasm && cp _build/wasm/release/build/src/src.wasm out.wasm
+Warning: `moon.mod.json` at '/study/probes/16-simd-memory-ops/moonbit/v128-library' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
+Finished. moon: no work to do
+FAIL 16 probes/16-simd-memory-ops/moonbit/v128-library//out.wasm (3628 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ instantiates
+  ✓ v_copy: export present
+  ✓ v_copy: instruction emitted (^(?=[\s\S]*v128.load)[\s\S]*v128.store)
+  ✗ v_copy: behaves  — no exported memory for the host to write test data into
+  ✓ v_select: export present
+  ✓ v_select: instruction emitted (v128.bitselect)
+  ✗ v_select: behaves  — no exported memory for the host to write test data into
+  ✓ v_narrow: export present
+  ✓ v_narrow: instruction emitted (i8x16.narrow_i16x8_s)
+  ✗ v_narrow: behaves  — no exported memory for the host to write test data into

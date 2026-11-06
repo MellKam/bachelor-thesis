@@ -1,0 +1,13 @@
+# 04-table-import-export/c/import-funcref-table spec=04:import
+$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -mreference-types -Wl,--no-entry -Wl,--allow-undefined main.c -o out.wasm
+main.c:2:35: error: 'import_module' attribute only applies to functions
+    2 | extern fn_t tbl[2] __attribute__((import_module("host"), import_name("tbl")));
+      |                                   ^
+main.c:2:58: error: 'import_name' attribute only applies to functions
+    2 | extern fn_t tbl[2] __attribute__((import_module("host"), import_name("tbl")));
+      |                                                          ^
+main.c:2:13: error: WebAssembly table must be static
+    2 | extern fn_t tbl[2] __attribute__((import_module("host"), import_name("tbl")));
+      |             ^
+3 errors generated.
+BUILD FAILED

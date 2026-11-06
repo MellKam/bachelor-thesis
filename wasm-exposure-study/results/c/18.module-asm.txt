@@ -1,0 +1,10 @@
+# 18-multiple-tables/c/module-asm spec=18
+$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -mreference-types -Wl,--no-entry main.c -o out.wasm
+PASS 18 probes/18-multiple-tables/c/module-asm//out.wasm (498 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ two or more tables
+  · element segments initialise the tables (informational: a table may also be filled by table.set at run time)  — 0
+  ✓ call_indirect uses two different tables
+  ✓ instantiates
+  ✓ call_a(5) == 6
+  ✓ call_b(5) == 105

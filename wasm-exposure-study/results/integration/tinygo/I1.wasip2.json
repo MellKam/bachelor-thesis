@@ -1,0 +1,52 @@
+{
+  "criterion": "I1",
+  "file": "integration/i1-wasi/tinygo/wasip2//out.wasm",
+  "bytes": 604646,
+  "optBytes": null,
+  "pass": true,
+  "checks": [
+    {
+      "name": "stdout equals stdin (text), exit 0",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "stdout equals stdin (empty), exit 0",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "binary-safe: stdout equals stdin (100000 random bytes), exit 0",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "WASI p2, component, entry command",
+      "ok": true,
+      "detail": "",
+      "info": true
+    }
+  ],
+  "wasi": {
+    "kind": "component",
+    "versions": [
+      "p2"
+    ],
+    "entry": "command",
+    "imports": [
+      "wasi:cli/environment@0.2.0",
+      "wasi:io/error@0.2.0",
+      "wasi:io/streams@0.2.0",
+      "wasi:cli/stdin@0.2.0",
+      "wasi:cli/stdout@0.2.0",
+      "wasi:cli/stderr@0.2.0",
+      "wasi:clocks/monotonic-clock@0.2.0",
+      "wasi:clocks/wall-clock@0.2.0",
+      "wasi:filesystem/types@0.2.0",
+      "wasi:filesystem/preopens@0.2.0",
+      "wasi:random/random@0.2.0"
+    ],
+    "nonWasiImports": []
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "feature": "13",
+  "file": "probes/13-passive-data-segments/c/module-asm-shared-memory//out.wasm",
+  "bytes": 582,
+  "pass": false,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "a passive data segment holding \"WASM\"",
+      "ok": true,
+      "detail": "segments: [[\"passive\",null,4]]"
+    },
+    {
+      "name": "memory.init emitted in load",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "data.drop emitted",
+      "ok": true,
+      "detail": "informational",
+      "info": true
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "peek(2048) == 0 before load",
+      "ok": true,
+      "detail": "got 0, expected 0"
+    },
+    {
+      "name": "load(2048) ok",
+      "ok": false,
+      "detail": "memory access out of bounds"
+    },
+    {
+      "name": "peek(2048) == 0x57 after load",
+      "ok": false,
+      "detail": "got 0, expected 87"
+    },
+    {
+      "name": "peek(2051) == 0x4d after load",
+      "ok": false,
+      "detail": "got 0, expected 77"
+    }
+  ],
+  "unsupported": []
+}

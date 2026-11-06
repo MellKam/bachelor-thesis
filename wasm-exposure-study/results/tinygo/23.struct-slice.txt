@@ -1,0 +1,11 @@
+# 23-gc-typed-refs/tinygo/struct-slice spec=23
+$ tinygo build -o out.wasm -target=wasm-unknown -no-debug main.goFAIL 20 probes/23-gc-typed-refs/tinygo/struct-slice/out.wasm (750 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ module defines a struct type
+  ✗ module defines an array type
+  ✗ struct.new + struct.get present in the module
+  ✗ array.new* + array.get present in the module
+  · typed function references (call_ref / ref.func) used  — informational
+  ✓ instantiates
+  ✓ host called _initialize before any other export (reactor convention)
+  ✓ gc_test() == 15

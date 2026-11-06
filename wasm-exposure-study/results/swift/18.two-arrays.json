@@ -1,0 +1,46 @@
+{
+  "feature": "18",
+  "file": "probes/18-multiple-tables/swift/two-arrays//out.wasm",
+  "bytes": 953,
+  "pass": false,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "two or more tables",
+      "ok": false,
+      "detail": "1"
+    },
+    {
+      "name": "element segments initialise the tables (informational: a table may also be filled by table.set at run time)",
+      "ok": false,
+      "detail": "1",
+      "info": true
+    },
+    {
+      "name": "call_indirect uses two different tables",
+      "ok": false,
+      "detail": "table operands: [\"0\"]"
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "call_a(5) == 6",
+      "ok": true,
+      "detail": "got 6, expected 6"
+    },
+    {
+      "name": "call_b(5) == 105",
+      "ok": true,
+      "detail": "got 105, expected 105"
+    }
+  ],
+  "unsupported": []
+}

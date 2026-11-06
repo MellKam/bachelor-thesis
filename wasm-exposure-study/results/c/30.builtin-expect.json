@@ -1,0 +1,46 @@
+{
+  "feature": "30",
+  "file": "probes/30-branch-hinting/c/builtin-expect//out.wasm",
+  "bytes": 385,
+  "pass": false,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "custom section \"metadata.code.branch_hint\"",
+      "ok": false,
+      "detail": "custom sections: name, producers, target_features"
+    },
+    {
+      "name": "at least one hint targets classify",
+      "ok": false,
+      "detail": "hints: []; classify = function 0"
+    },
+    {
+      "name": "hint values (0 unlikely, 1 likely)",
+      "ok": true,
+      "detail": "[]",
+      "info": true
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "classify(5) == 10",
+      "ok": true,
+      "detail": "got 10, expected 10"
+    },
+    {
+      "name": "classify(-1) == -1",
+      "ok": true,
+      "detail": "got -1, expected -1"
+    }
+  ],
+  "unsupported": []
+}

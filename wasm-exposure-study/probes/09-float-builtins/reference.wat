@@ -1,0 +1,10 @@
+(module
+  (func (export "f_sqrt") (param f64) (result f64) (f64.sqrt (local.get 0)))
+  (func (export "f_min") (param f64 f64) (result f64) (f64.min (local.get 0) (local.get 1)))
+  (func (export "f_max") (param f64 f64) (result f64) (f64.max (local.get 0) (local.get 1)))
+  (func (export "f_ceil") (param f64) (result f64) (f64.ceil (local.get 0)))
+  (func (export "f_floor") (param f64) (result f64) (f64.floor (local.get 0)))
+  (func (export "f_trunc") (param f64) (result f64) (f64.trunc (local.get 0)))
+  (func (export "f_nearest") (param f64) (result f64) (f64.nearest (local.get 0)))
+  (func (export "f_copysign") (param f64 f64) (result f64) (f64.copysign (local.get 0) (local.get 1)))
+  (func (export "f_abs") (param f64) (result f64) (f64.abs (local.get 0))))

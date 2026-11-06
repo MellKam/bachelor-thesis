@@ -1,0 +1,17 @@
+# 03-table-indirect-call/assemblyscript/default spec=03
+$ asc main.ts -o out.wasm -O --noAssertPASS 04 probes/03-table-indirect-call/assemblyscript/default/out.wasm (638 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ funcref table
+  ✓ element segment
+  ✓ call_indirect present
+  ✓ instantiates
+  ✓ call_slot(0,5) == 10
+  ✓ call_slot(1,5) == 105
+PASS 03 probes/03-table-indirect-call/assemblyscript/default/out.wasm (638 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ funcref table
+  ✓ element segment
+  ✓ call_indirect present
+  ✓ instantiates
+  ✓ call_slot(0,5) == 10
+  ✓ call_slot(1,5) == 105

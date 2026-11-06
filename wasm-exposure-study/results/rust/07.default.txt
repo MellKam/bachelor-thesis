@@ -1,0 +1,13 @@
+# 07-custom-sections/rust/default spec=07
+$ rm -rf /tmp/rt && cargo build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p11_default v0.1.0 (/study/probes/07-custom-sections/rust/default)
+    Finished `release` profile [optimized] target(s) in 0.14sPASS 07 probes/07-custom-sections/rust/default/out.wasm (335 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ custom section "meta"
+  ✓ payload is "hello"
+  ✓ instantiates
+PASS 07 probes/07-custom-sections/rust/default/out.wasm (335 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ custom section "meta"
+  ✓ payload is "hello"
+  ✓ instantiates

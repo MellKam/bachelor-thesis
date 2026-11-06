@@ -1,0 +1,7 @@
+# 10-globals/swift/extern-var spec=10
+$ swiftc -target wasm32-unknown-none-wasm -enable-experimental-feature Embedded -wmo -parse-as-library -O -enable-experimental-feature Extern main.swift -o out.wasm -Xlinker --no-entry -Xclang-linker -nostdlib -Xlinker --export=counter
+error: link command failed with exit code 1 (use -v to see invocation)
+wasm-ld: error: symbol exported via --export not found: counter
+wasm-ld: error: /tmp/TemporaryDirectory.tcb4wk/out-1.o: undefined symbol: base
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+BUILD FAILED

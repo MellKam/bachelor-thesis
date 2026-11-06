@@ -1,0 +1,12 @@
+# 22-typed-function-references/moonbit/closure spec=22
+$ moon build --release --target wasm && cp _build/wasm/release/build/src/src.wasm out.wasm
+Warning: `moon.mod.json` at '/study/probes/22-typed-function-references/moonbit/closure' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
+Finished. moon: no work to do
+FAIL 22 probes/22-typed-function-references/moonbit/closure//out.wasm (2737 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ ref.func emitted (anywhere in the module: the reference may be built in an initialiser)
+  ✗ call_ref emitted in apply
+  · reference type is non-nullable (informational)
+  ✓ call_indirect or a table also present (informational)
+  ✓ instantiates
+  ✓ apply(5) == 10

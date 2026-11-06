@@ -1,0 +1,1 @@
+swift build -c debug --swift-sdk swift-6.4.0-RELEASE_wasm-embedded --scratch-path /tmp/sb-i4 && cp /tmp/sb-i4/out/Products/Debug-webassembly-wasm32/App.wasm out.wasm

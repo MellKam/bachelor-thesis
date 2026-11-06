@@ -1,0 +1,16 @@
+# i2-component/assemblyscript/hand-abi-wasm-tools
+$ asc main.ts -o core.wasm -O --noAssert --runtime stub
+wasm-tools print core.wasm | sed 's|(export "analyse"|(export "study:words/words@0.1.0#analyse"|' | wasm-tools parse -o renamed.wasm
+wasm-tools component embed ../../../wit renamed.wasm --world words-world -o embedded.wasm
+wasm-tools component new embedded.wasm -o out.wasm
+PASS I2 integration/i2-component/assemblyscript/hand-abi-wasm-tools//out.wasm (1174 bytes)
+  ✓ the file is a component, not a core module
+  ✓ wasm-tools validate (component-model)
+  ✓ exports study:words/words
+  ✓ the interface has the reference types
+  ✓ analyse("the quick brown fox") is right
+  ✓ analyse("") is right
+  ✓ analyse("  a  bb ccc  ") is right
+  ✓ analyse("héllo wörld") is right
+  ✓ analyse("lorem ipsum … (100001 bytes)") is right
+  ✓ imports: none

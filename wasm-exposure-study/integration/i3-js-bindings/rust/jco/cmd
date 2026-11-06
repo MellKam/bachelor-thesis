@@ -1,0 +1,5 @@
+# needs the I2 component built first (make integration-rust CRITERIA=I2)
+cp ../../../i2-component/rust/wit-bindgen-wasip2/out.wasm component.wasm
+ln -sfn /opt/jco/node_modules node_modules
+rm -rf pkg && jco transpile component.wasm -o pkg --no-typescript --name words
+cp pkg/words.core.wasm out.wasm

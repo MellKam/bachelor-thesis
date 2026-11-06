@@ -1,0 +1,40 @@
+# 24-gc-casts-subtyping/moonbit-gc/enum-array spec=24
+$ moon build --release --target wasm-gc && cp _build/wasm-gc/release/build/src/src.wasm out.wasm
+Warning: `moon.mod.json` at '/study/probes/24-gc-casts-subtyping/moonbit-gc/enum-array' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
+Warning: [0004]
+   ╭─[ /study/probes/24-gc-casts-subtyping/moonbit-gc/enum-array/src/lib.mbt:1:6 ]
+   │
+ 1 │ enum Animal {
+   │      ───┬──  
+   │         ╰──── Warning (missing_priv): The type 'Animal' does not occur in public signature of current package, consider marking it as `priv`.
+───╯
+Warning: [0006]
+   ╭─[ /study/probes/24-gc-casts-subtyping/moonbit-gc/enum-array/src/lib.mbt:2:3 ]
+   │
+ 2 │   Cat(Int)
+   │   ─┬─  
+   │    ╰─── Warning (unused_constructor): Variant 'Cat' is never constructed
+───╯
+Warning: [0007]
+   ╭─[ /study/probes/24-gc-casts-subtyping/moonbit-gc/enum-array/src/lib.mbt:2:7 ]
+   │
+ 2 │   Cat(Int)
+   │       ─┬─  
+   │        ╰─── Warning (unused_field): The 1st positional argument of constructor 'Cat' is unused.
+───╯
+Warning: [0007]
+   ╭─[ /study/probes/24-gc-casts-subtyping/moonbit-gc/enum-array/src/lib.mbt:3:7 ]
+   │
+ 3 │   Dog(Int, Int)
+   │       ─┬─  
+   │        ╰─── Warning (unused_field): The 1st positional argument of constructor 'Dog' is unused.
+───╯
+Finished. moon: ran 2 tasks, now up to date (4 warnings, 0 errors)
+FAIL 24 probes/24-gc-casts-subtyping/moonbit-gc/enum-array//out.wasm (265 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ instantiates
+  ✓ gc_extra() == 210
+  ✓ declared subtype (sub) present
+  ✓ ref.test / ref.cast present
+  ✗ ref.i31 + i31.get present
+  ✓ packed i8/i16 element with get_s|u present

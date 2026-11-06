@@ -1,0 +1,5 @@
+# life/rust
+$ cargo build --release --target wasm32-unknown-unknown --target-dir /tmp/t-life && cp /tmp/t-life/wasm32-unknown-unknown/release/life.wasm out.wasm
+   Compiling life v0.1.0 (/study/capstones/life/rust)
+    Finished `release` profile [optimized] target(s) in 1.09s
+{"bytes":945,"extraImports":[],"extraExports":[],"calledStart":false,"ok":true,"detail":"matches reference after 100 steps","alive":1608}

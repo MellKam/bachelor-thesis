@@ -1,0 +1,14 @@
+{
+  "is-main": false,
+  "link": {
+    "wasm": {
+      "exports": [
+        "simd_add",
+        "simd_shuffle"
+      ]
+    }
+  },
+  "import": [
+    "moonbitlang/core/v128"
+  ]
+}

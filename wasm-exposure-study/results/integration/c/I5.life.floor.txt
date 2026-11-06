@@ -1,0 +1,5 @@
+# i5-size/life/c/floor
+$ clang --target=wasm32-unknown-unknown -Oz -nostdlib -Wl,--no-entry -Wl,--export-memory -Wl,--strip-all main.c -o out.wasm
+PASS I5:life integration/i5-size/life/c/floor//out.wasm (504 bytes)
+  ✓ width x height is 64 x 64
+  ✓ matches the reference after 100 steps

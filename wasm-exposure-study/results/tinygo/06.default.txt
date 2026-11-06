@@ -1,0 +1,8 @@
+# 06-data-segments/tinygo/default spec=06
+$ tinygo build -o out.wasm -target=wasm-unknown -no-debug main.goFAIL 06 probes/06-data-segments/tinygo/default/out.wasm (836 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ active data segment puts "WASM" at address 1024  — bytes at 1024..1027 = [null,null,null,null]; segments: [["active",65536,4]]
+  ✓ instantiates
+  ✓ host called _initialize before any other export (reactor convention)
+  ✗ peek(1024) == 0x57  — got 0, expected 87
+  ✗ peek(1027) == 0x4d  — got 0, expected 77

@@ -1,0 +1,13 @@
+# 13-passive-data-segments/moonbit/bytes-literal spec=13
+$ moon build --release --target wasm && cp _build/wasm/release/build/src/src.wasm out.wasm
+Warning: `moon.mod.json` at '/study/probes/13-passive-data-segments/moonbit/bytes-literal' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
+Finished. moon: ran 2 tasks, now up to date
+FAIL 13 probes/13-passive-data-segments/moonbit/bytes-literal//out.wasm (317 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ a passive data segment holding "WASM"  — segments: [["active",10000,24]]
+  ✗ memory.init emitted in load
+  · data.drop emitted  — informational
+  ✓ instantiates
+  ✗ peek(2048) == 0 before load  — got 87, expected 0
+  ✓ peek(2048) == 0x57 after load
+  ✓ peek(2051) == 0x4d after load

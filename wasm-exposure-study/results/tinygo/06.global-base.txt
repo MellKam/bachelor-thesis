@@ -1,0 +1,8 @@
+# 06-data-segments/tinygo/global-base spec=06
+$ tinygo build -o out.wasm -target=wasm-unknown -no-debug -ldflags="-extldflags \"--global-base=1024 -z stack-size=1024\"" main.goPASS 06 probes/06-data-segments/tinygo/global-base/out.wasm (831 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ active data segment puts "WASM" at address 1024
+  ✓ instantiates
+  ✓ host called _initialize before any other export (reactor convention)
+  ✓ peek(1024) == 0x57
+  ✓ peek(1027) == 0x4d

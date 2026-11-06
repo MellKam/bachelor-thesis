@@ -1,0 +1,35 @@
+# Intermediate build outputs. What is kept as evidence: each probe's out.wasm and the verdicts in results/.
+probes/*/*/*/_build/
+probes/*/*/*/out/
+probes/*/*/*/lib/
+probes/*/*/*/target/
+probes/*/*/*/*.o
+node_modules/
+capstones/*/*/out/
+capstones/*/*/out.wasm
+capstones/*/*/_build/
+
+# Integration criteria (INTEGRATION.md): generated bindings, intermediate modules and the large Swift builds are not evidence.
+integration/**/_build/
+integration/**/target/
+integration/**/pkg/
+integration/**/gen/
+integration/**/internal/
+integration/**/Bundle/
+integration/**/.build/
+integration/**/wit/deps/
+integration/**/embedded.wasm
+integration/**/renamed.wasm
+integration/**/core.wasm
+integration/**/component.wasm
+integration/**/lib/
+integration/**/out/
+integration/i1-wasi/swift/*/out.wasm
+integration/i5-size/*/swift/default/out.wasm
+integration/i3-js-bindings/swift/*/out.wasm
+
+# negative probes: keep sources, cmd and the README; drop build trees and logs
+negative/**/_build/
+negative/**/target/
+negative/**/build-*.log
+integration/**/node_modules

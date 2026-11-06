@@ -1,0 +1,16 @@
+# 01-imports-exports/kotlin/wasi spec=01
+$ sh ../../../kotlin-build.sh wasm-wasiPASS 01 probes/01-imports-exports/kotlin/wasi/out.wasm (614665 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ import host.log
+  ✓ import type (i32) -> ()
+  ✓ export run () -> ()
+  ✓ instantiates
+  ✓ host called _start before any other export (WASI command convention)
+  ✓ log received 42PASS 01 probes/01-imports-exports/kotlin/wasi/out.wasm (614665 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ import host.log
+  ✓ import type (i32) -> ()
+  ✓ export run () -> ()
+  ✓ instantiates
+  ✓ host called _start before any other export (WASI command convention)
+  ✓ log received 42

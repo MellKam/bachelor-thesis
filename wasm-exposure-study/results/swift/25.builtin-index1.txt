@@ -1,0 +1,8 @@
+# 25-multiple-memories/swift/builtin-index1 spec=25
+$ swiftc -target wasm32-unknown-none-wasm -enable-experimental-feature Embedded -wmo -parse-as-library -O -enable-experimental-feature BuiltinModule main.swift -o out.wasm -Xlinker --no-entry -Xclang-linker -nostdlib
+FAIL 25 probes/25-multiple-memories/swift/builtin-index1//out.wasm (363 bytes)
+  · module validates (all extensions enabled)  — error: func 0 failed to validate
+  ✗ two or more memories  — 1
+  ✗ memory.copy with differing memory operands  — copies: []
+  ✗ instantiates  — WebAssembly.instantiate(): Compiling function #0:"copy_test" failed: memory index 1 exceeds number of declared memories (1) @+81
+  ✗ export copy_test

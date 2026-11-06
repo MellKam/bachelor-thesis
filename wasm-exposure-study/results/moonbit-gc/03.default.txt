@@ -1,0 +1,12 @@
+# 03-table-indirect-call/moonbit-gc/default spec=03
+$ moon build --release --target wasm-gc && cp _build/wasm-gc/release/build/src/src.wasm out.wasm
+Warning: `moon.mod.json` at '/study/probes/03-table-indirect-call/moonbit-gc/default' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
+Finished. moon: ran 2 tasks, now up to date
+FAIL 03 probes/03-table-indirect-call/moonbit-gc/default//out.wasm (357 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ funcref table
+  ✓ element segment
+  ✗ call_indirect present
+  ✓ instantiates
+  ✓ call_slot(0,5) == 10
+  ✓ call_slot(1,5) == 105

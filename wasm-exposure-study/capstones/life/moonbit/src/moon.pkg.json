@@ -1,0 +1,16 @@
+{
+  "is-main": false,
+  "link": {
+    "wasm": {
+      "exports": [
+        "init_grid:init",
+        "step",
+        "cells_ptr",
+        "width",
+        "height"
+      ],
+      "export-memory-name": "memory",
+      "heap-start-address": 16384
+    }
+  }
+}

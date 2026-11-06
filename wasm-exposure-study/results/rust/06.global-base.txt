@@ -1,0 +1,15 @@
+# 06-data-segments/rust/global-base spec=06
+$ rm -rf /tmp/rt && cargo build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p06_global_base v0.1.0 (/study/probes/06-data-segments/rust/global-base)
+    Finished `release` profile [optimized] target(s) in 0.17sPASS 06 probes/06-data-segments/rust/global-base/out.wasm (349 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ active data segment puts "WASM" at address 1024
+  ✓ instantiates
+  ✓ peek(1024) == 0x57
+  ✓ peek(1027) == 0x4d
+PASS 06 probes/06-data-segments/rust/global-base/out.wasm (349 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ active data segment puts "WASM" at address 1024
+  ✓ instantiates
+  ✓ peek(1024) == 0x57
+  ✓ peek(1027) == 0x4d

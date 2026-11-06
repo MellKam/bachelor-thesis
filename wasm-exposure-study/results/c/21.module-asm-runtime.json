@@ -1,0 +1,41 @@
+{
+  "feature": "21",
+  "file": "probes/21-extended-const/c/module-asm-runtime//out.wasm",
+  "bytes": 392,
+  "pass": false,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "imported global host.base (immutable i32)",
+      "ok": true,
+      "detail": "{\"module\":\"host\",\"name\":\"base\",\"kind\":\"global\",\"type\":\"i32\",\"mutable\":false}"
+    },
+    {
+      "name": "a global initialiser combines global.get with integer arithmetic",
+      "ok": false,
+      "detail": "initialisers: []"
+    },
+    {
+      "name": "start function used instead (informational)",
+      "ok": false,
+      "detail": "start = null",
+      "info": true
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "get_g() == 112",
+      "ok": true,
+      "detail": "got 112, expected 112"
+    }
+  ],
+  "unsupported": []
+}

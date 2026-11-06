@@ -1,0 +1,9 @@
+// Built through SwiftPM with the official Swift SDK for WebAssembly (swift-6.4.0-RELEASE_wasm-embedded), the route the Swift docs describe.
+// @_extern(wasm, module:, name:) declares the import; it needs @_extern(c) next to it to get the C calling convention.
+@_extern(wasm, module: "host", name: "log")
+@_extern(c)
+func hostLog(_ x: Int32)
+
+@_expose(wasm, "run")
+@_cdecl("run")
+func run() { hostLog(42) }

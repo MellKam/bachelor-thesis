@@ -1,0 +1,66 @@
+{
+  "criterion": "I2",
+  "file": "integration/i2-component/moonbit/wit-bindgen-wasm//out.wasm",
+  "bytes": 8780,
+  "pass": true,
+  "checks": [
+    {
+      "name": "the file is a component, not a core module",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "wasm-tools validate (component-model)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "exports study:words/words",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the interface has the reference types",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "analyse(\"the quick brown fox\") is right",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "analyse(\"\") is right",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "analyse(\"  a  bb ccc  \") is right",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "analyse(\"héllo wörld\") is right",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "analyse(\"lorem ipsum … (100001 bytes)\") is right",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "imports: none",
+      "ok": true,
+      "detail": "",
+      "info": true
+    }
+  ],
+  "wasi": {
+    "kind": "component",
+    "versions": [],
+    "entry": "component",
+    "imports": [],
+    "nonWasiImports": []
+  }
+}

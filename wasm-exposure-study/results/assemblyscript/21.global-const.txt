@@ -1,0 +1,9 @@
+# 21-extended-const/assemblyscript/global-const spec=21
+$ asc main.ts -o out.wasm -O --noAssert
+FAIL 21 probes/21-extended-const/assemblyscript/global-const//out.wasm (97 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ imported global host.base (immutable i32)
+  ✗ a global initialiser combines global.get with integer arithmetic  — initialisers: [["i32.const"]]
+  ✓ start function used instead (informational)
+  ✓ instantiates
+  ✓ get_g() == 112

@@ -1,0 +1,19 @@
+# 12-bulk-memory/assemblyscript/builtins-bulk-memory-flag spec=12
+$ asc main.ts -o out.wasm -O --noAssert --enable bulk-memoryPASS 13 probes/12-bulk-memory/assemblyscript/builtins-bulk-memory-flag/out.wasm (115 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ export bulk_test
+  ✓ memory.fill emitted
+  ✓ memory.copy emitted
+  · array.fill / array.copy used instead (the GC-array equivalents; informational)
+  ✓ instantiates
+  ✓ bulk_test(8) == 40
+  ✓ bulk_test(40) == 200
+PASS 12 probes/12-bulk-memory/assemblyscript/builtins-bulk-memory-flag/out.wasm (115 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ export bulk_test
+  ✓ memory.fill emitted
+  ✓ memory.copy emitted
+  · array.fill / array.copy used instead (the GC-array equivalents; informational)
+  ✓ instantiates
+  ✓ bulk_test(8) == 40
+  ✓ bulk_test(40) == 200

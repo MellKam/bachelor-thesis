@@ -1,0 +1,11 @@
+# 22-typed-function-references/tinygo/func-value spec=22
+$ tinygo build -o out.wasm -target=wasm-unknown -no-debug main.go
+FAIL 22 probes/22-typed-function-references/tinygo/func-value//out.wasm (751 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ ref.func emitted (anywhere in the module: the reference may be built in an initialiser)
+  ✗ call_ref emitted in apply
+  · reference type is non-nullable (informational)
+  · call_indirect or a table also present (informational)
+  ✓ instantiates
+  ✓ host called _initialize before any other export (reactor convention)
+  ✓ apply(5) == 10

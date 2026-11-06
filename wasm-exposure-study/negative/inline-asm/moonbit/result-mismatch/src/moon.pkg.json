@@ -1,0 +1,1 @@
+{ "is-main": false, "link": { "wasm": { "exports": ["run"], "export-memory-name": "memory" }, "wasm-gc": { "exports": ["run"] } } }

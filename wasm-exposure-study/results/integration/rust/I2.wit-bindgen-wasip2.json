@@ -1,0 +1,83 @@
+{
+  "criterion": "I2",
+  "file": "integration/i2-component/rust/wit-bindgen-wasip2//out.wasm",
+  "bytes": 69458,
+  "pass": true,
+  "checks": [
+    {
+      "name": "the file is a component, not a core module",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "wasm-tools validate (component-model)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "exports study:words/words",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "the interface has the reference types",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "analyse(\"the quick brown fox\") is right",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "analyse(\"\") is right",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "analyse(\"  a  bb ccc  \") is right",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "analyse(\"héllo wörld\") is right",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "analyse(\"lorem ipsum … (100001 bytes)\") is right",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "imports: 14 WASI interfaces",
+      "ok": true,
+      "detail": "",
+      "info": true
+    }
+  ],
+  "wasi": {
+    "kind": "component",
+    "versions": [
+      "p2"
+    ],
+    "entry": "component",
+    "imports": [
+      "wasi:io/poll@0.2.12",
+      "wasi:clocks/monotonic-clock@0.2.12",
+      "wasi:io/error@0.2.12",
+      "wasi:io/streams@0.2.12",
+      "wasi:cli/stdout@0.2.12",
+      "wasi:cli/stderr@0.2.12",
+      "wasi:cli/stdin@0.2.12",
+      "wasi:cli/environment@0.2.12",
+      "wasi:cli/exit@0.2.12",
+      "wasi:cli/terminal-input@0.2.12",
+      "wasi:cli/terminal-output@0.2.12",
+      "wasi:cli/terminal-stdin@0.2.12",
+      "wasi:cli/terminal-stdout@0.2.12",
+      "wasi:cli/terminal-stderr@0.2.12"
+    ],
+    "nonWasiImports": []
+  }
+}

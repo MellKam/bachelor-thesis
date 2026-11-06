@@ -1,0 +1,40 @@
+{
+  "feature": "01",
+  "file": "probes/01-imports-exports/swift/expose-only//out.wasm",
+  "bytes": 422,
+  "pass": false,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "import host.log",
+      "ok": true,
+      "detail": "imports: host.log"
+    },
+    {
+      "name": "import type (i32) -> ()",
+      "ok": false,
+      "detail": "(i32, i32, i32) -> ()"
+    },
+    {
+      "name": "export run () -> ()",
+      "ok": false,
+      "detail": "(i32, i32) -> ()"
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "log received 42",
+      "ok": true,
+      "detail": "received [42]"
+    }
+  ],
+  "unsupported": []
+}

@@ -1,0 +1,50 @@
+{
+  "feature": "19",
+  "file": "probes/19-table-operations/zig/inline-asm//out.wasm",
+  "bytes": 86,
+  "pass": false,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": false,
+      "detail": "error: func 0 failed to validate",
+      "info": true
+    },
+    {
+      "name": "table.grow emitted",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "table.set emitted",
+      "ok": false,
+      "detail": ""
+    },
+    {
+      "name": "table.get emitted",
+      "ok": false,
+      "detail": ""
+    },
+    {
+      "name": "table.size emitted",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ref.is_null emitted",
+      "ok": false,
+      "detail": ""
+    },
+    {
+      "name": "instantiates",
+      "ok": false,
+      "detail": "WebAssembly.instantiate(): Compiling function #0 failed: expected 1 elements on the stack for fallthru, found 2 @+85"
+    },
+    {
+      "name": "export table_ops",
+      "ok": false,
+      "detail": ""
+    }
+  ],
+  "unsupported": []
+}

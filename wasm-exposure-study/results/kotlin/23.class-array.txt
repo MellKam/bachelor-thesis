@@ -1,0 +1,21 @@
+# 23-gc-typed-refs/kotlin/class-array spec=23
+$ sh ../../../kotlin-build.sh wasm-wasiPASS 20 probes/23-gc-typed-refs/kotlin/class-array/out.wasm (615595 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ module defines a struct type
+  ✓ module defines an array type
+  ✓ struct.new + struct.get present in the module
+  ✓ array.new* + array.get present in the module
+  ✓ typed function references (call_ref / ref.func) used
+  ✓ instantiates
+  ✓ host called _start before any other export (WASI command convention)
+  ✓ gc_test() == 15
+PASS 23 probes/23-gc-typed-refs/kotlin/class-array/out.wasm (615595 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ module defines a struct type
+  ✓ module defines an array type
+  ✓ struct.new + struct.get present in the module
+  ✓ array.new* + array.get present in the module
+  ✓ typed function references (call_ref / ref.func) used
+  ✓ instantiates
+  ✓ host called _start before any other export (WASI command convention)
+  ✓ gc_test() == 15

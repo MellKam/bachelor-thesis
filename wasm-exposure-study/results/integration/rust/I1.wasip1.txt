@@ -1,0 +1,9 @@
+# i1-wasi/rust/wasip1
+$ rm -rf /tmp/i1 && cargo build --release --target wasm32-wasip1 --target-dir /tmp/i1 && cp /tmp/i1/wasm32-wasip1/release/cat.wasm out.wasm
+   Compiling cat v0.1.0 (/study/integration/i1-wasi/rust/wasip1)
+    Finished `release` profile [optimized] target(s) in 0.60s
+PASS I1 integration/i1-wasi/rust/wasip1//out.wasm (76673 bytes)
+  ✓ stdout equals stdin (text), exit 0
+  ✓ stdout equals stdin (empty), exit 0
+  ✓ binary-safe: stdout equals stdin (100000 random bytes), exit 0
+  ✓ WASI p1, module, entry command

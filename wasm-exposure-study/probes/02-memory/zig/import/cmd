@@ -1,0 +1,1 @@
+zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm --initial-memory=65536 --max-memory=262144 --stack 8192 --import-memory

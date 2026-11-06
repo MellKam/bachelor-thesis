@@ -1,0 +1,12 @@
+{
+  "is-main": false,
+  "link": {
+    "wasm-gc": {
+      "exports": [
+        "sat_trunc",
+        "ext8",
+        "ext16"
+      ]
+    }
+  }
+}

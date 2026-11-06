@@ -1,0 +1,11 @@
+# i3-js-bindings/tinygo/wasm-exec
+$ cp "$(tinygo env TINYGOROOT)/targets/wasm_exec.js" wasm_exec.js
+tinygo build -o out.wasm -target=wasm -no-debug .
+PASS I3 integration/i3-js-bindings/tinygo/wasm-exec//out.wasm (48823 bytes)
+  ✓ adapter loads the generated bindings
+  ✓ analyse("the quick brown fox") is right
+  ✓ analyse("") is right
+  ✓ analyse("  a  bb ccc  ") is right
+  ✓ analyse("héllo wörld") is right
+  ✓ analyse("lorem ipsum … (100001 bytes)") is right
+  ✓ adapter: 10 lines of code

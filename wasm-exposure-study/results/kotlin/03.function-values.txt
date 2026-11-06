@@ -1,0 +1,18 @@
+# 03-table-indirect-call/kotlin/function-values spec=03
+$ sh ../../../kotlin-build.sh wasm-wasiFAIL 04 probes/03-table-indirect-call/kotlin/function-values/out.wasm (616752 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ funcref table
+  ✓ element segment
+  ✗ call_indirect present
+  ✓ instantiates
+  ✓ host called _start before any other export (WASI command convention)
+  ✓ call_slot(0,5) == 10
+  ✓ call_slot(1,5) == 105FAIL 04 probes/03-table-indirect-call/kotlin/function-values/out.wasm (616752 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ funcref table
+  ✓ element segment
+  ✗ call_indirect present
+  ✓ instantiates
+  ✓ host called _start before any other export (WASI command convention)
+  ✓ call_slot(0,5) == 10
+  ✓ call_slot(1,5) == 105

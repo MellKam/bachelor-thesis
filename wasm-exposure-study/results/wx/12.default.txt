@@ -1,0 +1,12 @@
+# 12-bulk-memory/wx/default spec=12
+$ wx build . -o out.wasm
+Wrote 215 bytes to out.wasm
+PASS 12 probes/12-bulk-memory/wx/default//out.wasm (215 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ export bulk_test
+  ✓ memory.fill emitted
+  ✓ memory.copy emitted
+  · array.fill / array.copy used instead (the GC-array equivalents; informational)
+  ✓ instantiates
+  ✓ bulk_test(8) == 40
+  ✓ bulk_test(40) == 200

@@ -1,0 +1,69 @@
+# 15-simd/moonbit-gc/v128-library spec=15
+$ moon build --release --target wasm-gc && cp _build/wasm-gc/release/build/src/src.wasm out.wasm
+Warning: `moon.mod.json` at '/study/probes/15-simd/moonbit-gc/v128-library' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
+Warning: [0014]
+   ╭─[ /study/probes/15-simd/moonbit-gc/v128-library/src/lib.mbt:2:11 ]
+   │
+ 2 │   let r = @v128.i32x4_add(@v128.i32x4_splat(a.reinterpret_as_uint()), @v128.i32x4_splat(b.reinterpret_as_uint()))
+   │           ───────┬───────  
+   │                  ╰───────── Warning (alert_experimental): subject to breaking change without notice
+───╯
+Warning: [0014]
+   ╭─[ /study/probes/15-simd/moonbit-gc/v128-library/src/lib.mbt:2:27 ]
+   │
+ 2 │   let r = @v128.i32x4_add(@v128.i32x4_splat(a.reinterpret_as_uint()), @v128.i32x4_splat(b.reinterpret_as_uint()))
+   │                           ────────┬────────  
+   │                                   ╰────────── Warning (alert_experimental): subject to breaking change without notice
+───╯
+Warning: [0014]
+   ╭─[ /study/probes/15-simd/moonbit-gc/v128-library/src/lib.mbt:2:71 ]
+   │
+ 2 │   let r = @v128.i32x4_add(@v128.i32x4_splat(a.reinterpret_as_uint()), @v128.i32x4_splat(b.reinterpret_as_uint()))
+   │                                                                       ────────┬────────  
+   │                                                                               ╰────────── Warning (alert_experimental): subject to breaking change without notice
+───╯
+Warning: [0014]
+   ╭─[ /study/probes/15-simd/moonbit-gc/v128-library/src/lib.mbt:3:3 ]
+   │
+ 3 │   @v128.i32x4_extract_lane(r, 0).reinterpret_as_int()
+   │   ────────────┬───────────  
+   │               ╰───────────── Warning (alert_experimental): subject to breaking change without notice
+───╯
+Warning: [0014]
+   ╭─[ /study/probes/15-simd/moonbit-gc/v128-library/src/lib.mbt:7:11 ]
+   │
+ 7 │   let r = @v128.i8x16_shuffle(
+   │           ─────────┬─────────  
+   │                    ╰─────────── Warning (alert_experimental): subject to breaking change without notice
+───╯
+Warning: [0014]
+   ╭─[ /study/probes/15-simd/moonbit-gc/v128-library/src/lib.mbt:8:5 ]
+   │
+ 8 │     @v128.i32x4_splat(a.reinterpret_as_uint()),
+   │     ────────┬────────  
+   │             ╰────────── Warning (alert_experimental): subject to breaking change without notice
+───╯
+Warning: [0014]
+   ╭─[ /study/probes/15-simd/moonbit-gc/v128-library/src/lib.mbt:9:5 ]
+   │
+ 9 │     @v128.i32x4_splat(b.reinterpret_as_uint()),
+   │     ────────┬────────  
+   │             ╰────────── Warning (alert_experimental): subject to breaking change without notice
+───╯
+Warning: [0014]
+    ╭─[ /study/probes/15-simd/moonbit-gc/v128-library/src/lib.mbt:12:3 ]
+    │
+ 12 │   @v128.i32x4_extract_lane(r, 0).reinterpret_as_int()
+    │   ────────────┬───────────  
+    │               ╰───────────── Warning (alert_experimental): subject to breaking change without notice
+────╯
+Finished. moon: ran 2 tasks, now up to date (8 warnings, 0 errors)
+PASS 15 probes/15-simd/moonbit-gc/v128-library//out.wasm (930 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ instantiates
+  ✓ simd_add: i32x4.splat emitted
+  ✓ simd_add: i32x4.add emitted
+  ✓ simd_add: i32x4.extract_lane emitted
+  ✓ simd_shuffle: i8x16.shuffle emitted
+  ✓ simd_add(2,3) == 5
+  ✓ simd_shuffle(1,2) == 2

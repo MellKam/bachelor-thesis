@@ -1,0 +1,12 @@
+# 13-passive-data-segments/kotlin/string-literal spec=13
+$ sh ../../../kotlin-build.sh wasm-wasi
+FAIL 13 probes/13-passive-data-segments/kotlin/string-literal//out.wasm (614969 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ a passive data segment holding "WASM"
+  ✗ memory.init emitted in load
+  · data.drop emitted  — informational
+  ✓ instantiates
+  ✓ host called _start before any other export (WASI command convention)
+  ✗ peek(2048) == 0 before load  — got 87, expected 0
+  ✓ peek(2048) == 0x57 after load
+  ✓ peek(2051) == 0x4d after load

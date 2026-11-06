@@ -1,0 +1,63 @@
+# 09-float-builtins/rust/nightly-minimum spec=09
+$ rm -rf /tmp/rt && cargo +nightly-2026-10-02 build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p09_nightly_minimum v0.1.0 (/study/probes/09-float-builtins/rust/nightly-minimum)
+    Finished `release` profile [optimized] target(s) in 0.16sPASS 09 probes/09-float-builtins/rust/nightly-minimum/out.wasm (562 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ instantiates
+  ✓ sqrt: export present
+  ✓ sqrt: instruction emitted (f64.sqrt)
+  ✓ sqrt: behaves
+  ✓ min: export present
+  ✓ min: instruction emitted (f64.min)
+  ✓ min: behaves
+  ✓ max: export present
+  ✓ max: instruction emitted (f64.max)
+  ✓ max: behaves
+  ✓ ceil: export present
+  ✓ ceil: instruction emitted (f64.ceil)
+  ✓ ceil: behaves
+  ✓ floor: export present
+  ✓ floor: instruction emitted (f64.floor)
+  ✓ floor: behaves
+  ✓ trunc: export present
+  ✓ trunc: instruction emitted (f64.trunc)
+  ✓ trunc: behaves
+  ✓ nearest: export present
+  ✓ nearest: instruction emitted (f64.nearest)
+  ✓ nearest: behaves
+  ✓ copysign: export present
+  ✓ copysign: instruction emitted (f64.copysign)
+  ✓ copysign: behaves
+  ✓ abs: export present
+  ✓ abs: instruction emitted (f64.abs)
+  ✓ abs: behaves
+PASS 09 probes/09-float-builtins/rust/nightly-minimum/out.wasm (562 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ instantiates
+  ✓ sqrt: export present
+  ✓ sqrt: instruction emitted (f64.sqrt)
+  ✓ sqrt: behaves
+  ✓ min: export present
+  ✓ min: instruction emitted (f64.min)
+  ✓ min: behaves
+  ✓ max: export present
+  ✓ max: instruction emitted (f64.max)
+  ✓ max: behaves
+  ✓ ceil: export present
+  ✓ ceil: instruction emitted (f64.ceil)
+  ✓ ceil: behaves
+  ✓ floor: export present
+  ✓ floor: instruction emitted (f64.floor)
+  ✓ floor: behaves
+  ✓ trunc: export present
+  ✓ trunc: instruction emitted (f64.trunc)
+  ✓ trunc: behaves
+  ✓ nearest: export present
+  ✓ nearest: instruction emitted (f64.nearest)
+  ✓ nearest: behaves
+  ✓ copysign: export present
+  ✓ copysign: instruction emitted (f64.copysign)
+  ✓ copysign: behaves
+  ✓ abs: export present
+  ✓ abs: instruction emitted (f64.abs)
+  ✓ abs: behaves

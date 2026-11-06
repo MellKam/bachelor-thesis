@@ -1,0 +1,1 @@
+tinygo build -o out.wasm -target=wasm-unknown -no-debug -ldflags="-extldflags \"--global-base=1024 -z stack-size=1024\"" main.go

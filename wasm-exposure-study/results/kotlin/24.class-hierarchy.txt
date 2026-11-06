@@ -1,0 +1,11 @@
+# 24-gc-casts-subtyping/kotlin/class-hierarchy spec=24
+$ sh ../../../kotlin-build.sh wasm-wasi
+FAIL 24 probes/24-gc-casts-subtyping/kotlin/class-hierarchy//out.wasm (616281 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ instantiates
+  ✓ host called _start before any other export (WASI command convention)
+  ✓ gc_extra() == 210
+  ✓ declared subtype (sub) present
+  ✓ ref.test / ref.cast present
+  ✗ ref.i31 + i31.get present
+  ✓ packed i8/i16 element with get_s|u present

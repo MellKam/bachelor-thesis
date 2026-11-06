@@ -1,0 +1,10 @@
+# 27-exception-tags/rust/stable-catch-unwind spec=27
+$ rm -rf /tmp/rt && cargo build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p9_stable_catch_unwind v0.1.0 (/study/probes/27-exception-tags/rust/stable-catch-unwind)
+    Finished `release` profile [optimized] target(s) in 0.16sFAIL 17 probes/27-exception-tags/rust/stable-catch-unwind/out.wasm (20180 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ tag section with at least one tag  — tags: []
+  ✓ tag payload types (informational; the reference uses i32)
+  ✗ exception-handling instructions
+  ✓ instantiates
+  ✗ roundtrip(5) == 5  — unreachable

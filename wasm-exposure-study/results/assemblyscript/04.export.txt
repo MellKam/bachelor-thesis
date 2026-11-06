@@ -1,0 +1,11 @@
+# 04-table-import-export/assemblyscript/export spec=04:export
+$ asc main.ts -o out.wasm -O --noAssert --exportTable
+FAIL 04:export probes/04-table-import-export/assemblyscript/export//out.wasm (645 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exactly one table
+  ✗ funcref table with limits min 2 max 8  — {"reftype":"funcref","min":3,"max":null,"shared":false,"memory64":false}
+  ✓ call_indirect present
+  ✓ defined in module (not imported)
+  ✗ exported as "tbl"  — table exports: table
+  ✓ instantiates
+  ✗ exported table is reachable from the host

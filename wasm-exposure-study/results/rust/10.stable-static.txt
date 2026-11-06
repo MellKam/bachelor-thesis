@@ -1,0 +1,19 @@
+# 10-globals/rust/stable-static spec=10
+$ rm -rf /tmp/rt && cargo build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p4_stable_static v0.1.0 (/study/probes/10-globals/rust/stable-static)
+    Finished `release` profile [optimized] target(s) in 0.16sFAIL 03 probes/10-globals/rust/stable-static/out.wasm (351 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ exported global "counter"
+  ✗ counter is mutable i32
+  ✗ imported global host.base (immutable i32)
+  ✓ instantiates
+  ✗ bump() == 42  — got 1, expected 42
+  ✗ counter global == 42  — undefined
+FAIL 10 probes/10-globals/rust/stable-static/out.wasm (351 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ exported global "counter"
+  ✗ counter is mutable i32
+  ✗ imported global host.base (immutable i32)
+  ✓ instantiates
+  ✗ bump() == 42  — got 1, expected 42
+  ✗ counter global == 42  — undefined

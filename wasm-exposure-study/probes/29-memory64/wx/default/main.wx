@@ -1,0 +1,13 @@
+#[memory_limits({ min_pages: 1 })]
+memory big: u64;
+
+func touch() -> u32 {
+    local at = RawPtr::<big, u32>::from_addr(16).as_ptr();
+    at.* = 42;
+    at.*
+}
+
+export {
+    touch,
+    big as "memory",
+}

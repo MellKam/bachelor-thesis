@@ -1,0 +1,10 @@
+# 30-branch-hinting/assemblyscript/unlikely-builtin spec=30
+$ asc main.ts -o out.wasm -O --noAssert
+ERROR TS2304: Cannot find name 'unlikely'.
+   :
+ 2 │ if (unlikely(x < 0)) return -1; // the rare branch
+   │     ~~~~~~~~
+   └─ in main.ts(2,7)
+
+FAILURE 1 compile error(s)
+BUILD FAILED

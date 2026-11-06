@@ -1,0 +1,8 @@
+# i5-size/words/zig/default
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -femit-bin=out.wasm
+PASS I5:words integration/i5-size/words/zig/default//out.wasm (565791 bytes)
+  ✓ analyse("the quick brown fox") is right
+  ✓ analyse("") is right
+  ✓ analyse("  a  bb ccc  ") is right
+  ✓ analyse("héllo wörld") is right
+  ✓ analyse("lorem ipsum … (100001 bytes)") is right

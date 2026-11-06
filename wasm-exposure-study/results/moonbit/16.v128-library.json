@@ -1,0 +1,82 @@
+{
+  "feature": "16",
+  "file": "probes/16-simd-memory-ops/moonbit/v128-library//out.wasm",
+  "bytes": 3628,
+  "pass": false,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "v_copy: export present",
+      "ok": true,
+      "detail": "no exported memory for the host to write test data into"
+    },
+    {
+      "name": "v_copy: instruction emitted (^(?=[\\s\\S]*v128.load)[\\s\\S]*v128.store)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "v_copy: behaves",
+      "ok": false,
+      "detail": "no exported memory for the host to write test data into"
+    },
+    {
+      "name": "v_select: export present",
+      "ok": true,
+      "detail": "no exported memory for the host to write test data into"
+    },
+    {
+      "name": "v_select: instruction emitted (v128.bitselect)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "v_select: behaves",
+      "ok": false,
+      "detail": "no exported memory for the host to write test data into"
+    },
+    {
+      "name": "v_narrow: export present",
+      "ok": true,
+      "detail": "no exported memory for the host to write test data into"
+    },
+    {
+      "name": "v_narrow: instruction emitted (i8x16.narrow_i16x8_s)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "v_narrow: behaves",
+      "ok": false,
+      "detail": "no exported memory for the host to write test data into"
+    }
+  ],
+  "members": {
+    "v_copy": {
+      "export": true,
+      "emitted": true,
+      "behaves": false
+    },
+    "v_select": {
+      "export": true,
+      "emitted": true,
+      "behaves": false
+    },
+    "v_narrow": {
+      "export": true,
+      "emitted": true,
+      "behaves": false
+    }
+  },
+  "unsupported": []
+}

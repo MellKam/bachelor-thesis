@@ -1,0 +1,73 @@
+{
+  "feature": "24",
+  "file": "probes/24-gc-casts-subtyping/kotlin/class-hierarchy//out.wasm",
+  "bytes": 616281,
+  "pass": false,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "host called _start before any other export (WASI command convention)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "gc_extra() == 210",
+      "ok": true,
+      "detail": "got 210, expected 210"
+    },
+    {
+      "name": "declared subtype (sub) present",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ref.test / ref.cast present",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ref.i31 + i31.get present",
+      "ok": false,
+      "detail": ""
+    },
+    {
+      "name": "packed i8/i16 element with get_s|u present",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "members": {
+    "subtype": {
+      "export": true,
+      "emitted": true,
+      "behaves": true
+    },
+    "cast": {
+      "export": true,
+      "emitted": true,
+      "behaves": true
+    },
+    "i31": {
+      "export": true,
+      "emitted": false,
+      "behaves": true
+    },
+    "packed": {
+      "export": true,
+      "emitted": true,
+      "behaves": true
+    }
+  },
+  "unsupported": []
+}

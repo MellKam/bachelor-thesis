@@ -1,0 +1,9 @@
+# 29-memory64/moonbit/wasm64-target spec=29
+$ moon build --release --target wasm64 && cp _build/wasm64/release/build/src/src.wasm out.wasm
+error: invalid value 'wasm64' for '--target <TARGET>'
+  [possible values: wasm, wasm-gc, js, native, llvm, all]
+
+  tip: a similar value exists: 'wasm'
+
+For more information, try '--help'.
+BUILD FAILED

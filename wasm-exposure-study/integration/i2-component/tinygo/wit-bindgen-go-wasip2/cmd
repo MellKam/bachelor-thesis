@@ -1,0 +1,8 @@
+# TinyGo's runtime imports WASI 0.2, so the world it embeds must include wasi:cli/imports and the WASI packages must sit in wit/deps
+# (copied here from TinyGo's own lib/wasi-cli). The bindings are generated from the reference world, which only has the export.
+export GOPATH=/tmp/gopath GOFLAGS=-mod=mod PATH=$PATH:/tmp/gopath/bin
+R="$(tinygo env TINYGOROOT)/lib/wasi-cli/wit"
+rm -rf wit/deps && mkdir -p wit/deps/cli && cp "$R"/*.wit wit/deps/cli/ && cp -r "$R"/deps/* wit/deps/
+go install go.bytecodealliance.org/cmd/wit-bindgen-go@v0.7.0
+rm -rf internal && wit-bindgen-go generate -w words-world -p words/internal -o internal ../../../wit/words.wit
+tinygo build -o out.wasm -target=wasip2 -no-debug --wit-package wit/ --wit-world words-world .

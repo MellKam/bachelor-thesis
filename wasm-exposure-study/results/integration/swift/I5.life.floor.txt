@@ -1,0 +1,9 @@
+# i5-size/life/swift/floor
+$ swift build -c release --swift-sdk swift-6.4.0-RELEASE_wasm-embedded --scratch-path /tmp/sb-life-floor && cp /tmp/sb-life-floor/out/Products/Release-webassembly-wasm32/App.wasm out.wasm
+Building for production...
+[Planning deferred tasks]
+[18 / 20] App-product
+Build complete! (1.92 secs)
+PASS I5:life integration/i5-size/life/swift/floor//out.wasm (50315 bytes)
+  ✓ width x height is 64 x 64
+  ✓ matches the reference after 100 steps

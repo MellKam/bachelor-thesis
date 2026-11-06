@@ -1,0 +1,9 @@
+# 02-memory/tinygo/export-2-pages spec=02:export
+$ tinygo build -o out.wasm -target=wasm-unknown -no-debug -ldflags="-extldflags \"--initial-memory=131072 --max-memory=262144 --export-memory=mem\"" -stack-size=8kB main.goFAIL 02:export probes/02-memory/tinygo/export-2-pages/out.wasm (745 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exactly one memory
+  ✗ limits min 1 max 4  — {"min":2,"max":4,"shared":false,"memory64":false}
+  ✓ defined in module (not imported)
+  ✓ exported as "mem"
+  ✓ instantiates
+  ✓ host called _initialize before any other export (reactor convention)

@@ -1,0 +1,9 @@
+== rust
+{"bytes":945,"extraImports":[],"extraExports":[],"calledStart":false,"ok":true,"detail":"matches reference after 100 steps","alive":1608}
+== zig
+{"bytes":538,"extraImports":[],"extraExports":[],"calledStart":false,"ok":true,"detail":"matches reference after 100 steps","alive":1608}
+== assemblyscript
+{"bytes":408,"extraImports":[],"extraExports":[],"calledStart":false,"ok":true,"detail":"matches reference after 100 steps","alive":1608}
+== moonbit
+BUILD FAILED
+done

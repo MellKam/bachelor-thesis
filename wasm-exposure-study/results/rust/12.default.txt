@@ -1,0 +1,12 @@
+# 12-bulk-memory/rust/default spec=12
+$ rm -rf /tmp/rt && cargo build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p13_default v0.1.0 (/study/probes/12-bulk-memory/rust/default)
+    Finished `release` profile [optimized] target(s) in 0.16sPASS 13 probes/12-bulk-memory/rust/default/out.wasm (588 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ export bulk_test
+  ✓ memory.fill emitted
+  ✓ memory.copy emitted
+  · array.fill / array.copy used instead (the GC-array equivalents; informational)
+  ✓ instantiates
+  ✓ bulk_test(8) == 40
+  ✓ bulk_test(40) == 200

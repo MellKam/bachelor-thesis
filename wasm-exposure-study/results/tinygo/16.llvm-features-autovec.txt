@@ -1,0 +1,15 @@
+# 16-simd-memory-ops/tinygo/llvm-features-autovec spec=16
+$ tinygo build -o out.wasm -target=wasm-unknown -no-debug -llvm-features=+simd128 main.go
+FAIL 16 probes/16-simd-memory-ops/tinygo/llvm-features-autovec//out.wasm (1105 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ instantiates
+  ✓ host called _initialize before any other export (reactor convention)
+  ✓ v_copy: export present
+  ✗ v_copy: instruction emitted (^(?=[\s\S]*v128.load)[\s\S]*v128.store)
+  ✗ v_copy: behaves  — got undefined, expected 1
+  ✓ v_select: export present
+  ✗ v_select: instruction emitted (v128.bitselect)
+  ✗ v_select: behaves  — got 18, expected 303174162; memory contents differ
+  ✓ v_narrow: export present
+  ✗ v_narrow: instruction emitted (i8x16.narrow_i16x8_s)
+  ✗ v_narrow: behaves  — got 1, expected 127; memory contents differ

@@ -1,0 +1,11 @@
+# 04-table-import-export/zig/import spec=04:import
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm --import-table
+FAIL 04:import probes/04-table-import-export/zig/import//out.wasm (185 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exactly one table
+  ✗ funcref table with limits min 2 max 8  — {"module":"env","name":"__indirect_function_table","kind":"table","reftype":"funcref","min":3,"max":null,"shared":false,"memory64":false}
+  ✓ call_indirect present
+  ✗ imported as host.tbl  — table imports: env.__indirect_function_table
+  ✓ instantiates
+  ✗ slot 0 of the host table is filled by the module  — the module must place a function into the imported table
+  ✓ call_slot(0,5) == 10

@@ -1,0 +1,9 @@
+# 01-imports-exports/swift/default spec=01
+$ swiftc -target wasm32-unknown-none-wasm -enable-experimental-feature Embedded -wmo -parse-as-library -O -enable-experimental-feature Extern main.swift -o out.wasm -Xlinker --no-entry -Xclang-linker -nostdlib
+PASS 01 probes/01-imports-exports/swift/default//out.wasm (383 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ import host.log
+  ✓ import type (i32) -> ()
+  ✓ export run () -> ()
+  ✓ instantiates
+  ✓ log received 42

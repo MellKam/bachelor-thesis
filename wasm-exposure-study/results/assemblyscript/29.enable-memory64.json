@@ -1,0 +1,30 @@
+{
+  "feature": "29",
+  "file": "probes/29-memory64/assemblyscript/enable-memory64/out.wasm",
+  "bytes": 62,
+  "pass": false,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "a memory with a 64-bit index type",
+      "ok": false,
+      "detail": "[{\"min\":0,\"max\":null,\"shared\":false,\"memory64\":false}]"
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "touch() == 42",
+      "ok": false,
+      "detail": "memory access out of bounds"
+    }
+  ],
+  "unsupported": []
+}

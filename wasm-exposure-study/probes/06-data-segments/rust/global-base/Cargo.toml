@@ -1,0 +1,7 @@
+[package]
+name = "p06_global_base"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib"]

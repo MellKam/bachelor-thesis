@@ -1,0 +1,11 @@
+import "host" as host {
+    func log(value: i32);
+}
+
+func run() {
+    host::log(42);
+}
+
+export {
+    run,
+}

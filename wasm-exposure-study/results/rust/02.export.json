@@ -1,0 +1,40 @@
+{
+  "feature": "02:export",
+  "file": "probes/02-memory/rust/export/out.wasm",
+  "bytes": 292,
+  "pass": true,
+  "checks": [
+    {
+      "name": "module validates (all extensions enabled)",
+      "ok": true,
+      "detail": "",
+      "info": true
+    },
+    {
+      "name": "exactly one memory",
+      "ok": true,
+      "detail": "1 memories"
+    },
+    {
+      "name": "limits min 1 max 4",
+      "ok": true,
+      "detail": "{\"min\":1,\"max\":4,\"shared\":false,\"memory64\":false}"
+    },
+    {
+      "name": "defined in module (not imported)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "exported as \"mem\"",
+      "ok": true,
+      "detail": "memory exports: mem"
+    },
+    {
+      "name": "instantiates",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "unsupported": []
+}

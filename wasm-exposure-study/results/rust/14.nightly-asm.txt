@@ -1,0 +1,15 @@
+# 14-multi-value/rust/nightly-asm spec=14
+$ rm -rf /tmp/rt && cargo +nightly-2026-10-02 build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p6_nightly_asm v0.1.0 (/study/probes/14-multi-value/rust/nightly-asm)
+    Finished `release` profile [optimized] target(s) in 0.15sPASS 10 probes/14-multi-value/rust/nightly-asm/out.wasm (327 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ divmod has two results
+  ✓ divmod (i32, i32) -> (i32, i32)
+  ✓ instantiates
+  ✓ divmod(17,5) == [3,2]
+PASS 14 probes/14-multi-value/rust/nightly-asm/out.wasm (327 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ divmod has two results
+  ✓ divmod (i32, i32) -> (i32, i32)
+  ✓ instantiates
+  ✓ divmod(17,5) == [3,2]

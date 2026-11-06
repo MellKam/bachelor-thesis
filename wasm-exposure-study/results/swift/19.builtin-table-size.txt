@@ -1,0 +1,62 @@
+# 19-table-operations/swift/builtin-table-size spec=19
+$ swiftc -target wasm32-unknown-none-wasm -enable-experimental-feature Embedded -wmo -parse-as-library -O -enable-experimental-feature BuiltinModule main.swift -o out.wasm -Xlinker --no-entry -Xclang-linker -nostdlib
+error: compile command failed due to signal 11 (use -v to see invocation)
+Please submit a bug report (https://swift.org/contributing/#reporting-bugs) and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /opt/swift/usr/bin/swift-frontend -frontend -c main.swift -target wasm32-unknown-none-wasm -disable-objc-interop -no-color-diagnostics -Xcc -fno-color-diagnostics -O -enable-experimental-feature Embedded -enable-experimental-feature BuiltinModule -empty-abi-descriptor -no-auto-bridging-header-chaining -module-name out -in-process-plugin-server-path /opt/swift/usr/lib/swift/host/libSwiftInProcPluginServer.so -plugin-path /opt/swift/usr/lib/swift/host/plugins -plugin-path /opt/swift/usr/local/lib/swift/host/plugins -enable-default-cmo -parse-as-library -o /tmp/TemporaryDirectory.LqGOMO/out-1.o
+1.	Swift version 6.4 (swift-6.4-RELEASE)
+2.	Compiling with effective version 5.10
+3.	While evaluating request TypeCheckPrimaryFileRequest(source_file "main.swift")
+4.	While evaluating request TypeCheckFunctionBodyRequest(out.(file).tableOps@main.swift:6:6)
+5.	While type-checking statement at [main.swift:6:36 - line:8:1] RangeText="{
+    Int32(Builtin.int_wasm_table_size(UnsafeMutableRawPointer(bitPattern: 16)!._rawValue))
+"
+6.	While type-checking statement at [main.swift:7:5 - line:7:90] RangeText="Int32(Builtin.int_wasm_table_size(UnsafeMutableRawPointer(bitPattern: 16)!._rawValue)"
+7.	While type-checking-target starting at main.swift:7:5
+8.	While evaluating request ModuleQualifiedLookupRequest(0x60e2e5656e48 AbstractFunctionDecl name=tableOps(_:) : (Int32) -> Int32, Builtin, 'int_wasm_table_size', { NL_ProtocolMembers, NL_RemoveNonVisible, NL_RemoveOverridden, NL_OnlyTypes })
+9.	While evaluating request LookupInModuleRequest(0x60e2e5465858 Module name=Builtin, 'int_wasm_table_size', 0, QualifiedLookup, TypesOnly, 0x60e2e5656528 FileUnit file="main.swift", { NL_ProtocolMembers, NL_RemoveNonVisible, NL_RemoveOverridden, NL_OnlyTypes })
+
+*** Signal 11: Backtracing from 0x7edf5f0075d7... done ***
+
+*** Program crashed: Bad pointer dereference at 0x000000000000003f ***
+
+Platform: x86_64 Linux (Debian GNU/Linux 13 (trixie))
+
+Thread 0 "swift-frontend" crashed:
+
+0      0x00007edf5f0075d7 <unknown> in libgcc_s.so.1
+1 [ra] 0x000060e2e5442a08
+
+
+Registers:
+
+rax 0x000000000000003f  63
+rdx 0x000060e2e54425e0  d0 cf fa 5e df 7e 00 00 ca cf fa 5e df 7e 00 00  ÐÏú^ß~··ÊÏú^ß~··
+rcx 0x000060e2e54423f0  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ················
+rbx 0x000060e2a6eba000  7f 45 4c 46 02 01 01 03 00 00 00 00 00 00 00 00  ·ELF············
+rsi 0x000000000000003f  63
+rdi 0x000060e2e54423f0  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ················
+rbp 0x000060e2e54424f0  10 2a 44 e5 e2 60 00 00 08 2a 44 e5 e2 60 00 00  ·*Dåâ`···*Dåâ`··
+rsp 0x000060e2e5442490  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ················
+ r8 0x0000000000000000  0
+ r9 0x00007edf60d4bea0  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ················
+r10 0x0000000000000010  16
+r11 0x0000000000000246  582
+r12 0x0000000000000000  0
+r13 0x0000000000000000  0
+r14 0x00007edf5ef0c990  55 48 89 e5 41 54 53 8b 56 18 48 89 f3 83 fa ff  UH·åATS·V·H·ó·úÿ
+r15 0x0000000000000021  33
+rip 0x00007edf5f0075d7  80 38 48 0f 85 58 ff ff ff 48 ba c7 c0 0f 00 00  ·8H··XÿÿÿHºÇÀ···
+
+rflags 0x0000000000010246  ZF PF
+
+cs 0x0033  fs 0x0000  gs 0x0000
+
+
+Images (28 omitted):
+
+0x00007edf5efe6000–0x00007edf5f00cfa1 12eddb764a9c4e3c9ad99b3e645cbd206521af07 libgcc_s.so.1 /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+
+Backtrace took 0.01s
+
+BUILD FAILED

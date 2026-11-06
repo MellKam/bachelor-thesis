@@ -1,0 +1,16 @@
+# 02-memory/kotlin/default spec=02:export
+$ sh ../../../kotlin-build.sh wasm-wasiFAIL 02:export probes/02-memory/kotlin/default/out.wasm (614677 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exactly one memory
+  ✗ limits min 1 max 4  — {"min":0,"max":null,"shared":false,"memory64":false}
+  ✓ defined in module (not imported)
+  ✗ exported as "mem"  — memory exports: memory
+  ✓ instantiates
+  ✓ host called _start before any other export (WASI command convention)FAIL 02:export probes/02-memory/kotlin/default/out.wasm (614677 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exactly one memory
+  ✗ limits min 1 max 4  — {"min":0,"max":null,"shared":false,"memory64":false}
+  ✓ defined in module (not imported)
+  ✗ exported as "mem"  — memory exports: memory
+  ✓ instantiates
+  ✓ host called _start before any other export (WASI command convention)

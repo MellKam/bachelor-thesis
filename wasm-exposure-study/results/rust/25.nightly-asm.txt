@@ -1,0 +1,9 @@
+# 25-multiple-memories/rust/nightly-asm spec=25
+$ rm -rf /tmp/rt && cargo +nightly-2026-10-02 build --release --target wasm32-unknown-unknown --target-dir /tmp/rt && cp /tmp/rt/wasm32-unknown-unknown/release/*.wasm out.wasm
+   Compiling p3_nightly_asm v0.1.0 (/study/probes/25-multiple-memories/rust/nightly-asm)
+    Finished `release` profile [optimized] target(s) in 0.15sFAIL 16 probes/25-multiple-memories/rust/nightly-asm/out.wasm (335 bytes)
+  · module validates (all extensions enabled)  — error: func 0 failed to validate
+  ✗ two or more memories  — 1
+  ✓ memory.copy with differing memory operands
+  ✗ instantiates  — WebAssembly.instantiate(): Compiling function #0:"copy_test" failed: memory index 1 exceeds number of declared memories (1) @+62
+  ✗ export copy_test

@@ -1,0 +1,19 @@
+# 23-gc-typed-refs/assemblyscript/classes-enable-gc spec=23
+$ asc main.ts -o out.wasm -O --noAssert --enable gcFAIL 20 probes/23-gc-typed-refs/assemblyscript/classes-enable-gc/out.wasm (3387 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ module defines a struct type
+  ✗ module defines an array type
+  ✗ struct.new + struct.get present in the module
+  ✗ array.new* + array.get present in the module
+  · typed function references (call_ref / ref.func) used  — informational
+  ✓ instantiates
+  ✓ gc_test() == 15
+FAIL 23 probes/23-gc-typed-refs/assemblyscript/classes-enable-gc/out.wasm (3387 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ module defines a struct type
+  ✗ module defines an array type
+  ✗ struct.new + struct.get present in the module
+  ✗ array.new* + array.get present in the module
+  · typed function references (call_ref / ref.func) used  — informational
+  ✓ instantiates
+  ✓ gc_test() == 15

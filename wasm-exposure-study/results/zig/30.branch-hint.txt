@@ -1,0 +1,10 @@
+# 30-branch-hinting/zig/branch-hint spec=30
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm
+FAIL 30 probes/30-branch-hinting/zig/branch-hint//out.wasm (85 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ custom section "metadata.code.branch_hint"  — custom sections: 
+  ✗ at least one hint targets classify  — hints: []; classify = function 0
+  ✓ hint values (0 unlikely, 1 likely)
+  ✓ instantiates
+  ✓ classify(5) == 10
+  ✓ classify(-1) == -1

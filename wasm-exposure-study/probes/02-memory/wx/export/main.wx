@@ -1,0 +1,11 @@
+#[memory_limits({ min_pages: 1, max_pages: 4 })]
+memory heap: u32;
+
+func touch() -> u32 {
+    heap.size_bytes()
+}
+
+export {
+    heap as "mem",
+    touch,
+}

@@ -1,0 +1,1 @@
+clang --target=wasm32-unknown-unknown -O2 -nostdlib -mllvm --enable-branch-hint -Wl,--no-entry main.c -o out.wasm

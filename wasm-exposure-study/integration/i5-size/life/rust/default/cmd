@@ -1,0 +1,1 @@
+rm -rf /tmp/i5-life-default && cargo build --release --target wasm32-unknown-unknown --target-dir /tmp/i5-life-default && cp /tmp/i5-life-default/wasm32-unknown-unknown/release/life.wasm out.wasm

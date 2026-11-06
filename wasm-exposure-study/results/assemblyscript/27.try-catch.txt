@@ -1,0 +1,16 @@
+# 27-exception-tags/assemblyscript/try-catch spec=27
+$ asc main.ts -o out.wasm -O --noAssert
+ERROR AS100: Not implemented: Exceptions
+   :
+ 2 │ try {
+   │ ~~~~~
+   └─ in main.ts(2,3)
+
+ERROR TS2355: A function whose declared type is not 'void' must return a value.
+   :
+ 1 │ export function roundtrip(x: i32): i32 {
+   │                                    ~~~
+   └─ in main.ts(1,36)
+
+FAILURE 2 compile error(s)
+BUILD FAILED

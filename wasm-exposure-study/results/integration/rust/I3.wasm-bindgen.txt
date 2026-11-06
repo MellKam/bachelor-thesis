@@ -1,0 +1,40 @@
+# i3-js-bindings/rust/wasm-bindgen
+$ rm -rf /tmp/i3-rs pkg && cargo build --release --target wasm32-unknown-unknown --target-dir /tmp/i3-rs
+wasm-bindgen --target nodejs --out-dir pkg /tmp/i3-rs/wasm32-unknown-unknown/release/words.wasm
+cp pkg/words_bg.wasm out.wasm
+    Updating crates.io index
+ Downloading crates ...
+  Downloaded rustversion v1.0.23
+  Downloaded cfg-if v1.0.5
+  Downloaded once_cell v1.21.4
+  Downloaded wasm-bindgen-macro v0.2.129
+  Downloaded wasm-bindgen-shared v0.2.129
+  Downloaded unicode-ident v1.0.26
+  Downloaded quote v1.0.47
+  Downloaded proc-macro2 v1.0.107
+  Downloaded wasm-bindgen v0.2.129
+  Downloaded bumpalo v3.20.3
+  Downloaded wasm-bindgen-macro-support v0.2.129
+  Downloaded syn v3.0.6
+   Compiling wasm-bindgen-shared v0.2.129
+   Compiling proc-macro2 v1.0.107
+   Compiling unicode-ident v1.0.26
+   Compiling quote v1.0.47
+   Compiling rustversion v1.0.23
+   Compiling bumpalo v3.20.3
+   Compiling once_cell v1.21.4
+   Compiling cfg-if v1.0.5
+   Compiling wasm-bindgen v0.2.129
+   Compiling syn v3.0.6
+   Compiling wasm-bindgen-macro-support v0.2.129
+   Compiling wasm-bindgen-macro v0.2.129
+   Compiling words v0.1.0 (/study/integration/i3-js-bindings/rust/wasm-bindgen)
+    Finished `release` profile [optimized] target(s) in 11.04s
+PASS I3 integration/i3-js-bindings/rust/wasm-bindgen//out.wasm (21207 bytes)
+  ✓ adapter loads the generated bindings
+  ✓ analyse("the quick brown fox") is right
+  ✓ analyse("") is right
+  ✓ analyse("  a  bb ccc  ") is right
+  ✓ analyse("héllo wörld") is right
+  ✓ analyse("lorem ipsum … (100001 bytes)") is right
+  ✓ adapter: 3 lines of code

@@ -1,0 +1,10 @@
+# 30-branch-hinting/c/builtin-expect spec=30
+$ clang --target=wasm32-unknown-unknown -O2 -nostdlib -Wl,--no-entry main.c -o out.wasm
+FAIL 30 probes/30-branch-hinting/c/builtin-expect//out.wasm (385 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ custom section "metadata.code.branch_hint"  — custom sections: name, producers, target_features
+  ✗ at least one hint targets classify  — hints: []; classify = function 0
+  ✓ hint values (0 unlikely, 1 likely)
+  ✓ instantiates
+  ✓ classify(5) == 10
+  ✓ classify(-1) == -1

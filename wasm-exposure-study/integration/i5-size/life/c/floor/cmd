@@ -1,0 +1,1 @@
+clang --target=wasm32-unknown-unknown -Oz -nostdlib -Wl,--no-entry -Wl,--export-memory -Wl,--strip-all main.c -o out.wasm

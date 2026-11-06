@@ -1,0 +1,15 @@
+# 30-branch-hinting/kotlin/internal-likely spec=30
+$ sh ../../../kotlin-build.sh wasm-wasi
+main.kt:4:36: warning: suppression of error 'INVISIBLE_REFERENCE' might compile and work, but the compiler behavior is UNSPECIFIED and WILL NOT BE PRESERVED. Please report your use case to the Kotlin issue tracker instead: https://kotl.in/issue
+@file:Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")
+                                   ^^^^^^^^^^^^^^^^^^^^^
+FAIL 30 probes/30-branch-hinting/kotlin/internal-likely//out.wasm (614744 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ custom section "metadata.code.branch_hint"
+  ✗ hint section precedes the code section  — section order: 1,2,3,4,5,13,6,7,8,9,12,10,0,11,0
+  ✓ at least one hint targets classify
+  ✓ hint values (0 unlikely, 1 likely)
+  ✓ instantiates
+  ✓ host called _start before any other export (WASI command convention)
+  ✓ classify(5) == 10
+  ✓ classify(-1) == -1

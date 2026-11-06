@@ -1,0 +1,9 @@
+# 14-multi-value/wx/default spec=14
+$ wx build . -o out.wasm
+Wrote 68 bytes to out.wasm
+PASS 14 probes/14-multi-value/wx/default//out.wasm (68 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ divmod has two results
+  ✓ divmod (i32, i32) -> (i32, i32)
+  ✓ instantiates
+  ✓ divmod(17,5) == [3,2]

@@ -1,0 +1,11 @@
+# 10-globals/wx/default spec=10
+$ wx build . -o out.wasm
+Wrote 97 bytes to out.wasm
+PASS 10 probes/10-globals/wx/default//out.wasm (97 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exported global "counter"
+  ✓ counter is mutable i32
+  ✓ imported global host.base (immutable i32)
+  ✓ instantiates
+  ✓ bump() == 42
+  ✓ counter global == 42

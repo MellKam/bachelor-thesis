@@ -1,0 +1,10 @@
+# 22-typed-function-references/zig/function-pointer spec=22
+$ zig build-exe main.zig -target wasm32-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasm
+FAIL 22 probes/22-typed-function-references/zig/function-pointer//out.wasm (124 bytes)
+  ✓ module validates (all extensions enabled)
+  ✗ ref.func emitted (anywhere in the module: the reference may be built in an initialiser)
+  ✗ call_ref emitted in apply
+  · reference type is non-nullable (informational)
+  ✓ call_indirect or a table also present (informational)
+  ✓ instantiates
+  ✓ apply(5) == 10

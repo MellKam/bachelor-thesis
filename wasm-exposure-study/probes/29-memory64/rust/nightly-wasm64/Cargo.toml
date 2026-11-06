@@ -1,0 +1,7 @@
+[package]
+name = "p18_nightly_wasm64"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib"]

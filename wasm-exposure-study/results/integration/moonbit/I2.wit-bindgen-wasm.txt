@@ -1,0 +1,33 @@
+# i2-component/moonbit/wit-bindgen-wasm
+$ # bindings are generated into the package, impl.mbt is the program; MoonBit strings are UTF-16, hence --encoding utf16
+rm -rf _build && moon build --release --target wasm 2>&1 | tail -20
+core=$(find _build -name "gen.wasm" | head -1)
+wasm-tools component embed ../../../wit "$core" --encoding utf16 -o embedded.wasm
+wasm-tools component new embedded.wasm -o out.wasm
+Warning: `moon.mod.json` at '/study/integration/i2-component/moonbit/wit-bindgen-wasm' is deprecated. Run `moon fmt` to migrate to `moon.mod`.
+Warning: [0020]
+    ╭─[ /study/integration/i2-component/moonbit/wit-bindgen-wasm/gen/interface/study/words/words/impl.mbt:27:17 ]
+    │
+ 27 │   let mut cur = StringBuilder::new()
+    │                 ─────────┬────────  
+    │                          ╰────────── Warning (deprecated): Use `StringBuilder()` instead
+────╯
+Warning: [0020]
+    ╭─[ /study/integration/i2-component/moonbit/wit-bindgen-wasm/gen/interface/study/words/words/impl.mbt:38:15 ]
+    │
+ 38 │         cur = StringBuilder::new()
+    │               ─────────┬────────  
+    │                        ╰────────── Warning (deprecated): Use `StringBuilder()` instead
+────╯
+Finished. moon: ran 3 tasks, now up to date (2 warnings, 0 errors)
+PASS I2 integration/i2-component/moonbit/wit-bindgen-wasm//out.wasm (8780 bytes)
+  ✓ the file is a component, not a core module
+  ✓ wasm-tools validate (component-model)
+  ✓ exports study:words/words
+  ✓ the interface has the reference types
+  ✓ analyse("the quick brown fox") is right
+  ✓ analyse("") is right
+  ✓ analyse("  a  bb ccc  ") is right
+  ✓ analyse("héllo wörld") is right
+  ✓ analyse("lorem ipsum … (100001 bytes)") is right
+  ✓ imports: none

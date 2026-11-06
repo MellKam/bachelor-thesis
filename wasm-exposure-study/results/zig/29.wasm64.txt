@@ -1,0 +1,6 @@
+# 29-memory64/zig/wasm64 spec=29
+$ zig build-exe main.zig -target wasm64-freestanding -fno-entry -rdynamic -O ReleaseSmall -femit-bin=out.wasmPASS 18 probes/29-memory64/zig/wasm64/out.wasm (80 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ a memory with a 64-bit index type
+  ✓ instantiates
+  ✓ touch() == 42

@@ -1,0 +1,45 @@
+{
+  "criterion": "I3",
+  "file": "integration/i3-js-bindings/assemblyscript/bindings-esm//out.wasm",
+  "bytes": 5089,
+  "pass": true,
+  "checks": [
+    {
+      "name": "adapter loads the generated bindings",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "analyse(\"the quick brown fox\") is right",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "analyse(\"\") is right",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "analyse(\"  a  bb ccc  \") is right",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "analyse(\"héllo wörld\") is right",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "analyse(\"lorem ipsum … (100001 bytes)\") is right",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "adapter: 4 lines of code",
+      "ok": true,
+      "detail": "",
+      "info": true
+    }
+  ],
+  "adapterLines": 4
+}

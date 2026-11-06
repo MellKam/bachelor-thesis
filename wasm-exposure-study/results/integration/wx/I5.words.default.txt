@@ -1,0 +1,9 @@
+# i5-size/words/wx/default
+$ wx build . -o out.wasm
+Wrote 692 bytes to out.wasm
+PASS I5:words integration/i5-size/words/wx/default//out.wasm (692 bytes)
+  ✓ analyse("the quick brown fox") is right
+  ✓ analyse("") is right
+  ✓ analyse("  a  bb ccc  ") is right
+  ✓ analyse("héllo wörld") is right
+  ✓ analyse("lorem ipsum … (100001 bytes)") is right
