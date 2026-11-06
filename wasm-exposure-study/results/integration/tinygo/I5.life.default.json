@@ -2,8 +2,8 @@
   "criterion": "I5",
   "program": "life",
   "file": "integration/i5-size/life/tinygo/default//out.wasm",
-  "bytes": 121671,
-  "optBytes": 21602,
+  "bytes": 121653,
+  "optBytes": 21650,
   "pass": true,
   "checks": [
     {

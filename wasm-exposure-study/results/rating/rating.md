@@ -14,6 +14,7 @@ All 30 features are probed. Nothing here is a score: each number is a count of c
 | AssemblyScript | 15/30 | 13 | 12 | 12 | 3 | 0 | 15 | 0 | 4 |
 | Swift | 14/30 | 12 | 9 | 0 | 9 | 5 | 16 | 0 | 3 |
 | Kotlin | 11/30 | 7 | 11 | 9 | 2 | 0 | 18 | 1 | 10 |
+| WX | 10/30 | 7 | 10 | 10 | 0 | 0 | 20 | 0 | 20 |
 | TinyGo | 10/30 | 5 | 5 | 5 | 5 | 0 | 18 | 2 | 9 |
 
 **Reached**: the language can produce the feature in some way. **Full**: all of it, not part. **Checked**: the compiler of the language checks it (native or annotation; an inline assembly block only if the compiler relates it to the program, see `checked` in `results/README.md`). **No obstacle / 1 / 2+**: among the reached features, how many obstacles stand between the developer and it. An obstacle is reaching it through a build config or through inline assembly (checked or not), or any of:
@@ -39,6 +40,7 @@ The same reached cells by how the selected variant is written. Language = native
 | AssemblyScript | 15/30 | 12 | 3 | 0 | 0 | 15 |
 | Swift | 14/30 | 9 | 5 | 0 | 0 | 16 |
 | Kotlin | 11/30 | 11 | 0 | 0 | 0 | 19 |
+| WX | 10/30 | 10 | 0 | 0 | 0 | 20 |
 | TinyGo | 10/30 | 5 | 5 | 0 | 0 | 20 |
 
 ## Score
@@ -51,16 +53,17 @@ One number between 0 and 1 per language, from the coefficients in `results/ratin
 | Rust | 0.64 | 2–3 |
 | Zig | 0.59 | 2–4 |
 | AssemblyScript | 0.57 | 2–4 |
-| Swift | 0.43 | 5–7 |
-| MoonBit | 0.39 | 5–8 |
-| TinyGo | 0.34 | 6–8 |
-| Kotlin | 0.32 | 5–8 |
+| Swift | 0.43 | 5–8 |
+| MoonBit | 0.39 | 5–9 |
+| WX | 0.37 | 5–9 |
+| TinyGo | 0.34 | 6–9 |
+| Kotlin | 0.32 | 5–9 |
 
 The ranks come from changing every coefficient at random (partial reach ±0.2; the damage of all obstacles together between half and one and a half times, plus ±15% each, in the same order; each feature weight between half and double) 2000 times. An order is robust only if it held in at least 95% of the runs.
 
-**Robust orderings:** C/C++ above Rust (100%); C/C++ above Zig (100%); C/C++ above AssemblyScript (100%); C/C++ above Swift (100%); C/C++ above MoonBit (100%); C/C++ above TinyGo (100%); C/C++ above Kotlin (100%); Rust above Zig (100%); Rust above Swift (100%); Rust above MoonBit (100%); Rust above TinyGo (100%); Rust above Kotlin (100%); Zig above Swift (100%); Zig above MoonBit (100%); Zig above TinyGo (100%); Zig above Kotlin (100%); AssemblyScript above Swift (100%); AssemblyScript above MoonBit (100%); AssemblyScript above TinyGo (100%); AssemblyScript above Kotlin (100%); Swift above TinyGo (100%); Swift above Kotlin (99%).
+**Robust orderings:** C/C++ above Rust (100%); C/C++ above Zig (100%); C/C++ above AssemblyScript (100%); C/C++ above Swift (100%); C/C++ above MoonBit (100%); C/C++ above WX (100%); C/C++ above TinyGo (100%); C/C++ above Kotlin (100%); Rust above Zig (100%); Rust above Swift (100%); Rust above MoonBit (100%); Rust above WX (100%); Rust above TinyGo (100%); Rust above Kotlin (100%); Zig above Swift (100%); Zig above MoonBit (100%); Zig above WX (100%); Zig above TinyGo (100%); Zig above Kotlin (100%); AssemblyScript above Swift (100%); AssemblyScript above MoonBit (100%); AssemblyScript above WX (100%); AssemblyScript above TinyGo (100%); AssemblyScript above Kotlin (100%); Swift above TinyGo (100%); Swift above Kotlin (99%).
 
-**Not robust** (the score gap is smaller than the uncertainty of the coefficients): Rust / AssemblyScript (91% / 9%); Zig / AssemblyScript (61% / 39%); Swift / MoonBit (85% / 15%); MoonBit / TinyGo (86% / 14%); MoonBit / Kotlin (93% / 7%); TinyGo / Kotlin (70% / 30%).
+**Not robust** (the score gap is smaller than the uncertainty of the coefficients): Rust / AssemblyScript (91% / 9%); Zig / AssemblyScript (61% / 39%); Swift / MoonBit (85% / 15%); Swift / WX (92% / 8%); MoonBit / WX (65% / 35%); MoonBit / TinyGo (86% / 14%); MoonBit / Kotlin (93% / 7%); WX / TinyGo (79% / 21%); WX / Kotlin (88% / 12%); TinyGo / Kotlin (70% / 30%).
 
 **Obstacle factors**, from least to most damaging. A cell is worth its reach times the factor of each obstacle it has.
 
@@ -83,19 +86,21 @@ True of every probe of the language. They are recorded here and count for nothin
 - **TinyGo**: The host must call the exported `_initialize` before any other export (the WASI reactor convention); Go's `init()` and the runtime start there. True of every probe, so it is not a cost on any one feature.
 - **Kotlin**: The host must run `_start` (the WASI command convention) before any other export; true of every module that built. Feature 17 (`externref`) is built for the `wasm-js` target, every other probe for `wasm-wasi`.
 - **Swift**: Every probe is built freestanding in Embedded Swift (`swiftc -target wasm32-unknown-none-wasm`, linked by the toolchain's `wasm-ld`), the lowest-level route in the 6.4.0 toolchain and the only one that yields a module without WASI imports or a runtime. Embedded mode is itself behind `-enable-experimental-feature Embedded` in 6.4.0 (`swift-frontend -print-supported-features` lists `Embedded`, `Extern` and `BuiltinModule` under "experimental"), so every variant carries `experimental-api`; so do the underscored attributes (`@_expose`, `@_cdecl`, `@_extern`) and the Builtin module. No start call is needed by the host.
+- **WX**: Every probe is built with `wx build` from a `wx.json` package. No flags exist, so each probe has one variant. The module is a bare core module: no start function and no initialisation by the host.
 
 ## Which language is ahead of which
 
 A language is ahead of another only if it is at least as good on all 4 counts (reached, full, checked, no obstacle) and better on at least one.
 
-- **C/C++** is ahead of Rust, Zig, MoonBit, TinyGo, Kotlin, Swift.
+- **C/C++** is ahead of Rust, Zig, MoonBit, TinyGo, Kotlin, Swift, WX.
 - **Rust** is ahead of Zig, TinyGo, Kotlin, Swift.
 - **Zig** is ahead of TinyGo.
 - **MoonBit** is ahead of TinyGo, Swift.
-- **AssemblyScript** is ahead of TinyGo, Kotlin, Swift.
+- **AssemblyScript** is ahead of TinyGo, Kotlin, Swift, WX.
 - **Kotlin** is ahead of TinyGo.
+- **WX** is ahead of TinyGo.
 
-Not ordered, because each leads on something: Rust / MoonBit; Rust / AssemblyScript; Zig / MoonBit; Zig / AssemblyScript; Zig / Kotlin; Zig / Swift; C/C++ / AssemblyScript; MoonBit / AssemblyScript; MoonBit / Kotlin; TinyGo / Swift; Kotlin / Swift.
+Not ordered, because each leads on something: Rust / MoonBit; Rust / AssemblyScript; Rust / WX; Zig / MoonBit; Zig / AssemblyScript; Zig / Kotlin; Zig / Swift; Zig / WX; C/C++ / AssemblyScript; MoonBit / AssemblyScript; MoonBit / Kotlin; MoonBit / WX; TinyGo / Swift; Kotlin / Swift; Kotlin / WX; Swift / WX.
 
 ## By spec version
 
@@ -111,43 +116,44 @@ The same counts for the features of each spec version (1.0 = module core, 2.0, 3
 | TinyGo | 7/10 reached, 4 with none | 3/9 reached, 1 with none | 0/11 reached, 0 with none |
 | Kotlin | 4/10 reached, 3 with none | 2/9 reached, 1 with none | 5/11 reached, 5 with none |
 | Swift | 7/10 reached, 0 with none | 5/9 reached, 0 with none | 2/11 reached, 0 with none |
+| WX | 6/10 reached, 6 with none | 2/9 reached, 2 with none | 2/11 reached, 2 with none |
 
 ## Per feature
 
 Each cell: `F` full or `P` partial, `✓` checked or `✗` not checked, then the number of obstacles; `–` Absent.
 
-| # | Feature | Spec | Rust | Zig | C/C++ | MoonBit | AssemblyScript | TinyGo | Kotlin | Swift |
-|---|---|---|---|---|---|---|---|---|---|---|
-| 01 | Imports and exports | 1.0 | F✓0 | F✓0 | F✓0 | F✓0 | F✓0 | F✓0 | F✓1 | F✓1 |
-| 02 | Memory configuration | 1.0 | F✗1 | P✗1 | F✗1 | F✗1 | P✗1 | P✗1 | – | F✗2 |
-| 03 | Table and indirect call | 1.0 | F✓0 | F✓0 | F✓0 | F✓1 | F✓0 | F✓0 | – | F✓1 |
-| 04 | Table import and export | 1.0 | P✗1 | P✗1 | P✗1 | – | P✗1 | P✗1 | – | P✗2 |
-| 05 | Start function | 1.0 | – | – | – | F✓0 | F✓0 | – | F✓0 | – |
-| 06 | Data segments | 1.0 | F✗1 | F✗1 | F✗1 | F✗2 | F✗1 | F✗1 | – | F✗2 |
-| 07 | Custom sections | 1.0 | F✓0 | F✗1 | F✗1 | – | – | – | – | – |
-| 08 | Integer operations | 1.0 | F✓0 | F✓0 | F✓0 | P✓0 | F✓0 | F✓0 | P✓0 | F✓1 |
-| 09 | Float builtins | 1.0 | F✓1 | F✗1 | F✓0 | P✓0 | F✓0 | P✓0 | P✓0 | F✓1 |
-| 10 | Globals | 1.0 | F✗2 | F✗1 | F✗1 | – | F✓0 | – | – | – |
-| 11 | Non-trapping conversions, sign extension | 2.0 | F✓0 | F✓0 | F✓0 | F✗1 | F✓0 | F✓0 | P✓0 | F✓1 |
-| 12 | Bulk memory | 2.0 | F✓0 | F✓0 | F✓0 | F✓0 | F✓0 | P✗1 | – | F✓1 |
-| 13 | Passive data segments | 2.0 | P✗2 | P✗1 | P✗1 | – | – | P✗1 | – | P✗2 |
-| 14 | Multi-value | 2.0 | F✗2 | F✗1 | F✗2 | – | – | – | – | – |
-| 15 | SIMD | 2.0 | F✓0 | F✓0 | F✓0 | F✓1 | F✓0 | – | – | F✓1 |
-| 16 | SIMD memory and bitwise operations | 2.0 | F✓0 | F✗1 | F✓0 | F✗1 | F✓0 | – | – | F✓1 |
-| 17 | `externref` | 2.0 | F✗2 | F✗1 | F✓0 | F✓0 | F✓0 | – | F✓1 | – |
-| 18 | Multiple tables | 2.0 | F✗2 | F✗1 | F✗1 | – | – | – | – | – |
-| 19 | Table operations on references | 2.0 | F✗2 | F✗1 | F✗1 | – | – | – | – | – |
-| 20 | Tail calls | 3.0 | F✓1 | F✓0 | F✓0 | – | – | – | – | – |
-| 21 | Extended constant expressions | 3.0 | – | – | – | – | – | – | – | – |
-| 22 | Typed function references | 3.0 | F✗2 | – | F✗2 | F✓1 | – | – | F✓0 | – |
-| 23 | GC structs and arrays | 3.0 | – | – | – | F✓1 | – | – | F✓0 | – |
-| 24 | GC casts, subtyping, i31, packed fields | 3.0 | – | – | – | P✓1 | – | – | P✓0 | – |
-| 25 | Multiple memories | 3.0 | – | – | – | – | – | – | – | – |
-| 26 | Relaxed SIMD | 3.0 | F✓0 | F✓1 | F✓0 | F✓1 | F✓0 | – | – | F✓1 |
-| 27 | Exception tags | 3.0 | F✗2 | F✗1 | F✓2 | – | – | – | F✓0 | – |
-| 28 | Exception handling with exnref | 3.0 | F✗2 | F✗1 | F✓2 | – | – | – | F✓0 | – |
-| 29 | 64-bit memory | 3.0 | F✗2 | F✗1 | F✗1 | – | – | – | – | F✗2 |
-| 30 | Branch hinting | 3.0 | – | – | – | – | – | – | – | – |
+| # | Feature | Spec | Rust | Zig | C/C++ | MoonBit | AssemblyScript | TinyGo | Kotlin | Swift | WX |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 01 | Imports and exports | 1.0 | F✓0 | F✓0 | F✓0 | F✓0 | F✓0 | F✓0 | F✓1 | F✓1 | F✓0 |
+| 02 | Memory configuration | 1.0 | F✗1 | P✗1 | F✗1 | F✗1 | P✗1 | P✗1 | – | F✗2 | P✓0 |
+| 03 | Table and indirect call | 1.0 | F✓0 | F✓0 | F✓0 | F✓1 | F✓0 | F✓0 | – | F✓1 | – |
+| 04 | Table import and export | 1.0 | P✗1 | P✗1 | P✗1 | – | P✗1 | P✗1 | – | P✗2 | – |
+| 05 | Start function | 1.0 | – | – | – | F✓0 | F✓0 | – | F✓0 | – | – |
+| 06 | Data segments | 1.0 | F✗1 | F✗1 | F✗1 | F✗2 | F✗1 | F✗1 | – | F✗2 | P✓0 |
+| 07 | Custom sections | 1.0 | F✓0 | F✗1 | F✗1 | – | – | – | – | – | – |
+| 08 | Integer operations | 1.0 | F✓0 | F✓0 | F✓0 | P✓0 | F✓0 | F✓0 | P✓0 | F✓1 | P✓0 |
+| 09 | Float builtins | 1.0 | F✓1 | F✗1 | F✓0 | P✓0 | F✓0 | P✓0 | P✓0 | F✓1 | F✓0 |
+| 10 | Globals | 1.0 | F✗2 | F✗1 | F✗1 | – | F✓0 | – | – | – | F✓0 |
+| 11 | Non-trapping conversions, sign extension | 2.0 | F✓0 | F✓0 | F✓0 | F✗1 | F✓0 | F✓0 | P✓0 | F✓1 | – |
+| 12 | Bulk memory | 2.0 | F✓0 | F✓0 | F✓0 | F✓0 | F✓0 | P✗1 | – | F✓1 | F✓0 |
+| 13 | Passive data segments | 2.0 | P✗2 | P✗1 | P✗1 | – | – | P✗1 | – | P✗2 | – |
+| 14 | Multi-value | 2.0 | F✗2 | F✗1 | F✗2 | – | – | – | – | – | F✓0 |
+| 15 | SIMD | 2.0 | F✓0 | F✓0 | F✓0 | F✓1 | F✓0 | – | – | F✓1 | – |
+| 16 | SIMD memory and bitwise operations | 2.0 | F✓0 | F✗1 | F✓0 | F✗1 | F✓0 | – | – | F✓1 | – |
+| 17 | `externref` | 2.0 | F✗2 | F✗1 | F✓0 | F✓0 | F✓0 | – | F✓1 | – | – |
+| 18 | Multiple tables | 2.0 | F✗2 | F✗1 | F✗1 | – | – | – | – | – | – |
+| 19 | Table operations on references | 2.0 | F✗2 | F✗1 | F✗1 | – | – | – | – | – | – |
+| 20 | Tail calls | 3.0 | F✓1 | F✓0 | F✓0 | – | – | – | – | – | – |
+| 21 | Extended constant expressions | 3.0 | – | – | – | – | – | – | – | – | – |
+| 22 | Typed function references | 3.0 | F✗2 | – | F✗2 | F✓1 | – | – | F✓0 | – | – |
+| 23 | GC structs and arrays | 3.0 | – | – | – | F✓1 | – | – | F✓0 | – | – |
+| 24 | GC casts, subtyping, i31, packed fields | 3.0 | – | – | – | P✓1 | – | – | P✓0 | – | – |
+| 25 | Multiple memories | 3.0 | – | – | – | – | – | – | – | – | F✓0 |
+| 26 | Relaxed SIMD | 3.0 | F✓0 | F✓1 | F✓0 | F✓1 | F✓0 | – | – | F✓1 | – |
+| 27 | Exception tags | 3.0 | F✗2 | F✗1 | F✓2 | – | – | – | F✓0 | – | – |
+| 28 | Exception handling with exnref | 3.0 | F✗2 | F✗1 | F✓2 | – | – | – | F✓0 | – | – |
+| 29 | 64-bit memory | 3.0 | F✗2 | F✗1 | F✗1 | – | – | – | – | F✗2 | F✓0 |
+| 30 | Branch hinting | 3.0 | – | – | – | – | – | – | – | – | – |
 
 ## Selected variant per cell
 
@@ -416,6 +422,39 @@ The variant that stands for the cell: the most complete first, then the one the 
 - **28 Exception handling with exnref**: Absent (confirmed).
 - **29 64-bit memory**: `wasm64`, Config, experimental-api; 2 obstacles. The 6.4.0 toolchain ships Embedded Swift stdlib modules for `wasm64-unknown-none-wasm`; no `-Zbuild-std`-style rebuild is needed.
 - **30 Branch hinting**: Absent (confirmed).
+
+### WX
+
+- **01 Imports and exports**: `default`, Native; 0 obstacles.
+- **02 Memory configuration**: `export+import`, Annotation, partial (limits cannot be set on an imported memory (the import is min 0, no max)); 0 obstacles. `#[memory_limits({ min_pages, max_pages })]` sets the limits of a defined memory and the export name is written in the export block (`heap as "mem"`). The attribute is rejected on an import entry (E1009), so an imported memory always has min 0 and no max.
+- **03 Table and indirect call**: Absent (confirmed), never probed; see [`probes/03-table-indirect-call/wx/ABSENT.md`](../../probes/03-table-indirect-call/wx/ABSENT.md).
+- **04 Table import and export**: Absent (confirmed), never probed; see [`probes/04-table-import-export/wx/ABSENT.md`](../../probes/04-table-import-export/wx/ABSENT.md).
+- **05 Start function**: Absent (confirmed), never probed; see [`probes/05-start-function/wx/ABSENT.md`](../../probes/05-start-function/wx/ABSENT.md).
+- **06 Data segments**: `default`, Native, partial (the address of the data cannot be chosen); 0 obstacles. Static data is an active segment placed by the compiler at the start of the memory (here address 0); there is no option or attribute to move it. `Memory::DATA_END` reads where it ends.
+- **07 Custom sections**: Absent (confirmed), never probed; see [`probes/07-custom-sections/wx/ABSENT.md`](../../probes/07-custom-sections/wx/ABSENT.md).
+- **08 Integer operations**: `default`, Native, partial (clz, ctz, popcnt, rotl and rotr have no intrinsic yet (easy to add)); 0 obstacles. The ten members are written as functions in the source; only add, sub, mul, div and rem exist as operators. The five bit-counting and rotation operations were not attempted by loops because the checker requires the instruction.
+- **09 Float builtins**: `default`, Native; 0 obstacles.
+- **10 Globals**: `default`, Native; 0 obstacles.
+- **11 Non-trapping conversions, sign extension**: Absent (confirmed), never probed; see [`probes/11-conversions-sign-extension/wx/ABSENT.md`](../../probes/11-conversions-sign-extension/wx/ABSENT.md).
+- **12 Bulk memory**: `default`, Native; 0 obstacles.
+- **13 Passive data segments**: Absent (confirmed), never probed; see [`probes/13-passive-data-segments/wx/ABSENT.md`](../../probes/13-passive-data-segments/wx/ABSENT.md).
+- **14 Multi-value**: `default`, Native; 0 obstacles.
+- **15 SIMD**: Absent (confirmed), never probed; see [`probes/15-simd/wx/ABSENT.md`](../../probes/15-simd/wx/ABSENT.md).
+- **16 SIMD memory and bitwise operations**: Absent (confirmed), never probed; see [`probes/16-simd-memory-ops/wx/ABSENT.md`](../../probes/16-simd-memory-ops/wx/ABSENT.md).
+- **17 `externref`**: Absent (confirmed), never probed; see [`probes/17-externref/wx/ABSENT.md`](../../probes/17-externref/wx/ABSENT.md).
+- **18 Multiple tables**: Absent (confirmed), never probed; see [`probes/18-multiple-tables/wx/ABSENT.md`](../../probes/18-multiple-tables/wx/ABSENT.md).
+- **19 Table operations on references**: Absent (confirmed), never probed; see [`probes/19-table-operations/wx/ABSENT.md`](../../probes/19-table-operations/wx/ABSENT.md).
+- **20 Tail calls**: Absent (confirmed), never probed; see [`probes/20-tail-calls/wx/ABSENT.md`](../../probes/20-tail-calls/wx/ABSENT.md).
+- **21 Extended constant expressions**: Absent (confirmed), never probed; see [`probes/21-extended-const/wx/ABSENT.md`](../../probes/21-extended-const/wx/ABSENT.md).
+- **22 Typed function references**: Absent (confirmed), never probed; see [`probes/22-typed-function-references/wx/ABSENT.md`](../../probes/22-typed-function-references/wx/ABSENT.md).
+- **23 GC structs and arrays**: Absent (confirmed), never probed; see [`probes/23-gc-typed-refs/wx/ABSENT.md`](../../probes/23-gc-typed-refs/wx/ABSENT.md).
+- **24 GC casts, subtyping, i31, packed fields**: Absent (confirmed), never probed; see [`probes/24-gc-casts-subtyping/wx/ABSENT.md`](../../probes/24-gc-casts-subtyping/wx/ABSENT.md).
+- **25 Multiple memories**: `default`, Native; 0 obstacles.
+- **26 Relaxed SIMD**: Absent (confirmed), never probed; see [`probes/26-relaxed-simd/wx/ABSENT.md`](../../probes/26-relaxed-simd/wx/ABSENT.md).
+- **27 Exception tags**: Absent (confirmed), never probed; see [`probes/27-exception-tags/wx/ABSENT.md`](../../probes/27-exception-tags/wx/ABSENT.md).
+- **28 Exception handling with exnref**: Absent (confirmed), never probed; see [`probes/28-exnref-exceptions/wx/ABSENT.md`](../../probes/28-exnref-exceptions/wx/ABSENT.md).
+- **29 64-bit memory**: `default`, Native; 0 obstacles.
+- **30 Branch hinting**: Absent (confirmed), never probed; see [`probes/30-branch-hinting/wx/ABSENT.md`](../../probes/30-branch-hinting/wx/ABSENT.md).
 
 ## Cross-checks against the verdicts
 

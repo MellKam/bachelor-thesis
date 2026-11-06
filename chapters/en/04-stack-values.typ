@@ -1,4 +1,5 @@
 #import "../../template.typ": booktable, muted, todo
+#import "../../bibliography.typ": fnote
 
 = Stack Values: Types on the WebAssembly Stack <ch:stack-values>
 
@@ -6,7 +7,7 @@
 
 == A global holds one value <sec:one-value>
 
-A WebAssembly global holds exactly one value of one value type @wasm-spec-modules:
+A WebAssembly global holds exactly one value of one value type #fnote("wasm-spec-modules"):
 
 ```wat
 (global $count (mut i32) (i32.const 0))
@@ -77,13 +78,13 @@ pub typeset StackScalar { i32, i64, f32, f64, funcref }
     [`(i32, f64)`],
     [`()`, an item's type],
     [`()`],
+    [`!`, `(u32, !)`],
+    [`!`],
   ),
   caption: [The stack representation of some WX types. Parts are flattened in declaration order, and zero-sized parts are dropped.],
 ) <tbl:repr>
 
-No `impl StackValue` is written anywhere. The compiler computes the answer from the type's structure when it is needed, in the same way it implements `Memory` for a declared memory. A struct or a tuple is its parts, flattened, in declaration order, with zero-sized parts dropped. Every type implements `StackValue` except `!` (the type with no values) and types that contain it.
-
-Because no impl is recorded, a short path such as `Point::Repr` does not work: the compiler looks for `Repr` in the impls of `Point` and finds none. The trait must be named, as in `<Point as StackValue>::Repr`, which also says where the representation comes from. Bounds such as `where { Repr = T::Repr }` work as usual, so this only affects code that names a concrete type's representation directly.
+No `impl StackValue` is written anywhere. The compiler computes the answer from the type's structure when it is needed, in the same way it implements `Memory` for a declared memory. A struct or a tuple is its parts, flattened, in declaration order, with zero-sized parts dropped. Every type implements `StackValue`, including `!` (the type with no values). If a type contains `!` anywhere, its representation is `!` as a whole, as the last rows of @tbl:repr show.
 
 `StackScalar` is a typeset (@sec:typesets) of the types of one WebAssembly value. `v128` is missing only because WX does not support SIMD yet. `funcref` is a WebAssembly function reference of any signature.
 
@@ -142,32 +143,23 @@ Because `Repr` keeps declaration order, `transmute` cannot reorder fields. Turni
 
 
 #figure(
-  kind: raw,
-  supplement: [Listing],
-  text(size: 0.8em)[
-    ```text
-    error[E2112]: type mismatch resolving `<(u64, u8) as StackValue>::Repr == (i32, i64)`
-       ┌─ /main.wx:21:40
-       │
-    14 │     U: StackValue where { Repr = T::Repr },
-       │                                  ------- required by this equality in `transmute`
-       ·
-    21 │ func swap(x: (u8, u64)) -> (u64, u8) { transmute(x) }
-       │                                        ^^^^^^^^^ expected `(i32, i64)`, found `(i64, i32)`
-    ```
-  ],
-  caption: [A `transmute` that would reorder fields is rejected. Same test setup and commit as @fig:global-diagnostic.],
+  ```wx
+  func swap(x: (u8, u64)) -> (u64, u8) {
+      transmute(x)
+      // error[E2112]: type mismatch resolving `<(u64, u8) as StackValue>::Repr == <(u8, u64) as StackValue>::Repr`
+      // expected `(i32, i64)`, found `(i64, i32)`
+      // required by this equality in `transmute`: `U: StackValue where { Repr = T::Repr }`
+  }
+  ```,
+  caption: [A `transmute` that would reorder fields is rejected. The error is the compiler's output for this code.],
 ) <fig:transmute-diagnostic>
 
 *A limitation.* `transmute` checks the representation, not the values. `transmute::<u8, Bool>(2)` is accepted, although `Bool` has only the values 0 and 1, and so is an enum made from a number that is not one of its variants. In Rust, `transmute` is `unsafe` for this reason. WX has no `unsafe` yet; marking such operations is planned as part of the effect design.
-
-Before `transmute`, WX had an `as` expression. It did two different things: it gave a literal its type (`5 as u8`), and it reinterpreted a value. Now these are separate. A type ascription, `(5: u8)`, gives a value its type and converts nothing. `transmute` reinterprets, and an instruction changes a representation.
 
 `transmute` also lets the standard library type every instruction exactly as WebAssembly reads its operands. `i32.add` adds two `i32` values and does not know about signedness, so the function for it takes two `i32`. Addition for `u32` reinterprets on the way in and out:
 
 ```wx
 impl Add for u32 {
-    #[inline]
     func add(self: Self, rhs: Self) -> Self {
         transmute(i32_add(transmute(self), transmute(rhs)))
     }
@@ -220,8 +212,6 @@ Two representations are then compared like any two types: both are normalized an
 
 == Comparison <sec:stack-comparison>
 
-#todo[Verify each row against the language's documentation and add citations. The rows are from knowledge, not from the Chapter 2 probes: probe 10 only declares `i32` globals.]
-
 @tbl:stack-comparison compares WX with three languages from @ch:background on the two questions of this chapter.
 
 #figure(
@@ -245,6 +235,8 @@ Two representations are then compared like any two types: both are normalized an
   ),
   caption: [Globals of compound types and reinterpretation in WX and three other languages.],
 ) <tbl:stack-comparison>
+
+The rows were checked by compiling a small program in each language with the toolchains of the study. A `static` struct in Rust and a global struct in Zig live in linear memory, and the only WebAssembly global in the module is the stack pointer (or, for an exported Rust `static`, a constant that holds its address). AssemblyScript exports a global that holds the address of the object. A `transmute` in Rust #fnote("rust-transmute") and a `@bitCast` in Zig #fnote("zig-bitcast") between types of different sizes are rejected at compile time, and AssemblyScript's `reinterpret` #fnote("as-globals") accepts only an integer and a float of the same width.
 
 The second column follows from the first. Rust and Zig keep values in linear memory, where any value can be read back as bytes, so equal size is the only thing they can check. WX reinterprets values on the stack, so it checks the actual list of WebAssembly values, and it also rejects a reordering that keeps the size.
 

@@ -1,0 +1,267 @@
+# Bibliography data for the thesis (WSZiB-ANS footnote system). Rendered by bibliography.typ.
+#   type: book | collection (paper or chapter in a collected volume) | article | web
+#   accessed: date the web page was last read (YYYY-MM-DD). The footnote shows a visible TODO
+#             until it is filled in, because the standard requires "data odczytu".
+#   verify: true marks an entry typed from memory; check authors, venue, pages before submission.
+
+wasm-spec-modules:
+  type: web
+  organization: W3C WebAssembly Community Group
+  title: "WebAssembly Core Specification: Modules"
+  url: https://webassembly.github.io/spec/core/syntax/modules.html
+  accessed: "2026-11-06"
+wasm-spec-intro:
+  type: web
+  organization: W3C WebAssembly Community Group
+  title: "WebAssembly Core Specification: Introduction"
+  url: https://webassembly.github.io/spec/core/intro/introduction.html
+  accessed: "2026-11-06"
+wasm-spec-text:
+  type: web
+  organization: W3C WebAssembly Community Group
+  title: "WebAssembly Core Specification: Text Format"
+  url: https://webassembly.github.io/spec/core/text/index.html
+  accessed: "2026-11-06"
+wasm-spec-exec-instructions:
+  type: web
+  organization: W3C WebAssembly Community Group
+  title: "WebAssembly Core Specification: Instructions (Execution)"
+  url: https://webassembly.github.io/spec/core/exec/instructions.html
+  accessed: "2026-11-06"
+wasm-spec-binary-modules:
+  type: web
+  organization: W3C WebAssembly Community Group
+  title: "WebAssembly Core Specification: Binary Format, Modules"
+  url: https://webassembly.github.io/spec/core/binary/modules.html
+  accessed: "2026-11-06"
+wasm-wit:
+  type: web
+  organization: WebAssembly Community Group
+  title: Wasm Interface Type (WIT) format
+  url: https://github.com/WebAssembly/component-model/blob/main/design/mvp/WIT.md
+  accessed: "2026-11-06"
+wasm-proposals:
+  type: web
+  organization: WebAssembly Community Group
+  title: WebAssembly proposals overview
+  url: https://github.com/WebAssembly/proposals
+  accessed: "2026-11-06"
+wasm-type-imports:
+  type: web
+  organization: WebAssembly Community Group
+  title: "Type Imports and Exports: proposal overview"
+  url: https://github.com/WebAssembly/proposal-type-imports/blob/master/proposals/type-imports/Overview.md
+  accessed: "2026-10-09"
+wasm-function-references:
+  type: web
+  organization: WebAssembly Community Group
+  title: "Typed Function References: proposal overview"
+  url: https://github.com/WebAssembly/function-references/blob/main/proposals/function-references/Overview.md
+  accessed: "2026-11-06"
+wasm-reference-types:
+  type: web
+  organization: WebAssembly Community Group
+  title: "Reference Types: proposal overview"
+  url: https://github.com/WebAssembly/reference-types/blob/master/proposals/reference-types/Overview.md
+  accessed: "2026-11-06"
+wasm-component-model:
+  type: web
+  organization: WebAssembly Community Group
+  title: "The Component Model: explainer"
+  url: https://github.com/WebAssembly/component-model/blob/main/design/mvp/Explainer.md
+  accessed: "2026-11-06"
+wasm-multi-memory:
+  type: web
+  organization: WebAssembly Community Group
+  title: "Multiple Memories: proposal overview"
+  url: https://github.com/WebAssembly/multi-memory/blob/main/proposals/multi-memory/Overview.md
+  accessed: "2026-11-06"
+wasi-preview1:
+  type: web
+  organization: WebAssembly System Interface
+  title: "WASI Preview 1: API documentation"
+  url: https://github.com/WebAssembly/WASI/blob/wasi-0.1/preview1/docs.md
+  accessed: "2026-11-06"
+rust-traits:
+  type: web
+  organization: The Rust Project Developers
+  title: Defining Shared Behavior with Traits
+  url: https://doc.rust-lang.org/book/ch10-02-traits.html
+  accessed: "2026-11-06"
+haskell-type-classes:
+  type: web
+  organization: Haskell.org
+  title: "Haskell 2010 Language Report: Declarations and Bindings"
+  url: https://www.haskell.org/onlinereport/haskell2010/haskellch4.html
+  accessed: "2026-11-06"
+zig-allocators:
+  type: web
+  organization: Zig Software Foundation
+  title: "The Zig Programming Language: Choosing an Allocator"
+  url: https://ziglang.org/documentation/master/#Choosing-an-Allocator
+  accessed: "2026-11-06"
+zig-wasm-builtins:
+  type: web
+  organization: Zig Software Foundation
+  title: "The Zig Programming Language: Builtin Functions (@wasmMemorySize, @wasmMemoryGrow)"
+  url: https://ziglang.org/documentation/master/#wasmMemorySize
+  accessed: "2026-10-10"
+wx-study:
+  type: web
+  authors: [{given: "A.", family: Melnyk}]
+  title: "WebAssembly exposure study: probes, checker and results"
+  url: https://github.com/MellKam/bachelor-thesis/tree/main/wasm-exposure-study
+  accessed: "2026-11-06"
+
+asmjs:
+  type: web
+  organization: asm.js Working Group
+  title: "asm.js: Working Draft (archived copy)"
+  url: https://web.archive.org/web/2019/http://asmjs.org/spec/latest/
+  accessed: "2026-11-06"
+rust-transmute:
+  type: web
+  organization: The Rust Project Developers
+  title: "Function std::mem::transmute"
+  url: https://doc.rust-lang.org/std/mem/fn.transmute.html
+  accessed: "2026-11-06"
+rust-memory-grow:
+  type: web
+  organization: The Rust Project Developers
+  title: "Function core::arch::wasm32::memory_grow"
+  url: https://doc.rust-lang.org/core/arch/wasm32/fn.memory_grow.html
+  accessed: "2026-11-06"
+rust-fn-traits:
+  type: web
+  organization: The Rust Project Developers
+  title: "Trait std::ops::Fn"
+  url: https://doc.rust-lang.org/std/ops/trait.Fn.html
+  accessed: "2026-11-06"
+rust-tuples:
+  type: web
+  organization: The Rust Project Developers
+  title: "Tuple types, The Rust Reference"
+  url: https://doc.rust-lang.org/reference/types/tuple.html
+  accessed: "2026-11-06"
+zig-bitcast:
+  type: web
+  organization: Zig Software Foundation
+  title: "The Zig Programming Language: @bitCast"
+  url: https://ziglang.org/documentation/master/#bitCast
+  accessed: "2026-11-06"
+as-globals:
+  type: web
+  organization: The AssemblyScript Project
+  title: "AssemblyScript documentation: Globals (reinterpret, memory.grow)"
+  url: https://www.assemblyscript.org/stdlib/globals.html
+  accessed: "2026-11-06"
+clang-extensions:
+  type: web
+  organization: The LLVM Project
+  title: "Clang Language Extensions: WebAssembly builtins"
+  url: https://clang.llvm.org/docs/LanguageExtensions.html
+  accessed: "2026-11-06"
+swift-se0029:
+  type: web
+  organization: Swift Evolution
+  title: "SE-0029: Remove implicit tuple splat behavior from function applications"
+  url: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0029-remove-implicit-tuple-splat.md
+  accessed: "2026-11-06"
+swift-se0110:
+  type: web
+  organization: Swift Evolution
+  title: "SE-0110: Distinguish between single-tuple and multiple-argument function types"
+  url: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0110-distinguish-single-tuple-arg.md
+  accessed: "2026-11-06"
+swift-functions:
+  type: web
+  organization: Apple Inc.
+  title: "The Swift Programming Language: Functions"
+  url: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/functions/
+  accessed: "2026-11-06"
+python-functions:
+  type: web
+  organization: Python Software Foundation
+  title: "The Python Tutorial: More on Defining Functions"
+  url: https://docs.python.org/3/tutorial/controlflow.html
+  accessed: "2026-11-06"
+python-tuples:
+  type: web
+  organization: Python Software Foundation
+  title: "The Python Tutorial: Tuples and Sequences"
+  url: https://docs.python.org/3/tutorial/datastructures.html
+  accessed: "2026-11-06"
+kotlin-functions:
+  type: web
+  organization: JetBrains
+  title: "Kotlin documentation: Functions"
+  url: https://kotlinlang.org/docs/functions.html
+  accessed: "2026-11-06"
+
+haas2017:
+  type: collection
+  authors: [{given: "A.", family: Haas}, {given: "A.", family: Rossberg}, {given: "D. L.", family: Schuff}, {given: "B. L.", family: Titzer}, {given: "M.", family: Holman}, {given: "D.", family: Gohman}, {given: "L.", family: Wagner}, {given: "A.", family: Zakai}, {given: "J.", family: Bastien}]
+  title: Bringing the Web up to Speed with WebAssembly
+  in: Proceedings of the 38th ACM SIGPLAN Conference on Programming Language Design and Implementation (PLDI)
+  place: Barcelona
+  year: "2017"
+  pages: "185–200"
+click1995:
+  type: article
+  authors: [{given: "C.", family: Click}, {given: "M.", family: Paleczny}]
+  title: A Simple Graph-Based Intermediate Representation
+  journal: ACM SIGPLAN Notices
+  year: "1995"
+  volume: "30"
+  number: "3"
+  pages: "35–49"
+wadler2003:
+  type: collection
+  authors: [{given: "P.", family: Wadler}]
+  title: A Prettier Printer
+  in: The Fun of Programming
+  publisher: Palgrave Macmillan
+  place: London
+  year: "2003"
+  pages: "223–243"
+wadler1989:
+  type: collection
+  authors: [{given: "P.", family: Wadler}, {given: "S.", family: Blott}]
+  title: How to Make Ad-hoc Polymorphism Less Ad Hoc
+  in: Proceedings of the 16th ACM SIGPLAN-SIGACT Symposium on Principles of Programming Languages (POPL)
+  place: Austin
+  year: "1989"
+  pages: "60–76"
+damas1982:
+  type: collection
+  authors: [{given: "L.", family: Damas}, {given: "R.", family: Milner}]
+  title: Principal Type-Schemes for Functional Programs
+  in: Proceedings of the 9th ACM SIGPLAN-SIGACT Symposium on Principles of Programming Languages (POPL)
+  place: Albuquerque
+  year: "1982"
+  pages: "207–212"
+dunfield2021:
+  type: article
+  authors: [{given: "J.", family: Dunfield}, {given: "N.", family: Krishnaswami}]
+  title: Bidirectional Typing
+  journal: ACM Computing Surveys
+  year: "2021"
+  volume: "54"
+  number: "5"
+  pages: "1–38"
+milner1997:
+  type: book
+  verify: true
+  authors: [{given: "R.", family: Milner}, {given: "M.", family: Tofte}, {given: "R.", family: Harper}, {given: "D.", family: MacQueen}]
+  title: The Definition of Standard ML (Revised)
+  publisher: MIT Press
+  place: Cambridge, MA
+  year: "1997"
+aho2006:
+  type: book
+  verify: true
+  authors: [{given: "A. V.", family: Aho}, {given: "M. S.", family: Lam}, {given: "R.", family: Sethi}, {given: "J. D.", family: Ullman}]
+  title: "Compilers: Principles, Techniques, and Tools"
+  publisher: Pearson Education
+  place: Boston
+  year: "2006"

@@ -1,0 +1,6 @@
+# i5-size/life/wx/floor
+$ wx build . -o out.wasm
+Wrote 961 bytes to out.wasm
+PASS I5:life integration/i5-size/life/wx/floor//out.wasm (961 bytes)
+  ✓ width x height is 64 x 64
+  ✓ matches the reference after 100 steps

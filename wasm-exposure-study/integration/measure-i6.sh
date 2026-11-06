@@ -16,6 +16,7 @@ case $lang in
   tinygo) dirs="/opt/tinygo /opt/go";;
   kotlin) dirs="/opt/kotlinc /opt/jdk";;
   swift) dirs="/opt/swift /root/.swiftpm/swift-sdks";;
+  wx) dirs="/opt/wx";;
 esac
 mb=$(du -smc $dirs 2>/dev/null | tail -1 | cut -f1)
 mkdir -p "results/integration/$lang"

@@ -1,4 +1,5 @@
 #import "../../template.typ": booktable, muted, todo
+#import "../../bibliography.typ": fnote
 
 = Functions and Calls <ch:calls>
 
@@ -17,7 +18,7 @@ compose(add, twice, (1, 2))  // twice(add(1, 2)) = 6
 
 `add` takes two values and `twice` takes one. Rust describes functions with the `Fn` traits, which take the argument types as a tuple: `Fn<(i32, i32)>` for two arguments and `Fn<(i32,)>`, with a one-element tuple, for one. Because a Rust function does not really take a tuple, the compiler needs a special calling convention to spread the tuple into separate arguments, and user code cannot implement these traits on stable Rust. C++ and Swift use *variadic generics* instead: a type parameter that stands for a list of types, with its own syntax.
 
-I wanted something simpler: describe any function by two types, its arguments and its result, without variadic generics and without spread syntax.
+The aim was something simpler: to describe any function by two types, its arguments and its result, without variadic generics and without spread syntax.
 
 == Every function takes one value <sec:one-parameter>
 
@@ -46,9 +47,9 @@ For this to work, a tuple of one element cannot exist. If `(A,)` were a type of 
 With one value per function, the trait for anything callable needs only two associated types:
 
 ```wx
-pub trait Call {
-    type Args;
-    type Result;
+pub trait Call: StackValue {
+    type Args: StackValue;
+    type Result: StackValue;
 
     func call(self: Self, args: Self::Args) -> Self::Result;
 }
@@ -80,8 +81,6 @@ compose(divmod, add, (17, 5))  // add(3, 2) = 5
 The current type checker accepts both calls. No variadic type parameter, spread syntax or special calling convention was needed.
 
 The rule has one surprising effect. `func g(p: (A, B))` and `func f(a: A, b: B)` have the same type, because both take an `(A, B)`. This shows only in generic code and in error messages, and it is exactly what `compose` needs.
-
-*An alternative I dropped.* The first version followed Rust more closely: the arguments were always a tuple, so a function of one parameter took `(A,)`, and a `..` syntax spread a tuple into arguments. It needed `..` in two places and one-element tuples at every generic call (`apply(f, (5,))`). It could also describe `func(..u32)`, a type that no declared function can have. I replaced it with the one-value rule.
 
 == Calling a function <sec:filling>
 
@@ -185,8 +184,6 @@ For imported and exported functions, this representation determines the exact se
 
 == Comparison <sec:calls-comparison>
 
-#todo[Verify each claim against its source and add citations: the Definition of Standard ML, the Rust reference and the `fn_traits` tracking issue, Swift Evolution SE-0029 and SE-0110, the Python and Kotlin references.]
-
 #figure(
   booktable(
     columns: (auto, 1fr, 1fr, 1fr),
@@ -202,7 +199,7 @@ For imported and exported functions, this representation determines the exact se
     [`(T,)`, different from `T`],
     [no],
     [Swift],
-    [removed (SE-0029, SE-0110)],
+    [removed (SE-0029); function types kept apart (SE-0110)],
     [none],
     [yes, part of the function's name],
     [Python],
@@ -221,9 +218,11 @@ For imported and exported functions, this representation determines the exact se
   caption: [How arguments are passed in WX and in five other languages.],
 ) <tbl:calls-comparison>
 
+The rows follow the definition of Standard ML #fnote("milner1997"), the Rust documentation of the `Fn` traits #fnote("rust-fn-traits") and of tuple types #fnote("rust-tuples"), the Swift book #fnote("swift-functions"), and the Python #fnote("python-functions")#super[,]#fnote("python-tuples") and Kotlin #fnote("kotlin-functions") documentation.
+
 Standard ML is the source of the one-value rule: a function takes one argument, and a function of several parameters takes a tuple. WX keeps this rule and adds argument names.
 
-Swift tried the same idea and removed it. Early Swift allowed a function of several parameters to be called with one tuple, and treated a function type over a tuple as equal to one over several parameters. Proposals SE-0029 and SE-0110 removed both, partly because they conflicted with argument labels: a tuple's element labels could disagree with the function's labels. In WX, names are never part of a type, so this conflict cannot happen.
+Swift tried the same idea and removed it. Early Swift allowed a function of several parameters to be called with one tuple. SE-0029 removed this "tuple splat" #fnote("swift-se0029"), among other reasons because the labels of the tuple had to agree with those of the function. SE-0110 then made a function of several parameters and a function of one tuple different types #fnote("swift-se0110"); an exception that keeps closures convenient was added later. In WX, names are never part of a type, so this conflict cannot happen.
 
 // Open point (2026-10-30): a struct constructor is not a first-class value yet (`compose(divmod, Point, ..)` is
 // rejected, E2110). It may become a function item later.

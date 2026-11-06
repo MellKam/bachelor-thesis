@@ -1,0 +1,26 @@
+#[memory_limits({ min_pages: 1 })]
+memory a: u32;
+#[memory_limits({ min_pages: 1 })]
+memory b: u32;
+
+func copy_test() -> u32 {
+    local from = slice_from_parts_mut::<a, u8>(RawPtr::<a, u8>::from_addr(0).as_ptr(), 4);
+    from[0] = 1;
+    from[1] = 2;
+    from[2] = 3;
+    from[3] = 4;
+    local into = slice_from_parts_mut::<b, u8>(RawPtr::<b, u8>::from_addr(0).as_ptr(), 4);
+    memory_copy::<u32, a, b>(
+        RawPtr::<b, u8>::from_addr(0).as_ptr(),
+        RawPtr::<a, u8>::from_addr(0).as_ref(),
+        4,
+    );
+    transmute::<u8, u32>(into[0]) + transmute::<u8, u32>(into[1])
+        + transmute::<u8, u32>(into[2]) + transmute::<u8, u32>(into[3])
+}
+
+export {
+    copy_test,
+    a as "memory_a",
+    b as "memory_b",
+}

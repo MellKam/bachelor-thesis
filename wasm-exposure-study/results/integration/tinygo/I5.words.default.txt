@@ -1,6 +1,6 @@
 # i5-size/words/tinygo/default
 $ tinygo build -o out.wasm -target=wasip1 -buildmode=c-shared .
-PASS I5:words integration/i5-size/words/tinygo/default//out.wasm (120341 bytes)
+PASS I5:words integration/i5-size/words/tinygo/default//out.wasm (120323 bytes)
   ✓ analyse("the quick brown fox") is right
   ✓ analyse("") is right
   ✓ analyse("  a  bb ccc  ") is right

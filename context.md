@@ -1,3 +1,31 @@
+## Completion decisions — 2026-11-05
+
+These decisions supersede older chapter-order and scope notes below. The active outline is
+the first section of `plan.md`; the older outline is retained there as historical material.
+
+- Keep written Chapters 1–6 as the design spine. Follow them with **Memory, Pointers and
+  Slices → Example Programs → Compiler Implementation → Evaluation → Conclusion and Future
+  Work**. Readers see practical uses before compiler internals.
+- Explain the programmer's memory model alongside pointers and slices: Wasm values versus
+  addressable linear memory, explicit memory declarations, host buffers, arrays/slices,
+  layout/static data, optional allocation and multiple memories. Chapter 3 still explains
+  why memories have identities; Chapter 4 still defines stack representation.
+- Start with three small executable teaching examples (memory-free values, host-managed
+  slices, and two memories), then the application suite. Teaching examples do not substitute
+  for useful applications or for measured evaluation.
+- Reuse hashing and the raycaster; add a two-memory filter and one streaming WASI utility.
+  Myrmic is optional. Effects, GC, stack switching and fuller memory safety are future work,
+  not required standalone chapters or implementation milestones.
+- The compiler pipeline runs end to end again, although lowering and tooling have gaps.
+  Earlier notes saying codegen is disabled describe an older checkpoint. Verify behaviour
+  with current build/run checks, and retain commit/date pins for reported evidence.
+- Import blocks own a scope and accept explicit `use` items (named, aliased,
+  grouped or glob), including `pub use`, with the same visibility and private-re-export
+  checks as modules. There is no automatic parent glob. Keep the existing resolution
+  and cycle checks: reciprocal parent/block
+  globs are rejected, not handled by a new trail-based lookup algorithm. Use a named
+  import in at least one direction to avoid that cycle.
+
 ## Tooling: Typst, not Markdown or LaTeX
 
 The thesis is written in [Typst](https://typst.app). Deliberate choice over Markdown

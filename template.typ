@@ -22,7 +22,7 @@
   sans: ("Liberation Serif", "Libertinus Serif"),  // WSZiB requires Times New Roman (Liberation Serif is metric-compatible) across the entire document
   mono: ("Liberation Mono", "DejaVu Sans Mono"),
   size: 12pt,
-  leading: 1.0em,    // 1.5 line spacing
+  leading: 1.07em,   // 1.5 line spacing as Word sets it for Times New Roman 12 pt (about 20.7 pt between baselines)
   spacing: 1.0em,    // block formatting without extra gap between paragraphs
   indent: 1.25cm,    // automatic first-line paragraph indent
 )
@@ -161,6 +161,7 @@
   set figure(numbering: "1", gap: 1em)
   show figure.where(kind: table): set figure(supplement: [Tabela])
   show figure.where(kind: image): set figure(supplement: [Rysunek])
+  show figure.where(kind: "chart"): set figure(supplement: [Wykres])
   show figure.where(kind: raw): set figure(supplement: [Listing])
   show figure: set figure.caption(position: top)
   show figure.caption: it => align(center, block(width: 100%, {
@@ -198,6 +199,14 @@
   show table: set text(font: layout.serif, size: 10pt)
   show table: set par(justify: false, first-line-indent: 0pt)
 
+  // Footnotes: 10 pt, single line spacing, numbered continuously (WSZiB-ANS standard).
+  show footnote.entry: it => {
+    set text(font: layout.serif, size: 10pt)
+    set par(justify: true, first-line-indent: 0pt, leading: 0.55em, spacing: 0.4em)
+    it
+  }
+  set footnote.entry(separator: line(length: 30%, stroke: 0.5pt + black), gap: 0.5em, clearance: 1em)
+
   // Code
   set raw(align: left)
   show raw: set text(font: layout.mono, size: 0.85em)
@@ -212,7 +221,7 @@
     stroke: 0.5pt + hairline,
     inset: (x: 8pt, y: 8pt),
     {
-      set text(size: 8pt)
+      set text(size: 9pt)
       set align(left)
       set par(first-line-indent: 0pt, leading: 0.55em)
       it
@@ -346,8 +355,10 @@
   }))
   block(above: 1.2em, below: 0.6em, text(size: 14pt, weight: "bold")[Spis tabel])
   outline(title: none, target: figure.where(kind: table))
-  block(above: 1.5em, below: 0.6em, text(size: 14pt, weight: "bold")[Spis rysunków i wykresów])
+  block(above: 1.5em, below: 0.6em, text(size: 14pt, weight: "bold")[Spis rysunków])
   outline(title: none, target: figure.where(kind: image))
+  block(above: 1.5em, below: 0.6em, text(size: 14pt, weight: "bold")[Spis wykresów])
+  outline(title: none, target: figure.where(kind: "chart"))
   block(above: 1.5em, below: 0.6em, text(size: 14pt, weight: "bold")[Spis listingów])
   outline(title: none, target: figure.where(kind: raw))
 }

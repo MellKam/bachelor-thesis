@@ -1,5 +1,142 @@
 # Thesis outline — working plan
 
+## Active completion plan — 2026-11-05
+
+This section supersedes the historical outline below. The written Chapters 1–6, not the older
+chapter descriptions, are the starting point. The remaining arc is **language design → memory
+in practice → example programs → compiler implementation → evaluation → conclusion**. Show
+what a reader can do with WX before explaining the compiler's internals.
+
+### Chapter order
+
+| Chapter | Purpose | Status / next action |
+|---|---|---|
+| 1. Introduction | Goals, contributions, scope | Written; update roadmap as the remaining chapters land |
+| 2. Background and Related Work | Wasm concepts and the eight-language study | Written; review evidence and pin the study revision |
+| 3. Items: the Platform's Entities as Types | Entity identity, memory-tagged pointers, explicit boundary | Written; keep the short pointer introduction and point forward to Chapter 7 |
+| 4. Stack Values | Representation on the Wasm stack, globals, `transmute` | Written; distinguish stack representation from memory layout |
+| 5. Functions and Calls | `Call`, structs, named arguments, boundary signatures | Written; verify comparison claims and citations |
+| 6. Intrinsics | Typed instructions and places | Written; reconcile implementation-status statements with the executable compiler |
+| 7. Memory, Pointers and Slices | Explain the programmer's memory model together, with small runnable examples | Next design chapter |
+| 8. Programs in a Host | Hello, world in a browser and through WASI, then a small WASI library; states the package/memory limit | Written |
+| 9. Compiler Implementation | Explain how the preceding language and examples are implemented | Pipeline plus selected deep dives; not a second language manual |
+| 10. Evaluation and Future Work | Test the claims (probes, application results, module inspection), compare, report limitations, list future work, close with the conclusion | Reuse the examples from Chapter 8; future work collects package parameters, sum types, slice ranges, ownership and effects, a reserved null address, and further Wasm features |
+
+### Chapter 7: memory, pointers and slices
+
+The chapter answers **where does data live, how is it accessed, and who manages its lifetime?**
+It belongs with pointers and slices, rather than being buried in the compiler chapter.
+
+1. **Values do not imply linear-memory allocation.** Locals, structs, parameters and results
+   can be Wasm values; a program can have no linear memory. The Wasm operand stack is not an
+   implicit addressable C-style stack. WX cannot take a pointer to an ordinary local.
+2. **An explicit memory is an address space.** Defined versus imported memory, pages,
+   initial limits and growth. Declaring a memory does not install an allocator. Distinguish
+   growing an address space from allocating individual objects within it.
+3. **Pointers identify a place and its memory.** Explain `M::&T`, `M::*T`, `.*`, `.&` and
+   field access. State which reads/writes the checker permits, without claiming an enforced
+   ownership or borrowing discipline. An address is an offset, not a native host pointer.
+4. **Arrays and slices.** Fixed length in an array type; address and element count in a
+   slice pointer; `.len()`, indexing and element stride. Separate slice bounds checks from
+   Wasm's whole-memory bounds checks. Neither validates a forged pointer's provenance.
+5. **A complete host-buffer example.** The host supplies a memory and reserves a byte range;
+   WX sums and modifies it without an allocator. Walk through the raw `(offset, length)`
+   call and the host's view of the same bytes. This example makes no initialization writes.
+   Do not generalize it to an arbitrary imported memory with static data or allocator state:
+   the host and guest must agree on placement and ownership of ranges.
+6. **Layout and static data.** Stack order versus memory offsets, alignment, padding,
+   `#[fixed_order]`, memory-typed literals and `DATA_END`. A pointer is not an allocation.
+7. **Allocation is library policy.** Start with host-managed storage; then explain an
+   optional bump allocator using `examples/alloc`. Show placement, alignment, growth,
+   exhaustion and lifetime/reclamation responsibilities. Do not imply automatic freeing.
+8. **Several memories.** The same numeric offset denotes different places in different
+   memories. Reuse one memory-generic algorithm, show a rejected cross-memory call, and
+   explain which memory the host can access. This is not a confidentiality or memory-safety
+   proof: explicit reinterpretation and intentional copying remain possible.
+
+Chapter 3 retains the rationale for memory identity and its traits; Chapter 7 explains using
+those constructs. Chapter 4 remains authoritative for stack representation. Avoid repeating
+those derivations. Link the existing places table in Chapter 6 to the practical walkthrough.
+
+Import blocks have their own scope. They accept `use` items for signature dependencies and
+`pub use` for source-level re-exports, with ordinary module visibility checks. Neither adds
+Wasm imports or exports, and the surrounding scope is not imported automatically. Keep the existing
+glob-resolution and cycle policy: `use super::*` in the block combined with `use host::*`
+in its parent is rejected. Demonstrate named imports as the acyclic alternative.
+
+### First runnable examples
+
+These are teaching examples, not the substantial application suite. Keep each small enough
+to explain in a few paragraphs, and compile and execute the exact source before quoting it.
+
+| Example | Main observation | Required checks |
+|---|---|---|
+| `examples/memory_values` | A struct result is multiple Wasm values, with no linear memory | Host sees both results; module has no memory section or imports |
+| `examples/memory_slices` | Host-managed bytes, thin pointers and slice pointers | Sum and in-place ASCII conversion match host results; slice and memory bounds trap |
+| `examples/two_memories` | Memory identity is static; one generic sum works in two memories | Private data is unaffected by host-memory writes; only declared imports/exports; wrong-memory call is rejected |
+
+Run them with `node examples/test_memory_examples.mjs` from the compiler repository after
+building the current CLI (`cargo build -p wx-cli`). Record actual observations separately
+from the intended checks; do not turn this table into an unmeasured result claim.
+
+### Chapter 8: application suite
+
+Introduce each program with its task, a short usage example, the relevant WX source, the host
+contract, and the design choices it exercises. The evaluation later reports correctness and
+measurements, rather than making the reader discover each application inside a results table.
+
+1. **Two-memory packet filter:** flagship application of the memory chapter. Host exchange
+   memory, private rules/state, a small documented packet format, deterministic verdicts,
+   and an independent host oracle. No real networking or cryptography required.
+2. **Hashing:** develop `examples/hashing`, not a second generic-library demo. Exercise
+   by-value state, default trait methods, generic memory access and stack-only keys. Compare
+   generic and manually specialized implementations for equal results and emitted machinery.
+3. **One streaming WASI utility:** prefer a narrow `wxwc` (bytes, lines and a documented
+   whitespace convention) if completing SHA-256 would distract from the thesis. `wxsum` is
+   the alternative, with published vectors and `sha256sum` as oracles. Use fixed-size buffers,
+   handle partial reads/writes, and report errors. Keep WASI Preview 1 single-memory.
+4. **Raycaster:** reuse the existing application as the visual demonstration. Reproducible
+   build/run instructions, a screenshot and deterministic scene checks; no new game project.
+
+Myrmic is optional external integration after the core suite. Distinguish a minimal cell in
+the actual runtime from a standalone ABI-matching harness; neither implies full SDK coverage.
+Durable state, embedded deployment and hardware measurements are not completion requirements.
+
+### Chapters 9–11: implementation and evidence
+
+- Describe the live pipeline: package graph → AST → checked TIR → monomorphized MIR →
+  inlining → optimizer/scheduler → Wasm encoding. The pipeline runs end to end again; old
+  statements below that codegen is disabled are historical, not the current baseline.
+- State lowering gaps, disconnected legacy tests and tooling separately. A checked program
+  is not automatically an executable one; old test counts are not current measurements.
+- For evaluation, use **claim → artifact → independent check → module evidence → limitation**.
+  Inspect signatures, memory/import/export sections and representative instructions as well
+  as observing output. No runtime imports alone does not prove absence of embedded runtime code.
+- Apply the existing Chapter 2 probe criteria to WX in a separate evaluation result set; do
+  not silently insert WX into the original baseline study or redefine the criteria for it.
+- Re-verify the historical 30-feature coverage map below against the chosen compiler revision.
+  Distinguish implemented, partial, designed, absent and untested with evidence for each.
+- Report module sizes with pinned tool versions and identical post-processing. Performance
+  benchmarking is optional; correctness and the structural claims come first.
+- Audit WASI bindings for layout and handle/sum-type workarounds. Expressing all declarations
+  is an expressibility case study, not proof of full ABI conformance.
+- End with explicit limitations: no borrow checker, unchecked reinterpretation/value validity,
+  raw-pointer lifetime/provenance responsibilities, unsupported Wasm features and tooling gaps.
+
+### Execution order
+
+1. Add and run the three teaching examples, including a compile-fail case.
+2. Draft Chapter 7 around them; add the allocator explanation as a separate next step.
+3. Build the two-memory filter, then the hashing experiment and one WASI utility.
+4. Write Chapter 8 from the working applications, then the implementation and evaluation.
+5. Finish the conclusion; review citations, status claims, version pins and the roadmap.
+
+## Historical outline and design material (superseded)
+
+The material below preserves rationale, alternatives and source pointers. Its chapter
+numbers, scope decisions, feature statuses and compiler-state statements are historical.
+Use the active plan above for what to write and in which order.
+
 Bottom-up arc: start from WebAssembly's own execution model, then show each wx design
 decision as a deliberate answer to "how much of this do we expose, and how." Every section
 should earn its place by pointing back at a WASM property it's representing, extending, or

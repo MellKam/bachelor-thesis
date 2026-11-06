@@ -466,5 +466,44 @@
     }
    }
   }
+ },
+ "wx": {
+  "I1": {
+   "variants": {
+    "wasi-floor": {
+     "route": "hand-written",
+     "support": "full"
+    },
+    "wasi-library": {
+     "route": "hand-written",
+     "support": "full"
+    }
+   },
+   "note": "WX std has no WASI layer. wasi-floor declares the three imports and places the iovec and buffer by hand; wasi-library uses the thesis example library (examples/wasi, with alloc and slices), which is project code and not shipped with the compiler. Preview 1 only."
+  },
+  "I2": {
+   "absent": "confirmed",
+   "note": "No component target and no WIT generator (integration/i2-component/wx/ABSENT.md)."
+  },
+  "I5": {
+   "cat": {
+    "floor": "wasi-floor",
+    "default": "wasi-library"
+   }
+  },
+  "I3": {
+   "variants": {
+    "raw": {
+     "route": "hand-written",
+     "support": "full",
+     "verdict": "I5.words/floor"
+    }
+   },
+   "note": "No JS binding generator; the developer marshals the string through alloc/analyse by hand."
+  },
+  "I4": {
+   "absent": "confirmed",
+   "note": "wx build has no debug option and the module carries no name section, no DWARF and no source map (checked on integration/i4-debug/wx/debug). A trap in Node shows wasm-function[6]. The life build itself runs correctly."
+  }
  }
 }

@@ -3,7 +3,7 @@
   "program": "words",
   "file": "integration/i5-size/words/tinygo/floor//out.wasm",
   "bytes": 1168,
-  "optBytes": 1150,
+  "optBytes": 1359,
   "pass": true,
   "checks": [
     {

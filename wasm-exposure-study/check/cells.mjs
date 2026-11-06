@@ -24,7 +24,7 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { FEATURES } from './feature-list.mjs';
 
-export const LANG_KEYS = ['rust', 'zig', 'c', 'moonbit', 'assemblyscript', 'tinygo', 'kotlin', 'swift'];
+export const LANG_KEYS = ['rust', 'zig', 'c', 'moonbit', 'assemblyscript', 'tinygo', 'kotlin', 'swift', 'wx'];
 // A language column can have several probe/verdict directories, one per backend that is a different target (MoonBit: `wasm` in
 // `moonbit/`, `wasm-gc` in `moonbit-gc/`). A probe is named `<name>` (first directory) or `<directory>/<name>`.
 export const LANG_DIRS = { moonbit: ['moonbit', 'moonbit-gc'] };

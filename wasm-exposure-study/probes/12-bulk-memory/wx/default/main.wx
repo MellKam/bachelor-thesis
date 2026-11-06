@@ -1,0 +1,22 @@
+#[memory_limits({ min_pages: 1 })]
+memory heap: u32;
+
+func bulk_test(n: u32) -> u32 {
+    local src = RawPtr::<heap, u8>::from_addr(256).as_ptr();
+    local dst = RawPtr::<heap, u8>::from_addr(2048).as_ptr();
+    memory_fill(src, 5, n);
+    memory_copy::<u32, heap, heap>(dst, src.*.&, n);
+    local copy = slice_from_parts::<heap, u8>(dst.*.&, n);
+    local mut sum: u32 = 0;
+    local mut i: u32 = 0;
+    loop {
+        if i == n { break };
+        sum += transmute::<u8, u32>(copy[i]);
+        i += 1;
+    }
+    sum
+}
+
+export {
+    bulk_test,
+}

@@ -1,0 +1,61 @@
+// cat, WASI Preview 1, the lowest route: the program declares the three imports it uses and places the buffers itself.
+// Memory map: 16 = the list of buffers (address, length), 24 = the byte count, 32.. = the 4096-byte buffer.
+#[memory_limits({ min_pages: 1 })]
+memory heap: u32;
+
+enum Errno(u16) {
+    Success = 0,
+    ..
+}
+
+import "wasi_snapshot_preview1" as wasi {
+    use super::*;
+    func fd_read(
+        fd: u32,
+        io_vecs: heap::&[heap::*[u8]],
+        bytes_read: heap::*u32,
+    ) -> Errno;
+    func fd_write(
+        fd: u32,
+        io_vecs: heap::&[heap::&[u8]],
+        bytes_written: heap::*u32,
+    ) -> Errno;
+    func proc_exit(code: u32) -> !;
+}
+
+func main() {
+    local buffer = slice_from_parts_mut::<heap, u8>(
+        RawPtr::<heap, u8>::from_addr(32).as_ptr(),
+        4096,
+    );
+    local reads = slice_from_parts_mut::<heap, heap::*[u8]>(
+        RawPtr::<heap, heap::*[u8]>::from_addr(16).as_ptr(),
+        1,
+    );
+    local writes = slice_from_parts_mut::<heap, heap::&[u8]>(
+        RawPtr::<heap, heap::&[u8]>::from_addr(16).as_ptr(),
+        1,
+    );
+    local count = RawPtr::<heap, u32>::from_addr(24).as_ptr();
+    loop {
+        reads[0] = buffer;
+        match wasi::fd_read(0, reads.*.&, count) {
+            Errno::Success => (),
+            _ => wasi::proc_exit(1),
+        }
+        if count.* == 0 { break };
+        writes[0] = slice_from_parts::<heap, u8>(
+            RawPtr::<heap, u8>::from_addr(32).as_ref(),
+            count.*,
+        );
+        match wasi::fd_write(1, writes.*.&, count) {
+            Errno::Success => (),
+            _ => wasi::proc_exit(1),
+        }
+    }
+}
+
+export {
+    main as "_start",
+    heap as "memory",
+}

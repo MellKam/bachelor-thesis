@@ -1,0 +1,14 @@
+#[memory_limits({ min_pages: 1 })]
+memory heap: u32;
+
+const MAGIC: heap::&[u8] = "WASM";
+
+func peek(addr: u32) -> u32 {
+    local at = RawPtr::<heap, u8>::from_addr(addr).as_ref();
+    transmute::<u8, u32>(at.*) + MAGIC.len() * 0
+}
+
+export {
+    peek,
+    heap as "memory",
+}

@@ -1,8 +1,9 @@
-#import "../../template.typ": booktable, muted, todo
+#import "../../template.typ": booktable, layout, muted, todo
+#import "../../bibliography.typ": fnote
 
 = Items: the Platform's Entities as Types <ch:items>
 
-@ch:background showed that the entities of a WebAssembly module (memories, globals, tables and tags) are the part of the platform that languages expose least (@fig:entities). This chapter describes how WX represents them. The idea is simple: every entity is an *item* of the language, every item has its own type, and a trait that the compiler implements says what the item can do. The next three chapters reuse this idea for values, calls and instructions.
+@ch:background showed that the entities of a WebAssembly module (memories, globals, tables and tags) are the part of the platform that languages expose least (@fig:matrix). This chapter describes how WX represents them. The idea is simple: every entity is an *item* of the language, every item has its own type, and a trait that the compiler implements says what the item can do. The next three chapters reuse this idea for values, calls and instructions.
 
 == Reading WX <sec:reading-wx>
 
@@ -45,7 +46,7 @@ Globals are accessed through `get` and `set` to distinguish access to module sta
 
 == Entities are numbers in WebAssembly <sec:identity-shape>
 
-Inside a WebAssembly module, an entity is a number. A function is referred to by its index in the function index space, and imported functions come before defined ones @wasm-spec-modules. So adding an import changes the index of every defined function:
+Inside a WebAssembly module, an entity is a number. A function is referred to by its index in the function index space, and imported functions come before defined ones #fnote("wasm-spec-modules"). So adding an import changes the index of every defined function:
 
 ```wat
 (module
@@ -58,11 +59,11 @@ The text format allows names such as `$run` instead of numbers, and replaces the
 
 A language that lets a program use these entities has to decide what type they have. There are two simple answers, and both have a problem.
 
-The first answer is to use the index itself. Zig's `@wasmMemoryGrow` builtin takes the memory as a `u32` index @zig-wasm-builtins. This is fine for a low-level builtin, but then any integer can be used as a memory, and the type system cannot tell a memory index from a loop counter. It also cannot know whether the memory uses 32-bit or 64-bit addresses, because the integer says nothing about it.
+The first answer is to use the index itself. Zig's `@wasmMemoryGrow` builtin takes the memory as a `u32` index #fnote("zig-wasm-builtins"). This is fine for a low-level builtin, but then any integer can be used as a memory, and the type system cannot tell a memory index from a loop counter. It also cannot know whether the memory uses 32-bit or 64-bit addresses, because the integer says nothing about it.
 
 The second answer is to describe only what the entity looks like: a function by its signature, a memory by its address type. Then two functions with the same signature have the same type, and so do two memories with 32-bit addresses. A pointer into one memory could be used as a pointer into the other, and the compiler could not see the mistake.
 
-So a program needs both: what kind of entity it is and which one (its *identity*), and what can be done with it (its *shape*). @tbl:kinds lists the shape of each kind. I found this distinction only after several versions of the design; it was not the starting point.
+So a program needs both: what kind of entity it is and which one (its *identity*), and what can be done with it (its *shape*). @tbl:kinds lists the shape of each kind. This distinction was found only after several versions of the design; it was not the starting point.
 
 #figure(
   booktable(
@@ -109,101 +110,175 @@ Rust has a similar idea. Every Rust function has its own zero-sized type, so two
 
 == Pointers carry their memory <sec:pointers-memory>
 
-A linear memory is a growable array of bytes, measured in 64 KiB pages @wasm-spec-modules. The `u32` in `memory heap: u32;` is its address type, not its current size. WX also accepts `memory heap: u64;` for Memory64. These address types describe potential address spaces of 4 GiB and 16 EiB respectively; neither size is allocated by the declaration alone.
+A linear memory is a growable array of bytes, measured in 64 KiB pages #fnote("wasm-spec-modules"). The `u32` in `memory heap: u32;` is its address type, not its current size. WX also accepts `memory heap: u64;` for Memory64. These address types describe potential address spaces of 4 GiB and 16 EiB respectively; neither size is allocated by the declaration alone.
 
-With the multi-memory extension, a module can have several linear memories @wasm-multi-memory. Each memory has its own addresses, and every load and store instruction names its memory as an immediate. A pointer type that only says what it points to, like `*u8`, is not enough: two pointers of that type can point into different memories, and the compiler must know which memory to use for each load.
+With the multi-memory extension, a module can have several linear memories #fnote("wasm-multi-memory"). Each memory has its own addresses, and every load and store instruction names its memory as an immediate. A pointer type that only says what it points to, like `*u8`, is not enough: two pointers of that type can point into different memories, and the compiler must know which memory to use for each load.
 
 One option is a *fat pointer*, which stores the memory index next to the address at run time. This costs space for every pointer, and because a load names its memory as an immediate, a memory index known only at run time would need a branch over all memories at every access.
 
 WX puts the memory in the pointer's type instead. `heap::*u8` is a pointer to a byte in `heap`. A pointer into another memory has a different type, and using it in the wrong place is an ordinary type error (@fig:cross-memory). The compiler knows the memory of every load and store from the type, so nothing is stored at run time.
 
 #figure(
-  kind: raw,
-  supplement: [Listing],
-  text(size: 0.8em)[
-    ```text
-    // memory heap: u32;
-    // memory io: u32;
-    // func read(p: heap::&u32) -> u32 { p.* }
+  ```wx
+  memory heap: u32;
+  memory io: u32;
 
-    error[E2001]: type mismatch
-         ┌─ /main.wx:2381:39
-         │
-    2381 │ func wrong(p: io::&u32) -> u32 { read(p) }
-         │                                       ^ expected `heap::&u32`, found `io::&u32`
-    ```
-  ],
-  caption: [A pointer into one memory used where a pointer into another is expected. The test appends its source to the standard library, hence the line number. Compiler at `186ba25`, branch `tir-refactor`, 2026-10-30.],
+  func read(p: heap::&u32) -> u32 { p.* }
+
+  func wrong(p: io::&u32) -> u32 {
+      read(p)
+      //   ^ error[E2001]: type mismatch:
+      //     expected `heap::&u32`, found `io::&u32`
+  }
+  ```,
+  caption: [A pointer into one memory used where a pointer into another is expected. The diagnostic is shortened from the compiler's output. Compiler at `186ba25`, branch `tir-refactor`, 2026-10-30.],
 ) <fig:cross-memory>
 
 There is no default memory. A pointer type without a memory is an error, even in a module with only one memory, and the compiler's message states the rule (@fig:untagged-pointer).
 
 #figure(
-  kind: raw,
-  supplement: [Listing],
-  text(size: 0.8em)[
-    ```text
-    error[E2038]: a pointer type must name its memory
-         ┌─ /main.wx:2378:14
-         │
-    2378 │ func read(p: *u32) -> u32 { p.* }
-         │              ^^^^ no memory written here
-         │
-         = write the memory before the sigil: `heap::*T`, or a memory parameter `Mem::*T`
-    ```
-  ],
-  caption: [A pointer type without a memory. The test appends its source to the standard library, hence the line numbers. Compiler at `186ba25`, branch `tir-refactor`, 2026-10-30.],
+  ```wx
+  memory heap: u32;
+
+  func read(p: *u32) -> u32 { p.* }
+  //           ^^^^ error[E2038]: missing memory in pointer type
+  //           help: write the memory before the pointer, like `heap::*u32`
+  ```,
+  caption: [A pointer type without a memory. The diagnostic is the compiler's, reformatted as comments. Compiler on branch `tir-refactor`, 2026-11-05.],
 ) <fig:untagged-pointer>
 
-Code that works with any memory uses a type parameter for it: `M::*u8` is a pointer into whichever memory `M` is. For this, `M` must be known to be a memory, and that needs a trait.
+A pointer type has three parts (@fig:pointer-anatomy). The middle part, `*` or `&`, is the pointer's *ownership*. A `*` pointer is owned and mutable: the program may read and write through it. A `&` pointer is shared and read-only.
 
-== Traits describe what an item can do <sec:why-traits>
+#figure(
+  {
+    let c-mem = rgb("#1f6fb2")
+    let c-ownership = rgb("#b25a1f")
+    let c-pointee = rgb("#2a7d4b")
+    let part(name, note, color) = stack(
+      dir: ttb,
+      spacing: 4pt,
+      line(length: 100%, stroke: 1.5pt + color),
+      align(center, text(weight: "bold", fill: color, name)),
+      align(center, text(size: 0.85em, note)),
+    )
+    stack(
+      dir: ttb,
+      spacing: 10pt,
+      block(width: 100%, text(size: 1.25em, weight: "bold", {
+        // Equal flexible space before, between and after the two types.
+        for (memory, sigil, pointee) in (("heap", "*", "u8"), ("io", "&", "u32")) {
+          h(1fr)
+          text(font: layout.mono, fill: c-mem, memory + "::")
+          text(font: layout.mono, fill: c-ownership, sigil)
+          text(font: layout.mono, fill: c-pointee, pointee)
+        }
+        h(1fr)
+      })),
+      grid(
+        columns: (1fr, 1fr, 1fr),
+        column-gutter: 6pt,
+        part("memory", "which memory the address is in", c-mem),
+        part("ownership", [`*` mutable, `&` read-only], c-ownership),
+        part("pointee", "the type of the value at the address", c-pointee),
+      ),
+    )
+  },
+  caption: [The parts of a pointer type, as in `heap::*u8` and `io::&u32`.],
+) <fig:pointer-anatomy>
 
-For every declared memory, the compiler implements the `Memory` trait from the standard library. No impl is written in the source. For `memory heap: u32;` the compiler behaves as if this impl existed:
+== Where a pointer comes from <sec:pointer-sources>
+
+A pointer type names its memory, but a memory declaration only creates the item `heap`, which holds no bytes that the program can name. The simplest source of pointers is static data. A string literal such as `"hi"` has the type `[u8; 2]`: an array of two bytes that lives in no memory, so it has no address. When a declaration asks for a pointer type, the compiler *places* the bytes in the static data of the memory that the type names, and the value becomes a pointer to them (@lst:literal-placement).
+
+#figure(
+  ```wx
+  memory heap: u32;
+  memory io: u32;
+
+  func demo() {
+      local a: heap::&[u8] = "hi";
+      local b: io::&[u8] = "hi";
+  }
+  ```,
+  caption: [One literal placed in two memories. The context chooses the memory, so `a` and `b` have different types.],
+) <lst:literal-placement>
+
+== Dynamic memory is a convention <sec:dynamic-memory>
+
+Static data is fixed when the program is compiled. A program that needs memory whose size it learns only while running must ask for it. WebAssembly does not do this for the program. The runtime gives a module linear memories, a growable buffer of bytes for each `memory` the module declares, and the language has no built-in way to divide a buffer into blocks. The program makes that decision itself, with an *allocator*: ordinary code that keeps a record of which bytes are free and hands them out on request.
+
+The simplest allocator keeps one number, the first free address, and moves it forward on every request:
 
 ```wx
+memory heap: u32;
+
+global mut next: u32 = 4; // address 0 means null
+
+func alloc(size: u32) -> heap::*u8 {
+    local start = next.get();
+    next.set(start + size);
+    local p: heap::*u8 = transmute(start);
+    p
+}
+```
+
+This version has no `free` and never grows the buffer. Real allocators reuse freed blocks and grow the memory when it is full, but they make the same kind of decision.
+
+Since the language provides no allocator, allocation is a convention, the same one Zig uses: the program chooses the allocator and passes it to the code that needs memory #fnote("zig-allocators"). The cost is that nothing checks how the program uses the memory. A block can be used after it is freed, freed twice, or reached through two pointers. Ownership and borrow checking would prevent this, but they are outside the scope of this thesis.
+
+== Polymorphism and traits over memories <sec:why-traits>
+
+The allocator above works only for `heap`. Its return type is `heap::*u8`, and `io::*u8` is a different type. A second allocator for `io` would repeat the same logic, and allocators also combine: an arena takes its blocks from a larger allocator. We want to write each allocator once and use it with any memory.
+
+*Polymorphism* means one piece of code that works for many types. A function takes a type parameter, `M`, that stands for "some memory", and the caller fills it in:
+
+```wx
+// `M` is chosen by the caller; the body is the one above, with `M` for `heap`.
+func alloc<M: Memory>(size: M::Size) -> M::*u8 { .. }
+```
+
+Calling it with `heap` gives `heap::*u8`, and calling it with `io` gives `io::*u8`. The compiler checks the body once, against the placeholder, and then makes a separate copy of the function for each memory it is used with.
+
+A placeholder alone is not enough. The body compares and adds addresses, and the compiler cannot assume such operations exist for an arbitrary type. A *trait* states what a type must provide. It is a named set of types and operations that a type can implement, as in Rust's traits and Haskell's type classes #fnote("rust-traits")#super[,]#fnote("haskell-type-classes"). A function written `func f<M: Memory>(..)` accepts only types that implement `Memory`, and its body may use only what `Memory` promises.
+
+The first thing generic code needs to know about a memory is its address type, so `Memory` starts with that. The compiler implements it for every declared memory, so no impl appears in the source. For `memory heap: u32;` the compiler behaves as if this impl existed:
+
+```wx
+trait Memory {
+    type Size;
+}
+
 impl Memory for heap {
     type Size = u32;
 }
 ```
 
-The associated type `Size` is the memory's address type: `u32` for a 32-bit memory, `u64` for a 64-bit one (`memory big: u64;`). The trait is shortened here:
+`Size` is an *associated type*: each type that implements `Memory` chooses its own. For `heap` it is `u32`, and for `memory big: u64;` it would be `u64`. Generic code refers to it as `M::Size`, so an allocator can take a length of type `M::Size` and be correct for a 32-bit and a 64-bit memory alike.
 
-```wx
-pub trait Memory {
-    type Size: PointerSize;
-    const PAGE_SIZE: Self::Size = 65536;
-
-    func grow(self: Self, delta: Self::Size) -> Self::Size::Signed { .. }
-    func size_pages(self: Self) -> Self::Size { .. }
-}
-```
-
-Generic code can now work with any memory and still use the right address type. A function that takes `M::*u8` and a length of type `M::Size` works on a 32-bit and a 64-bit memory, and the compiler checks it once, for every possible `M`. So generic code cannot silently assume a 32-bit memory. In @fig:generic-memory, the length is a `u32`, which is correct for `heap` but not for every `M`, and the compiler rejects the function before it is ever called with a 64-bit memory.
+Copying bytes is also how string code works. @lst:append appends a string literal to a buffer. The literal is placed in a 32-bit memory, the buffer lives in a 64-bit one, and `memory_copy` needs both pointers to belong to memories with the same address type. The compiler therefore rejects the call. Whether `Size` can be anything at all is a separate question, answered in @sec:typesets.
 
 #figure(
-  kind: raw,
-  supplement: [Listing],
-  text(size: 0.8em)[
-    ```text
-    error[E2112]: type mismatch resolving `<M as Memory>::Size == u32`
-         ┌─ /main.wx:2379:63
-         │
-    2079 │     DstMem: Memory where { Size = Size },
-         │                                   ---- required by this equality in `memory_copy`
-         ·
-    2379 │ func copy<M: Memory>(dst: M::*u8, src: heap::&u8, len: u32) { memory_copy(dst, src, len) }
-         │                                                               ^^^^^^^^^^^ expected `u32`, found `<M as Memory>::Size`
-    ```
-  ],
-  caption: [Generic code that assumes a 32-bit memory. `memory_copy` is shown in @sec:intrinsic-entities. The test appends its source to the standard library, hence the line numbers. Compiler at `186ba25`, branch `tir-refactor`, 2026-10-30.],
-) <fig:generic-memory>
+  ```wx
+  memory small: u32;
+  memory big: u64;
 
-A program cannot implement `Memory` for its own types, because its methods need a real WebAssembly memory behind them.
+  func append(buf: big::*u8, text: small::&[u8]) {
+      memory_copy(buf, text[0].&, text.len());
+      // error[E2112]: type mismatch resolving `<big as Memory>::Size == u32`
+      // expected `u32`, found `u64`
+      // required by this equality in `memory_copy`: `DstMem: Memory where { Size = Size }`
+  }
+  ```,
+  caption: [Appending a string from a 32-bit memory to a buffer in a 64-bit memory. The error is the compiler's output for this code.],
+) <lst:append>
 
 === Typesets <sec:typesets>
 
-`Memory::Size` must be `u32` or `u64` and nothing else. An ordinary trait bound cannot say this. If `PointerSize` were a normal trait, any code could later implement it for another type, such as `u8`, and the bound would accept it. WX adds a *typeset*: a closed set of types, listed in its declaration (@fig:typeset-vs-trait).
+So far, `Size` can be any type. But a WebAssembly memory has only two address types, 32 and 64 bits. Generic code should be able to rely on that, for example to add two addresses or compare them, and nothing in `type Size;` guarantees it.
+
+The natural fix is to require `Size` to implement a trait, `PointerSize`, which `u32` and `u64` implement. This does not work, because a trait is *open*: any code can later implement it for another type. If someone wrote `impl PointerSize for u8`, the bound would accept it, and a memory with 8-bit addresses would type-check.
+
+WX therefore adds a *typeset*: a closed set of types, listed in its declaration (@fig:typeset-vs-trait).
 
 #figure(
   kind: raw,
@@ -236,6 +311,35 @@ A program cannot implement `Memory` for its own types, because its methods need 
 ) <fig:typeset-vs-trait>
 
 A typeset is used in bounds like a trait, but it cannot be implemented: its members are listed only in its declaration. It can also require traits, so every member of `PointerSize` also has addition, comparison and the other operations that generic code needs on an address.
+
+The typeset is used in the bounds of `memory_copy`, which the standard library declares as follows:
+
+#align(right)[#text(size: 0.8em)[`std/main.wx`]]
+
+```wx
+/// Can copy across two different memories as long as they have the same pointer size.
+pub package func memory_copy<
+    Size: PointerSize,
+    SrcMem: Memory where { Size = Size },
+    DstMem: Memory where { Size = Size },
+>(dst: DstMem::*u8, src: SrcMem::&u8, len: Size);
+```
+
+`Size` is one type, chosen from the typeset, and each memory's `Size` must equal it. So two memories with different address types cannot be used together.
+
+Now `Size` can be restricted, and `Memory` can offer operations in terms of it. The trait below is shortened:
+
+```wx
+pub trait Memory {
+    type Size: PointerSize;
+    const PAGE_SIZE: Self::Size = 65536;
+
+    func grow(self: Self, delta: Self::Size) -> Self::Size::Signed { .. }
+    func size_pages(self: Self) -> Self::Size { .. }
+}
+```
+
+`type Size: PointerSize` says that every memory's address type is `u32` or `u64`. `PAGE_SIZE` is an associated constant, and `grow` and `size_pages` map directly to the WebAssembly instructions `memory.grow` and `memory.size`. A program cannot implement `Memory` for its own types, because these operations need a real WebAssembly memory behind them.
 
 === Globals and explicit access <sec:global-access>
 
@@ -296,19 +400,22 @@ import "env" as env {
 
 An imported function has no body, and an imported global has no initial value. The items are used through the block's name: `env::log`, `env::total`, `env::shared`. They get the same types and traits as defined items, so an imported memory is a `Memory` and an imported `global mut` is a `GlobalMut`.
 
-A package that is compiled to a module has one export block, which lists the items the host can use, optionally under another name:
+Exports work in the other direction: they name the items the host can use. An entry can be written as its own statement, or several entries can share an `export { ... }` block, and a package may use either shape or both:
 
 ```wx
-export { sum, heap as "memory" }
+export heap as "memory";
+export sum as "add";
+
+export { product, sum as "plus" };
 ```
+
+The name after `as` is the external name. Inside the program, an item has a name that follows wx's identifier rules, but a WebAssembly export name is any string. A host may expect `"memory"`, or a name such as `"get-name"` that is not a valid identifier. An alias lets the source keep its own name while the module presents the name the host expects. Here `sum` is exported twice, once as `add` and once as `plus`. An entry without `as` keeps its own name.
 
 The compiler assigns all indices at code generation, imports first. A program never writes or computes an index, so adding an import never changes existing code.
 
-Memory limits are written with `#[memory_limits(min_pages = 1, max_pages = 10)]` before a memory declaration. The compiler raises the initial page count when static data needs more space, and raises a stated maximum as well if it falls below that count. Thus `max_pages` is not checked as a strict source-level limit.
-
 == Multiple memories at the host boundary <sec:multi-memory-host>
 
-An address passed to an imported function is only a number. To read the bytes at that address, the host must also have access to the memory containing them. A module can import a memory supplied by the host or define one and export it. Either way, the party receiving access can read or write the *whole memory*, not just the range passed to a function @wasm-spec-modules. If a module exports the memory holding its internal data merely to pass a string, that data becomes accessible to the host too. The multiple-memories proposal names separation of public and private data as one motivation @wasm-multi-memory.
+An address passed to an imported function is only a number. To read the bytes at that address, the host must also have access to the memory containing them. A module can import a memory supplied by the host or define one and export it. Either way, the party receiving access can read or write the *whole memory*, not just the range passed to a function #fnote("wasm-spec-modules"). If a module exports the memory holding its internal data merely to pass a string, that data becomes accessible to the host too. The multiple-memories proposal names separation of public and private data as one motivation #fnote("wasm-multi-memory").
 
 WX gives the exchange its own memory:
 
@@ -317,7 +424,7 @@ memory host_io: u32;
 memory private_mem: u32;
 
 import "host" as host {
-    func write(message: host_io::&[u8]);
+    func write(message: super::host_io::&[u8]);
 }
 
 func main() {
@@ -331,7 +438,7 @@ The parameter type `host_io::&[u8]` fixes the string literal's memory. The host 
 
 == Tables and tags: designed, not implemented <sec:items-kinds>
 
-Tables and tags are not implemented. The design follows the same pattern. A table would be declared like a memory, and the compiler would implement a trait that gives its operations (`table.get`, `table.set`, `table.grow`). A handle to a table slot would carry its table in its type, as a pointer carries its memory. A tag would be declared like a struct with a payload, and the compiler would implement a `Tag` trait for it. These designs are kept short here because none of them can be tested yet. #todo[Expand only if tables or tags are implemented before submission; source: `notes/wx-tables-references-design.md`.]
+Tables and tags are not implemented. The design follows the same pattern. A table would be declared like a memory, and the compiler would implement a trait that gives its operations (`table.get`, `table.set`, `table.grow`). A handle to a table slot would carry its table in its type, as a pointer carries its memory. A tag would be declared like a struct with a payload, and the compiler would implement a `Tag` trait for it. These designs are kept short here because none of them can be tested yet.
 
 == One mechanism <sec:items-summary>
 

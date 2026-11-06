@@ -2,8 +2,8 @@
   "criterion": "I5",
   "program": "words",
   "file": "integration/i5-size/words/tinygo/default//out.wasm",
-  "bytes": 120341,
-  "optBytes": 21683,
+  "bytes": 120323,
+  "optBytes": 21707,
   "pass": true,
   "checks": [
     {

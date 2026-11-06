@@ -2,7 +2,7 @@
   "criterion": "I1",
   "file": "integration/i1-wasi/assemblyscript/raw-imports//out.wasm",
   "bytes": 203,
-  "optBytes": 203,
+  "optBytes": 181,
   "pass": true,
   "checks": [
     {

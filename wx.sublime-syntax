@@ -25,16 +25,12 @@ contexts:
       scope: keyword.other.wx
 
     # Control-flow keywords
-    - match: '\b(if|else|loop|match|break|continue|return|for|where|as|unreachable)\b'
+    - match: '\b(if|else|loop|block|match|break|continue|return|for|where|as|unreachable)\b'
       scope: keyword.control.wx
 
     # Path / receiver keywords
-    - match: '\b(self|Self|crate|super)\b'
+    - match: '\b(self|Self|package|super)\b'
       scope: variable.language.wx
-
-    # Boolean literals
-    - match: '\b(true|false)\b'
-      scope: constant.language.wx
 
   comments:
     - match: "///.*$"

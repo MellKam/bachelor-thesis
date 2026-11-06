@@ -3,7 +3,7 @@
   "program": "life",
   "file": "integration/i5-size/life/tinygo/floor//out.wasm",
   "bytes": 1279,
-  "optBytes": 1197,
+  "optBytes": 1406,
   "pass": true,
   "checks": [
     {

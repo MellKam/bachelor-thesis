@@ -1,4 +1,5 @@
 #import "../../template.typ": todo, booktable, muted
+#import "../../bibliography.typ": fnote
 #import "../../figures/charts.typ" as ch
 
 // Where the full study lives. Pin this to a tagged commit before submission.
@@ -26,7 +27,7 @@ A WebAssembly program is delivered as a module: a self-contained unit that a hos
 - *Tables* hold references and are used mainly for indirect calls.
 - *Tags* are nominal identifiers associated with type signatures, currently used for exceptions in WebAssembly.
 
-A module can define these entities itself or import them from the host, and it can choose which of its entities to export @wasm-spec-modules.
+A module can define these entities itself or import them from the host, and it can choose which of its entities to export #fnote("wasm-spec-modules").
 
 This thesis uses WAT, the text format of WebAssembly, to illustrate modules. Parentheses group the parts of a module, and names beginning with `$` identify entities. In @lst:wat-example, the nested instructions pass the constant `42` to the imported function `$log`.
 
@@ -47,7 +48,7 @@ This thesis uses WAT, the text format of WebAssembly, to illustrate modules. Par
 
 === The sandbox <sec:sandbox>
 
-This module cannot log anything by itself. The host must provide the imported function `host.log` when it instantiates the module. This illustrates a central aspect of WebAssembly's sandboxing model: a module can interact with its environment only through capabilities made available to it, such as imported functions and memories @wasm-spec-intro.
+This module cannot log anything by itself. The host must provide the imported function `host.log` when it instantiates the module. This illustrates a central aspect of WebAssembly's sandboxing model: a module can interact with its environment only through capabilities made available to it, such as imported functions and memories #fnote("wasm-spec-intro").
 
 Three properties help enforce this boundary:
 
@@ -59,7 +60,7 @@ The sandbox does not protect a module from its own bugs: a program can corrupt d
 
 === Extensions to the core <sec:extensions>
 
-WebAssembly's instruction set and execution model have expanded through extensions incorporated into the core specification, while other proposals continue to evolve @wasm-proposals.
+WebAssembly's instruction set and execution model have expanded through extensions incorporated into the core specification, while other proposals continue to evolve #fnote("wasm-proposals").
 
 Several extensions are particularly relevant to the language design explored in this thesis:
 
@@ -97,7 +98,7 @@ Eight languages are compared along two axes. *Exposure* asks which WebAssembly f
 
 The memory-model column distinguishes garbage collection implemented by a language runtime in linear memory from WebAssembly's own GC features. The route column records the compiler infrastructure used to produce the module.
 
-*How it was verified.* Each test uses a small program based on the language's documentation and built with a toolchain pinned in a container. A checker inspects the compiled `.wasm` or runs it under V8, Wasmtime, or Node. The results are a snapshot taken between 2026-10-02 and 2026-10-09. The programs, checker, and per-cell evidence are available in the project repository @wx-study. #todo[pin commit hash or tag]
+*How it was verified.* Each test uses a small program based on the language's documentation and built with a toolchain pinned in a container. A checker inspects the compiled `.wasm` or runs it under V8, Wasmtime, or Node. The results are a snapshot taken between 2026-10-02 and 2026-11-06. The programs, checker, and per-cell evidence are available in the project repository #fnote("wx-study"). #todo[pin commit hash or tag]
 
 == Exposure <sec:exposure>
 
@@ -122,18 +123,16 @@ Thirty features from the released versions of the specification (1.0, 2.0 and 3.
 
 === How it is rated <sec:exposure-rating>
 
-The counts of results are the evidence. A single score between 0 and 1 per language summarises them: each feature counts fully, partially or not at all, is discounted for every obstacle on the way (a build option, hand-written assembly, an experimental or nightly compiler, a runtime shipped in every module, a restricted host, or a different backend), and counts more if it belongs to the module core that every program uses. The discounts and weights are my own choice and are listed in the repository. They are meant to order the languages roughly, not to measure them to the second decimal.
+The counts of results are the evidence. A single score between 0 and 1 per language summarises them: each feature counts fully, partially or not at all, is discounted for every obstacle on the way (a build option, hand-written assembly, an experimental or nightly compiler, a runtime shipped in every module, a restricted host, or a different backend), and counts more if it belongs to the module core that every program uses. The discounts and weights are the author's choice and are listed in the repository. They are meant to order the languages roughly, not to measure them to the second decimal.
 
 === Results <sec:results>
-
-#todo[First draft, written from the generated data. All counts below are computed from `rating.json`; the commentary needs a review pass against the per-cell evidence before it is final.]
 
 @fig:matrix shows how each language reaches each feature, distinguishing source constructs from configuration, assembly, and features for which no route was found.
 
 #figure(
   ch.matrix-figure(),
-  kind: image,
-  caption: [How each language reaches each of the #ch.n-features WebAssembly features, grouped by memory model and by specification version. The cell shows the best route found.],
+  kind: "chart",
+  caption: [How each language reaches each of the #ch.n-features WebAssembly features, grouped by memory model and by specification version. The cell shows the best route found. Features in bold correspond to WebAssembly's module entities (@sec:synthesis).],
   placement: auto,
 ) <fig:matrix>
 
@@ -143,15 +142,15 @@ For #ch.construct-in-none.len() of the #ch.n-features features, no language offe
 
 #figure(
   ch.reach-figure(),
-  kind: image,
+  kind: "chart",
   caption: [Number of the #ch.n-features features each language reaches as a language construct or annotation, through build configuration, as inline assembly, or not at all.],
 ) <fig:reach>
 
-*The profiles are complementary, not nested.* @fig:versions shows that languages built on linear memory reach more of the sampled 1.0 and 2.0 features, while Kotlin reaches the GC and exception features of 3.0. No language reaches both the GC features and the tested linear-memory features in full. MoonBit offers both groups on separate backends that cannot be combined in one module. This is the pattern @sec:problem describes: using both usually means combining languages.
+*The profiles are complementary, not nested.* @fig:versions shows that languages built on linear memory reach more of the sampled 1.0 and 2.0 features, while Kotlin reaches the GC and exception features of 3.0. No language reaches both the GC features and the tested linear-memory features in full. MoonBit offers both groups on separate backends that cannot be combined in one module. This is the pattern described in the introduction: using both usually means combining languages.
 
 #figure(
   ch.version-figure(),
-  kind: image,
+  kind: "chart",
   caption: [Features reached, out of those probed, per specification version.],
 ) <fig:versions>
 
@@ -159,7 +158,7 @@ For #ch.construct-in-none.len() of the #ch.n-features features, no language offe
 
 #figure(
   ch.exposure-figure(),
-  kind: image,
+  kind: "chart",
   caption: [Exposure score (0 to 1) per language, ordered, with the range of its rank when the scoring coefficients are varied at random 2000 times.],
 ) <fig:exposure>
 
@@ -187,17 +186,15 @@ Access to platform features is only part of using WebAssembly: the resulting mod
 
 === How it is rated <sec:integration-rating>
 
-Criteria I1 to I3 are scored by *route*, from best to worst: built into the language's own toolchain, an official extra tool (from the language's project or the Bytecode Alliance), a community tool, or glue the developer writes by hand. A route without direct support scores 0. Size is scored on a log scale, so that one very large runtime does not flatten the rest: a build 1000 times the smallest scores 0. The integration score is the weighted mean of I1 to I5, with the weights given in @fig:integration. As with exposure, these coefficients are my choice and the score is only a summary.
+Criteria I1 to I3 are scored by *route*, from best to worst: built into the language's own toolchain, an official extra tool (from the language's project or the Bytecode Alliance), a community tool, or glue the developer writes by hand. A route without direct support scores 0. Size is scored on a log scale, so that one very large runtime does not flatten the rest: a build 1000 times the smallest scores 0. The integration score is the weighted mean of I1 to I5, with the weights given in @fig:integration. As with exposure, these coefficients are the author's choice and the score is only a summary.
 
 === Results <sec:integration-results>
-
-#todo[First draft, written from the generated data; the commentary needs a review pass against the per-cell evidence.]
 
 @fig:integration reports the five scored criteria and their weighted summary.
 
 #figure(
   ch.integration-figure(),
-  kind: image,
+  kind: "chart",
   caption: [Score of each language on the five scored integration criteria (0 to 1; – means no direct support) and the integration score, their weighted mean. The weight of each criterion is given under its name.],
   placement: auto,
 ) <fig:integration>
@@ -208,13 +205,11 @@ Module size also varies substantially: the smallest builds of `life` range from 
 
 == Combined ranking <sec:combined>
 
-#todo[First draft, written from the generated data; the commentary needs a review pass.]
-
-The two scores are combined as #ch.w-exposure × exposure + #ch.w-integration × integration, so that exposure, the subject of this thesis, counts a little more. The split is my choice. @fig:combined shows the result, with each bar divided into the part contributed by each axis.
+The two scores are combined as #ch.w-exposure × exposure + #ch.w-integration × integration, so that exposure, the subject of this thesis, counts a little more. The split is a choice of the author. @fig:combined shows the result, with each bar divided into the part contributed by each axis.
 
 #figure(
   ch.combined-figure(),
-  kind: image,
+  kind: "chart",
   caption: [Combined score per language (#ch.w-exposure × exposure + #ch.w-integration × integration), ordered, with the range of its rank when the coefficients are varied at random 2000 times. A full-length bar would be 1.0.],
 ) <fig:combined>
 
@@ -222,19 +217,13 @@ The two scores are combined as #ch.w-exposure × exposure + #ch.w-integration ×
 
 *The axes pull in different directions.* TinyGo moves from place #ch.place-of(ch.by-exposure, "tinygo") to place #ch.place-of(ch.by-combined, "tinygo"): it covers little of the platform but its modules are among the best integrated. Swift moves from place #ch.place-of(ch.by-exposure, "swift") to place #ch.place-of(ch.by-combined, "swift"), with no component route and the largest modules.
 
-*How to read these numbers.* They are a snapshot of my probes against pinned toolchains, and I am not equally expert in every language. The probe set samples the specification rather than covering it, the integration programs are small, and a cell marked _not found_ means no way was found, which is weaker than impossible. Some routes are counted conservatively: a hand-built component is not support for components. The study does not test whether a language checks the host boundary for safety. The scores summarise the counts and are not a verdict on any language.
+*How to read these numbers.* They are a snapshot of the probes written for this study, run against pinned toolchains, and the author is not equally expert in every language. The probe set samples the specification rather than covering it, the integration programs are small, and a cell marked _not found_ means no way was found, which is weaker than impossible. Some routes are counted conservatively: a hand-built component is not support for components. The study does not test whether a language checks the host boundary for safety. The scores summarise the counts and are not a verdict on any language.
 
 == Synthesis and design questions <sec:synthesis>
 
 The recurring gaps concern module structure and newer extensions. These may reflect deliberate choices suited to a language's audience. For WX, they identify concepts that a language built around WebAssembly could make explicit.
 
-@fig:entities isolates the #ch.entity-features.len() features that correspond to WebAssembly's module entities: the memory section, multiple memories, globals, tables (indirect calls, import and export, and multiple tables) and exception tags. No language offers a construct for more than #ch.max-entity-constructs of them.
-
-#figure(
-  ch.entity-figure(),
-  kind: image,
-  caption: [How each language reaches the features that correspond to WebAssembly's module entities. A subset of @fig:matrix.],
-) <fig:entities>
+The #ch.entity-features.len() features in bold in @fig:matrix are those that correspond to WebAssembly's module entities: the memory section, multiple memories, globals, tables (indirect calls, import and export, and multiple tables) and exception tags. No language offers a construct for more than #ch.max-entity-constructs of them.
 
 The comparison concerns each language together with its tested toolchain. It establishes which routes were found, but does not by itself identify whether a gap comes from the language, its backend, or its linker.
 

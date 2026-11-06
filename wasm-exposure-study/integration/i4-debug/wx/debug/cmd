@@ -1,0 +1,1 @@
+wx build . -o out.wasm

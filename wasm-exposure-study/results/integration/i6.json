@@ -59,6 +59,11 @@
     "PackageToJS plugin",
     "npm"
    ]
+  },
+  "wx": {
+   "footprintMB": 3,
+   "buildSeconds": 0,
+   "tools": []
   }
  }
 }

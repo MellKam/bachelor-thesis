@@ -1,0 +1,9 @@
+# i4-debug/wx/debug
+$ wx build . -o out.wasm
+Wrote 980 bytes to out.wasm
+PASS I4 integration/i4-debug/wx/debug//out.wasm (980 bytes)
+  · name section present
+  · DWARF sections present
+  · source-map reference present
+  · a trap names the source function in the stack  — RuntimeError: unreachable |     at wasm://wasm/1b69c3fa:wasm-function[6]:0x39c |     at Object.checkI4 [as I4] (file:///study/check/integration.mjs:213:30) |     at async file:///study/check/integrati
+  ✓ the debug build still runs life correctly

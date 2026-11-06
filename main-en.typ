@@ -1,4 +1,5 @@
 #import "template.typ": *
+#import "bibliography.typ": render-bibliography
 
 // Everything a department is likely to want on the title page.
 // Metadata follows the WSZiB-ANS standard (Rysunek 1).
@@ -57,8 +58,13 @@
 #include "chapters/en/04-stack-values.typ"
 #include "chapters/en/05-calls.typ"
 #include "chapters/en/06-intrinsics.typ"
+#include "chapters/en/07-bodies.typ"
+#include "chapters/en/08-hosts.typ"
+#include "chapters/en/09-implementation.typ"
+#include "chapters/en/10-evaluation.typ"
+#include "chapters/en/11-conclusion.typ"
 
 #unnumbered[Bibliografia]
-#bibliography("refs.bib", title: none, style: "ieee")
+#render-bibliography()
 
 #figure-lists()

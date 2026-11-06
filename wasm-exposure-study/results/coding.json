@@ -1,5 +1,6 @@
 {
  "caveats": {
+  "wx": ["Every probe is built with `wx build` from a `wx.json` package. No flags exist, so each probe has one variant. The module is a bare core module: no start function and no initialisation by the host."],
   "tinygo": ["The host must call the exported `_initialize` before any other export (the WASI reactor convention); Go's `init()` and the runtime start there. True of every probe, so it is not a cost on any one feature."],
   "kotlin": ["The host must run `_start` (the WASI command convention) before any other export; true of every module that built. Feature 17 (`externref`) is built for the `wasm-js` target, every other probe for `wasm-wasi`."],
   "swift": ["Every probe is built freestanding in Embedded Swift (`swiftc -target wasm32-unknown-none-wasm`, linked by the toolchain's `wasm-ld`), the lowest-level route in the 6.4.0 toolchain and the only one that yields a module without WASI imports or a runtime. Embedded mode is itself behind `-enable-experimental-feature Embedded` in 6.4.0 (`swift-frontend -print-supported-features` lists `Embedded`, `Extern` and `BuiltinModule` under \"experimental\"), so every variant carries `experimental-api`; so do the underscored attributes (`@_expose`, `@_cdecl`, `@_extern`) and the Builtin module. No start call is needed by the host."]
@@ -1596,6 +1597,178 @@
    "absent": "confirmed",
    "rests_on": ["slow-path", "slow-path-llvm-flag"],
    "note": "`_slowPath(x < 0)` (llvm.expect) produces no `metadata.code.branch_hint` section, with or without `-Xllvm -enable-branch-hint`, an option of this toolchain's LLVM 21 that is accepted but changes nothing. Compare C, Rust and Zig. Confirmed as of 2026-10-09: llvm/llvm-project#146230 is still open (last updated 2026-10-01), so no LLVM-based toolchain here can emit the section from source. A hand-encoded `.custom_section.metadata.code.branch_hint` can be written with module-level assembly or a section attribute (shown for Zig), but it names a function index and a byte offset that exist only after code generation, so it patches the output instead of marking a branch in the source; it is not counted as a way to express the feature. Swift has no assembly route at all."
+  }
+ },
+ "wx": {
+  "10": {
+   "variants": {
+    "default": {
+     "expressed_as": "native",
+     "support": "full"
+    }
+   }
+  },
+  "11": {
+   "absent": "confirmed",
+   "note": "std has no intrinsic for `i32.trunc_sat_f64_*`, `i32.extend8_s` or `i32.extend16_s`: `i32_trunc_f64` is the trapping conversion and narrow integers are held as i32 with unchecked `transmute`. Status: Not implemented yet; the instructions fit the current intrinsic design and are easy to add."
+  },
+  "12": {
+   "variants": {
+    "default": {
+     "expressed_as": "native",
+     "support": "full"
+    }
+   }
+  },
+  "13": {
+   "absent": "confirmed",
+   "note": "Static data is always an active segment placed by the compiler; there is no source form for a passive segment, `memory.init` or `data.drop`. Status: Not considered yet; needs investigation."
+  },
+  "14": {
+   "variants": {
+    "default": {
+     "expressed_as": "native",
+     "support": "full"
+    }
+   }
+  },
+  "15": {
+   "absent": "confirmed",
+   "note": "No `v128` type and no SIMD intrinsics in std. Status: Not implemented yet; a new API on the same intrinsic design."
+  },
+  "16": {
+   "absent": "confirmed",
+   "note": "No `v128` type and no SIMD intrinsics in std (see 15). Status: Not implemented yet; as 15."
+  },
+  "17": {
+   "absent": "confirmed",
+   "note": "std has `funcref` only as the representation of `func(A) -> R`; there is no `externref` type. Status: Not implemented yet; fits the design, needs research."
+  },
+  "18": {
+   "absent": "confirmed",
+   "note": "No table items in the language (see 03). Status: Not implemented yet (tables)."
+  },
+  "19": {
+   "absent": "confirmed",
+   "note": "No table items in the language (see 03). Status: Not implemented yet (tables)."
+  },
+  "20": {
+   "absent": "confirmed",
+   "note": "No `return_call` form. The backend never emits `return_call` and does not turn mutual tail recursion into a loop, so the probe would only show stack exhaustion; none was written. Status: Not implemented yet; fits the design, needs research."
+  },
+  "21": {
+   "absent": "confirmed",
+   "note": "A global's initializer is evaluated at compile time into a constant (`global_values`) and one that is not a constant expression is an error (E2015), so a global cannot be initialised from an imported global. The module's globals always get a plain constant initializer. Status: Deferred on purpose. Lazy initialisation of globals was attempted and postponed until the design is settled; extended constants follow from it."
+  },
+  "22": {
+   "absent": "confirmed",
+   "note": "No `ref.func` or `call_ref` is emitted by the current backend: `func(A) -> R` calls are specified to lower to `call_ref` but this path is not lowered yet. Status: Not implemented yet; depends on tables and function references."
+  },
+  "23": {
+   "absent": "confirmed",
+   "note": "No GC types: structs and arrays are laid out in linear memory. Wasm GC is on the future-work list. Status: Not implemented yet; partly designed, needs research (Wasm GC is on the future-work list)."
+  },
+  "24": {
+   "absent": "confirmed",
+   "note": "No GC types (see 23). Status: Not implemented yet; as 23."
+  },
+  "25": {
+   "variants": {
+    "default": {
+     "expressed_as": "native",
+     "support": "full"
+    }
+   }
+  },
+  "26": {
+   "absent": "confirmed",
+   "note": "No `v128` type and no SIMD intrinsics in std. Status: Not implemented yet; as 15."
+  },
+  "27": {
+   "absent": "confirmed",
+   "note": "No exception handling: no tag items, `throw` or `try`. Effect tracking (WasmFX) and exceptions are future work. Status: Not implemented yet; partly designed, needs research."
+  },
+  "28": {
+   "absent": "confirmed",
+   "note": "No exception handling (see 27). Status: Not implemented yet; as 27."
+  },
+  "29": {
+   "variants": {
+    "default": {
+     "expressed_as": "native",
+     "support": "full"
+    }
+   }
+  },
+  "30": {
+   "absent": "confirmed",
+   "note": "No attribute for branch hints and no `metadata.code.branch_hint` section is emitted. Status: Not implemented yet; fits the design, needs research."
+  },
+  "01": {
+   "variants": {
+    "default": {
+     "expressed_as": "native",
+     "support": "full"
+    }
+   }
+  },
+  "02": {
+   "variants": {
+    "export+import": {
+     "probes": [
+      "export",
+      "import"
+     ],
+     "expressed_as": "annotation",
+     "support": "partial",
+     "missing": "limits cannot be set on an imported memory (the import is min 0, no max)"
+    }
+   },
+   "note": "`#[memory_limits({ min_pages, max_pages })]` sets the limits of a defined memory and the export name is written in the export block (`heap as \"mem\"`). The attribute is rejected on an import entry (E1009), so an imported memory always has min 0 and no max."
+  },
+  "03": {
+   "absent": "confirmed",
+   "note": "WX has no table declaration, no element segments and no `call_indirect`. A `func(A) -> R` value lowers to `call_ref` in the design, which needs typed function references; neither tables nor that lowering exist in the current compiler (tables are designed, not implemented: notes in the repository). Status: Not implemented yet. Tables are designed but not built; every kind of function reference depends on them."
+  },
+  "04": {
+   "absent": "confirmed",
+   "note": "No table items in the language (see 03). Status: Not implemented yet (tables)."
+  },
+  "05": {
+   "absent": "confirmed",
+   "note": "The language has no start-function attribute or export-block form. An export named `_start` is an ordinary export, not the start section; no source construct emits a start section. Status: Not implemented yet; no design decision recorded."
+  },
+  "06": {
+   "variants": {
+    "default": {
+     "expressed_as": "native",
+     "support": "partial",
+     "missing": "the address of the data cannot be chosen"
+    }
+   },
+   "note": "Static data is an active segment placed by the compiler at the start of the memory (here address 0); there is no option or attribute to move it. `Memory::DATA_END` reads where it ends."
+  },
+  "07": {
+   "absent": "confirmed",
+   "note": "No attribute or item emits a custom section. The only attributes are `inline`, `fixed_order` and `memory_limits`. Status: Not considered yet; the use case is not clear to the author."
+  },
+  "08": {
+   "variants": {
+    "default": {
+     "expressed_as": "native",
+     "support": "partial",
+     "missing": "clz, ctz, popcnt, rotl and rotr have no intrinsic yet (easy to add)"
+    }
+   },
+   "note": "The ten members are written as functions in the source; only add, sub, mul, div and rem exist as operators. The five bit-counting and rotation operations were not attempted by loops because the checker requires the instruction."
+  },
+  "09": {
+   "variants": {
+    "default": {
+     "expressed_as": "native",
+     "support": "full"
+    }
+   }
   }
  }
 }

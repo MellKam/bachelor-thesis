@@ -181,13 +181,13 @@
    "cat": {
     "floor": {
      "raw": 203,
-     "opt": 203,
-     "best": 203
+     "opt": 181,
+     "best": 181
     },
     "default": {
      "raw": 7904,
-     "opt": 7867,
-     "best": 7867
+     "opt": 7800,
+     "best": 7800
     }
    }
   },
@@ -195,37 +195,37 @@
    "life": {
     "floor": {
      "raw": 1279,
-     "opt": 1197,
-     "best": 1197
+     "opt": 1406,
+     "best": 1279
     },
     "default": {
-     "raw": 121671,
-     "opt": 21602,
-     "best": 21602
+     "raw": 121653,
+     "opt": 21650,
+     "best": 21650
     }
    },
    "words": {
     "floor": {
      "raw": 1168,
-     "opt": 1150,
-     "best": 1150
+     "opt": 1359,
+     "best": 1168
     },
     "default": {
-     "raw": 120341,
-     "opt": 21683,
-     "best": 21683
+     "raw": 120323,
+     "opt": 21707,
+     "best": 21707
     }
    },
    "cat": {
     "floor": {
      "raw": 405158,
-     "opt": 84319,
-     "best": 84319
+     "opt": 83791,
+     "best": 83791
     },
     "default": {
      "raw": 405158,
-     "opt": 84319,
-     "best": 84319
+     "opt": 83791,
+     "best": 83791
     }
    }
   },
@@ -304,24 +304,63 @@
      "best": 60376073
     }
    }
+  },
+  "wx": {
+   "life": {
+    "floor": {
+     "raw": 961,
+     "opt": 544,
+     "best": 544
+    },
+    "default": {
+     "raw": 961,
+     "opt": 544,
+     "best": 544
+    }
+   },
+   "words": {
+    "floor": {
+     "raw": 692,
+     "opt": 307,
+     "best": 307
+    },
+    "default": {
+     "raw": 692,
+     "opt": 307,
+     "best": 307
+    }
+   },
+   "cat": {
+    "floor": {
+     "raw": 782,
+     "opt": 233,
+     "best": 233
+    },
+    "default": {
+     "raw": 4307,
+     "opt": 634,
+     "best": 634
+    }
+   }
   }
  },
  "smallest": {
   "life/floor": 408,
   "life/default": 405,
-  "words/floor": 324,
-  "words/default": 317,
+  "words/floor": 307,
+  "words/default": 307,
   "cat/floor": 180,
   "cat/default": 180
  },
  "score": {
-  "rust": 0.677,
-  "zig": 0.82,
-  "c": 0.808,
-  "moonbit": 0.829,
-  "assemblyscript": 0.906,
-  "tinygo": 0.449,
-  "kotlin": 0.222,
-  "swift": 0.169
+  "rust": 0.675,
+  "zig": 0.818,
+  "c": 0.806,
+  "moonbit": 0.827,
+  "assemblyscript": 0.907,
+  "tinygo": 0.445,
+  "kotlin": 0.22,
+  "swift": 0.168,
+  "wx": 0.949
  }
 }

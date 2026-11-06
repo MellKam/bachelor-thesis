@@ -2,7 +2,7 @@
   "criterion": "I1",
   "file": "integration/i1-wasi/assemblyscript/wasi-shim//out.wasm",
   "bytes": 7904,
-  "optBytes": 7867,
+  "optBytes": 7800,
   "pass": true,
   "checks": [
     {

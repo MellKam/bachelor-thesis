@@ -1,0 +1,10 @@
+# 02-memory/wx/export spec=02:export
+$ wx build . -o out.wasm
+Wrote 76 bytes to out.wasm
+PASS 02:export probes/02-memory/wx/export//out.wasm (76 bytes)
+  ✓ module validates (all extensions enabled)
+  ✓ exactly one memory
+  ✓ limits min 1 max 4
+  ✓ defined in module (not imported)
+  ✓ exported as "mem"
+  ✓ instantiates

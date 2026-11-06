@@ -2,7 +2,7 @@
   "criterion": "I1",
   "file": "integration/i1-wasi/tinygo/wasip1//out.wasm",
   "bytes": 405158,
-  "optBytes": 84319,
+  "optBytes": 83791,
   "pass": true,
   "checks": [
     {

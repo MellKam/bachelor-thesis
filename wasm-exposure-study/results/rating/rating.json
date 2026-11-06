@@ -464,8 +464,8 @@
       "score": 0.3923,
       "scoreRank": {
         "best": 5,
-        "worst": 8,
-        "mean": 6.0685
+        "worst": 9,
+        "mean": 6.419
       },
       "counts": {
         "probed": 30,
@@ -582,8 +582,8 @@
       "score": 0.3357,
       "scoreRank": {
         "best": 6,
-        "worst": 8,
-        "mean": 7.1565
+        "worst": 9,
+        "mean": 7.95
       },
       "counts": {
         "probed": 30,
@@ -641,8 +641,8 @@
       "score": 0.3152,
       "scoreRank": {
         "best": 5,
-        "worst": 8,
-        "mean": 7.6195
+        "worst": 9,
+        "mean": 8.4965
       },
       "counts": {
         "probed": 30,
@@ -700,8 +700,8 @@
       "score": 0.4333,
       "scoreRank": {
         "best": 5,
-        "worst": 7,
-        "mean": 5.1555
+        "worst": 8,
+        "mean": 5.24
       },
       "counts": {
         "probed": 30,
@@ -745,6 +745,65 @@
           "checked": 0.3333,
           "directness": 0.7933,
           "score": 0.1488
+        }
+      }
+    },
+    {
+      "id": "wx",
+      "name": "WX",
+      "features": 30,
+      "reached": 10,
+      "support": 0.3661,
+      "checked": 1,
+      "directness": 1,
+      "score": 0.3661,
+      "scoreRank": {
+        "best": 5,
+        "worst": 9,
+        "mean": 6.8945
+      },
+      "counts": {
+        "probed": 30,
+        "reached": 10,
+        "full": 7,
+        "checked": 10,
+        "noObstacle": 10,
+        "oneObstacle": 0,
+        "twoOrMoreObstacles": 0,
+        "absentConfirmed": 20,
+        "absentNotFound": 0,
+        "neverProbed": 20,
+        "reachedVia": {
+          "language": 10,
+          "config": 0,
+          "inlineAsmChecked": 0,
+          "inlineAsmUnchecked": 0
+        }
+      },
+      "bySpecVersion": {
+        "1.0": {
+          "features": 10,
+          "reached": 6,
+          "support": 0.5192,
+          "checked": 1,
+          "directness": 1,
+          "score": 0.5192
+        },
+        "2.0": {
+          "features": 9,
+          "reached": 2,
+          "support": 0.2857,
+          "checked": 1,
+          "directness": 1,
+          "score": 0.2857
+        },
+        "3.0": {
+          "features": 11,
+          "reached": 2,
+          "support": 0.1875,
+          "checked": 1,
+          "directness": 1,
+          "score": 0.1875
         }
       }
     }
@@ -4662,6 +4721,466 @@
       "directness": null,
       "score": 0,
       "obstacles": []
+    },
+    {
+      "language": "wx",
+      "feature": "01",
+      "featureName": "Imports and exports",
+      "since": "1.0",
+      "weight": 3,
+      "status": "reached",
+      "variant": "default",
+      "expressedAs": "native",
+      "partial": null,
+      "support": 1,
+      "checked": 1,
+      "directness": 1,
+      "score": 1,
+      "obstacles": []
+    },
+    {
+      "language": "wx",
+      "feature": "02",
+      "featureName": "Memory configuration",
+      "since": "1.0",
+      "weight": 3,
+      "status": "reached",
+      "variant": "export+import",
+      "expressedAs": "annotation",
+      "partial": "limits cannot be set on an imported memory (the import is min 0, no max)",
+      "support": 0.5,
+      "checked": 1,
+      "directness": 1,
+      "score": 0.5,
+      "obstacles": []
+    },
+    {
+      "language": "wx",
+      "feature": "03",
+      "featureName": "Table and indirect call",
+      "since": "1.0",
+      "weight": 3,
+      "status": "absent",
+      "absent": "confirmed",
+      "neverProbed": true,
+      "support": 0,
+      "checked": null,
+      "directness": null,
+      "score": 0,
+      "obstacles": []
+    },
+    {
+      "language": "wx",
+      "feature": "04",
+      "featureName": "Table import and export",
+      "since": "1.0",
+      "weight": 2,
+      "status": "absent",
+      "absent": "confirmed",
+      "neverProbed": true,
+      "support": 0,
+      "checked": null,
+      "directness": null,
+      "score": 0,
+      "obstacles": []
+    },
+    {
+      "language": "wx",
+      "feature": "05",
+      "featureName": "Start function",
+      "since": "1.0",
+      "weight": 2,
+      "status": "absent",
+      "absent": "confirmed",
+      "neverProbed": true,
+      "support": 0,
+      "checked": null,
+      "directness": null,
+      "score": 0,
+      "obstacles": []
+    },
+    {
+      "language": "wx",
+      "feature": "06",
+      "featureName": "Data segments",
+      "since": "1.0",
+      "weight": 3,
+      "status": "reached",
+      "variant": "default",
+      "expressedAs": "native",
+      "partial": "the address of the data cannot be chosen",
+      "support": 0.5,
+      "checked": 1,
+      "directness": 1,
+      "score": 0.5,
+      "obstacles": []
+    },
+    {
+      "language": "wx",
+      "feature": "07",
+      "featureName": "Custom sections",
+      "since": "1.0",
+      "weight": 1,
+      "status": "absent",
+      "absent": "confirmed",
+      "neverProbed": true,
+      "support": 0,
+      "checked": null,
+      "directness": null,
+      "score": 0,
+      "obstacles": []
+    },
+    {
+      "language": "wx",
+      "feature": "08",
+      "featureName": "Integer operations",
+      "since": "1.0",
+      "weight": 3,
+      "status": "reached",
+      "variant": "default",
+      "expressedAs": "native",
+      "partial": "clz, ctz, popcnt, rotl and rotr have no intrinsic yet (easy to add)",
+      "support": 0.5,
+      "checked": 1,
+      "directness": 1,
+      "score": 0.5,
+      "obstacles": []
+    },
+    {
+      "language": "wx",
+      "feature": "09",
+      "featureName": "Float builtins",
+      "since": "1.0",
+      "weight": 3,
+      "status": "reached",
+      "variant": "default",
+      "expressedAs": "native",
+      "partial": null,
+      "support": 1,
+      "checked": 1,
+      "directness": 1,
+      "score": 1,
+      "obstacles": []
+    },
+    {
+      "language": "wx",
+      "feature": "10",
+      "featureName": "Globals",
+      "since": "1.0",
+      "weight": 3,
+      "status": "reached",
+      "variant": "default",
+      "expressedAs": "native",
+      "partial": null,
+      "support": 1,
+      "checked": 1,
+      "directness": 1,
+      "score": 1,
+      "obstacles": []
+    },
+    {
+      "language": "wx",
+      "feature": "11",
+      "featureName": "Non-trapping conversions, sign extension",
+      "since": "2.0",
+      "weight": 2,
+      "status": "absent",
+      "absent": "confirmed",
+      "neverProbed": true,
+      "support": 0,
+      "checked": null,
+      "directness": null,
+      "score": 0,
+      "obstacles": []
+    },
+    {
+      "language": "wx",
+      "feature": "12",
+      "featureName": "Bulk memory",
+      "since": "2.0",
+      "weight": 2,
+      "status": "reached",
+      "variant": "default",
+      "expressedAs": "native",
+      "partial": null,
+      "support": 1,
+      "checked": 1,
+      "directness": 1,
+      "score": 1,
+      "obstacles": []
+    },
+    {
+      "language": "wx",
+      "feature": "13",
+      "featureName": "Passive data segments",
+      "since": "2.0",
+      "weight": 1,
+      "status": "absent",
+      "absent": "confirmed",
+      "neverProbed": true,
+      "support": 0,
+      "checked": null,
+      "directness": null,
+      "score": 0,
+      "obstacles": []
+    },
+    {
+      "language": "wx",
+      "feature": "14",
+      "featureName": "Multi-value",
+      "since": "2.0",
+      "weight": 2,
+      "status": "reached",
+      "variant": "default",
+      "expressedAs": "native",
+      "partial": null,
+      "support": 1,
+      "checked": 1,
+      "directness": 1,
+      "score": 1,
+      "obstacles": []
+    },
+    {
+      "language": "wx",
+      "feature": "15",
+      "featureName": "SIMD",
+      "since": "2.0",
+      "weight": 1,
+      "status": "absent",
+      "absent": "confirmed",
+      "neverProbed": true,
+      "support": 0,
+      "checked": null,
+      "directness": null,
+      "score": 0,
+      "obstacles": []
+    },
+    {
+      "language": "wx",
+      "feature": "16",
+      "featureName": "SIMD memory and bitwise operations",
+      "since": "2.0",
+      "weight": 2,
+      "status": "absent",
+      "absent": "confirmed",
+      "neverProbed": true,
+      "support": 0,
+      "checked": null,
+      "directness": null,
+      "score": 0,
+      "obstacles": []
+    },
+    {
+      "language": "wx",
+      "feature": "17",
+      "featureName": "`externref`",
+      "since": "2.0",
+      "weight": 2,
+      "status": "absent",
+      "absent": "confirmed",
+      "neverProbed": true,
+      "support": 0,
+      "checked": null,
+      "directness": null,
+      "score": 0,
+      "obstacles": []
+    },
+    {
+      "language": "wx",
+      "feature": "18",
+      "featureName": "Multiple tables",
+      "since": "2.0",
+      "weight": 1,
+      "status": "absent",
+      "absent": "confirmed",
+      "neverProbed": true,
+      "support": 0,
+      "checked": null,
+      "directness": null,
+      "score": 0,
+      "obstacles": []
+    },
+    {
+      "language": "wx",
+      "feature": "19",
+      "featureName": "Table operations on references",
+      "since": "2.0",
+      "weight": 1,
+      "status": "absent",
+      "absent": "confirmed",
+      "neverProbed": true,
+      "support": 0,
+      "checked": null,
+      "directness": null,
+      "score": 0,
+      "obstacles": []
+    },
+    {
+      "language": "wx",
+      "feature": "20",
+      "featureName": "Tail calls",
+      "since": "3.0",
+      "weight": 2,
+      "status": "absent",
+      "absent": "confirmed",
+      "neverProbed": true,
+      "support": 0,
+      "checked": null,
+      "directness": null,
+      "score": 0,
+      "obstacles": []
+    },
+    {
+      "language": "wx",
+      "feature": "21",
+      "featureName": "Extended constant expressions",
+      "since": "3.0",
+      "weight": 1,
+      "status": "absent",
+      "absent": "confirmed",
+      "neverProbed": true,
+      "support": 0,
+      "checked": null,
+      "directness": null,
+      "score": 0,
+      "obstacles": []
+    },
+    {
+      "language": "wx",
+      "feature": "22",
+      "featureName": "Typed function references",
+      "since": "3.0",
+      "weight": 2,
+      "status": "absent",
+      "absent": "confirmed",
+      "neverProbed": true,
+      "support": 0,
+      "checked": null,
+      "directness": null,
+      "score": 0,
+      "obstacles": []
+    },
+    {
+      "language": "wx",
+      "feature": "23",
+      "featureName": "GC structs and arrays",
+      "since": "3.0",
+      "weight": 2,
+      "status": "absent",
+      "absent": "confirmed",
+      "neverProbed": true,
+      "support": 0,
+      "checked": null,
+      "directness": null,
+      "score": 0,
+      "obstacles": []
+    },
+    {
+      "language": "wx",
+      "feature": "24",
+      "featureName": "GC casts, subtyping, i31, packed fields",
+      "since": "3.0",
+      "weight": 1,
+      "status": "absent",
+      "absent": "confirmed",
+      "neverProbed": true,
+      "support": 0,
+      "checked": null,
+      "directness": null,
+      "score": 0,
+      "obstacles": []
+    },
+    {
+      "language": "wx",
+      "feature": "25",
+      "featureName": "Multiple memories",
+      "since": "3.0",
+      "weight": 1,
+      "status": "reached",
+      "variant": "default",
+      "expressedAs": "native",
+      "partial": null,
+      "support": 1,
+      "checked": 1,
+      "directness": 1,
+      "score": 1,
+      "obstacles": []
+    },
+    {
+      "language": "wx",
+      "feature": "26",
+      "featureName": "Relaxed SIMD",
+      "since": "3.0",
+      "weight": 1,
+      "status": "absent",
+      "absent": "confirmed",
+      "neverProbed": true,
+      "support": 0,
+      "checked": null,
+      "directness": null,
+      "score": 0,
+      "obstacles": []
+    },
+    {
+      "language": "wx",
+      "feature": "27",
+      "featureName": "Exception tags",
+      "since": "3.0",
+      "weight": 2,
+      "status": "absent",
+      "absent": "confirmed",
+      "neverProbed": true,
+      "support": 0,
+      "checked": null,
+      "directness": null,
+      "score": 0,
+      "obstacles": []
+    },
+    {
+      "language": "wx",
+      "feature": "28",
+      "featureName": "Exception handling with exnref",
+      "since": "3.0",
+      "weight": 1,
+      "status": "absent",
+      "absent": "confirmed",
+      "neverProbed": true,
+      "support": 0,
+      "checked": null,
+      "directness": null,
+      "score": 0,
+      "obstacles": []
+    },
+    {
+      "language": "wx",
+      "feature": "29",
+      "featureName": "64-bit memory",
+      "since": "3.0",
+      "weight": 2,
+      "status": "reached",
+      "variant": "default",
+      "expressedAs": "native",
+      "partial": null,
+      "support": 1,
+      "checked": 1,
+      "directness": 1,
+      "score": 1,
+      "obstacles": []
+    },
+    {
+      "language": "wx",
+      "feature": "30",
+      "featureName": "Branch hinting",
+      "since": "3.0",
+      "weight": 1,
+      "status": "absent",
+      "absent": "confirmed",
+      "neverProbed": true,
+      "support": 0,
+      "checked": null,
+      "directness": null,
+      "score": 0,
+      "obstacles": []
     }
   ],
   "comparison": {
@@ -4697,6 +5216,12 @@
       {
         "higher": "c",
         "lower": "moonbit",
+        "share": 1,
+        "robust": true
+      },
+      {
+        "higher": "c",
+        "lower": "wx",
         "share": 1,
         "robust": true
       },
@@ -4738,6 +5263,12 @@
       },
       {
         "higher": "rust",
+        "lower": "wx",
+        "share": 1,
+        "robust": true
+      },
+      {
+        "higher": "rust",
         "lower": "tinygo",
         "share": 1,
         "robust": true
@@ -4768,6 +5299,12 @@
       },
       {
         "higher": "zig",
+        "lower": "wx",
+        "share": 1,
+        "robust": true
+      },
+      {
+        "higher": "zig",
         "lower": "tinygo",
         "share": 1,
         "robust": true
@@ -4792,6 +5329,12 @@
       },
       {
         "higher": "assemblyscript",
+        "lower": "wx",
+        "share": 1,
+        "robust": true
+      },
+      {
+        "higher": "assemblyscript",
         "lower": "tinygo",
         "share": 1,
         "robust": true
@@ -4810,6 +5353,12 @@
       },
       {
         "higher": "swift",
+        "lower": "wx",
+        "share": 0.9155,
+        "robust": false
+      },
+      {
+        "higher": "swift",
         "lower": "tinygo",
         "share": 1,
         "robust": true
@@ -4822,6 +5371,12 @@
       },
       {
         "higher": "moonbit",
+        "lower": "wx",
+        "share": 0.6495,
+        "robust": false
+      },
+      {
+        "higher": "moonbit",
         "lower": "tinygo",
         "share": 0.8565,
         "robust": false
@@ -4830,6 +5385,18 @@
         "higher": "moonbit",
         "lower": "kotlin",
         "share": 0.9295,
+        "robust": false
+      },
+      {
+        "higher": "wx",
+        "lower": "tinygo",
+        "share": 0.7935,
+        "robust": false
+      },
+      {
+        "higher": "wx",
+        "lower": "kotlin",
+        "share": 0.877,
         "robust": false
       },
       {
@@ -4885,6 +5452,10 @@
         "behind": "swift"
       },
       {
+        "ahead": "c",
+        "behind": "wx"
+      },
+      {
         "ahead": "moonbit",
         "behind": "tinygo"
       },
@@ -4905,7 +5476,15 @@
         "behind": "swift"
       },
       {
+        "ahead": "assemblyscript",
+        "behind": "wx"
+      },
+      {
         "ahead": "kotlin",
+        "behind": "tinygo"
+      },
+      {
+        "ahead": "wx",
         "behind": "tinygo"
       }
     ]
