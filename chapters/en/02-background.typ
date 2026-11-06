@@ -1,4 +1,4 @@
-#import "../../template.typ": todo, booktable, muted
+#import "../../template.typ": booktable, muted, todo
 #import "../../bibliography.typ": fnote
 #import "../../figures/charts.typ" as ch
 
@@ -74,7 +74,7 @@ These entities and instructions are concepts a developer may want to express in 
 
 == Comparing languages <sec:method>
 
-Eight languages are compared along two axes. *Exposure* asks which WebAssembly features a developer can name, configure, and control from source code. *Integration* asks how the resulting module is run, called, packaged, and debugged, and how large it is. These axes describe access to the platform and its tooling; hiding platform details may be a deliberate language choice. They are reported separately (@sec:exposure, @sec:integration) and combined in @sec:combined.
+Eight languages are compared along two axes. *Exposure* asks which WebAssembly features a developer can name, configure, and control from source code. *Integration* asks how the resulting module is run, called, packaged, and debugged, and how large it is. These axes describe access to the platform and its tooling; hiding platform details may be a deliberate language choice. They are reported separately (@sec:exposure, @sec:integration).
 
 *Languages.* Eight language columns were studied (@tbl:languages). C and C++ share a column because they use one toolchain. MoonBit has two backends, `wasm` and `wasm-gc`, that cannot be combined in one module; each probe is run on both and a feature that only the other backend offers is counted as an obstacle. The set was chosen for current use as a WebAssembly target and for variety in design intent. It is not complete: Emscripten, Go's standard compiler and Dart are known omissions.
 
@@ -84,21 +84,45 @@ Eight languages are compared along two axes. *Exposure* asks which WebAssembly f
     align: (left, left, left, left),
     table.header([Language], [Version], [Memory model], [Route]),
     table.hline(stroke: 0.5pt),
-    [Rust], [1.99.0], [linear], [LLVM],
-    [Zig], [0.16.0], [linear], [LLVM],
-    [C/C++], [clang 23.1.0 (wasi-sdk 34.0)], [linear], [LLVM],
-    [Swift], [6.4.0 (Embedded Swift)], [linear], [LLVM],
-    [MoonBit], [`moon` 0.1.20260920, `moonc` v0.10.14], [linear / Wasm GC], [own backend],
-    [AssemblyScript], [0.28.20], [linear + runtime GC], [Binaryen],
-    [TinyGo], [0.42.0 (Go 1.27.1)], [linear + runtime GC], [LLVM],
-    [Kotlin], [2.4.21 (Kotlin/Wasm)], [Wasm GC], [own backend],
+    [Rust],
+    [1.99.0],
+    [linear],
+    [LLVM],
+    [Zig],
+    [0.16.0],
+    [linear],
+    [LLVM],
+    [C/C++],
+    [clang 23.1.0 (wasi-sdk 34.0)],
+    [linear],
+    [LLVM],
+    [Swift],
+    [6.4.0 (Embedded Swift)],
+    [linear],
+    [LLVM],
+    [MoonBit],
+    [`moon` 0.1.20260920, `moonc` v0.10.14],
+    [linear / Wasm GC],
+    [own backend],
+    [AssemblyScript],
+    [0.28.20],
+    [linear + runtime GC],
+    [Binaryen],
+    [TinyGo],
+    [0.42.0 (Go 1.27.1)],
+    [linear + runtime GC],
+    [LLVM],
+    [Kotlin],
+    [2.4.21 (Kotlin/Wasm)],
+    [Wasm GC],
+    [own backend],
   ),
   caption: [The languages compared, in the order used by all figures: grouped by memory model.],
 ) <tbl:languages>
 
 The memory-model column distinguishes garbage collection implemented by a language runtime in linear memory from WebAssembly's own GC features. The route column records the compiler infrastructure used to produce the module.
 
-*How it was verified.* Each test uses a small program based on the language's documentation and built with a toolchain pinned in a container. A checker inspects the compiled `.wasm` or runs it under V8, Wasmtime, or Node. The results are a snapshot taken between 2026-10-02 and 2026-11-06. The programs, checker, and per-cell evidence are available in the project repository #fnote("wx-study"). #todo[pin commit hash or tag]
+*How it was verified.* Each test uses a small program based on the language's documentation and built with a toolchain pinned in a container. A checker inspects the compiled `.wasm` or runs it under V8, Wasmtime, or Node. The results are a snapshot. The programs, checker, and per-cell evidence are available in the project repository #fnote("wx-study"). #todo[pin commit hash or tag]
 
 == Exposure <sec:exposure>
 
@@ -112,11 +136,26 @@ Thirty features from the released versions of the specification (1.0, 2.0 and 3.
     align: (left, center, center, left),
     table.header([Result], [In source], [Checked by compiler], [Meaning]),
     table.hline(stroke: 0.5pt),
-    [Native], [yes], [yes], [a language construct, or a typed library or intrinsic function; the compiler may choose the encoding],
-    [Annotation], [yes], [yes], [an attribute on an ordinary construct],
-    [Config], [no], [no], [a build flag, configuration file or linker argument],
-    [Inline assembly], [yes], [no], [assembly or Wasm text written by hand],
-    [Absent], [n/a], [n/a], [no way found; _confirmed_ if documentation or compiler rejects it, _not found_ otherwise],
+    [Native],
+    [yes],
+    [yes],
+    [a language construct, or a typed library or intrinsic function; the compiler may choose the encoding],
+    [Annotation],
+    [yes],
+    [yes],
+    [an attribute on an ordinary construct],
+    [Config],
+    [no],
+    [no],
+    [a build flag, configuration file or linker argument],
+    [Inline assembly],
+    [yes],
+    [no],
+    [assembly or Wasm text written by hand],
+    [Absent],
+    [n/a],
+    [n/a],
+    [no way found; _confirmed_ if documentation or compiler rejects it, _not found_ otherwise],
   ),
   caption: [The vocabulary used to classify every cell of the comparison.],
 ) <tbl:vocabulary>
@@ -174,12 +213,24 @@ Access to platform features is only part of using WebAssembly: the resulting mod
     align: (left, left, left),
     table.header([Criterion], [Test], [Scored by]),
     table.hline(stroke: 0.5pt),
-    [I1 WASI], [`cat` is built for the WASI target and run under Wasmtime], [route],
-    [I2 Component Model], [`words` is built as a component with a typed interface and called under Wasmtime; only direct support counts, not hand-written glue], [route],
-    [I3 JS bindings], [`words` is called from Node with a string and returns an object, through the glue the language's tooling generates], [route],
-    [I4 Debuggability], [a debug build of `life` is checked for a name section, DWARF or a source map, and a trap whose stack names the source function], [full or partial],
-    [I5 Size], [all three programs are built as a smallest and as a default build and measured after `wasm-opt -Oz`], [bytes],
-    [I6 Toolchain cost], [installed size of the toolchain, cold build time, and extra tools needed], [reported only],
+    [I1 WASI],
+    [`cat` is built for the WASI target and run under Wasmtime],
+    [route],
+    [I2 Component Model],
+    [`words` is built as a component with a typed interface and called under Wasmtime; only direct support counts, not hand-written glue],
+    [route],
+    [I3 JS bindings],
+    [`words` is called from Node with a string and returns an object, through the glue the language's tooling generates],
+    [route],
+    [I4 Debuggability],
+    [a debug build of `life` is checked for a name section, DWARF or a source map, and a trap whose stack names the source function],
+    [full or partial],
+    [I5 Size],
+    [all three programs are built as a smallest and as a default build and measured after `wasm-opt -Oz`],
+    [bytes],
+    [I6 Toolchain cost],
+    [installed size of the toolchain, cold build time, and extra tools needed],
+    [reported only],
   ),
   caption: [The integration criteria.],
 ) <tbl:criteria>
@@ -203,19 +254,7 @@ All eight languages run `cat` as a WASI command, six with their ordinary toolcha
 
 Module size also varies substantially: the smallest builds of `life` range from 408 bytes for AssemblyScript to 61 KB for Kotlin.
 
-== Combined ranking <sec:combined>
-
-The two scores are combined as #ch.w-exposure × exposure + #ch.w-integration × integration, so that exposure, the subject of this thesis, counts a little more. The split is a choice of the author. @fig:combined shows the result, with each bar divided into the part contributed by each axis.
-
-#figure(
-  ch.combined-figure(),
-  kind: "chart",
-  caption: [Combined score per language (#ch.w-exposure × exposure + #ch.w-integration × integration), ordered, with the range of its rank when the coefficients are varied at random 2000 times. A full-length bar would be 1.0.],
-) <fig:combined>
-
-*The top is firm and the middle is a cluster.* #ch.lang-name(ch.by-combined.at(0)) and #ch.lang-name(ch.by-combined.at(1)) are first and second however the coefficients are varied, at #ch.fmt2(ch.integ.at(ch.by-combined.at(0)).combined) and #ch.fmt2(ch.integ.at(ch.by-combined.at(1)).combined), because each is ahead on both axes. #ch.lang-name(ch.by-combined.at(2)), #ch.lang-name(ch.by-combined.at(3)), #ch.lang-name(ch.by-combined.at(4)) and #ch.lang-name(ch.by-combined.at(5)) lie within #ch.fmt2(ch.integ.at(ch.by-combined.at(2)).combined - ch.integ.at(ch.by-combined.at(5)).combined) of each other and should be read as a group, not a ladder.
-
-*The axes pull in different directions.* TinyGo moves from place #ch.place-of(ch.by-exposure, "tinygo") to place #ch.place-of(ch.by-combined, "tinygo"): it covers little of the platform but its modules are among the best integrated. Swift moves from place #ch.place-of(ch.by-exposure, "swift") to place #ch.place-of(ch.by-combined, "swift"), with no component route and the largest modules.
+== Reading the scores <sec:reading-scores>
 
 *How to read these numbers.* They are a snapshot of the probes written for this study, run against pinned toolchains, and the author is not equally expert in every language. The probe set samples the specification rather than covering it, the integration programs are small, and a cell marked _not found_ means no way was found, which is weaker than impossible. Some routes are counted conservatively: a hand-built component is not support for components. The study does not test whether a language checks the host boundary for safety. The scores summarise the counts and are not a verdict on any language.
 

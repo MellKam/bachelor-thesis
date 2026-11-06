@@ -5,7 +5,7 @@
 
 #heading(level: 2, numbering: none, outlined: false)[Motivation] <sec:motivation>
 
-WebAssembly (Wasm) is a portable bytecode format designed to execute safely inside a sandboxed environment. Its origins are closely connected to asm.js, a restricted subset of JavaScript that made it practical to compile lower-level languages such as C and C++ for the browser. WebAssembly took this idea further by introducing a dedicated binary format and execution model rather than relying on JavaScript as the transport format #fnote("haas2017")#super[,]#fnote("asmjs").
+WebAssembly (Wasm) is a portable bytecode format designed to execute safely inside a sandboxed environment. It grew out of asm.js, a restricted subset of JavaScript for compiling C and C++ for the browser, but has its own binary format and execution model #fnote("haas2017")#super[,]#fnote("asmjs").
 
 Although WebAssembly began as a technology for the Web, its use has expanded well beyond the browser. Standalone runtimes make it useful for server-side and serverless workloads, where fast startup and strong isolation are valuable properties, and the same isolation model makes it attractive as an extension format for running third-party or otherwise untrusted code inside a controlled sandbox.
 
@@ -21,11 +21,11 @@ This has two consequences. Developers often have little visibility into which We
 
 This holds even for languages designed for WebAssembly from the start. They too settle on a programming model — a memory-management strategy, a set of abstractions, a particular notion of safety — and expose that model instead of the full range of the platform's constructs. Being designed for WebAssembly has so far meant targeting it well, not exposing everything it offers.
 
-This creates room for a different kind of language. It would not add another paradigm alongside the others. It would take the platform's own model as its starting point, so that no memory-management strategy or runtime is imposed on top. Memories, globals, tables and tags would be typed constructs in the source, and developers would reason in the same concepts the platform uses. That lets one language combine capabilities that today come from different languages.
+This motivates a language organized around WebAssembly's resources, with allocation and runtime policies left to libraries and applications. Memories, globals, tables and tags would be typed source constructs. The long-term aim is to combine more of the platform's capabilities in one language; this thesis investigates that foundation through memories, globals, functions and selected instructions.
 
 #heading(level: 2, numbering: none, outlined: false)[Goals] <sec:goals>
 
-The goal of this thesis is not to replace existing languages. It is to explore how to make writing code for the WebAssembly platform a first-class experience. Demonstrating this means showing that such a design's core mechanisms can be implemented in a working compiler, compose consistently, and are sufficient to write practical programs.
+The goal of this thesis is to investigate whether a source language can expose WebAssembly resources directly and check their use through its type system. The work tests whether the core mechanisms can be implemented in a working compiler, compose consistently, and support practical example programs.
 
 The implementation follows these design principles:
 
@@ -54,7 +54,7 @@ The thesis makes the following contributions:
 + *A comparison of how languages expose WebAssembly* (@ch:background). Eight languages are tested on thirty features of the specification and on how their modules integrate with hosts and tooling. The study uses small programs built with pinned toolchains and checks their output automatically. Its programs and evidence are published so that the comparison can be repeated.
 + *Items: the platform's entities as types* (@ch:items). In WX, every memory, global and function is an item with its own zero-sized type, and a trait that the compiler implements describes what the item can do. A pointer type says which memory it points into. This makes several memories, and code that is generic over memories, part of the type system.
 + *The same mechanism for values and calls* (@ch:stack-values, @ch:calls). A trait computed by the compiler describes how any WX type is held on the WebAssembly stack. It decides which types a global can hold, checks reinterpretation between types, and makes a function's WebAssembly signature follow directly from its WX signature.
-+ *Instructions as typed functions* (@ch:intrinsics). WebAssembly instructions are functions in the standard library. An instruction that names an entity takes the entity's item, never an integer index.
++ *Instructions as typed functions* (@ch:intrinsics). Selected WebAssembly instructions are exposed as functions in the standard library. An intrinsic that names an entity takes the entity's item, never an integer index.
 + *A compiler* written in Rust that implements this design, with tests for each part. Every error message shown in the design chapters was produced by it.
 
 #heading(level: 2, numbering: none, outlined: false)[Scope] <sec:scope>
@@ -75,4 +75,4 @@ Further work could extend the model to effect tracking, WebAssembly GC, stack sw
 
 #heading(level: 2, numbering: none, outlined: false)[Structure of the thesis] <sec:structure>
 
-@ch:background introduces the structure of a WebAssembly module and compares how eight languages expose it. The comparison ends with five questions that guide the language design. @ch:items shows how WX represents memories, globals, and functions as items with their own types, and how pointers identify their memory. @ch:stack-values extends the same mechanism to values on the WebAssembly stack. @ch:calls applies it to function calls, and @ch:intrinsics shows how instructions become typed functions. The remaining chapters explain memory, pointers and slices in practice, then introduce example programs that use these mechanisms together. Only then do they describe the compiler's architecture and implementation. The evaluation checks the design's claims against executable programs and the modules they produce, followed by limitations and future work. The conclusion returns to the research questions.
+@ch:background introduces the structure of a WebAssembly module and compares how eight languages expose it. The comparison ends with five questions that guide the language design. @ch:items shows how WX represents memories, globals, and functions as items with their own types, and how pointers identify their memory. @ch:stack-values describes stack representation, @ch:calls applies it to function calls, and @ch:intrinsics explains typed instruction access. @ch:bodies describes function bodies, and @ch:hosts combines these mechanisms in browser and WASI programs. @ch:implementation presents the compiler's architecture and tests. @ch:evaluation reports feature coverage, integration and module sizes, then discusses limitations and future work. The conclusion returns to the research questions.

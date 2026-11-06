@@ -50,7 +50,7 @@ pub trait StackValue {
 pub typeset StackScalar { i32, i64, f32, f64, funcref }
 ```
 
-`Repr` is the list of WebAssembly values a type is held as, written with WX's own primitive types. A type held as one value has that value's type as its `Repr`. A type held as several values has their tuple, and a type held as none has `()`. WX has no tuple of one element, so a single value and a tuple of it are the same type. @tbl:repr gives examples.
+`Repr` describes the sequence of WebAssembly value types used to represent a WX value, written with WX's own primitive types. A single value is represented by its scalar type, several values by a tuple, and no values by `()`. WX identifies a one-element tuple with its element, so the single-value case needs no separate tuple form. @tbl:repr gives examples.
 
 #figure(
   booktable(
@@ -84,7 +84,7 @@ pub typeset StackScalar { i32, i64, f32, f64, funcref }
   caption: [The stack representation of some WX types. Parts are flattened in declaration order, and zero-sized parts are dropped.],
 ) <tbl:repr>
 
-No `impl StackValue` is written anywhere. The compiler computes the answer from the type's structure when it is needed, in the same way it implements `Memory` for a declared memory. A struct or a tuple is its parts, flattened, in declaration order, with zero-sized parts dropped. Every type implements `StackValue`, including `!` (the type with no values). If a type contains `!` anywhere, its representation is `!` as a whole, as the last rows of @tbl:repr show.
+No `impl StackValue` is written in the source. The compiler derives the representation from the type's structure when needed. Structs and tuples are flattened in declaration order, with zero-sized parts dropped. The trait covers runtime value types and `!` (the type with no values). If a type contains `!` anywhere, its representation is `!` as a whole, as the last rows of @tbl:repr show.
 
 `StackScalar` is a typeset (@sec:typesets) of the types of one WebAssembly value. `v128` is missing only because WX does not support SIMD yet. `funcref` is a WebAssembly function reference of any signature.
 
@@ -121,7 +121,7 @@ The value of a global must be held as exactly one WebAssembly value. For `global
   20 │ global origin: Pair = Pair(0, 0);
      │                ^^^^ the trait `StackScalar` is not implemented for `(i32, f64)`
   ```],
-  caption: [A global of two values is rejected (`struct Pair(x: u32, y: f64)`). The test uses a minimal standard library, so `Global` is written on one line. Compiler at `186ba25`, branch `tir-refactor`, 2026-10-30.],
+  caption: [A global of two values is rejected (`struct Pair(x: u32, y: f64)`). The test uses a minimal standard library, so `Global` is written on one line.],
 ) <fig:global-diagnostic>
 
 All three requirements hold. A WX global is one WebAssembly global, so `Meters`, an enum, a pointer or a function reference can be a global, and `Point` cannot. Generic code gets the guarantee from the trait: for any `G: Global`, `G::Value` is one value. And the rule is not special code for globals. It is an associated-type bound, the same mechanism that limits `Memory::Size` to `PointerSize`.
@@ -154,7 +154,7 @@ Because `Repr` keeps declaration order, `transmute` cannot reorder fields. Turni
   caption: [A `transmute` that would reorder fields is rejected. The error is the compiler's output for this code.],
 ) <fig:transmute-diagnostic>
 
-*A limitation.* `transmute` checks the representation, not the values. `transmute::<u8, Bool>(2)` is accepted, although `Bool` has only the values 0 and 1, and so is an enum made from a number that is not one of its variants. In Rust, `transmute` is `unsafe` for this reason. WX has no `unsafe` yet; marking such operations is planned as part of the effect design.
+*Caller responsibility.* `transmute` is an unsafe stack reinterpretation primitive. Its bound guarantees that the source and destination have the same stack representation; the caller must ensure that the resulting value is valid for the destination type. For example, `transmute::<u8, Bool>(2)` is accepted by the checker but violates this requirement, because `Bool` has only the values 0 and 1. The standard library builds higher-level operations on this primitive, and checked conversions can validate values before using it. WX has no `unsafe` annotation yet; marking such operations is planned as part of the effect design.
 
 `transmute` also lets the standard library type every instruction exactly as WebAssembly reads its operands. `i32.add` adds two `i32` values and does not know about signedness, so the function for it takes two `i32`. Addition for `u32` reinterprets on the way in and out:
 
@@ -178,17 +178,7 @@ func unwrap<T: StackValue>(w: Wrap<T>) -> T {
 }
 ```
 
-Here the compiler must show that `Wrap<T>` and `T` have the same representation while `T` is unknown. For an ordinary trait, this would follow from an impl that works for any `Wrap<T>`:
-
-```wx
-impl<T: StackValue> StackValue for Wrap<T> {
-    type Repr = T::Repr;
-}
-```
-
-`StackValue` behaves as if the compiler had written such an impl for every struct and tuple, but it does not build any of them.
-
-For a type with several parts, such an impl cannot be written. The representation of `Pair<T, u32>` is not `(T::Repr, i32)`: with `T = (u8, u8)` that type would be `((i32, i32), i32)`, a nested tuple, while the real representation is the flat `(i32, i32, i32)`. WX has no type for "the concatenation of two tuples", and I did not want to add one. Instead, the compiler rewrites the type into a *normal form* that is flattened as far as it is known: nested tuples and structs are flattened, known scalars are replaced by their representation, zero-sized parts are dropped, and each unknown part stays as one element (@tbl:repr-normal).
+Here the compiler must show that `Wrap<T>` and `T` have the same representation while `T` is unknown. For a type with several parts this cannot be stated as one impl: the representation of `Pair<T, u32>` is not `(T::Repr, i32)`, because `T::Repr` may itself be a tuple, and WX has no type for the concatenation of two tuples. Instead, the compiler rewrites a representation into a *normal form* that is flattened as far as it is known: nested parts are flattened, known scalars are replaced by their representation, zero-sized parts are dropped, and each unknown part stays as one element (@tbl:repr-normal).
 
 #figure(
   booktable(
@@ -208,7 +198,7 @@ For a type with several parts, such an impl cannot be written. The representatio
   caption: [Normal forms of `Repr`. Without an unknown part the result is the flat tuple. With one, the projection is kept over a flattened type.],
 ) <tbl:repr-normal>
 
-Two representations are then compared like any two types: both are normalized and the results are compared. No other part of the compiler needs to know about `StackValue`. `unwrap` is accepted, and so is a `transmute` between `Pair<T, u32>` and `(T, u32)`. Once `T` is known, the rest reduces like any other type: with `T = (u8, u8)`, `<((u8, u8), i32) as StackValue>::Repr` is `(i32, i32, i32)`. Each rewriting step keeps the flattened result the same for every possible `T`, so equal normal forms always mean equal representations. The opposite is not always true: `(T, U)` and `(U, T)` are not equal in generic code, although they are equal when `T` and `U` are the same type.
+Two representations are then compared like any two types, by comparing their normal forms. `unwrap` is accepted, and so is a `transmute` between `Pair<T, u32>` and `(T, u32)`. The converse does not hold: `(T, U)` and `(U, T)` are different in generic code, although they are equal when `T` and `U` are the same type.
 
 == Comparison <sec:stack-comparison>
 
@@ -238,7 +228,7 @@ Two representations are then compared like any two types: both are normalized an
 
 The rows were checked by compiling a small program in each language with the toolchains of the study. A `static` struct in Rust and a global struct in Zig live in linear memory, and the only WebAssembly global in the module is the stack pointer (or, for an exported Rust `static`, a constant that holds its address). AssemblyScript exports a global that holds the address of the object. A `transmute` in Rust #fnote("rust-transmute") and a `@bitCast` in Zig #fnote("zig-bitcast") between types of different sizes are rejected at compile time, and AssemblyScript's `reinterpret` #fnote("as-globals") accepts only an integer and a float of the same width.
 
-The second column follows from the first. Rust and Zig keep values in linear memory, where any value can be read back as bytes, so equal size is the only thing they can check. WX reinterprets values on the stack, so it checks the actual list of WebAssembly values, and it also rejects a reordering that keeps the size.
+These operations reinterpret values at different levels. Rust's `transmute` and Zig's `@bitCast` require equal sizes. WX's `transmute` requires the same sequence of WebAssembly stack types, so equal byte size alone is insufficient. Like Rust's `transmute`, it leaves value validity to the caller. Its representation bound defines when stack reinterpretation needs no instructions; safer conversions can be built on top of the primitive (@sec:transmute).
 
 // Status (2026-10-30, `tir-refactor` at `186ba25`): StackValue, StackScalar, transmute and the Global bound are
 // implemented in the type checker and tested. Codegen is disabled on the branch, so nothing using them has been

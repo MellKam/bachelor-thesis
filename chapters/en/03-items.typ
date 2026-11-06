@@ -3,7 +3,7 @@
 
 = Items: the Platform's Entities as Types <ch:items>
 
-@ch:background showed that the entities of a WebAssembly module (memories, globals, tables and tags) are the part of the platform that languages expose least (@fig:matrix). This chapter describes how WX represents them. The idea is simple: every entity is an *item* of the language, every item has its own type, and a trait that the compiler implements says what the item can do. The next three chapters reuse this idea for values, calls and instructions.
+@ch:background identified gaps in how languages expose module entities such as memories, globals, tables and tags (@fig:matrix). WX represents each entity as an *item* with a distinct type. Compiler-provided trait implementations describe the operations available on that item. The next three chapters develop the related mechanisms for values, calls and instructions.
 
 == Reading WX <sec:reading-wx>
 
@@ -44,9 +44,9 @@ When the module is instantiated, the host supplies the global `step` and an impl
 
 Globals are accessed through `get` and `set` to distinguish access to module state from ordinary local computation. The traits behind these methods are explained in @sec:global-access.
 
-== Entities are numbers in WebAssembly <sec:identity-shape>
+== Entity references are indices in WebAssembly <sec:identity-shape>
 
-Inside a WebAssembly module, an entity is a number. A function is referred to by its index in the function index space, and imported functions come before defined ones #fnote("wasm-spec-modules"). So adding an import changes the index of every defined function:
+WebAssembly instructions refer to module entities by indices in separate index spaces. In the function index space, imported functions come before defined ones #fnote("wasm-spec-modules"). Adding a function import therefore changes the index of every defined function:
 
 ```wat
 (module
@@ -110,7 +110,7 @@ Rust has a similar idea. Every Rust function has its own zero-sized type, so two
 
 == Pointers carry their memory <sec:pointers-memory>
 
-A linear memory is a growable array of bytes, measured in 64 KiB pages #fnote("wasm-spec-modules"). The `u32` in `memory heap: u32;` is its address type, not its current size. WX also accepts `memory heap: u64;` for Memory64. These address types describe potential address spaces of 4 GiB and 16 EiB respectively; neither size is allocated by the declaration alone.
+A linear memory is a growable array of bytes, measured in 64 KiB pages #fnote("wasm-spec-modules"). The `u32` in `memory heap: u32;` is its address type, not its current size. WX also accepts `memory heap: u64;` for Memory64.
 
 With the multi-memory extension, a module can have several linear memories #fnote("wasm-multi-memory"). Each memory has its own addresses, and every load and store instruction names its memory as an immediate. A pointer type that only says what it points to, like `*u8`, is not enough: two pointers of that type can point into different memories, and the compiler must know which memory to use for each load.
 
@@ -131,7 +131,7 @@ WX puts the memory in the pointer's type instead. `heap::*u8` is a pointer to a 
       //     expected `heap::&u32`, found `io::&u32`
   }
   ```,
-  caption: [A pointer into one memory used where a pointer into another is expected. The diagnostic is shortened from the compiler's output. Compiler at `186ba25`, branch `tir-refactor`, 2026-10-30.],
+  caption: [A pointer into one memory used where a pointer into another is expected. The diagnostic is shortened from the compiler's output.],
 ) <fig:cross-memory>
 
 There is no default memory. A pointer type without a memory is an error, even in a module with only one memory, and the compiler's message states the rule (@fig:untagged-pointer).
@@ -144,7 +144,7 @@ There is no default memory. A pointer type without a memory is an error, even in
   //           ^^^^ error[E2038]: missing memory in pointer type
   //           help: write the memory before the pointer, like `heap::*u32`
   ```,
-  caption: [A pointer type without a memory. The diagnostic is the compiler's, reformatted as comments. Compiler on branch `tir-refactor`, 2026-11-05.],
+  caption: [A pointer type without a memory. The diagnostic is the compiler's, reformatted as comments.],
 ) <fig:untagged-pointer>
 
 A pointer type has three parts (@fig:pointer-anatomy). The middle part, `*` or `&`, is the pointer's *ownership*. A `*` pointer is owned and mutable: the program may read and write through it. A `&` pointer is shared and read-only.
@@ -255,23 +255,6 @@ impl Memory for heap {
 
 `Size` is an *associated type*: each type that implements `Memory` chooses its own. For `heap` it is `u32`, and for `memory big: u64;` it would be `u64`. Generic code refers to it as `M::Size`, so an allocator can take a length of type `M::Size` and be correct for a 32-bit and a 64-bit memory alike.
 
-Copying bytes is also how string code works. @lst:append appends a string literal to a buffer. The literal is placed in a 32-bit memory, the buffer lives in a 64-bit one, and `memory_copy` needs both pointers to belong to memories with the same address type. The compiler therefore rejects the call. Whether `Size` can be anything at all is a separate question, answered in @sec:typesets.
-
-#figure(
-  ```wx
-  memory small: u32;
-  memory big: u64;
-
-  func append(buf: big::*u8, text: small::&[u8]) {
-      memory_copy(buf, text[0].&, text.len());
-      // error[E2112]: type mismatch resolving `<big as Memory>::Size == u32`
-      // expected `u32`, found `u64`
-      // required by this equality in `memory_copy`: `DstMem: Memory where { Size = Size }`
-  }
-  ```,
-  caption: [Appending a string from a 32-bit memory to a buffer in a 64-bit memory. The error is the compiler's output for this code.],
-) <lst:append>
-
 === Typesets <sec:typesets>
 
 So far, `Size` can be any type. But a WebAssembly memory has only two address types, 32 and 64 bits. Generic code should be able to rely on that, for example to add two addresses or compare them, and nothing in `type Size;` guarantees it.
@@ -312,22 +295,7 @@ WX therefore adds a *typeset*: a closed set of types, listed in its declaration 
 
 A typeset is used in bounds like a trait, but it cannot be implemented: its members are listed only in its declaration. It can also require traits, so every member of `PointerSize` also has addition, comparison and the other operations that generic code needs on an address.
 
-The typeset is used in the bounds of `memory_copy`, which the standard library declares as follows:
-
-#align(right)[#text(size: 0.8em)[`std/main.wx`]]
-
-```wx
-/// Can copy across two different memories as long as they have the same pointer size.
-pub package func memory_copy<
-    Size: PointerSize,
-    SrcMem: Memory where { Size = Size },
-    DstMem: Memory where { Size = Size },
->(dst: DstMem::*u8, src: SrcMem::&u8, len: Size);
-```
-
-`Size` is one type, chosen from the typeset, and each memory's `Size` must equal it. So two memories with different address types cannot be used together.
-
-Now `Size` can be restricted, and `Memory` can offer operations in terms of it. The trait below is shortened:
+The `Memory` trait uses this typeset to restrict `Size` and define operations in terms of it. The trait below is shortened:
 
 ```wx
 pub trait Memory {
@@ -409,7 +377,7 @@ export sum as "add";
 export { product, sum as "plus" };
 ```
 
-The name after `as` is the external name. Inside the program, an item has a name that follows wx's identifier rules, but a WebAssembly export name is any string. A host may expect `"memory"`, or a name such as `"get-name"` that is not a valid identifier. An alias lets the source keep its own name while the module presents the name the host expects. Here `sum` is exported twice, once as `add` and once as `plus`. An entry without `as` keeps its own name.
+The name after `as` is the external name. Inside the program, an item has a name that follows wx's identifier rules, but a WebAssembly export name is any string. A host may expect a name that is not a valid identifier. An alias lets the source keep its own name while the module presents the name the host expects. Here `sum` is exported twice, once as `add` and once as `plus`. An entry without `as` keeps its own name.
 
 The compiler assigns all indices at code generation, imports first. A program never writes or computes an index, so adding an import never changes existing code.
 

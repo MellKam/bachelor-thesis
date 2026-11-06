@@ -3,7 +3,7 @@
 
 = Function Bodies: Expressions on the Stack <ch:bodies>
 
-The previous chapters gave WebAssembly's entities, values, calls and instructions a place in the type system. What is left is the code that connects them: the body of a function. WebAssembly is an operand-stack machine with structured control flow: instructions take their operands from the stack, and loops and conditionals are nested constructs rather than jumps. This chapter describes how WX bodies are written so that each of these has a counterpart in the source, and what the compiler checks at each one. Most of the forms are familiar from Rust, which WX's syntax follows, so the chapter spends its words on what they mean in WebAssembly.
+Function bodies connect the entities, values, calls and instructions described in the preceding chapters. WebAssembly is an operand-stack machine with structured control flow: instructions consume stack operands, and loops and conditionals are nested constructs. WX follows Rust's expression-oriented syntax. The discussion focuses on its WebAssembly representation and on rules that differ from Rust.
 
 == A body is an expression <sec:body-stack-machine>
 
@@ -26,7 +26,7 @@ func area(w: u32, h: u32) -> u32 {
 }
 ```
 
-This compiles to the sequence above, with no `return` and no variable. What an expression leaves on the stack is decided by its type: @sec:stack-repr defined `StackValue::Repr` as the list of WebAssembly values a type is held as, so a `u32` leaves one `i32`, `()` leaves nothing, and a struct leaves one value for each field. WebAssembly validates that a function ends with exactly the values of its result type, and WX checks the same thing as a type equality between the body's last expression and the declared result.
+This compiles to the sequence above, with no `return` and no variable. An expression's type determines its stack representation through `StackValue::Repr` (@sec:stack-repr): a `u32` leaves one `i32`, `()` leaves nothing, and a struct leaves the flattened representations of its fields. WebAssembly validates the function's result stack against its declared result types. WX checks that the body's final expression has the declared WX result type, which also determines that stack representation.
 
 == Blocks, statements and multiple values <sec:body-blocks>
 

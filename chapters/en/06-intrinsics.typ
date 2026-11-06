@@ -3,7 +3,7 @@
 
 = Intrinsics: Instructions as Functions <ch:intrinsics>
 
-The previous chapters gave WebAssembly's entities, values and calls a place in the type system. This chapter is about instructions. @sec:synthesis asked whether a language can give typed access to the platform's instructions, so that the compiler checks every use. WX's answer is plain: an instruction is a function in the standard library, with a signature and no body, and a program calls it like any other function.
+WX exposes selected WebAssembly instructions as standard-library functions with typed signatures and no bodies. Calls are checked through the same mechanisms as ordinary functions. This chapter explains these intrinsics and their library wrappers, then distinguishes them from memory-access operations that use dedicated syntax.
 
 == Instructions in the standard library <sec:intrinsic-functions>
 
@@ -41,18 +41,6 @@ pub func memory_fill<Mem: Memory>(dst: Mem::*u8, val: u8, len: Mem::Size);
 
 The argument `mem` is zero-sized. It takes no space on the stack, and the compiler reads which memory it is from its type and writes the index into the instruction. The other parameters are typed by the same memory: `delta` is a `u32` for a 32-bit memory and a `u64` for a 64-bit one. `memory.grow` returns the old size, or $-1$ if the memory cannot grow, so its result is the signed type of the same width (`Size::Signed`, `i32` or `i64`). No intrinsic takes an integer where an entity is expected, so an index never appears in a program as a value. This completes the goal of @sec:identity-shape: a program never uses an entity's index as an integer.
 
-When an instruction uses two entities, the signature says how they must relate. `memory.copy` copies between two memories, which must have the same address type:
-
-```wx
-pub func memory_copy<
-    Size: PointerSize,
-    SrcMem: Memory where { Size = Size },
-    DstMem: Memory where { Size = Size },
->(dst: DstMem::*u8, src: SrcMem::&u8, len: Size);
-```
-
-One declaration covers a copy inside one memory and between any two memories, and the memories come from the pointer types. A copy from a 32-bit into a 64-bit memory is rejected with the normal error for an unmet bound. Chapter 3 shows that error on a real program (@lst:append).
-
 == From instruction to method <sec:intrinsic-layers>
 
 Most programs never call these functions directly. The library wraps them in default methods of the traits that the compiler implements for each item (@sec:why-traits):
@@ -73,7 +61,7 @@ Operators follow the same layers: an operator is a call of a trait method, as @s
 
 == Operators are trait calls <sec:operators>
 
-An operator is not built into the language. `a + b` is a call of the `Add` trait's method `add`, and each operator has its own trait in the standard library: `Sub`, `Mul` and the rest of the arithmetic traits, `PartialEq` for `==` and `PartialOrd` for `<`. `Add` is declared as:
+Arithmetic and comparison operators dispatch through standard-library traits. `a + b` calls the `Add` trait's method `add`; other traits include `Sub`, `Mul`, `PartialEq` for `==` and `PartialOrd` for `<`. `Add` is declared as:
 
 ```wx
 pub trait Add: StackValue {

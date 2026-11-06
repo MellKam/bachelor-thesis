@@ -42,7 +42,7 @@ WX takes its rule from the ML family of languages: a function takes exactly one 
   caption: [The parameter type of a function, by its written parameter list.],
 ) <tbl:parameter-type>
 
-For this to work, a tuple of one element cannot exist. If `(A,)` were a type of its own, a function with one parameter would have two possible argument types. So in WX, `(T)`, `(T,)` and `T` are the same type. This is different from Rust, where `(T,)` is a separate type. It costs little, because a one-element tuple holds nothing more than its element.
+WX identifies a one-element tuple with its element: `(T)`, `(T,)` and `T` are the same type. This keeps the argument type of `func(T)` equal to `T` and lets the same calling rule cover zero, one, or several parameters. Rust instead distinguishes `(T,)` from `T`.
 
 With one value per function, the trait for anything callable needs only two associated types:
 
@@ -112,7 +112,7 @@ blit({ len, src: image, dst: buffer })    // the same call; `len` means `len: le
 Point({ x: 1, y: 2 })
 ```
 
-This helps where several parameters have the same type and are easy to swap, like `dst` and `src` above. The rules are simple. A call is either positional or named, never both. The names belong to the declaration and are never part of a type, so a function reference `func(A, B) -> R`, which has no names, is called by position (@fig:named-reference). A call by name compiles to the same code as the positional call: no struct is created, and nothing changes in the WebAssembly signature.
+Names make argument roles visible, such as the destination and source in `blit`. A call is either positional or named, never both. Names belong to the declaration and are never part of a type, so a function reference `func(A, B) -> R`, which has no names, is called by position (@fig:named-reference). Named arguments create no struct and do not change the WebAssembly signature.
 
 #figure(
   kind: raw,
@@ -126,7 +126,7 @@ This helps where several parameters have the same type and are easy to swap, lik
          │                                               ^^^^^^^^^^^^^^^^^
     ```
   ],
-  caption: [A call by name needs a declaration. A function reference has only a type, and a type has no parameter names. The test appends its source to the standard library, hence the line numbers. Compiler at `186ba25`, branch `tir-refactor`, 2026-10-30.],
+  caption: [A call by name needs a declaration. A function reference has only a type, and a type has no parameter names. The test appends its source to the standard library, hence the line numbers.],
 ) <fig:named-reference>
 
 Named arguments also separate the order of evaluation from the order of parameters. Expressions are evaluated from left to right, as written at the call site, even when the names appear in a different order from the declaration. The resulting values are then arranged into parameter order. For example:
@@ -176,7 +176,7 @@ Treating `func(A, B)` and `func((A, B))` as one type is only correct if both com
   caption: [The WebAssembly type of a WX function is the stack representation of its `Args` and `Result`.],
 ) <tbl:call-abi>
 
-A function that returns several values uses multi-value, with no hidden pointer for the result. A struct passed or returned by value is flattened into its fields in declaration order. This order follows `StackValue::Repr` (Section 4.3), not the struct's layout in linear memory. For example, `func(u8, u64)` becomes `(param i32 i64)`, regardless of how these types would be arranged in memory.
+A function that returns several values uses multi-value, with no hidden pointer for the result. A struct passed or returned by value is flattened into its fields in declaration order, following `StackValue::Repr` (@sec:stack-repr). Its layout in linear memory is independent of this order. For example, `func(u8, u64)` becomes `(param i32 i64)`, regardless of how these types would be arranged in memory.
 
 For imported and exported functions, this representation determines the exact sequence of WebAssembly parameter and result types exposed to the host. It remains stable regardless of memory layout optimizations or the order of named arguments at a call site. Internal functions may undergo transformations such as inlining or removal of unused parameters, provided their observable behavior is preserved. Functions at the module boundary, however, must retain their declared signatures. This lets WX optimize its internal code without changing the interface seen by the host.
 

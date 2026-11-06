@@ -3,7 +3,7 @@
 
 = Programs in a Host: from the Browser to WASI <ch:hosts>
 
-A WebAssembly module computes and nothing else. It cannot print, read a file or learn the time, because the core specification defines no such instruction. Everything that reaches outside the module is an import, supplied by the host that instantiates it (@sec:sandbox). This chapter writes two complete programs against two hosts. The first prints in a browser, with an import that the page defines. The second prints through WASI, the standard set of imports for a program that runs outside the browser. Along the way it shows what the earlier chapters bought in practice: imports as items (@sec:items-imports), pointers that name their memory (@sec:pointers-memory), and the calling convention of a boundary function (@sec:calls-abi).
+Core WebAssembly provides no instructions for printing, reading files or obtaining the time. A module accesses these services through imports supplied by its host (@sec:sandbox). The two programs in this chapter print through a browser-defined function and through WASI Preview 1. They combine typed imports (@sec:items-imports), memory-specific pointers (@sec:pointers-memory), and explicit boundary signatures (@sec:calls-abi).
 
 == Hello, world in a browser <sec:hello-browser>
 
@@ -62,7 +62,7 @@ The names are labels from the text format, here chosen to match the source. In t
   caption: [The host side of @lst:hello-browser: `env.print` receives the pair `(offset, length)` and decodes the bytes from the exported memory.],
 ) <lst:hello-host>
 
-Two things in this example are worth stating because the language makes them explicit. The import is a declaration with a type, so a host function that disagrees with the module's expectation (a number where a pointer is expected, say) is a visible difference between two signatures, not a crash in a call. And the module's memory is a named item that the program exports on purpose: leaving out `text as "memory"` still compiles, and the module then has no way to show anything, which is correct.
+The import declaration checks calls within WX and fixes the module's WebAssembly import type. The JavaScript host must still interpret the offset and length against the agreed memory; WX does not check that host-side convention. Exporting `text` explicitly gives the page access to the bytes. Leaving out `text as "memory"` still compiles, but the host code shown here can no longer read the message.
 
 == What WASI is <sec:wasi>
 

@@ -215,6 +215,15 @@ click1995:
   volume: "30"
   number: "3"
   pages: "35–49"
+pratt1973:
+  type: collection
+  authors: [{given: "V. R.", family: Pratt}]
+  title: Top Down Operator Precedence
+  in: Conference Record of the First Symposium on Principles of Programming Languages (POPL)
+  publisher: ACM Press
+  place: Boston
+  year: "1973"
+  pages: "41–51"
 wadler2003:
   type: collection
   authors: [{given: "P.", family: Wadler}]
@@ -251,17 +260,8 @@ dunfield2021:
   pages: "1–38"
 milner1997:
   type: book
-  verify: true
   authors: [{given: "R.", family: Milner}, {given: "M.", family: Tofte}, {given: "R.", family: Harper}, {given: "D.", family: MacQueen}]
   title: The Definition of Standard ML (Revised)
   publisher: MIT Press
   place: Cambridge, MA
   year: "1997"
-aho2006:
-  type: book
-  verify: true
-  authors: [{given: "A. V.", family: Aho}, {given: "M. S.", family: Lam}, {given: "R.", family: Sethi}, {given: "J. D.", family: Ullman}]
-  title: "Compilers: Principles, Techniques, and Tools"
-  publisher: Pearson Education
-  place: Boston
-  year: "2006"

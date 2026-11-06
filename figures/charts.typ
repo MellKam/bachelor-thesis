@@ -440,15 +440,10 @@
         ],
       ))
     }
-    rows.push(table.cell(align: left + horizon, inset: (x: 6pt, y: 0pt), stack(
-      dir: ltr,
-      spacing: 5pt,
-      bar-track(s.integration, c-integration, 2.1cm),
-      bar-label(fmt2(s.integration)),
-    )))
+    rows.push(table.cell(align: center + horizon, inset: (x: 6pt, y: 0pt), bar-label(fmt2(s.integration))))
   }
   table(
-    columns: (2.9cm,) + (1.95cm,) * icrit.len() + (3.2cm,),
+    columns: (2.9cm,) + (2.2cm,) * icrit.len() + (2.1cm,),
     rows: (auto,) + (0.58cm,) * langs.len(),
     inset: (x: 3pt, y: 3pt),
     stroke: grid-stroke,
@@ -457,10 +452,10 @@
         size: 10pt,
         weight: "bold",
       )[Language]),
-      ..icrit.map(c => table.cell(align: center + horizon, fill: header-fill, inset: (x: 2pt, y: 4pt), text(
-        size: 10pt,
+      ..icrit.map(c => table.cell(align: center + horizon, fill: header-fill, inset: (x: 1pt, y: 4pt), text(
+        size: 9pt,
         weight: "bold",
-      )[#icrit-head(c) \ #text(size: 10pt, weight: "regular")[weight #criterion(c).weight]])),
+      )[#icrit-head(c) \ #text(size: 9pt, weight: "regular")[weight #criterion(c).weight]])),
       table.cell(align: center + horizon, fill: header-fill, inset: (x: 4pt, y: 4pt), text(
         size: 10pt,
         weight: "bold",
@@ -581,17 +576,17 @@
   let versions = ("1.0", "2.0", "3.0")
   let rows = ()
   for v in versions {
-    rows.push(table.cell(colspan: 3, align: left + horizon, fill: section-fill, inset: (x: 5pt, y: 3pt), text(
+    rows.push(table.cell(colspan: 3, align: left + horizon, fill: section-fill, inset: (x: 5pt, y: 2pt), text(
       size: 10pt,
       weight: "bold",
     )[Specification #v]))
     for f in feature-ids.filter(f => rating.features.find(x => x.id == f).since == v) {
-      rows.push(table.cell(align: left + horizon, inset: (x: 5pt, y: 3.5pt), text(size: 10pt)[#text(fill: muted)[#f] #h(
+      rows.push(table.cell(align: left + horizon, inset: (x: 5pt, y: 2.5pt), text(size: 10pt)[#text(fill: muted)[#f] #h(
           0.35em,
         ) #short-names.at(f)]))
       rows.push(matrix-cell(cell("wx", f)))
       let n = wx-notes.at(f)
-      rows.push(table.cell(align: left + horizon, inset: (x: 5pt, y: 3.5pt), if n == none { [] } else {
+      rows.push(table.cell(align: left + horizon, inset: (x: 5pt, y: 2.5pt), if n == none { [] } else {
         text(size: 10pt)[#wx-status.at(n.at(0))]
         if n.at(1) != "" { text(size: 10pt, fill: muted)[ #sym.dash.en #n.at(1)] }
       }))
@@ -599,8 +594,8 @@
   }
   set par(justify: false, leading: 0.45em)
   table(
-    columns: (4.8cm, 1.1cm, 8cm),
-    inset: (x: 3pt, y: 4pt),
+    columns: (5.4cm, 1.1cm, 1fr),
+    inset: (x: 3pt, y: 3pt),
     stroke: grid-stroke,
     table.header(
       table.cell(align: left + horizon, fill: header-fill, inset: (x: 5pt, y: 4pt), text(
