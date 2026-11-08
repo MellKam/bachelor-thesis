@@ -109,9 +109,9 @@ zig-wasm-builtins:
 wx-study:
   type: web
   authors: [{given: "A.", family: Melnyk}]
-  title: "WebAssembly exposure study: probes, checker and results"
-  url: https://github.com/MellKam/bachelor-thesis/tree/main/wasm-exposure-study
-  accessed: "2026-11-06"
+  title: "WebAssembly exposure study: probes, checker and results, commit 81d6a1d"
+  url: https://github.com/MellKam/bachelor-thesis/tree/81d6a1d12a712a9a016521e1dd276b6c03151cdc/wasm-exposure-study
+  accessed: "2026-11-08"
 wx-compiler:
   type: web
   authors: [{given: "A.", family: Melnyk}]

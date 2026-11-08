@@ -3,7 +3,7 @@
 #import "../../figures/charts-pl.typ" as ch
 #import "helpers.typ": nr
 
-// Where the full study lives. Pin this to a tagged commit before submission.
+// Where the full study lives: pinned to commit 81d6a1d of this repository (refs.yml, wx-study).
 #let study-url = "https://github.com/MellKam/bachelor-thesis/tree/main/wasm-exposure-study"
 
 = Podstawy i prace pokrewne <ch:background>
