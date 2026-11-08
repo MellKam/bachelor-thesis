@@ -122,7 +122,7 @@ Eight languages are compared along two axes. *Exposure* asks which WebAssembly f
 
 The memory-model column distinguishes garbage collection implemented by a language runtime in linear memory from WebAssembly's own GC features. The route column records the compiler infrastructure used to produce the module.
 
-*How it was verified.* Each test uses a small program based on the language's documentation and built with a toolchain pinned in a container. A checker inspects the compiled `.wasm` or runs it under V8, Wasmtime, or Node. The results are a snapshot. The programs, checker, and per-cell evidence are available in the project repository #fnote("wx-study"). #todo[pin commit hash or tag]
+*How it was verified.* Each test uses a small program based on the language's documentation and built with a toolchain pinned in a container. A checker inspects the compiled `.wasm` or runs it under V8, Wasmtime, or Node. The results are a snapshot. The programs, checker, and per-cell evidence are available in the project repository #fnote("wx-study").
 
 == Exposure <sec:exposure>
 

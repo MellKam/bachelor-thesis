@@ -123,7 +123,7 @@ Osiem języków porównano wzdłuż dwóch osi. *Udostępnienie* dotyczy tego, k
 
 Kolumna modelu pamięci odróżnia odśmiecanie pamięci realizowane w pamięci liniowej przez środowisko uruchomieniowe języka od własnych mechanizmów GC w WebAssembly. Kolumna drogi podaje infrastrukturę kompilatora użytą do wytworzenia modułu.
 
-*Jak to zweryfikowano.* Każdy test to mały program oparty na dokumentacji języka i zbudowany toolchainem przypiętym w kontenerze. Program sprawdzający analizuje skompilowany plik `.wasm` albo uruchamia go w V8, Wasmtime lub Node. Wyniki są migawką. Programy, program sprawdzający i dowody dla poszczególnych komórek są dostępne w repozytorium projektu #fnote("wx-study"). Wersja kompilatora WX, z którą wykonano przykłady i testy, to commit `1612da8` gałęzi `tir-refactor` #fnote("wx-compiler"). #todo[przypiąć repozytorium badania do commita po wypchnięciu zmian]
+*Jak to zweryfikowano.* Każdy test to mały program oparty na dokumentacji języka i zbudowany toolchainem przypiętym w kontenerze. Program sprawdzający analizuje skompilowany plik `.wasm` albo uruchamia go w V8, Wasmtime lub Node. Wyniki są migawką. Programy, program sprawdzający i dowody dla poszczególnych komórek są dostępne w repozytorium projektu #fnote("wx-study"). Wersja kompilatora WX, z którą wykonano przykłady i testy, to commit `1612da8` gałęzi `tir-refactor` #fnote("wx-compiler").
 
 == Udostępnienie cech platformy <sec:exposure>
 
