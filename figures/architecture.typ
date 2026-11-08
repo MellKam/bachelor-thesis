@@ -100,19 +100,21 @@
   ]
 }
 
-// Lines of live Rust, without comments and blank lines (cloc, 2026-11-06); dead code and the
-// suites of the earlier pipeline are not counted, tests written inside source files are.
+// Lines of live Rust, without comments and blank lines (cloc, 2026-11-08, commit 1612da8); only files reached from
+// the crate root through `mod` declarations are counted, so the old pipeline kept for reference is not;
+// items under #[cfg(test)] and test files are tests, the rest is code.
 // (label, code, tests)
 #let sizes = (
-  ("Front end (vfs, ast, diagnostics)", 7153, 4503),
-  ("Checker (tir)", 31985, 25282),
+  ("Front end (vfs, ast, diagnostics)", 7132, 4524),
+  ("Checker (tir)", 32396, 24871),
   ("Lowering (tir::lower)", 4230, 5947),
   ("MIR and inlining (mir)", 1411, 472),
   ("Optimizer (opt)", 5650, 140),
-  ("Encoding (codegen, wasm)", 2153, 0),
+  ("Encoding (codegen, wasm)", 2138, 15),
+  ("Other (backend, testing)", 92, 1215),
 )
 #let tools = (
-  ("Formatter (wx-fmt)", 3142, 2886),
+  ("Formatter (wx-fmt)", 3140, 2888),
   ("Command line (wx-cli)", 426, 0),
 )
 
@@ -129,7 +131,7 @@
 #let size-figure() = {
   set text(font: sans, size: 10pt)
   let width = 3.3cm
-  let peak = 32000
+  let peak = 33000
   let pos(v) = calc.min(1, v / peak) * width
   let pad = (x: 7pt, y: 0pt)
   // a number always sits in the same right-aligned slot, so the columns read as columns
@@ -152,7 +154,7 @@
   let total-label(t) = table.cell(fill: ch.section-fill, align: left + horizon, inset: pad, text(size: 10pt, weight: "bold", t))
   let total-number(v) = table.cell(fill: ch.section-fill, align: left + horizon, inset: pad,
     stack(dir: ltr, spacing: 6pt, box(width: width), number(v, weight: "bold", size: 10pt)))
-  let rows = bars(sizes) + (total-label[Compiler, total], total-number(52678), total-number(37555)) + bars(tools)
+  let rows = bars(sizes) + (total-label[Compiler, total], total-number(sizes.map(r => r.at(1)).sum()), total-number(sizes.map(r => r.at(2)).sum())) + bars(tools)
   set par(justify: false, leading: 0.4em)
   let head(t) = table.cell(align: center + horizon, fill: ch.header-fill, inset: (y: 4pt), text(size: 10pt, weight: "bold", t))
   table(
@@ -165,6 +167,6 @@
   )
   v(0.5em)
   align(center, text(size: 10pt, fill: ch.muted)[
-    lines of live Rust without comments and blank lines · axis: linear, 0 to 32 000 lines
+    lines of live Rust without comments and blank lines · axis: linear, 0 to 33 000 lines
   ])
 }

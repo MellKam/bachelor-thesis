@@ -135,7 +135,7 @@ Sprawdzono trzydzieści cech z opublikowanych wersji specyfikacji (1.0, 2.0 i 3.
   booktable(
     columns: (auto, auto, auto, 1fr),
     align: (left, center, center, left),
-    table.header([Wynik], [W kodzie źródłowym], [Sprawdzane przez kompilator], [Znaczenie]),
+    table.header([Wynik], [W kodzie źródłowym], [Sprawdzane typami języka], [Znaczenie]),
     table.hline(stroke: 0.5pt),
     [Natywna],
     [tak],
@@ -163,7 +163,28 @@ Sprawdzono trzydzieści cech z opublikowanych wersji specyfikacji (1.0, 2.0 i 3.
 
 === Jak jest oceniana <sec:exposure-rating>
 
-Dowodem są zliczenia wyników. Podsumowuje je jedna ocena od 0 do 1 dla każdego języka. Każda cecha liczy się w całości, częściowo albo wcale; jest dyskontowana za każdą przeszkodę na drodze (opcję budowania, ręcznie pisany asembler, eksperymentalny lub nightly kompilator, środowisko uruchomieniowe dołączane do każdego modułu, ograniczonego hosta albo inny backend); liczy się też bardziej, jeśli należy do rdzenia modułu, z którego korzysta każdy program. Dyskonta i wagi są wyborem autora i wymieniono je w repozytorium. Mają z grubsza uporządkować języki, a nie mierzyć je z dokładnością do drugiego miejsca po przecinku.
+Dowodem są zliczenia wyników. Podsumowuje je jedna ocena od 0 do 1 dla każdego języka. Cecha osiągnięta w pełni daje 1, osiągnięta częściowo 0,5, a nieosiągnięta 0. Ten wynik mnoży się przez współczynnik każdej przeszkody na drodze do cechy (tabela #nr(<tbl:obstacles>)), więc cecha dostępna tylko przez ręcznie pisany asembler jest warta mniej niż natywna konstrukcja języka. Ocena języka to średnia ważona po trzydziestu cechach: waga 3 dla rdzenia modułu, z którego korzysta każdy program, 2 dla popularnych rozszerzeń i 1 dla wyspecjalizowanych.
+
+#figure(
+  booktable(
+    columns: (1fr, auto),
+    align: (left, center),
+    table.header([Przeszkoda], [Współczynnik]),
+    table.hline(stroke: 0.5pt),
+    [Konfiguracja budowania], [0,90],
+    [Eksperymentalny interfejs], [0,85],
+    [Niestabilny kompilator], [0,80],
+    [Ograniczenie do wybranych hostów], [0,80],
+    [Środowisko uruchomieniowe dołączane do modułu], [0,70],
+    [Asembler wbudowany], [0,50],
+    [Inny backend], [0,35],
+  ),
+  caption: [Przeszkody w dotarciu do cechy i ich współczynniki, od najmniej do najbardziej dotkliwej.],
+) <tbl:obstacles>
+
+Współczynniki i wagi są wyborem autora. Kolejność przeszkód jest uzasadniona w badaniu, a same wartości odczytano z tej kolejności. Mają z grubsza uporządkować języki, a nie mierzyć je z dokładnością do drugiego miejsca po przecinku.
+
+*Wrażliwość rankingu.* Ranking policzono 2000 razy, za każdym razem z losowo zmienionymi współczynnikami (generator miał ustalone ziarno). Zasięg częściowy zmieniano o najwyżej ±0,2. Szkodę każdej przeszkody, czyli jeden minus jej współczynnik, mnożono przez wspólny czynnik z przedziału od 0,5 do 1,5 oraz przez własny czynnik, który różnił się od 1 o najwyżej 15%, przy zachowaniu kolejności przeszkód. Wagi cech mnożono przez czynnik od 0,5 do 2. Zakres pozycji języka to jego najlepsza i najgorsza pozycja w tych losowaniach, a kolejność dwóch języków uznano za trwałą, jeśli zachodziła w co najmniej 95% z nich. Wynik pokazuje, jak wskaźnik autora zależy od przyjętych współczynników; nie jest przedziałem ufności dla jakości języka.
 
 === Wyniki <sec:results>
 
@@ -181,7 +202,7 @@ Dla #ch.construct-in-none.len() z #ch.n-features cech żaden język nie oferuje 
 *Pokrycie różni się między językami.* Wykres #nr(<fig:reach>) zlicza, jak każdy język dociera do trzydziestu testowanych cech. Nawet najszerszy z nich, który osiąga #ch.broadest.reached z #ch.n-features, aż #(ch.broadest.reached - ch.broadest.counts.reachedVia.language) z nich osiąga wyłącznie przez konfigurację lub asembler.
 
 #figure(
-  ch.reach-figure(),
+  image("../../figures/build/reach-pl.png", width: 100%, alt: "Wykres słupkowy: dla każdego języka liczba spośród 30 cech osiągniętych jako konstrukcja lub adnotacja, przez konfigurację budowania, jako asembler wbudowany albo wcale. Rust: 11, 5, 8, 6. Zig: 8, 5, 10, 7. C/C++: 13, 6, 5, 6. Swift: 9, 5, 0, 16. MoonBit: 12, 2, 2, 14. AssemblyScript: 12, 3, 0, 15. TinyGo: 5, 5, 0, 20. Kotlin: 11, 0, 0, 19."),
   kind: "chart",
   caption: [Liczba spośród #ch.n-features cech, do których każdy język dociera jako konstrukcja języka lub adnotacja, przez konfigurację budowania, jako asembler wbudowany albo wcale.],
 ) <fig:reach>
@@ -197,16 +218,16 @@ Dla #ch.construct-in-none.len() z #ch.n-features cech żaden język nie oferuje 
 Wykres #nr(<fig:exposure>) podsumowuje pokrycie i przeszkody w dotarciu do poszczególnych cech. Zakresy pozycji pokazują, jak zmienia się uporządkowanie, gdy zmieniają się współczynniki oceny.
 
 #figure(
-  ch.exposure-figure(),
+  image("../../figures/build/exposure-pl.png", width: 100%, alt: "Wykres słupkowy wskaźnika udostępnienia od 0 do 1 z zakresem pozycji w rankingu: C/C++ 0,71 (pozycja 1), Rust 0,64 (2–3), Zig 0,59 (2–4), AssemblyScript 0,57 (2–4), Swift 0,43 (5–8), MoonBit 0,39 (5–9), TinyGo 0,34 (6–9), Kotlin 0,32 (5–9)."),
   kind: "chart",
-  caption: [Wskaźnik udostępnienia (od 0 do 1) każdego języka, w kolejności malejącej, z zakresem jego pozycji, gdy współczynniki oceny losowo zmieniano 2000 razy.],
+  caption: [Wskaźnik udostępnienia (od 0 do 1) każdego języka, w kolejności malejącej, z zakresem jego pozycji, gdy współczynniki oceny losowo zmieniano 2000 razy. Ranking obejmuje osiem języków z badania oraz WX, czyli dziewięć pozycji.],
 ) <fig:exposure>
 
 == Integracja <sec:integration>
 
 === Co jest testowane <sec:integration-tests>
 
-Dostęp do cech platformy to tylko część korzystania z WebAssembly: powstały moduł musi też współpracować ze swoim hostem. Oceniono pięć kryteriów integracji, a szóste raportowano osobno (tabela #nr(<tbl:criteria>)). Kryteria opierają się na trzech małych programach ze skryptami hosta wspólnymi dla wszystkich języków: `life` (obliczenia na pamięci liniowej), `cat` (program WASI typu _command_, który kopiuje standardowe wejście na standardowe wyjście) i `words` (napis na wejściu, rekord na wyjściu).
+Dostęp do cech platformy to tylko część korzystania z WebAssembly: powstały moduł musi też współpracować ze swoim hostem. Oceniono pięć kryteriów integracji (tabela #nr(<tbl:criteria>)). Kryteria opierają się na trzech małych programach ze skryptami hosta wspólnymi dla wszystkich języków: `life` (obliczenia na pamięci liniowej), `cat` (program WASI typu _command_, który kopiuje standardowe wejście na standardowe wyjście) i `words` (napis na wejściu, rekord na wyjściu).
 
 #figure(
   booktable(
@@ -227,18 +248,33 @@ Dostęp do cech platformy to tylko część korzystania z WebAssembly: powstały
     [debugowa wersja `life` jest sprawdzana pod kątem sekcji nazw, DWARF lub source mapy oraz trapa, którego stos wskazuje funkcję ze źródeł],
     [pełna lub częściowa],
     [I5 Rozmiar],
-    [wszystkie trzy programy są budowane jako najmniejsza i jako domyślna wersja, a rozmiar mierzony jest po `wasm-opt -Oz`],
+    [wszystkie trzy programy są budowane jako najmniejsza i jako domyślna wersja, a rozmiar to mniejsza z wartości: moduł surowy albo po `wasm-opt -Oz`],
     [bajty],
-    [I6 Koszt toolchainu],
-    [rozmiar instalacji toolchainu, czas zimnej budowy i potrzebne dodatkowe narzędzia],
-    [tylko raportowane],
   ),
   caption: [Kryteria integracji.],
 ) <tbl:criteria>
 
 === Jak jest oceniana <sec:integration-rating>
 
-Kryteria I1–I3 ocenia się według *drogi*, od najlepszej do najgorszej: wbudowana w toolchain samego języka, oficjalne dodatkowe narzędzie (z projektu języka lub Bytecode Alliance), narzędzie społeczności albo kod sklejający pisany ręcznie przez programistę. Droga bez bezpośredniego wsparcia otrzymuje 0. Rozmiar oceniany jest w skali logarytmicznej, aby jedno bardzo duże środowisko uruchomieniowe nie spłaszczało pozostałych wyników: wersja tysiąc razy większa od najmniejszej dostaje 0. Wynik integracji to średnia ważona kryteriów I1–I5, z wagami podanymi na wykresie #nr(<fig:integration>). Podobnie jak przy udostępnieniu, współczynniki są wyborem autora, a wynik jest tylko podsumowaniem.
+Kryteria I1–I3 ocenia się według *drogi*, od najlepszej do najgorszej: wbudowana w toolchain samego języka, oficjalne dodatkowe narzędzie (z projektu języka lub Bytecode Alliance), narzędzie społeczności albo kod sklejający pisany ręcznie przez programistę. Droga bez bezpośredniego wsparcia dostaje 0 (tabela #nr(<tbl:routes>)).
+
+#figure(
+  booktable(
+    columns: (1fr, auto),
+    align: (left, center),
+    table.header([Droga], [Współczynnik]),
+    table.hline(stroke: 0.5pt),
+    [Wbudowana w toolchain języka], [1,00],
+    [Oficjalne narzędzie dodatkowe], [0,85],
+    [Narzędzie społeczności], [0,70],
+    [Kod sklejający pisany ręcznie], [0,50],
+  ),
+  caption: [Drogi do możliwości integracji i ich współczynniki. Droga bez bezpośredniego wsparcia dostaje 0.],
+) <tbl:routes>
+
+*Wyniki kryteriów i rozmiar.* Wynik kryterium to zasięg pomnożony przez współczynnik drogi i przez współczynniki przeszkód, tak jak przy udostępnieniu; w I4 pełny zasięg oznacza nazwy oraz DWARF lub source mapę, a częściowy same nazwy. Wynik rozmiaru programu o rozmiarze $s$ to $1 - log_10(s / s_min) / 3$, ograniczony do przedziału od 0 do 1, gdzie $s_min$ to najmniejszy rozmiar tego programu wśród porównywanych języków. Skala jest logarytmiczna, aby jedno bardzo duże środowisko uruchomieniowe nie spłaszczało pozostałych wyników: wersja tysiąc razy większa od najmniejszej dostaje 0. Wynik rozmiaru dla języka to średnia z trzech programów w obu wersjach, najmniejszej i domyślnej.
+
+ Wynik integracji to średnia ważona kryteriów I1–I5, z wagami podanymi na wykresie #nr(<fig:integration>). Podobnie jak przy udostępnieniu, współczynniki są wyborem autora, a wynik jest tylko podsumowaniem.
 
 === Wyniki <sec:integration-results>
 
@@ -253,8 +289,7 @@ Wykres #nr(<fig:integration>) przedstawia pięć ocenianych kryteriów i ich wa�
 
 Wszystkie osiem języków uruchamia `cat` jako program WASI typu _command_, sześć z nich zwykłym toolchainem. Wsparcie dla Component Model jest mniej jednolite: bezpośrednią drogę ma tylko #ch.order.filter(l => ch.integ.at(l).per.I2 > 0).len() z nich, w każdym przypadku przez oficjalne dodatkowe narzędzie. Integracja z JavaScriptem również jest zróżnicowana, od generowanych wiązań po ręcznie pisany kod sklejający.
 
-Rozmiar modułu także bardzo się różni: najmniejsze wersje `life` mają od 408 bajtów w AssemblyScript do 61 KB w Kotlinie.
-
+Rozmiar modułu także bardzo się różni: najmniejsze wersje `life` mają od 408 bajtów w AssemblyScript do 61 KB w Kotlinie. Rozmiary w bajtach, także wersji domyślnych, są w danych badania #fnote("wx-study").
 == Jak czytać wyniki <sec:reading-scores>
 
 *Jak czytać te liczby.* To migawka testów napisanych na potrzeby tego badania i uruchomionych na przypiętych toolchainach, a autor nie jest jednakowo biegły we wszystkich językach. Zestaw testów próbkuje specyfikację, a nie pokrywa jej w całości, programy integracyjne są małe, a komórka oznaczona jako _nie znaleziono_ znaczy tylko tyle, że nie znaleziono drogi, co jest słabsze niż „niemożliwe”. Niektóre drogi liczono zachowawczo: ręcznie zbudowany komponent nie jest wsparciem dla komponentów. Badanie nie sprawdza, czy język chroni granicę z hostem pod względem bezpieczeństwa. Wyniki podsumowują zliczenia i nie są wyrokiem o żadnym języku.

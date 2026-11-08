@@ -60,7 +60,7 @@ Format tekstowy pozwala używać nazw takich jak `$run` zamiast liczb i zastępu
 
 Język, który pozwala programowi używać tych encji, musi zdecydować, jakiego są typu. Są dwie proste odpowiedzi i każda ma wadę.
 
-Pierwsza odpowiedź to użyć samego indeksu. Wbudowana funkcja `@wasmMemoryGrow` w Zigu przyjmuje pamięć jako indeks `u32` #fnote("zig-wasm-builtins"). Dla niskopoziomowej funkcji wbudowanej jest to w porządku, ale wtedy jako pamięci można użyć dowolnej liczby całkowitej, a system typów nie odróżni indeksu pamięci od licznika pętli. Nie wie też, czy pamięć używa adresów 32- czy 64-bitowych, bo sama liczba tego nie mówi.
+Pierwsza odpowiedź to użyć samego indeksu. Wbudowana funkcja `@wasmMemoryGrow` w Zigu przyjmuje pamięć jako indeks `u32` #fnote("zig-wasm-builtins"). Dla niskopoziomowej funkcji wbudowanej jest to w porządku, ale wtedy argument ma zwykły typ liczbowy, więc sam jego typ nie odróżnia indeksu pamięci od licznika pętli, a poprawność wartości trzeba sprawdzać osobno. Typ nie mówi też, czy pamięć używa adresów 32- czy 64-bitowych, bo sama liczba tego nie wyraża.
 
 Druga odpowiedź to opisać tylko to, jak encja wygląda: funkcję przez jej sygnaturę, pamięć przez typ adresu. Wtedy dwie funkcje o tej samej sygnaturze mają ten sam typ, podobnie jak dwie pamięci z adresami 32-bitowymi. Wskaźnik do jednej pamięci dałoby się użyć jako wskaźnik do drugiej, a kompilator nie zauważyłby błędu.
 
@@ -148,7 +148,7 @@ Nie ma pamięci domyślnej. Typ wskaźnika bez pamięci jest błędem, nawet w m
   caption: [Typ wskaźnika bez pamięci. Komunikat pochodzi od kompilatora, zapisany w postaci komentarzy.],
 ) <fig:untagged-pointer>
 
-Typ wskaźnika ma trzy części (rysunek #nr(<fig:pointer-anatomy>)). Środkowa część, `*` lub `&`, to *własność* wskaźnika. Wskaźnik `*` jest wyłączny i modyfikowalny: program może przez niego czytać i zapisywać. Wskaźnik `&` jest współdzielony i tylko do odczytu.
+Typ wskaźnika ma trzy części (rysunek #nr(<fig:pointer-anatomy>)). Środkowa część, `*` lub `&`, to *własność* wskaźnika. Wskaźnik `*` jest modyfikowalny: program może przez niego czytać i zapisywać. Wskaźnik `&` jest tylko do odczytu. W przyszłości mają one oznaczać wskaźnik wyłączny (`*`) i referencję współdzieloną (`&`), ale obecny kompilator nie kontroluje aliasowania ani czasu życia, więc dziś różni je tylko prawo zapisu.
 
 #figure(
   {
@@ -179,7 +179,7 @@ Typ wskaźnika ma trzy części (rysunek #nr(<fig:pointer-anatomy>)). Środkowa 
         columns: (1fr, 1fr, 1fr),
         column-gutter: 6pt,
         part("pamięć", "w której pamięci leży adres", c-mem),
-        part("własność", [`*` wyłączny, `&` współdzielony], c-ownership),
+        part("własność", [`*` modyfikowalny, `&` tylko do odczytu], c-ownership),
         part("wskazywany typ", "typ wartości pod adresem", c-pointee),
       ),
     )
@@ -227,7 +227,7 @@ func alloc(size: u32) -> heap::*u8 {
 
 Ta wersja nie ma `free` i nigdy nie powiększa bufora. Prawdziwe alokatory ponownie używają zwolnionych bloków i powiększają pamięć, gdy się zapełni, ale podejmują decyzje tego samego rodzaju.
 
-Skoro język nie dostarcza alokatora, alokacja jest konwencją, taką samą jak w Zigu: program wybiera alokator i przekazuje go kodowi, który potrzebuje pamięci #fnote("zig-allocators"). Ceną jest to, że nic nie sprawdza, jak program używa pamięci. Blok można użyć po zwolnieniu, zwolnić dwukrotnie albo osiągnąć przez dwa wskaźniki. Kontrola własności i pożyczek (ang. _ownership and borrow checking_) by temu zapobiegła, ale wykracza poza zakres tej pracy.
+Skoro język nie dostarcza alokatora, alokacja jest konwencją, taką samą jak w Zigu: program wybiera alokator i przekazuje go kodowi, który potrzebuje pamięci #fnote("zig-allocators"). Ceną jest to, że nic nie sprawdza, jak program używa pamięci. Bloku można użyć po zwolnieniu, zwolnić dwukrotnie albo osiągnąć przez dwa wskaźniki. Aby temu zapobiec, potrzebny byłby jakiś rodzaj typów liniowych (ang. _linear types_), które pilnowałyby takich zasobów, ale wykracza to poza zakres tej pracy.
 
 == Polimorfizm i traity nad pamięciami <sec:why-traits>
 
@@ -296,7 +296,7 @@ Dlatego WX dodaje *typeset*: zamknięty zbiór typów, wymieniony w swojej dekla
   caption: [Ten sam trzeci `impl`, odrzucony przez typeset i przyjęty przez zwykły trait.],
 ) <fig:typeset-vs-trait>
 
-Typeset używa się w ograniczeniach tak jak trait, ale nie można go implementować: jego członkowie są wymienieni wyłącznie w deklaracji. Może też wymagać traitów, więc każdy członek `PointerSize` ma również dodawanie, porównywanie i pozostałe operacje, których kod generyczny potrzebuje na adresie.
+Typesetu używa się w ograniczeniach tak jak traitu, ale nie można go implementować: jego członkowie są wymienieni wyłącznie w deklaracji. Może też wymagać traitów, więc każdy członek `PointerSize` ma również dodawanie, porównywanie i pozostałe operacje, których kod generyczny potrzebuje na adresie.
 
 Trait `Memory` używa tego typesetu, by ograniczyć `Size` i zdefiniować operacje w jego terminach. Poniższy trait jest skrócony:
 

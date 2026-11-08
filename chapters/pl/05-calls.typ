@@ -81,7 +81,7 @@ compose(divmod, add, (17, 5))  // add(3, 2) = 5
 
 Obecny moduł sprawdzania typów przyjmuje oba wywołania. Nie był potrzebny ani wariadyczny parametr typu, ani składnia rozwijania, ani specjalna konwencja wywołań.
 
-Reguła ma jeden zaskakujący skutek. `func g(p: (A, B))` i `func f(a: A, b: B)` mają ten sam typ, bo obie przyjmują `(A, B)`. Widać to tylko w kodzie generycznym i w komunikatach o błędach i jest to dokładnie to, czego potrzebuje `compose`.
+Reguła ma jeden zaskakujący skutek. `func g(p: (A, B))` i `func f(a: A, b: B)` mają ten sam typ argumentu, `(A, B)`, więc przy tym samym typie wyniku ich typy funkcyjne `func((A, B)) -> R` są równe, choć jako itemy pozostają różne. Widać to tylko w kodzie generycznym i w komunikatach o błędach i jest to dokładnie to, czego potrzebuje `compose`.
 
 == Wywołanie funkcji <sec:filling>
 

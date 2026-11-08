@@ -7,7 +7,7 @@ WX exposes selected WebAssembly instructions as standard-library functions with 
 
 == Instructions in the standard library <sec:intrinsic-functions>
 
-Languages reach the instructions their source language does not cover in two ways. Inline assembly reaches all of them, but the compiler checks none of it (@sec:synthesis). Builtin functions are checked, but the compiler defines their names and types, they often take an entity as a plain integer, and they cover only the instructions their authors chose.
+Languages reach the instructions their source language does not cover in two ways. Inline assembly reaches all of them, but the source compiler does not check its use in the type system, and the resulting module is only subject to WebAssembly validation (@sec:synthesis). Builtin functions are checked, but the compiler defines their names and types, they often take an entity as a plain integer, and they cover only the instructions their authors chose.
 
 In WX, an *intrinsic* is a function declared without a body in the standard library:
 
@@ -19,7 +19,7 @@ pub func f32_reinterpret_i32(value: i32) -> f32;
 pub func trap() -> !;
 ```
 
-The declaration is all a program sees. The compiler maps each one to its WebAssembly instruction. Nothing else about it is special: it is found by name resolution, checked against its signature, and can be wrapped or kept private to the library. A language server shows its signature like any other function.
+The declaration is all a program sees. The compiler maps each one to its WebAssembly instruction. Nothing else about it is special: it is found by name resolution, checked against its signature, and can be wrapped or kept private to the library. Once the language server is connected to the current checker, it will show its signature like any other function.
 
 Each signature is the instruction's own, as @sec:transmute explained. `i32.add` reads two `i32` values, so `i32_add` takes two `i32`. Where WebAssembly has separate signed and unsigned instructions, the library has separate functions: `i32_div` takes `i32` and `u32_div` takes `u32`. A change of representation is always a named function (`i64_extend_i32`, `i32_wrap_i64`, `f32_reinterpret_i32`) and never an implicit conversion, because each one is a different instruction.
 
@@ -144,7 +144,7 @@ func expect(ok: Bool, value: u32) -> u32 {
 }
 ```
 
-`break` and `return` also have type `!`, because they do not complete either. So `trap` needs no rule of its own: it is just a function that returns `!`.
+`break` and `return` also have type `!`, because they do not end by passing a value to the next expression: they transfer control elsewhere. So `trap` needs no rule of its own: it is just a function that returns `!`.
 
 == Memory access is syntax <sec:memory-access>
 

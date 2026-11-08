@@ -61,10 +61,11 @@
 // The bibliography: only cited sources, in groups, alphabetical, numbered afresh in each group.
 #let render-bibliography() = context {
   let keys = query(<wx-cited>).map(m => m.value).dedup()
+  let pl = text.lang == "pl"
   let groups = (
-    ("Książki", ("book", "collection")),
-    ("Czasopisma", ("article",)),
-    ("Netografia", ("web",)),
+    (if pl { "Książki i publikacje konferencyjne" } else { "Books and conference papers" }, ("book", "collection")),
+    (if pl { "Czasopisma" } else { "Journals" }, ("article",)),
+    (if pl { "Netografia" } else { "Web sources" }, ("web",)),
   )
   for (name, types) in groups {
     let entries = keys.map(k => data.at(k)).filter(e => e.type in types)

@@ -126,6 +126,9 @@
     margin: layout.margin,
     numbering: "1",
     footer: context {
+      // `--input page-numbers=no` leaves the footer empty, for a PDF that is converted to Word,
+      // where the numbers are added as a real page-number field (see Makefile, build-pl-word).
+      if sys.inputs.at("page-numbers", default: "yes") == "no" { return }
       let p = counter(page).get().first()
       if p <= 1 or here().page-numbering() == none { return }
       align(center, text(font: layout.serif, size: 10pt, numbering(here().page-numbering(), p)))

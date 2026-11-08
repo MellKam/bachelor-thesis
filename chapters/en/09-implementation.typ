@@ -11,7 +11,7 @@ The previous chapters described the language. This chapter describes the program
 The compiler is the Rust crate `wx-compiler`. The standard library is one WX file, embedded in the compiler when it is built. @fig:impl-pipeline shows the stages of a build and, under them, which stages each client of the library reaches. A build reads the packages (`vfs`) and parses them (`ast`), checks the whole program (`tir::check`), lowers the reachable functions into MIR (`tir::lower`), inlines (`mir::inline`), optimizes each function (`opt`) and encodes the module (`codegen`). The command line stops at the first stage that reports an error, so a syntax error never reaches the checker and a type error never reaches lowering.
 
 #figure(
-  arch.pipeline-figure(),
+  image("../../figures/build/pipeline-en.png", width: 100%, alt: "Diagram of the compiler stages: front end (vfs, ast), checker (tir::check), lowering (tir::lower), inlining (mir::inline), optimizer (opt) and encoder (codegen), with the clients of the library below and the stages each one reaches: wx build (all), wx check (up to the checker), wx format (syntax trees only), execution tests (all), backend tests (from MIR), and, not connected to the current checker, the language server and the browser compiler."),
   kind: image,
   caption: [The stages of the compiler (top, with the product each hands to the next) and the clients of the library, each drawn as a bar over the stages it uses. A dashed bar is a client that is written but does not compile against the current type checker (@sec:impl-state).],
   placement: auto,
@@ -19,12 +19,12 @@ The compiler is the Rust crate `wx-compiler`. The standard library is one WX fil
 
 The figure shows the first decision. The formatter needs only the syntax tree, the language server needs the front end and the checker, and the backend tests need nothing before MIR. Each stage hands the next a plain data structure and none depends on its consumers, so a client can start or stop at any stage. That is why there is one compiler and not one per tool: a second implementation of name resolution for an editor would be a second place where the language is defined, and the two would disagree.
 
-@fig:impl-size gives the size of each part. The checker is about two thirds of the compiler's production code; the backend, from MIR to bytes, is about a sixth.
+@fig:impl-size gives the size of each part. The checker is 61% of the compiler's production code; the backend, from MIR to bytes, is 17%.
 
 #figure(
-  arch.size-figure(),
+  image("../../figures/build/impl-size-en.png", width: 100%, alt: "Bar chart of the lines of live Rust code and tests in each part of the compiler. In total 53,049 lines of code and 37,184 lines of tests; the checker has 32,396 lines of code."),
   kind: "chart",
-  caption: [Lines of live Rust, without comments and blank lines (`cloc`, 2026-11-06); tests include those inside source files. The standard library, in WX, adds about 2 000 lines.],
+  caption: [Lines of live Rust, without comments and blank lines (`cloc`, 2026-11-08, commit `1612da8`); only live code is counted; tests include those inside source files. The standard library, in WX, adds about 2 000 lines.],
   placement: auto,
 ) <fig:impl-size>
 
@@ -58,7 +58,7 @@ This backend is deliberately simple: it does not yet schedule for the stack, so 
 
 == Testing <sec:impl-testing>
 
-Each stage is tested at its own boundary, with the input it receives and the output it hands on, and the tests of a stage run without the stages after it. @tbl:impl-tests lists the layers; the compiler has about 1,350 tests and the formatter 75.
+Each stage is tested at its own boundary, with the input it receives and the output it hands on, and the tests of a stage run without the stages after it. @tbl:impl-tests lists the layers; the compiler has 1,349 tests and the formatter 75. Run with `cargo test -p wx-compiler -p wx-fmt` at commit `1612da8` (debug build, Rust 1.97.0, 2026-11-08), 1,347 compiler tests passed, none failed and 2 were ignored, and all 75 formatter tests passed.
 
 #figure(
   booktable(
@@ -87,7 +87,7 @@ Each stage is tested at its own boundary, with the input it receives and the out
 
 *Diagnostics, not snapshots.* A test of the checker mostly states which diagnostics a program must produce, checked with their severity and not only their code, and a failing assertion prints the source around the diagnostic. A snapshot of a large structure records what the compiler does without saying what it should do, so the parser has only two snapshot tests and the others state the claim.
 
-*Execution tests.* The tests of lowering take a program as text, run the sequence that `wx build` runs, instantiate the module in Wasmtime and call its exports. Wasmtime validates the module on loading, so each of them also checks that the compiler emits valid WebAssembly. A program can be run with and without inlining, so a failure can be assigned to lowering or to the inliner. This is the layer that says what the compiled program does. A second set of tests builds MIR by hand, without the checker, and runs it, which fixes the contract between lowering and the backend.
+*Execution tests.* The tests of lowering take a program as text, run the sequence that `wx build` runs, instantiate the module in Wasmtime and call its exports. Wasmtime validates the module on loading, so each of them also checks that the compiler emits valid WebAssembly. A program can be run with and without inlining, so comparing the two runs helps narrow down the source of a failure; a difference can also come from an interaction with the optimizer or code generation. This is the layer that says what the compiled program does. A second set of tests builds MIR by hand, without the checker, and runs it, which fixes the contract between lowering and the backend.
 
 == State and limits <sec:impl-state>
 

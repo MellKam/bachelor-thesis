@@ -71,7 +71,7 @@ func quotient_plus_rest(a: u32, b: u32) -> u32 {
 
 *Strukturalny* przepływ sterowania oznacza, że skok może prowadzić tylko do konstrukcji, która go otacza: nie ma `goto` ani sposobu wejścia do pętli w środku. Zagnieżdżenie w kodzie źródłowym jest więc zagnieżdżeniem w module. Kompilator nie potrzebuje analizy przepływu sterowania, by wiedzieć, że skok jest poprawny, bo `break` jest poprawny, gdy jego etykieta wskazuje otaczający `block` lub `loop` (E2012, gdy żaden nie wskazuje).
 
-WebAssembly ma trzy konstrukcje, `block`, `loop` i `if`, a skok `br n` opuszcza otaczającą konstrukcję o `n` poziomów wyżej #fnote("wasm-spec-modules"). Opuszczenie `block` lub `if` kontynuuje za jego `end`, opuszczenie `loop` kontynuuje od jego początku, a skok może nieść wartości, które stają się wynikiem konstrukcji. Liczba `n` jest właśnie takim indeksem encji, jakiego unikano w podrozdziale #nr(<sec:identity-shape>): zmienia się, gdy wokół skoku doda się konstrukcję, a nic w instrukcji nie mówi, do czego służy. WX nigdy jej nie zapisuje. Skok wskazuje swój cel po nazwie, a kompilator oblicza głębokość (tabela #nr(<tbl:control-flow>)).
+WebAssembly ma trzy konstrukcje, `block`, `loop` i `if`, a skok `br n` opuszcza otaczającą konstrukcję o `n` poziomów wyżej #fnote("wasm-spec-modules"). Opuszczenie `block` lub `if` kontynuuje za jego `end`, opuszczenie `loop` kontynuuje od jego początku, a skok może nieść wartości, które stają się wynikiem konstrukcji. Liczba `n` to względny indeks etykiety, z innej przestrzeni indeksów niż encje modułu, ale ma tę samą wadę, której unikano w podrozdziale #nr(<sec:identity-shape>): zmienia się, gdy wokół skoku doda się konstrukcję, a nic w instrukcji nie mówi, do czego służy. WX nigdy jej nie zapisuje. Skok wskazuje swój cel po nazwie, a kompilator oblicza głębokość (tabela #nr(<tbl:control-flow>)).
 
 #figure(
   booktable(
@@ -153,7 +153,7 @@ Etykieta pozwala `break` lub `continue` opuścić pętlę inną niż najbardziej
 
 Trzy wyjścia opuszczają różne liczby konstrukcji: w skompilowanym module `break :outer` to `br 2` w pętli zewnętrznej i `br 4` w wewnętrznej, a `continue :outer` to `br 3`. Kod źródłowy nie zapisuje żadnego z nich. Pozycje i długości mają własny typ adresu pamięci, więc jedna definicja przeszukuje pamięć 32- i 64-bitową. Ponieważ ten typ nie jest znany, nie ma wartownika, takiego jak `u32::MAX`, oznaczającego „nie znaleziono”, a wynik niesie flagę: para `(Bool, Mem::Size)` zastępuje `Option<Mem::Size>`, bo WX nie ma jeszcze typów sumy. Są one planowane, a do tego czasu pozycja w parze ma znaczenie tylko wtedy, gdy flaga to `True`. Moduł eksportuje instancję funkcji dla jednej pamięci, ponieważ eksport nie może być generyczny.
 
-== Kod, który się nie kontynuuje: typ `!` <sec:body-never>
+== Kod bez normalnego powrotu sterowania: typ `!` <sec:body-never>
 
 `!` w WX to typ never z Rusta: mają go `return`, `break`, `continue`, `trap()` i `loop` bez `break`, a daje się on niejawnie przekształcić w dowolny typ. WebAssembly potrzebuje tej samej idei do walidacji. Po `br`, `return` lub `unreachable` stos jest *polimorficzny*: kod, który następuje, jest sprawdzany tak, jakby stos zawierał to, czego potrzebuje, bo nigdy nie może się wykonać #fnote("wasm-spec-modules"). `!` jest postacią tej reguły na poziomie typów, więc moduł sprawdzania typów przyjmuje to, co przyjmuje walidacja, z tego samego powodu. `if x == 0 { trap() } else { x - 1 }` ma typ `u32`, a jego gałąź `trap()` kompiluje się do `unreachable`.
 

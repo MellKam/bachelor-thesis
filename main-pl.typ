@@ -21,6 +21,9 @@
   date: "2026",
 )
 
+// Read by the Makefile to name the PDF (author and English title).
+#metadata(meta) <thesis-meta>
+
 #show: thesis.with(meta: meta)
 
 #title-page(meta)

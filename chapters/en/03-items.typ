@@ -59,7 +59,7 @@ The text format allows names such as `$run` instead of numbers, and replaces the
 
 A language that lets a program use these entities has to decide what type they have. There are two simple answers, and both have a problem.
 
-The first answer is to use the index itself. Zig's `@wasmMemoryGrow` builtin takes the memory as a `u32` index #fnote("zig-wasm-builtins"). This is fine for a low-level builtin, but then any integer can be used as a memory, and the type system cannot tell a memory index from a loop counter. It also cannot know whether the memory uses 32-bit or 64-bit addresses, because the integer says nothing about it.
+The first answer is to use the index itself. Zig's `@wasmMemoryGrow` builtin takes the memory as a `u32` index #fnote("zig-wasm-builtins"). This is fine for a low-level builtin, but then the argument has a plain numeric type, so its type alone does not tell a memory index from a loop counter, and the validity of the value has to be checked separately. It also cannot know whether the memory uses 32-bit or 64-bit addresses, because the integer says nothing about it.
 
 The second answer is to describe only what the entity looks like: a function by its signature, a memory by its address type. Then two functions with the same signature have the same type, and so do two memories with 32-bit addresses. A pointer into one memory could be used as a pointer into the other, and the compiler could not see the mistake.
 
@@ -147,7 +147,7 @@ There is no default memory. A pointer type without a memory is an error, even in
   caption: [A pointer type without a memory. The diagnostic is the compiler's, reformatted as comments.],
 ) <fig:untagged-pointer>
 
-A pointer type has three parts (@fig:pointer-anatomy). The middle part, `*` or `&`, is the pointer's *ownership*. A `*` pointer is owned and mutable: the program may read and write through it. A `&` pointer is shared and read-only.
+A pointer type has three parts (@fig:pointer-anatomy). The middle part, `*` or `&`, is the pointer's *ownership*. A `*` pointer is mutable: the program may read and write through it. A `&` pointer is read-only. They are meant to become an exclusive pointer and a shared reference, but the current compiler does not check aliasing or lifetimes, so today only the right to write tells them apart.
 
 #figure(
   {
@@ -226,7 +226,7 @@ func alloc(size: u32) -> heap::*u8 {
 
 This version has no `free` and never grows the buffer. Real allocators reuse freed blocks and grow the memory when it is full, but they make the same kind of decision.
 
-Since the language provides no allocator, allocation is a convention, the same one Zig uses: the program chooses the allocator and passes it to the code that needs memory #fnote("zig-allocators"). The cost is that nothing checks how the program uses the memory. A block can be used after it is freed, freed twice, or reached through two pointers. Ownership and borrow checking would prevent this, but they are outside the scope of this thesis.
+Since the language provides no allocator, allocation is a convention, the same one Zig uses: the program chooses the allocator and passes it to the code that needs memory #fnote("zig-allocators"). The cost is that nothing checks how the program uses the memory. A block can be used after it is freed, freed twice, or reached through two pointers. Preventing this would need some form of linear types to manage such resources, which is outside the scope of this thesis.
 
 == Polymorphism and traits over memories <sec:why-traits>
 

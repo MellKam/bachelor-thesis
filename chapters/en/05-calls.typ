@@ -80,7 +80,7 @@ compose(divmod, add, (17, 5))  // add(3, 2) = 5
 
 The current type checker accepts both calls. No variadic type parameter, spread syntax or special calling convention was needed.
 
-The rule has one surprising effect. `func g(p: (A, B))` and `func f(a: A, b: B)` have the same type, because both take an `(A, B)`. This shows only in generic code and in error messages, and it is exactly what `compose` needs.
+The rule has one surprising effect. `func g(p: (A, B))` and `func f(a: A, b: B)` have the same argument type, `(A, B)`, so with the same result type their function types `func((A, B)) -> R` are equal, although as items they remain distinct. This shows only in generic code and in error messages, and it is exactly what `compose` needs.
 
 == Calling a function <sec:filling>
 

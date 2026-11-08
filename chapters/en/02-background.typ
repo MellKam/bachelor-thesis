@@ -134,7 +134,7 @@ Thirty features from the released versions of the specification (1.0, 2.0 and 3.
   booktable(
     columns: (auto, auto, auto, 1fr),
     align: (left, center, center, left),
-    table.header([Result], [In source], [Checked by compiler], [Meaning]),
+    table.header([Result], [In source], [Checked by the language's types], [Meaning]),
     table.hline(stroke: 0.5pt),
     [Native],
     [yes],
@@ -162,7 +162,28 @@ Thirty features from the released versions of the specification (1.0, 2.0 and 3.
 
 === How it is rated <sec:exposure-rating>
 
-The counts of results are the evidence. A single score between 0 and 1 per language summarises them: each feature counts fully, partially or not at all, is discounted for every obstacle on the way (a build option, hand-written assembly, an experimental or nightly compiler, a runtime shipped in every module, a restricted host, or a different backend), and counts more if it belongs to the module core that every program uses. The discounts and weights are the author's choice and are listed in the repository. They are meant to order the languages roughly, not to measure them to the second decimal.
+The counts of results are the evidence. A single score between 0 and 1 per language summarises them: each feature counts fully, partially or not at all, is discounted for every obstacle on the way (a build option, hand-written assembly, an experimental interface, an unstable compiler, a runtime shipped in every module, a restricted host, or a different backend), and counts more if it belongs to the module core that every program uses. A feature reached fully scores 1, partially 0.5 and not at all 0. The score of a cell is that reach times the factor of each obstacle on its way (@tbl:obstacles), and the score of a language is the weighted mean of its cells over the thirty features, with weight 3 for the module core, 2 for common extensions and 1 for specialised ones.
+
+#figure(
+  booktable(
+    columns: (1fr, auto),
+    align: (left, center),
+    table.header([Obstacle], [Factor]),
+    table.hline(stroke: 0.5pt),
+    [Build configuration], [0.90],
+    [Experimental interface], [0.85],
+    [Unstable compiler], [0.80],
+    [Restricted host], [0.80],
+    [Extra runtime in the module], [0.70],
+    [Inline assembly], [0.50],
+    [Different backend], [0.35],
+  ),
+  caption: [Obstacles to reaching a feature and their factors, from the least to the most damaging.],
+) <tbl:obstacles>
+
+The discounts and weights are the author's choice: the order of the obstacles is argued in the study, and the factors are read off that order. They are meant to order the languages roughly, not to measure them to the second decimal.
+
+*Sensitivity.* The ranking is repeated 2000 times, with a fixed seed, with the coefficients moved at random: the partial reach by up to ±0.2, the damage of every obstacle (one minus its factor) by a common factor between 0.5 and 1.5 and by ±15% each, with the order of the obstacles kept, and every feature weight by a factor between 0.5 and 2. A rank range is the best and worst rank of a language over the draws, and an order of two languages counts as robust when it holds in at least 95% of them. This is the sensitivity of the author's index to its own coefficients, not a confidence interval for the quality of a language.
 
 === Results <sec:results>
 
@@ -180,7 +201,7 @@ For #ch.construct-in-none.len() of the #ch.n-features features, no language offe
 *Coverage differs between languages.* @fig:reach counts how each language reaches the thirty tested features. Even the broadest, which reaches #ch.broadest.reached of #ch.n-features, reaches #(ch.broadest.reached - ch.broadest.counts.reachedVia.language) of them only through configuration or assembly.
 
 #figure(
-  ch.reach-figure(),
+  image("../../figures/build/reach-en.png", width: 100%, alt: "Bar chart: for each language, how many of 30 features are reached as a construct or annotation, through build configuration, as inline assembly, or not at all. Rust: 11, 5, 8, 6. Zig: 8, 5, 10, 7. C/C++: 13, 6, 5, 6. Swift: 9, 5, 0, 16. MoonBit: 12, 2, 2, 14. AssemblyScript: 12, 3, 0, 15. TinyGo: 5, 5, 0, 20. Kotlin: 11, 0, 0, 19."),
   kind: "chart",
   caption: [Number of the #ch.n-features features each language reaches as a language construct or annotation, through build configuration, as inline assembly, or not at all.],
 ) <fig:reach>
@@ -196,16 +217,16 @@ For #ch.construct-in-none.len() of the #ch.n-features features, no language offe
 @fig:exposure summarises coverage and the obstacles to reaching each feature. The rank ranges show how the ordering changes when the scoring coefficients are varied.
 
 #figure(
-  ch.exposure-figure(),
+  image("../../figures/build/exposure-en.png", width: 100%, alt: "Bar chart of the exposure score from 0 to 1 with the range of each rank: C/C++ 0.71 (rank 1), Rust 0.64 (2–3), Zig 0.59 (2–4), AssemblyScript 0.57 (2–4), Swift 0.43 (5–8), MoonBit 0.39 (5–9), TinyGo 0.34 (6–9), Kotlin 0.32 (5–9)."),
   kind: "chart",
-  caption: [Exposure score (0 to 1) per language, ordered, with the range of its rank when the scoring coefficients are varied at random 2000 times.],
+  caption: [Exposure score (0 to 1) per language, ordered, with the range of its rank when the scoring coefficients are varied at random 2000 times. The ranking covers the eight languages of the study and WX, nine entries in all.],
 ) <fig:exposure>
 
 == Integration <sec:integration>
 
 === What is tested <sec:integration-tests>
 
-Access to platform features is only part of using WebAssembly: the resulting module must also work with its host. Five integration criteria are scored and a sixth is reported separately (@tbl:criteria). They use three small programs with host scripts shared across languages: `life` (computation on linear memory), `cat` (a WASI command that copies standard input to standard output), and `words` (a string in, a record out).
+Access to platform features is only part of using WebAssembly: the resulting module must also work with its host. Five integration criteria are scored (@tbl:criteria). They use three small programs with host scripts shared across languages: `life` (computation on linear memory), `cat` (a WASI command that copies standard input to standard output), and `words` (a string in, a record out).
 
 #figure(
   booktable(
@@ -226,18 +247,33 @@ Access to platform features is only part of using WebAssembly: the resulting mod
     [a debug build of `life` is checked for a name section, DWARF or a source map, and a trap whose stack names the source function],
     [full or partial],
     [I5 Size],
-    [all three programs are built as a smallest and as a default build and measured after `wasm-opt -Oz`],
+    [all three programs are built as a smallest and as a default build and the size is the smaller of the raw module and the module after `wasm-opt -Oz`],
     [bytes],
-    [I6 Toolchain cost],
-    [installed size of the toolchain, cold build time, and extra tools needed],
-    [reported only],
   ),
   caption: [The integration criteria.],
 ) <tbl:criteria>
 
 === How it is rated <sec:integration-rating>
 
-Criteria I1 to I3 are scored by *route*, from best to worst: built into the language's own toolchain, an official extra tool (from the language's project or the Bytecode Alliance), a community tool, or glue the developer writes by hand. A route without direct support scores 0. Size is scored on a log scale, so that one very large runtime does not flatten the rest: a build 1000 times the smallest scores 0. The integration score is the weighted mean of I1 to I5, with the weights given in @fig:integration. As with exposure, these coefficients are the author's choice and the score is only a summary.
+Criteria I1 to I3 are scored by *route*, from best to worst: built into the language's own toolchain, an official extra tool (from the language's project or the Bytecode Alliance), a community tool, or glue the developer writes by hand. A route without direct support scores 0 (@tbl:routes).
+
+#figure(
+  booktable(
+    columns: (1fr, auto),
+    align: (left, center),
+    table.header([Route], [Factor]),
+    table.hline(stroke: 0.5pt),
+    [Built into the language's toolchain], [1.00],
+    [Official extra tool], [0.85],
+    [Community tool], [0.70],
+    [Written by hand], [0.50],
+  ),
+  caption: [Routes to an integration capability and their factors. A route without direct support scores 0.],
+) <tbl:routes>
+
+*Cells and size.* A cell is its reach times the route factor times the factors of its obstacles, as for exposure; in I4 it is full with names plus DWARF or a source map, and partial with names only. For a program of size $s$ the size score is $1 - log_10(s / s_min) / 3$, limited to the range 0 to 1, where $s_min$ is the smallest size of that program among the languages. Size is scored on a log scale, so that one very large runtime does not flatten the rest: a build 1000 times the smallest scores 0. The size score of a language is the mean over its three programs and both builds, the smallest and the default.
+
+The integration score is the weighted mean of I1 to I5, with the weights given in @fig:integration. As with exposure, these coefficients are the author's choice and the score is only a summary.
 
 === Results <sec:integration-results>
 
@@ -252,8 +288,7 @@ Criteria I1 to I3 are scored by *route*, from best to worst: built into the lang
 
 All eight languages run `cat` as a WASI command, six with their ordinary toolchain. Component Model support is less uniform: only #ch.order.filter(l => ch.integ.at(l).per.I2 > 0).len() have a direct route, all through an official extra tool. JavaScript integration also varies, from generated bindings to hand-written glue.
 
-Module size also varies substantially: the smallest builds of `life` range from 408 bytes for AssemblyScript to 61 KB for Kotlin.
-
+Module size also varies substantially: the smallest builds of `life` range from 408 bytes for AssemblyScript to 61 KB for Kotlin. The sizes in bytes, including those of the default builds, are in the data of the study #fnote("wx-study").
 == Reading the scores <sec:reading-scores>
 
 *How to read these numbers.* They are a snapshot of the probes written for this study, run against pinned toolchains, and the author is not equally expert in every language. The probe set samples the specification rather than covering it, the integration programs are small, and a cell marked _not found_ means no way was found, which is weaker than impossible. Some routes are counted conservatively: a hand-built component is not support for components. The study does not test whether a language checks the host boundary for safety. The scores summarise the counts and are not a verdict on any language.

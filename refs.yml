@@ -7,74 +7,74 @@
 wasm-spec-modules:
   type: web
   organization: W3C WebAssembly Community Group
-  title: "WebAssembly Core Specification: Modules"
+  title: "WebAssembly Core Specification, Release 3.0: Modules"
   url: https://webassembly.github.io/spec/core/syntax/modules.html
   accessed: "2026-11-06"
 wasm-spec-intro:
   type: web
   organization: W3C WebAssembly Community Group
-  title: "WebAssembly Core Specification: Introduction"
+  title: "WebAssembly Core Specification, Release 3.0: Introduction"
   url: https://webassembly.github.io/spec/core/intro/introduction.html
   accessed: "2026-11-06"
 wasm-spec-text:
   type: web
   organization: W3C WebAssembly Community Group
-  title: "WebAssembly Core Specification: Text Format"
+  title: "WebAssembly Core Specification, Release 3.0: Text Format"
   url: https://webassembly.github.io/spec/core/text/index.html
   accessed: "2026-11-06"
 wasm-spec-exec-instructions:
   type: web
   organization: W3C WebAssembly Community Group
-  title: "WebAssembly Core Specification: Instructions (Execution)"
+  title: "WebAssembly Core Specification, Release 3.0: Instructions (Execution)"
   url: https://webassembly.github.io/spec/core/exec/instructions.html
   accessed: "2026-11-06"
 wasm-spec-binary-modules:
   type: web
   organization: W3C WebAssembly Community Group
-  title: "WebAssembly Core Specification: Binary Format, Modules"
+  title: "WebAssembly Core Specification, Release 3.0: Binary Format, Modules"
   url: https://webassembly.github.io/spec/core/binary/modules.html
   accessed: "2026-11-06"
 wasm-wit:
   type: web
   organization: WebAssembly Community Group
   title: Wasm Interface Type (WIT) format
-  url: https://github.com/WebAssembly/component-model/blob/main/design/mvp/WIT.md
+  url: https://github.com/WebAssembly/component-model/blob/8505ba73dda2775b9438c0b8d169b96a556f864a/design/mvp/WIT.md
   accessed: "2026-11-06"
 wasm-proposals:
   type: web
   organization: WebAssembly Community Group
   title: WebAssembly proposals overview
-  url: https://github.com/WebAssembly/proposals
+  url: https://github.com/WebAssembly/proposals/tree/df6a2aca1cd9d779eb4f2f3e19dae8277f336015
   accessed: "2026-11-06"
 wasm-type-imports:
   type: web
   organization: WebAssembly Community Group
   title: "Type Imports and Exports: proposal overview"
-  url: https://github.com/WebAssembly/proposal-type-imports/blob/master/proposals/type-imports/Overview.md
+  url: https://github.com/WebAssembly/proposal-type-imports/blob/13d907c9134c2549d99c8e0025832d577a5b275a/proposals/type-imports/Overview.md
   accessed: "2026-10-09"
 wasm-function-references:
   type: web
   organization: WebAssembly Community Group
   title: "Typed Function References: proposal overview"
-  url: https://github.com/WebAssembly/function-references/blob/main/proposals/function-references/Overview.md
+  url: https://github.com/WebAssembly/function-references/blob/54d35c63c7fb8b68866e7314cf4b22d9058254e2/proposals/function-references/Overview.md
   accessed: "2026-11-06"
 wasm-reference-types:
   type: web
   organization: WebAssembly Community Group
   title: "Reference Types: proposal overview"
-  url: https://github.com/WebAssembly/reference-types/blob/master/proposals/reference-types/Overview.md
+  url: https://github.com/WebAssembly/reference-types/blob/50e699f111381488f03ce7b09bd8e174091d1add/proposals/reference-types/Overview.md
   accessed: "2026-11-06"
 wasm-component-model:
   type: web
   organization: WebAssembly Community Group
   title: "The Component Model: explainer"
-  url: https://github.com/WebAssembly/component-model/blob/main/design/mvp/Explainer.md
+  url: https://github.com/WebAssembly/component-model/blob/36b9b95824b7747d20b762623422439267036b22/design/mvp/Explainer.md
   accessed: "2026-11-06"
 wasm-multi-memory:
   type: web
   organization: WebAssembly Community Group
   title: "Multiple Memories: proposal overview"
-  url: https://github.com/WebAssembly/multi-memory/blob/main/proposals/multi-memory/Overview.md
+  url: https://github.com/WebAssembly/multi-memory/blob/8bae4d847bf5ba608745cdcf08c82c312bafb898/proposals/multi-memory/Overview.md
   accessed: "2026-11-06"
 wasi-preview1:
   type: web
@@ -98,13 +98,13 @@ zig-allocators:
   type: web
   organization: Zig Software Foundation
   title: "The Zig Programming Language: Choosing an Allocator"
-  url: https://ziglang.org/documentation/master/#Choosing-an-Allocator
+  url: https://ziglang.org/documentation/0.16.0/#Choosing-an-Allocator
   accessed: "2026-11-06"
 zig-wasm-builtins:
   type: web
   organization: Zig Software Foundation
   title: "The Zig Programming Language: Builtin Functions (@wasmMemorySize, @wasmMemoryGrow)"
-  url: https://ziglang.org/documentation/master/#wasmMemorySize
+  url: https://ziglang.org/documentation/0.16.0/#wasmMemorySize
   accessed: "2026-10-10"
 wx-study:
   type: web
@@ -153,7 +153,7 @@ zig-bitcast:
   type: web
   organization: Zig Software Foundation
   title: "The Zig Programming Language: @bitCast"
-  url: https://ziglang.org/documentation/master/#bitCast
+  url: https://ziglang.org/documentation/0.16.0/#bitCast
   accessed: "2026-11-06"
 as-globals:
   type: web
@@ -171,13 +171,13 @@ swift-se0029:
   type: web
   organization: Swift Evolution
   title: "SE-0029: Remove implicit tuple splat behavior from function applications"
-  url: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0029-remove-implicit-tuple-splat.md
+  url: https://github.com/swiftlang/swift-evolution/blob/dcc1932a4b8dffbee02be1737d37cf13ecac40a6/proposals/0029-remove-implicit-tuple-splat.md
   accessed: "2026-11-06"
 swift-se0110:
   type: web
   organization: Swift Evolution
   title: "SE-0110: Distinguish between single-tuple and multiple-argument function types"
-  url: https://github.com/swiftlang/swift-evolution/blob/main/proposals/0110-distinguish-single-tuple-arg.md
+  url: https://github.com/swiftlang/swift-evolution/blob/821970ae986219f88eb3f950ed787a55ce31d512/proposals/0110-distinguish-single-tuple-arg.md
   accessed: "2026-11-06"
 swift-functions:
   type: web

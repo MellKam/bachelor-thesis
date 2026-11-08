@@ -12,7 +12,7 @@ Kompilator jest jedną biblioteką, a wszystko inne, co pracuje z kodem WX, jest
 Kompilator to crate Rusta `wx-compiler`. Biblioteka standardowa jest jednym plikiem WX, osadzanym w kompilatorze przy jego budowaniu. Rysunek #nr(<fig:impl-pipeline>) pokazuje etapy budowania, a pod nimi to, do których etapów sięga każdy klient biblioteki. Budowanie czyta pakiety (`vfs`) i parsuje je (`ast`), sprawdza cały program (`tir::check`), obniża osiągalne funkcje do MIR (`tir::lower`, ang. _lowering_), wykonuje inlining, czyli wstawianie funkcji (`mir::inline`), optymalizuje każdą funkcję (`opt`) i koduje moduł (`codegen`). Wiersz poleceń zatrzymuje się na pierwszym etapie, który zgłasza błąd, więc błąd składni nigdy nie dociera do sprawdzania typów, a błąd typów nigdy nie dociera do obniżania.
 
 #figure(
-  arch.pipeline-figure(),
+  image("../../figures/build/pipeline-pl.png", width: 100%, alt: "Diagram etapów kompilatora: front end (vfs, ast), sprawdzanie (tir::check), lowering (tir::lower), inlining (mir::inline), optymalizator (opt) i enkoder (codegen), a pod nimi klienci biblioteki i etapy, do których sięgają: wx build (wszystkie), wx check (do sprawdzania), wx format (tylko drzewa składniowe), testy wykonania (wszystkie), testy backendu (od MIR), a niepołączone z obecnym modułem sprawdzania typów serwer języka i kompilator w przeglądarce."),
   kind: image,
   caption: [Etapy kompilatora (u góry, z produktem, który każdy przekazuje następnemu) i klienci biblioteki, każdy narysowany jako pasek nad etapami, których używa. Pasek przerywany oznacza klienta, który jest napisany, ale nie kompiluje się z obecnym modułem sprawdzania typów (podrozdział #nr(<sec:impl-state>)).],
   placement: auto,
@@ -20,12 +20,12 @@ Kompilator to crate Rusta `wx-compiler`. Biblioteka standardowa jest jednym plik
 
 Rysunek pokazuje pierwszą decyzję. Formatter potrzebuje tylko drzewa składniowego, serwer języka potrzebuje front endu i sprawdzania typów, a testy backendu nie potrzebują niczego przed MIR. Każdy etap przekazuje następnemu zwykłą strukturę danych i żaden nie zależy od swoich odbiorców, więc klient może zacząć lub zakończyć na dowolnym etapie. Dlatego jest jeden kompilator, a nie po jednym na narzędzie: druga implementacja rozwiązywania nazw dla edytora byłaby drugim miejscem, w którym definiowany jest język, a oba by się rozjechały.
 
-Wykres #nr(<fig:impl-size>) podaje rozmiar każdej części. Sprawdzanie typów to około dwie trzecie kodu produkcyjnego kompilatora; backend, od MIR do bajtów, to około jedna szósta.
+Wykres #nr(<fig:impl-size>) podaje rozmiar każdej części. Sprawdzanie typów to 61% kodu produkcyjnego kompilatora, a backend, od MIR do bajtów, 17%.
 
 #figure(
-  arch.size-figure(),
+  image("../../figures/build/impl-size-pl.png", width: 100%, alt: "Wykres słupkowy liczby wierszy działającego kodu w Ruście i testów w poszczególnych częściach kompilatora. Razem 53 049 wierszy kodu i 37 184 wierszy testów; sprawdzanie typów ma 32 396 wierszy kodu."),
   kind: "chart",
-  caption: [Wiersze działającego kodu w Ruście, bez komentarzy i pustych wierszy (`cloc`, 2026-11-06); testy obejmują te wewnątrz plików źródłowych. Biblioteka standardowa, w WX, dodaje około 2 000 wierszy.],
+  caption: [Wiersze działającego kodu w Ruście, bez komentarzy i pustych wierszy (`cloc`, 2026-11-08, commit `1612da8`), tylko działający kod; testy obejmują te wewnątrz plików źródłowych. Biblioteka standardowa, w WX, dodaje około 2 000 wierszy.],
   placement: auto,
 ) <fig:impl-size>
 
@@ -59,7 +59,7 @@ Ten backend jest celowo prosty: nie szereguje jeszcze pod kątem stosu, więc mo
 
 == Testowanie <sec:impl-testing>
 
-Każdy etap jest testowany na własnej granicy, z danymi wejściowymi, które otrzymuje, i wynikiem, który przekazuje dalej, a testy etapu działają bez etapów po nim. Tabela #nr(<tbl:impl-tests>) wymienia warstwy; kompilator ma około 1350 testów, a formatter 75.
+Każdy etap jest testowany na własnej granicy, z danymi wejściowymi, które otrzymuje, i wynikiem, który przekazuje dalej, a testy etapu działają bez etapów po nim. Tabela #nr(<tbl:impl-tests>) wymienia warstwy; kompilator ma 1349 testów, a formatter 75. Po uruchomieniu `cargo test -p wx-compiler -p wx-fmt` na commicie `1612da8` (wersja debug, Rust 1.97.0, 2026-11-08) zaliczono 1347 testów kompilatora i wszystkie 75 testów formattera; żaden test nie zawiódł, a 2 testy kompilatora są pomijane.
 
 #figure(
   booktable(
@@ -88,7 +88,7 @@ Każdy etap jest testowany na własnej granicy, z danymi wejściowymi, które ot
 
 *Komunikaty diagnostyczne, a nie snapshoty.* Test sprawdzania typów w większości określa, jakie komunikaty diagnostyczne program musi wytworzyć, sprawdzane wraz z ich poziomem ważności, a nie tylko kodem, a nieudana asercja drukuje kod źródłowy wokół diagnostyki. Snapshot dużej struktury zapisuje to, co kompilator robi, nie mówiąc, co powinien robić, więc parser ma tylko dwa testy snapshotowe, a pozostałe wprost formułują sprawdzaną tezę.
 
-*Testy wykonania.* Testy obniżania biorą program jako tekst, uruchamiają sekwencję, którą wykonuje `wx build`, tworzą instancję modułu w Wasmtime i wywołują jego eksporty. Wasmtime waliduje moduł przy ładowaniu, więc każdy z tych testów sprawdza też, że kompilator emituje poprawny WebAssembly. Program można uruchomić z inliningiem i bez niego, więc niepowodzenie można przypisać obniżaniu albo inlinerowi. To warstwa, która mówi, co robi skompilowany program. Drugi zestaw testów buduje MIR ręcznie, bez sprawdzania typów, i go uruchamia, co ustala kontrakt między obniżaniem a backendem.
+*Testy wykonania.* Testy obniżania biorą program jako tekst, uruchamiają sekwencję, którą wykonuje `wx build`, tworzą instancję modułu w Wasmtime i wywołują jego eksporty. Wasmtime waliduje moduł przy ładowaniu, więc każdy z tych testów sprawdza też, że kompilator emituje poprawny WebAssembly. Program można uruchomić z inliningiem i bez niego, więc porównanie obu uruchomień pomaga zawęzić źródło błędu, choć różnica może wynikać także z interakcji z optymalizatorem lub generowaniem kodu. To warstwa, która mówi, co robi skompilowany program. Drugi zestaw testów buduje MIR ręcznie, bez sprawdzania typów, i go uruchamia, co ustala kontrakt między obniżaniem a backendem.
 
 == Stan i ograniczenia <sec:impl-state>
 

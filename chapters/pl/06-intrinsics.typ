@@ -8,7 +8,7 @@ WX udostępnia wybrane instrukcje WebAssembly jako funkcje biblioteki standardow
 
 == Instrukcje w bibliotece standardowej <sec:intrinsic-functions>
 
-Języki docierają do instrukcji, których nie obejmuje ich język źródłowy, na dwa sposoby. Asembler wbudowany dociera do wszystkich, ale kompilator nie sprawdza z niego niczego (podrozdział #nr(<sec:synthesis>)). Funkcje wbudowane (ang. _builtins_) są sprawdzane, ale kompilator definiuje ich nazwy i typy, często przyjmują encję jako zwykłą liczbę całkowitą i obejmują tylko te instrukcje, które wybrali ich autorzy.
+Języki docierają do instrukcji, których nie obejmuje ich język źródłowy, na dwa sposoby. Asembler wbudowany dociera do wszystkich, ale kompilator nie sprawdza jego użycia systemem typów języka; wynikowy moduł przechodzi tylko walidację WebAssembly (podrozdział #nr(<sec:synthesis>)). Funkcje wbudowane (ang. _builtins_) są sprawdzane, ale kompilator definiuje ich nazwy i typy, często przyjmują encję jako zwykłą liczbę całkowitą i obejmują tylko te instrukcje, które wybrali ich autorzy.
 
 W WX *funkcja wewnętrzna* (ang. _intrinsic_) to funkcja zadeklarowana w bibliotece standardowej bez ciała:
 
@@ -20,7 +20,7 @@ pub func f32_reinterpret_i32(value: i32) -> f32;
 pub func trap() -> !;
 ```
 
-Deklaracja to wszystko, co widzi program. Kompilator odwzorowuje każdą z nich na jej instrukcję WebAssembly. Poza tym nie ma w niej nic szczególnego: jest znajdowana przez rozwiązywanie nazw, sprawdzana względem swojej sygnatury i może być opakowana lub pozostać prywatna dla biblioteki. Serwer języka pokazuje jej sygnaturę jak każdej innej funkcji.
+Deklaracja to wszystko, co widzi program. Kompilator odwzorowuje każdą z nich na jej instrukcję WebAssembly. Poza tym nie ma w niej nic szczególnego: jest znajdowana przez rozwiązywanie nazw, sprawdzana względem swojej sygnatury i może być opakowana lub pozostać prywatna dla biblioteki. Gdy serwer języka zostanie podłączony do obecnego modułu sprawdzania typów, będzie pokazywał jej sygnaturę tak jak każdej innej funkcji.
 
 Każda sygnatura jest sygnaturą samej instrukcji, jak wyjaśniono w podrozdziale #nr(<sec:transmute>). `i32.add` czyta dwie wartości `i32`, więc `i32_add` przyjmuje dwa `i32`. Tam, gdzie WebAssembly ma osobne instrukcje ze znakiem i bez znaku, biblioteka ma osobne funkcje: `i32_div` przyjmuje `i32`, a `u32_div` przyjmuje `u32`. Zmiana reprezentacji jest zawsze nazwaną funkcją (`i64_extend_i32`, `i32_wrap_i64`, `f32_reinterpret_i32`), a nigdy niejawną konwersją, bo każda z nich jest inną instrukcją.
 
@@ -145,7 +145,7 @@ func expect(ok: Bool, value: u32) -> u32 {
 }
 ```
 
-`break` i `return` również mają typ `!`, bo też się nie kończą. `trap` nie potrzebuje więc własnej reguły: jest po prostu funkcją zwracającą `!`.
+`break` i `return` również mają typ `!`, bo nie przekazują wartości do następnego wyrażenia, tylko przenoszą sterowanie w inne miejsce. `trap` nie potrzebuje więc własnej reguły: jest po prostu funkcją zwracającą `!`.
 
 == Dostęp do pamięci jest składnią <sec:memory-access>
 
